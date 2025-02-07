@@ -1,3 +1,74 @@
-body{
-    background-color: white;
+#navbar {
+    background-color: #c6c6c6;
+    border-radius: 15px;
+    margin-top: 3%;
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    justify-content: space-between;
+    flex-wrap: wrap; /* Allow the navbar elements to wrap */
+}
+
+#logo {
+    border-radius: 50px;
+    width: 30px;
+    height: 30px;
+}
+
+#title {
+    margin-left: 10px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+    flex-wrap: wrap; /* Wrap the items when space is constrained */
+}
+
+#allPhones, #repair, #compare, #cart {
+    background-color: #68f145;
+    cursor: pointer;
+    padding: 10px 15px;
+    border-radius: 15px;
+    border: 1px solid black;
+    text-align: center;
+    font-size: 80%;
+    min-width: 100px; /* Ensures buttons don't shrink too small */
+    flex-grow: 1; /* Allow buttons to grow but still keep some flexibility */
+    margin-bottom: 5px; /* Add spacing between buttons when they wrap */
+}
+
+#allPhones:hover, #repair:hover, #compare:hover, #cart:hover {
+    border: 1px dashed black;
+    font-style: italic;
+}
+
+#searchBar {
+    display: flex;
+    justify-content: center;
+}
+
+#searchBarInput {
+    border-radius: 5px;
+    border: 1px solid black;
+    min-width: 150px; /* Set minimum width for search bar */
+}
+
+#searchBarInput:hover {
+    border: 1px dashed black;
+}
+
+#userChange {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-style: italic;
+}
+
+#userName {
+    margin-right: 5px;
 }
