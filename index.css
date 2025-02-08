@@ -72,3 +72,148 @@
 #userName {
     margin-right: 5px;
 }
+
+
+.phoneCard {
+    height: 97%;
+    margin-top: 5%; 
+    width: auto;
+    border: 2px solid #2300B3;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15%;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+    
+}
+
+.phoneName {
+    font-family: 'Inter', sans-serif;
+    font-size: 250%;
+    font-weight: 400;
+    margin-top: 10px;
+    color: #000000;
+}
+
+.phonePrice {
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    font-weight: 100;
+    font-size: 150%;
+    color: #000000;
+}
+
+.phoneStock {
+    font-family: 'Inter', sans-serif;
+    font-size: 125%;
+    font-weight: 400;
+    color: #539542;
+    margin-top: 5px;
+}
+
+.cardButtons {
+    display: flex;
+    gap: 10px;
+    margin-top: 7%;
+}
+
+.button {
+    width: 75px;
+    height: 74px;
+    background: #68F145;
+    border: 2px solid #000000;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.button img {
+    width: 80%;
+    height: auto;
+}
+
+.phoneImage {
+    width: 100%;
+    height: auto;
+}
+
+.carouselButton{
+    background-color: #E7C49D;
+    border-radius: 100%;
+}
+
+.col-1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.category-btn{
+    margin-top: 5%;
+    background-color:unset;
+    border: white solid 0px;
+}
+
+.eventCard{
+    height: 97%;
+    margin-top: 5%; 
+    width: auto;
+    border: 2px dashed red;
+    border-radius: 25px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 15%;
+    text-align: center;
+    position: relative;
+    cursor: pointer;
+}
+.liveEvent{
+    font-family: 'Inter', sans-serif;
+    font-size: 200%;
+    font-weight: 400;
+    margin-top: 10px;
+    color: #000000;
+}
+
+.eventName{
+    font-family: 'Inter', sans-serif;
+    font-size: 150%;
+    font-weight: 400;
+    margin-top: 10px;
+    color: #000000;
+}
+
+.eventCompanyLogo{
+    margin-top: 30%;
+    margin-bottom: 30%;
+    width: 50%;
+    height: auto;
+}
+
+.eventDate{
+    font-family: 'Inter', sans-serif;
+    font-style: italic;
+    font-weight: 100;
+    font-size: 150%;
+    color: #000000;
+}
+
+.eventButton{
+    margin-top: 10%;
+    width: 60%;
+    height: 10%;
+    background: #EFFF95;
+    border: 2px dashed #000000;
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
