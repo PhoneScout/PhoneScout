@@ -1,3 +1,6 @@
+const apiUrl = "http://localhost:5287/api/auth";  // Adjust the port if necessary
+
+
 // HTML content for Újdonságok (New Arrivals)
 const newArrivalsContent = `
   <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="20000">
@@ -448,3 +451,75 @@ document.getElementById('popularBtn').addEventListener('click', function() {
 document.getElementById('contentRow').innerHTML = newArrivalsContent;
 updateButtonSizes('newArrivalsBtn');
 
+
+
+//Bejelentkezés
+
+
+async function register() {
+    const username = document.getElementById("registerUsername").value;
+    const email = document.getElementById("registerEmail").value;
+    const password = document.getElementById("registerPassword").value;
+
+    const response = await fetch(`${apiUrl}/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, email, password })
+    });
+
+    const data = await response.text();
+    document.getElementById("alertReg").innerText = data;
+}
+
+async function login() {
+    const username = document.getElementById("loginUsername").value;
+    const password = document.getElementById("loginPassword").value;
+
+    const response = await fetch(`${apiUrl}/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ username, password })
+    });
+
+    const data = await response.json();
+    if (data.token) {
+        localStorage.setItem("jwtToken", data.token);
+        localStorage.setItem("username", username);
+        document.getElementById("alertLog").innerText = `Login successful! Welcome ${username}`;
+        window.location.href = "index.html";  
+    } else {
+        document.getElementById("alertLog").innerText = "Login failed.";
+    }
+}
+
+
+async function accessProtectedResource() {
+    const token = localStorage.getItem("jwtToken");
+    if (!token) {
+        document.getElementById("response").innerText = "Please log in first.";
+        return;
+    }
+
+    const response = await fetch(`${apiUrl}/protected-resource`, {
+        method: "GET",
+        headers: { "Authorization": "Bearer " + token }
+    });
+
+    const data = await response.text();
+    document.getElementById("response").innerText = data;
+}
+
+function logout() {
+    localStorage.removeItem("jwtToken");
+    alert("Logged out successfully!");
+}
+
+function showUsername() {
+    const username = localStorage.getItem("username"); 
+    if (username) {
+        document.getElementById("userName").innerText = username;  
+    }
+}
+
+// Call showUsername when the page loads
+document.addEventListener("DOMContentLoaded", showUsername);

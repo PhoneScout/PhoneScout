@@ -7,7 +7,7 @@
     padding: 10px;
     justify-content: space-between;
     flex-wrap: wrap;
-    
+    border: 3px solid black;
 }
 
 #logo {
@@ -87,7 +87,10 @@
 }
 #userIcon {
     margin-right: 5px;
-    color: white;
+    color: black;
+    background-color: white;
+    padding: 30%;
+    border-radius: 50px;
 }
 
 
