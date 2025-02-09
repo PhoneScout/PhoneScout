@@ -1,26 +1,35 @@
 #navbar {
-    background-color: #c6c6c6;
+    background-color: #000000;
     border-radius: 15px;
     margin-top: 3%;
     display: flex;
     align-items: center;
     padding: 10px;
     justify-content: space-between;
-    flex-wrap: wrap; /* Allow the navbar elements to wrap */
+    flex-wrap: wrap;
+    
 }
 
 #logo {
-    border-radius: 50px;
-    width: 30px;
-    height: 30px;
+    width: auto;
+    height: 50px;
 }
 
 #title {
     margin-left: 10px;
     font-size: 24px;
     font-weight: bold;
+    color: #ffffff;
+    display: flex;
+    font-style: italic;
+    letter-spacing: 2px;
 }
-
+#title1{
+    color: #2300B3;
+}
+#title2{
+    color: #68F145;
+}
 #navbar-right {
     display: flex;
     align-items: center;
@@ -30,21 +39,24 @@
 }
 
 #allPhones, #repair, #compare, #cart {
-    background-color: #68f145;
+    background-color: #2300B3;
+    color: white;
     cursor: pointer;
     padding: 10px 15px;
     border-radius: 15px;
-    border: 1px solid black;
+    border: 1px solid rgb(255, 255, 255);
     text-align: center;
     font-size: 80%;
-    min-width: 100px; /* Ensures buttons don't shrink too small */
-    flex-grow: 1; /* Allow buttons to grow but still keep some flexibility */
-    margin-bottom: 5px; /* Add spacing between buttons when they wrap */
+    min-width: 100px; 
+    flex-grow: 1;
+    margin-bottom: 5px; 
 }
-
 #allPhones:hover, #repair:hover, #compare:hover, #cart:hover {
-    border: 1px dashed black;
+    border: 1px dashed rgb(255, 255, 255);
     font-style: italic;
+    background-color: #1b0085;
+    color: #919191;
+
 }
 
 #searchBar {
@@ -54,12 +66,12 @@
 
 #searchBarInput {
     border-radius: 5px;
-    border: 1px solid black;
+    border: 1px solid rgb(255, 255, 255);
     min-width: 150px; /* Set minimum width for search bar */
 }
 
 #searchBarInput:hover {
-    border: 1px dashed black;
+    border: 1px dashed rgb(255, 255, 255);
 }
 
 #userChange {
@@ -71,6 +83,11 @@
 
 #userName {
     margin-right: 5px;
+    color: white;
+}
+#userIcon {
+    margin-right: 5px;
+    color: white;
 }
 
 
