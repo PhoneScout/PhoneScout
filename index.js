@@ -423,27 +423,27 @@ function updateButtonSizes(activeButtonId) {
 
     if (activeButtonId === 'newArrivalsBtn') {
         newArrivalsBtn.style.transform = 'scale(2)';
-        newArrivalsBtn.style.marginRight = '20%';        
+        newArrivalsBtn.style.marginRight = '20%';
         newArrivalsBtn.style.color = 'black';
         popularBtn.style.transform = 'scale(1.3)';
         popularBtn.style.marginLeft = '0';
         popularBtn.style.color = 'gray';
     } else if (activeButtonId === 'popularBtn') {
         popularBtn.style.transform = 'scale(2)';
-        popularBtn.style.marginLeft = '20%';              
+        popularBtn.style.marginLeft = '20%';
         popularBtn.style.color = 'black';
         newArrivalsBtn.style.transform = 'scale(1.3)';
-        newArrivalsBtn.style.marginRight = '0';        
+        newArrivalsBtn.style.marginRight = '0';
         newArrivalsBtn.style.color = 'gray';
     }
 }
 
-document.getElementById('newArrivalsBtn').addEventListener('click', function() {
+document.getElementById('newArrivalsBtn').addEventListener('click', function () {
     document.getElementById('contentRow').innerHTML = newArrivalsContent;
     updateButtonSizes('newArrivalsBtn');
 });
 
-document.getElementById('popularBtn').addEventListener('click', function() {
+document.getElementById('popularBtn').addEventListener('click', function () {
     document.getElementById('contentRow').innerHTML = popularContent;
     updateButtonSizes('popularBtn');
 });
@@ -475,22 +475,34 @@ async function login() {
     const username = document.getElementById("loginUsername").value;
     const password = document.getElementById("loginPassword").value;
 
-    const response = await fetch(`${apiUrl}/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, password })
-    });
+    try {
+        const response = await fetch(`${apiUrl}/login`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, password })
+        });
 
-    const data = await response.json();
-    if (data.token) {
-        localStorage.setItem("jwtToken", data.token);
-        localStorage.setItem("username", username);
-        document.getElementById("alertLog").innerText = `Login successful! Welcome ${username}`;
-        window.location.href = "index.html";  
-    } else {
-        document.getElementById("alertLog").innerText = "Login failed.";
+        const data = await response.json();
+
+        if (data.token) {
+            localStorage.setItem("jwtToken", data.token);
+            localStorage.setItem("username", username);
+            document.getElementById("alertLog").innerText = `Login successful! Welcome ${username}`;
+
+            // Redirect to index.html and force refresh
+            setTimeout(() => {
+                window.location.href = "index.html"; // Redirect back
+            }, 1000); // Small delay for better UX
+        } else {
+            document.getElementById("alertLog").innerText = "Login failed.";
+        }
+    } catch (error) {
+        console.error("Login error:", error);
+        document.getElementById("alertLog").innerText = "An error occurred.";
     }
 }
+
+
 
 
 async function accessProtectedResource() {
@@ -509,15 +521,22 @@ async function accessProtectedResource() {
     document.getElementById("response").innerText = data;
 }
 
+
 function logout() {
     localStorage.removeItem("jwtToken");
+    localStorage.removeItem("username");
     alert("Logged out successfully!");
+    setTimeout(() => {
+        window.location.href = "index.html"; // Redirect back
+    }, 1000);
 }
 
+
+
 function showUsername() {
-    const username = localStorage.getItem("username"); 
+    const username = localStorage.getItem("username");
     if (username) {
-        document.getElementById("userName").innerText = username;  
+        document.getElementById("userName").innerText = username;
     }
 }
 

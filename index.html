@@ -13,33 +13,34 @@
 </head>
 
 <body>
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div id="navbar">
+    <div class="row">
+        <div class="col-12">
+            <div id="navbar">
+                <div id="fullLogo">
                     <div><img id="logo" src="./Images/PhoneScoutLogo.png" alt="logo" id=""></div>
                     <div id="title">
                         <div id="title1">Phone</div>
                         <div id="title2">Scout</div>
                     </div>
+                </div>
 
-                    <div id="navbar-right">
-                        <div id="allPhones">Mind</div>
-                        <div id="repair">Szerviz</div>
-                        <div id="compare">Összehasonlítás</div>
-                        <div id="cart">Kosár</div>
+                <div id="menu-options">
+                    <div id="allPhones">Mind</div>
+                    <div id="repair">Szerviz</div>
+                    <div id="compare">Összehasonlítás</div>
+                    <div id="cart">Kosár</div>
+                </div>
 
-                        <div id="searchBar">
-                            <input id="searchBarInput" type="text" placeholder="Keresés...">
+                <div id="searchBar">
+                    <input id="searchBarInput" type="text" placeholder="Keresés...">
+                </div>
+                <div id="fullLogin">
+                    <a href="./login.html" style="text-decoration: none;">
+                        <div id="userChange">
+                            <div id="userName">Bejelentkezés</div>
+                            <div id="userIcon"><i class="fa-solid fa-user"></i></div>
                         </div>
-                        <a href="./login.html" target="_blank" style="text-decoration: none;">
-                            <div id="userChange">
-                                <div id="userName">Bejelentkezés</div>
-                                <div><i id="userIcon" class="fa-solid fa-user"></i></div>
-                            </div>
-                        </a>
-
-                    </div>
+                    </a>
                 </div>
 
             </div>
@@ -47,12 +48,13 @@
 
     </div>
 
+
+
     <div class="row category-row">
         <class class="col-1"></class>
         <class class="col-3"><button id="newArrivalsBtn" class="category-btn">Újdonságok</button>
             <button id="popularBtn" class="category-btn">Legnépszerűbbek</button>
         </class>
-
     </div>
 
     <div id="contentRow" class="row"></div>
