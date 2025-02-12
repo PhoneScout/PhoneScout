@@ -113,10 +113,10 @@
 
 
 .phoneCard {
-    height: 97%;
+    height: 550px;
     margin-top: 5%; 
     width: auto;
-    border: 2px solid #2300B3;
+    border: 2px solid #008fb3;
     border-radius: 25px;
     display: flex;
     flex-direction: column;
@@ -342,3 +342,13 @@ footer .address {
     font-size: 0.9em;
     color: #333;
 }
+
+img{
+    user-select: none;
+}
+
+hr {
+    width: 50%;
+    
+  }
+  
