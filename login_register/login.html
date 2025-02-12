@@ -1,28 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-
+    <title>Bejelentkezés</title>
+    <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+    <div class="form-container">
+        <div id="responseMessage" class="alert"></div>
 
-    <input type="text" id="registerUsername" placeholder="username">
-    <input type="password" id="registerPassword" placeholder="password">
-    <input type="email" id="registerEmail" placeholder="e-mail">
-    <button onclick="register()">Regisztráció</button>
-    <p id="alertReg"></p>
+        <h2>Bejelentkezés</h2>
 
+        <input type="text"  id="loginUsername" placeholder="username">
+        <input type="password"  id="loginPassword" placeholder="password">    
+        <button onclick="login()">Bejelentkezés</button>
+        <p id="alertLog"></p>
 
-    <input type="text"  id="loginUsername" placeholder="username">
-    <input type="password"  id="loginPassword" placeholder="password">    
-    <button onclick="login()">Bejelentkezés</button>
-    <p id="alertLog"></p>
+        <button class="logout_button" onclick="logout()">Kijelentkezés</button>
+        <a href="./register.html">Nincs fiókod? Regisztálj itt!</a>
+    </div>
 
-
-    <button onclick="logout()">Kijelentkezés</button>
-
-    <script src="index.js"></script>
+    <script src="./index.js"></script>
 </body>
 </html>
