@@ -1,5 +1,19 @@
 const apiUrl = "http://localhost:5287/api/auth";  // Adjust the port if necessary
+const allPhonesURL = "http://localhost:5287/api/Phone";
 
+let allPhonesData = [];
+
+function getPhoneDatas() {
+    return fetch(allPhonesURL)
+        .then(response => response.json())
+        .then(data => {
+            allPhonesData = data; // Populate arrayData with the fetched data
+            console.log('Data fetched successfully:', allPhonesData);
+
+        })
+        .catch(error => console.error('Error loading the JSON file:', error));
+}
+getPhoneDatas()
 
 // HTML content for Újdonságok (New Arrivals)
 const newArrivalsContent = `
@@ -491,7 +505,7 @@ async function login() {
 
             // Redirect to index.html and force refresh
             setTimeout(() => {
-                window.location.href = "index.html"; // Redirect back
+                window.location.href = "../index.html"; // Redirect back
             }, 1000); // Small delay for better UX
         } else {
             document.getElementById("alertLog").innerText = "Login failed.";
