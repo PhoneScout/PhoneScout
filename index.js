@@ -7,13 +7,16 @@ function getPhoneDatas() {
     return fetch(allPhonesURL)
         .then(response => response.json())
         .then(data => {
-            allPhonesData = data; // Populate arrayData with the fetched data
-            console.log('Data fetched successfully:', allPhonesData);
-
+            allPhonesData = data;/* példa a tagok eléréséhez:
+            allPhonesData.forEach(item => {
+                console.log(item.name)
+            });*/
+            //úgy tudom itt kell meghívni a kártya készítő függvényt. 
         })
         .catch(error => console.error('Error loading the JSON file:', error));
 }
 getPhoneDatas()
+
 
 // HTML content for Újdonságok (New Arrivals)
 /*;
