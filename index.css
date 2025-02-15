@@ -112,21 +112,41 @@
 }
 
 
-.phoneCard {
-    height: 550px;
-    margin-top: 5%; 
-    width: auto;
+/* Asztali nézet: 12 oszlopos grid, ahol az 1. és a 12. oszlop üresen marad */
+#contentRow {
+    display: grid;
+    grid-template-columns: 1fr repeat(10, 1fr) 1fr;
+    gap: 20px;
+    justify-content: center; /* A teljes grid középre igazítása */
+  }
+  
+  .phoneCard {
+    margin-top: 10%;
+    width: 250px;       
+    height: auto;      
     border: 2px solid #008fb3;
     border-radius: 25px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 15%;
+    padding: 20px;      
     text-align: center;
     position: relative;
     cursor: pointer;
-    
-}
+    box-sizing: border-box; 
+  }
+  
+  
+  /* Kisebb képernyőn/zoomolt nézetben a grid 1 oszlopos */
+  @media (max-width: 768px) {
+    #contentRow {
+      grid-template-columns: 1fr;
+    }
+    /* Ekkor ne állítsuk be a konkrét grid pozíciót */
+    .phoneCard {
+      grid-column: auto;
+    }
+  }
 
 .phoneName {
     font-family: 'Inter', sans-serif;
@@ -155,7 +175,7 @@
 .cardButtons {
     display: flex;
     gap: 10px;
-    margin-top: 7%;
+    margin-top: 7%;    
 }
 
 .button {

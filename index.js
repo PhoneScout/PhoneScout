@@ -1,269 +1,115 @@
-const apiUrl = "http://localhost:5287/api/auth";  // Adjust the port if necessary
-const allPhonesURL = "http://localhost:5287/api/Phone";
+const apiUrl = "http://localhost:5287/api/auth";
+const allPhonesURL = "http://localhost:5287/api/Phone"; 
 
 let allPhonesData = [];
+
+
+//Phone card
+function displayPhoneCards() {
+    const contentRow = document.getElementById("contentRow");
+    contentRow.innerHTML = '';
+
+    allPhonesData.slice(0, 5).forEach((phone, index) => {
+        const phoneCard = document.createElement("div");
+        phoneCard.classList.add("phoneCard");
+
+        phoneCard.style.gridColumn = `${2 + index * 2} / span 2`;
+
+        const phoneImage = document.createElement("img");
+        phoneImage.classList.add("phoneImage");
+        phoneImage.src = phone.imageUrl || "./Images/image 3.png";
+
+        const phoneName = document.createElement("div");
+        phoneName.classList.add("phoneName");
+        phoneName.textContent = phone.name; 
+
+        const phonePrice = document.createElement("div");
+        phonePrice.classList.add("phonePrice");
+        phonePrice.textContent = `${phone.price} Ft`; 
+
+        const phoneStock = document.createElement("div");
+        phoneStock.classList.add("phoneStock");
+        phoneStock.textContent = phone.stock === "Raktáron" ? "Raktáron" : "Nincs Raktáron";
+
+        const cardButtons = document.createElement("div");
+        cardButtons.classList.add("cardButtons");
+
+        const compareButton = document.createElement("div");
+        compareButton.classList.add("button");
+        const compareImg = document.createElement("img");
+        compareImg.src = "./Images/compare-removebg-preview 1.png";
+        compareButton.appendChild(compareImg);
+
+        const cartButton = document.createElement("div");
+        cartButton.classList.add("button");
+        const cartImg = document.createElement("img");
+        cartImg.src = "./Images/cart-removebg-preview 1.png";
+        cartButton.appendChild(cartImg);
+
+        cardButtons.appendChild(compareButton);
+        cardButtons.appendChild(cartButton);
+
+        phoneCard.appendChild(phoneImage);
+        phoneCard.appendChild(phoneName);
+        phoneCard.appendChild(phonePrice);
+        phoneCard.appendChild(phoneStock);
+        phoneCard.appendChild(cardButtons);
+
+        contentRow.appendChild(phoneCard);
+    });
+}
 
 function getPhoneDatas() {
     return fetch(allPhonesURL)
         .then(response => response.json())
         .then(data => {
-            allPhonesData = data;/* példa a tagok eléréséhez:
-            allPhonesData.forEach(item => {
-                console.log(item.name)
-            });*/
-            //úgy tudom itt kell meghívni a kártya készítő függvényt. 
+            allPhonesData = data;
+            displayPhoneCards(); 
         })
-        .catch(error => console.error('Error loading the JSON file:', error));
-}
-getPhoneDatas()
-
-
-// HTML content for Újdonságok (New Arrivals)
-/*;
-
-// HTML content for Legnépszerűbbek (Popular Items)
-const popularContent = `
-  <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="20000">
-            <div class="carousel-inner">
-            <div class="carousel-item active">
-                <div class="row">
-                <div class="col-1 d-flex align-items-center">
-                    <button class="carouselButton" data-bs-target="#carouselExample" data-bs-slide="prev">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                </div>
-
-                <div class="col-2">
-                    <div class="phoneCard">
-                    <img class="phoneImage" src="./Images/14t.png" alt="Product Image">
-                    <div class="phoneName">Xiaomi 14T</div>
-                    <div class="phonePrice">99.000 Ft</div>
-                    <div class="phoneStock">Raktáron</div>
-
-                    <div class="cardButtons">
-                        <div class="button">
-                        <img src="./Images/compare-removebg-preview 1.png" alt="Compare">
-                        </div>
-                        <div class="button">
-                        <img src="./Images/cart-removebg-preview 1.png" alt="Cart">
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="phoneCard">
-                    <img class="phoneImage" src="./Images/14t.png" alt="Product Image">
-                    <div class="phoneName">Xiaomi 14T</div>
-                    <div class="phonePrice">99.000 Ft</div>
-                    <div class="phoneStock">Raktáron</div>
-
-                    <div class="cardButtons">
-                        <div class="button">
-                        <img src="./Images/compare-removebg-preview 1.png" alt="Compare">
-                        </div>
-                        <div class="button">
-                        <img src="./Images/cart-removebg-preview 1.png" alt="Cart">
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="phoneCard">
-                    <img class="phoneImage" src="./Images/14t.png" alt="Product Image">
-                    <div class="phoneName">Xiaomi 14T</div>
-                    <div class="phonePrice">99.000 Ft</div>
-                    <div class="phoneStock">Raktáron</div>
-
-                    <div class="cardButtons">
-                        <div class="button">
-                        <img src="./Images/compare-removebg-preview 1.png" alt="Compare">
-                        </div>
-                        <div class="button">
-                        <img src="./Images/cart-removebg-preview 1.png" alt="Cart">
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="phoneCard">
-                    <img class="phoneImage" src="./Images/14t.png" alt="Product Image">
-                    <div class="phoneName">Xiaomi 14T</div>
-                    <div class="phonePrice">99.000 Ft</div>
-                    <div class="phoneStock">Raktáron</div>
-
-                    <div class="cardButtons">
-                        <div class="button">
-                        <img src="./Images/compare-removebg-preview 1.png" alt="Compare">
-                        </div>
-                        <div class="button">
-                        <img src="./Images/cart-removebg-preview 1.png" alt="Cart">
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="phoneCard">
-                    <img class="phoneImage" src="./Images/14t.png" alt="Product Image">
-                    <div class="phoneName">Xiaomi 14T</div>
-                    <div class="phonePrice">99.000 Ft</div>
-                    <div class="phoneStock">Raktáron</div>
-
-                    <div class="cardButtons">
-                        <div class="button">
-                        <img src="./Images/compare-removebg-preview 1.png" alt="Compare">
-                        </div>
-                        <div class="button">
-                        <img src="./Images/cart-removebg-preview 1.png" alt="Cart">
-                        </div>
-                    </div>
-                    </div>
-                </div>
-
-                <div class="col-1 d-flex align-items-center">
-                    <button class="carouselButton" data-bs-target="#carouselExample" data-bs-slide="next">
-                    <i class="fa-solid fa-arrow-right"></i>
-                    </button>
-                </div>
-                </div>
-            </div>
-            <div class="carousel-item">
-                <div class="row">
-                <div class="col-1 d-flex align-items-center">
-                    <button class="carouselButton" data-bs-target="#carouselExample" data-bs-slide="prev">
-                    <i class="fa-solid fa-arrow-left"></i>
-                    </button>
-                </div>
-
-                <div class="col-2">
-                    <div class="phoneCard">
-                    <img class="phoneImage" src="./Images/14t.png" alt="Product Image">
-                    <div class="phoneName">Xiaomi 14T</div>
-                    <div class="phonePrice">99.000 Ft</div>
-                    <div class="phoneStock">Raktáron</div>
-
-                    <div class="cardButtons">
-                        <div class="button">
-                        <img src="./Images/compare-removebg-preview 1.png" alt="Compare">
-                        </div>
-                        <div class="button">
-                        <img src="./Images/cart-removebg-preview 1.png" alt="Cart">
-                        </div>
-                    </div>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div class="phoneCard">
-                                <img class="phoneImage" src="./Images/14t.png" alt="Product Image">
-                                <div class="phoneName">Xiaomi 14T</div>
-                                <div class="phonePrice">99.000 Ft</div>
-                                <div class="phoneStock">Raktáron</div>
-
-                                <div class="cardButtons">
-                                    <div class="button">
-                                        <img src="./Images/compare-removebg-preview 1.png" alt="Compare">
-                                    </div>
-                                    <div class="button">
-                                        <img src="./Images/cart-removebg-preview 1.png" alt="Cart">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="phoneCard">
-                                <img class="phoneImage" src="./Images/image 3.png" alt="Product Image">
-                                <div class="phoneName">Xiaomi 14T</div>
-                                <div class="phonePrice">99.000 Ft</div>
-                                <div class="phoneStock">Raktáron</div>
-
-                                <div class="cardButtons">
-                                    <div class="button">
-                                        <img src="./Images/compare-removebg-preview 1.png" alt="Compare">
-                                    </div>
-                                    <div class="button">
-                                        <img src="./Images/cart-removebg-preview 1.png" alt="Cart">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="phoneCard">
-                                <img class="phoneImage" src="./Images/image 3.png" alt="Product Image">
-                                <div class="phoneName">Xiaomi 14T</div>
-                                <div class="phonePrice">99.000 Ft</div>
-                                <div class="phoneStock">Raktáron</div>
-
-                                <div class="cardButtons">
-                                    <div class="button">
-                                        <img src="./Images/compare-removebg-preview 1.png" alt="Compare">
-                                    </div>
-                                    <div class="button">
-                                        <img src="./Images/cart-removebg-preview 1.png" alt="Cart">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-2">
-                            <div class="phoneCard">
-                                <img class="phoneImage" src="./Images/image 3.png" alt="Product Image">
-                                <div class="phoneName">Xiaomi 14T</div>
-                                <div class="phonePrice">99.000 Ft</div>
-                                <div class="phoneStock">Raktáron</div>
-
-                                <div class="cardButtons">
-                                    <div class="button">
-                                        <img src="./Images/compare-removebg-preview 1.png" alt="Compare">
-                                    </div>
-                                    <div class="button">
-                                        <img src="./Images/cart-removebg-preview 1.png" alt="Cart">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col-1">
-                            <button class="carouselButton" data-bs-target="#carouselExample" data-bs-slide="next">
-                                <i class="fa-solid fa-arrow-right"></i>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-`;*/
-
-function updateButtonSizes(activeButtonId) {
-    const newArrivalsBtn = document.getElementById('newArrivalsBtn');
-    const popularBtn = document.getElementById('popularBtn');
-
-    if (activeButtonId === 'newArrivalsBtn') {
-        newArrivalsBtn.style.transform = 'scale(2)';
-        newArrivalsBtn.style.marginRight = '20%';
-        newArrivalsBtn.style.color = 'black';
-        popularBtn.style.transform = 'scale(1.3)';
-        popularBtn.style.marginLeft = '0';
-        popularBtn.style.color = 'gray';
-    } else if (activeButtonId === 'popularBtn') {
-        popularBtn.style.transform = 'scale(2)';
-        popularBtn.style.marginLeft = '20%';
-        popularBtn.style.color = 'black';
-        newArrivalsBtn.style.transform = 'scale(1.3)';
-        newArrivalsBtn.style.marginRight = '0';
-        newArrivalsBtn.style.color = 'gray';
-    }
+        .catch(error => console.error('Hiba a JSON betöltésekor:', error));
 }
 
-document.getElementById('newArrivalsBtn').addEventListener('click', function () {
-    document.getElementById('contentRow').innerHTML = newArrivalsContent;
-    updateButtonSizes('newArrivalsBtn');
-});
+getPhoneDatas();  
 
-document.getElementById('popularBtn').addEventListener('click', function () {
-    document.getElementById('contentRow').innerHTML = popularContent;
-    updateButtonSizes('popularBtn');
-});
 
-document.getElementById('contentRow').innerHTML = newArrivalsContent;
-updateButtonSizes('newArrivalsBtn');
+//Event Card
+function displayEventCard() {
+    const contentRow = document.getElementById("contentRow");
+
+    const eventCard = document.createElement("div");
+    eventCard.classList.add("eventCard");
+
+    const liveEvent = document.createElement("div");
+    liveEvent.classList.add("liveEvent");
+    liveEvent.textContent = "Élő esemény";
+
+    const eventName = document.createElement("div");
+    eventName.classList.add("eventName");
+    eventName.textContent = "Event Name";
+
+    const eventCompanyLogo = document.createElement("img");
+    eventCompanyLogo.classList.add("eventCompanyLogo");
+    eventCompanyLogo.src = "./Images/XiaomiLogo.png";
+    eventCompanyLogo.alt = "Product Image";
+
+    const eventDate = document.createElement("div");
+    eventDate.classList.add("eventDate");
+    eventDate.textContent = "Dátum: 2025.05.04";
+
+    const eventButton = document.createElement("div");
+    eventButton.classList.add("eventButton");
+    eventButton.textContent = "Nézd élőben!";
+
+    eventCard.appendChild(liveEvent);
+    eventCard.appendChild(eventName);
+    eventCard.appendChild(eventCompanyLogo);
+    eventCard.appendChild(eventDate);
+    eventCard.appendChild(eventButton);
+
+    contentRow.appendChild(eventCard);
+}
+
+displayEventCard();
 
 
 
@@ -356,3 +202,43 @@ function showUsername() {
 
 // Call showUsername when the page loads
 document.addEventListener("DOMContentLoaded", showUsername);
+
+
+//ezek kellenek majd még :
+
+/*
+function updateButtonSizes(activeButtonId) {
+    const newArrivalsBtn = document.getElementById('newArrivalsBtn');
+    const popularBtn = document.getElementById('popularBtn');
+
+    if (activeButtonId === 'newArrivalsBtn') {
+        newArrivalsBtn.style.transform = 'scale(2)';
+        newArrivalsBtn.style.marginRight = '20%';
+        newArrivalsBtn.style.color = 'black';
+        popularBtn.style.transform = 'scale(1.3)';
+        popularBtn.style.marginLeft = '0';
+        popularBtn.style.color = 'gray';
+    } else if (activeButtonId === 'popularBtn') {
+        popularBtn.style.transform = 'scale(2)';
+        popularBtn.style.marginLeft = '20%';
+        popularBtn.style.color = 'black';
+        newArrivalsBtn.style.transform = 'scale(1.3)';
+        newArrivalsBtn.style.marginRight = '0';
+        newArrivalsBtn.style.color = 'gray';
+    }
+}
+
+document.getElementById('newArrivalsBtn').addEventListener('click', function () {
+    document.getElementById('contentRow').innerHTML = newArrivalsContent;
+    updateButtonSizes('newArrivalsBtn');
+});
+
+document.getElementById('popularBtn').addEventListener('click', function () {
+    document.getElementById('contentRow').innerHTML = popularContent;
+    updateButtonSizes('popularBtn');
+});
+
+document.getElementById('contentRow').innerHTML = newArrivalsContent;
+updateButtonSizes('newArrivalsBtn');
+
+*/
