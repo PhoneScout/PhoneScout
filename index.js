@@ -1,8 +1,7 @@
 const apiUrl = "http://localhost:5287/api/auth";
-const allPhonesURL = "http://localhost:5287/api/Phone"; 
+const allPhonesURL = "http://localhost:5287/api/Phone";
 
 let allPhonesData = [];
-
 
 //Phone card
 function displayPhoneCards() {
@@ -21,15 +20,15 @@ function displayPhoneCards() {
 
         const phoneName = document.createElement("div");
         phoneName.classList.add("phoneName");
-        phoneName.textContent = phone.name; 
+        phoneName.textContent = phone.name;
 
         const phonePrice = document.createElement("div");
         phonePrice.classList.add("phonePrice");
-        phonePrice.textContent = `${phone.price} Ft`; 
+        phonePrice.textContent = `${phone.price} Ft`;
 
         const phoneStock = document.createElement("div");
         phoneStock.classList.add("phoneStock");
-        phoneStock.textContent = phone.stock === "Raktáron" ? "Raktáron" : "Nincs Raktáron";
+        phoneStock.textContent = phone.inStore === "van" ? "Raktáron" : "Nincs Raktáron";
 
         const cardButtons = document.createElement("div");
         cardButtons.classList.add("cardButtons");
@@ -64,13 +63,33 @@ function getPhoneDatas() {
         .then(response => response.json())
         .then(data => {
             allPhonesData = data;
-            displayPhoneCards(); 
+            displayPhoneCards();
         })
         .catch(error => console.error('Hiba a JSON betöltésekor:', error));
 }
 
-getPhoneDatas();  
+getPhoneDatas();
+function postPhone() {
+    console.log("Telefonfeltöltés")
 
+    let phoneName = document.getElementById("name").value;
+    let phonePrice = document.getElementById("price").value;
+    let phoneInStore = document.getElementById("inStore").value;
+
+    fetch(`${allPhonesURL}/phonePost`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name: phoneName, price: phonePrice, inStore: phoneInStore })
+    })
+        .then(response => response.text())
+        .then(data => {
+            alert(data); // Show response message
+        })
+        .catch(error => console.error("Error:", error));
+    ;
+}
 
 //Event Card
 function displayEventCard() {
@@ -149,10 +168,10 @@ async function login() {
             localStorage.setItem("username", username);
             document.getElementById("alertLog").innerText = `Login successful! Welcome ${username}`;
 
-            // Redirect to index.html and force refresh
+
             setTimeout(() => {
-                window.location.href = "../index.html"; // Redirect back
-            }, 1000); // Small delay for better UX
+                window.location.href = "../index.html";
+            }, 1000);
         } else {
             document.getElementById("alertLog").innerText = "Login failed.";
         }

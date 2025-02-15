@@ -51,7 +51,7 @@
     margin-left: auto;
     margin-right: auto;
 }
-#allPhones, #repair, #compare, #cart {
+#allPhones, #repair, #compare, #cart, #phoneUpload {
     color: rgb(0, 0, 0);
     cursor: pointer;    
     text-align: center;
@@ -62,7 +62,7 @@
     margin-right: 2%;
 
 }
-#allPhones:hover, #repair:hover, #compare:hover, #cart:hover {
+#allPhones:hover, #repair:hover, #compare:hover, #cart:hover, #phoneUpload:hover {
     scale: 110%;
     text-shadow: 
         1px 0 0 black;    
@@ -382,5 +382,6 @@ hr{
   border-radius: 10px;     
 }
 
-
-  
+a{
+    text-decoration: none;
+}
