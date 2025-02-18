@@ -85,10 +85,14 @@ function postPhone() {
     })
         .then(response => response.text())
         .then(data => {
-            alert(data); // Show response message
+            alert(data);
         })
         .catch(error => console.error("Error:", error));
     ;
+
+    setTimeout(() => {
+        window.location.href = "../index.html";
+    }, 1000);
 }
 
 //Event Card
