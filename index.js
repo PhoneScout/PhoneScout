@@ -1,14 +1,19 @@
 const apiUrl = "http://localhost:5287/api/auth";
 const allPhonesURL = "http://localhost:5287/api/Phone";
 
+let currentPage = 0;
+let phonesPerPage = 5;
 let allPhonesData = [];
 
-//Phone card
 function displayPhoneCards() {
     const contentRow = document.getElementById("contentRow");
     contentRow.innerHTML = '';
 
-    allPhonesData.slice(0, 5).forEach((phone, index) => {
+    const startIndex = currentPage * phonesPerPage;
+    const endIndex = startIndex + phonesPerPage;
+
+    // Az oldal telefonjainak a megjelenítése
+    allPhonesData.slice(startIndex, endIndex).forEach((phone, index) => {
         const phoneCard = document.createElement("div");
         phoneCard.classList.add("phoneCard");
 
@@ -21,6 +26,11 @@ function displayPhoneCards() {
         const phoneName = document.createElement("div");
         phoneName.classList.add("phoneName");
         phoneName.textContent = phone.name;
+
+        // Dinamikusan csökkentjük a betűméretet, ha túl hosszú a név
+        if (phoneName.textContent.length > 20) {
+            phoneName.style.fontSize = "150%"; // Csökkentett betűméret
+        }
 
         const phonePrice = document.createElement("div");
         phonePrice.classList.add("phonePrice");
@@ -68,7 +78,15 @@ function getPhoneDatas() {
         .catch(error => console.error('Hiba a JSON betöltésekor:', error));
 }
 
+// A carousel váltása
+function changeCarousel(direction) {
+    const maxPages = Math.ceil(allPhonesData.length / phonesPerPage) - 1;
+    currentPage = Math.max(0, Math.min(currentPage + direction, maxPages));  // Korábbi és következő oldal között navigálás
+    displayPhoneCards();
+}
+
 getPhoneDatas();
+
 function postPhone() {
     console.log("Telefonfeltöltés")
 

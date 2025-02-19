@@ -131,12 +131,18 @@
     }
   }
 
-.phoneName {
+  .phoneName {
     font-family: 'Inter', sans-serif;
     font-size: 250%;
     font-weight: 400;
     margin-top: 10px;
     color: #000000;
+
+    white-space: nowrap; /* Ne törje meg a sort */
+    overflow: hidden;    /* Túlcsordulás elrejtése */
+    text-overflow: ellipsis; /* Három pont (ellipszis) a túl hosszú szövegnél */
+    max-width: 100%; /* Ne engedje túlcsordulni */
+    text-align: center; /* Középre igazítás */
 }
 
 .phonePrice {
