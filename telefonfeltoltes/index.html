@@ -8,9 +8,21 @@
 </head>
 <body>
 
-    <input type="text" placeholder="name" id="name"> 
-    <input type="text" placeholder="price" id="price">
-    <input type="text" placeholder="inStore" id="inStore">
+    
+    <div class="textBox">
+        <input type="text" id="name" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Név</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="price" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Ár</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="inStore" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Raktáron</label>
+    </div>
+
+    
     <button onclick="postPhone()">button</button>
 
 

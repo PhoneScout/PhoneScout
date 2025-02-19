@@ -12,9 +12,20 @@
 
         <h2>Regisztráció</h2>
 
-        <input type="text" id="registerUsername" placeholder="username">
-        <input type="password" id="registerPassword" placeholder="password">
-        <input type="email" id="registerEmail" placeholder="e-mail">
+        <div class="input-container">
+            <input type="text" id="registerUsername" placeholder=" " required>
+            <label for="loginUsername">Username</label>
+        </div>
+        <div class="input-container">
+            <input type="password" id="registerPassword" placeholder=" " required>
+            <label for="loginPassword">Password</label>
+        </div>
+        <div class="input-container">
+            <input type="password" id="registerEmail" placeholder=" " required>
+            <label for="loginPassword">E-mail</label>
+        </div>
+
+        
         <button onclick="register()">Regisztráció</button>
         <p id="alertReg"></p>
 
@@ -23,6 +34,6 @@
 
     </div>
 
-    <script src="index.js"></script>
+    <script src="../index.js"></script>
 </body>
 </html>

@@ -12,8 +12,16 @@
 
         <h2>Bejelentkezés</h2>
 
-        <input type="text"  id="loginUsername" placeholder="username">
-        <input type="password"  id="loginPassword" placeholder="password">    
+        
+        <div class="input-container">
+            <input type="text" id="loginUsername" placeholder=" " required>
+            <label for="loginUsername">Username</label>
+        </div>
+        <div class="input-container">
+            <input type="password" id="loginPassword" placeholder=" " required>
+            <label for="loginPassword">Password</label>
+        </div>
+
         <button onclick="login()">Bejelentkezés</button>
         <p id="alertLog"></p>
 
