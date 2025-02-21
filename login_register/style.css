@@ -5,10 +5,10 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-image: url(../Images/PhoneScoutLogo.png);
+    background-image: url(../Images/ImagePhoneScoutLogo.png);
     background-repeat: no-repeat;
     background-position: 50%;
-    background-size: 45%;
+    background-size: 30%;
 }
 
 .form-container {

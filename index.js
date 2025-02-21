@@ -87,19 +87,35 @@ function changeCarousel(direction) {
 
 getPhoneDatas();
 
+function dateTest(){
+    let date = document.getElementById("dateInput").value;
+    console.log(date)
+}
+
+
 function postPhone() {
     console.log("Telefonfeltöltés")
 
     let phoneName = document.getElementById("name").value;
     let phonePrice = document.getElementById("price").value;
-    let phoneInStore = document.getElementById("inStore").value;
+    let phoneInStoreCheck = document.getElementById("inStore").checked;
+    let phoneInStore = "nincs"
+    let phoneReleaseDate = document.getElementById("dateInput").value;
+
+    if(phoneInStoreCheck){ 
+        phoneInStore = "van"
+    }
+    if(phoneReleaseDate == ""){
+        phoneReleaseDate = null
+    }
+    
 
     fetch(`${allPhonesURL}/phonePost`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ name: phoneName, price: phonePrice, inStore: phoneInStore })
+        body: JSON.stringify({ name: phoneName, price: phonePrice, inStore: phoneInStore, releaseDate: phoneReleaseDate })
     })
         .then(response => response.text())
         .then(data => {

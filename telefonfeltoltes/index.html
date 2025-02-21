@@ -5,10 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="index.css">
+    <script src="https://kit.fontawesome.com/40786368ae.js" crossorigin="anonymous"></script>
+
+    
+
 </head>
 <body>
 
     
+    <a href="../index.html" id="homeButton"><i class="fa-solid fa-house"></i></a>
+
     <div class="textBox">
         <input type="text" id="name" class="textBoxInput" placeholder=" " />
         <label for="textBoxInput" class="textBoxLabel">Név</label>
@@ -16,10 +22,16 @@
     <div class="textBox">
         <input type="text" id="price" class="textBoxInput" placeholder=" " />
         <label for="textBoxInput" class="textBoxLabel">Ár</label>
+    </div>   
+
+    <div>
+        <label for="inStore">Raktáron</label>
+        <input type="checkbox" name="inStore" id="inStore">        
     </div>
-    <div class="textBox">
-        <input type="text" id="inStore" class="textBoxInput" placeholder=" " />
-        <label for="textBoxInput" class="textBoxLabel">Raktáron</label>
+
+    <div>
+        <input id="dateInput" type="date">
+        <button onclick="dateTest()">Teszt</button>
     </div>
 
     

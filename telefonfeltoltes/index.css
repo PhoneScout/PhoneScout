@@ -43,3 +43,8 @@
     padding-right: 3px;
     font-style: normal;
 }
+
+#homeButton{
+    color: black;
+    font-size: 150%;
+}
