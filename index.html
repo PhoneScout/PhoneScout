@@ -48,12 +48,22 @@
                 
 
                 <div id="fullLogin">
-                    <a href="./login_register/login.html" style="text-decoration: none;">
-                        <div id="userChange">
-                            <div id="userName">Bejelentkezés</div>
-                            <div id="userIcon"><i class="fa-solid fa-user"></i></div>
-                        </div>
-                    </a>
+                    <div class="dropdown">
+                        <a href="#" class="dropdown-toggle" id="loginDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <div id="userChange">
+                                <div id="userName">Bejelentkezés</div>
+                                <div id="userIcon"><i class="fa-solid fa-user"></i></div>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="loginDropdown">
+                            <li>
+                                <button class="logout_button" onclick="logout()">Kijelentkezés</button>
+                            </li>
+                            <li>
+                                <a href="">Profil</a> <!--kis töltő szöveg lássuk hogy néz ki-->
+                            </li>
+                        </ul>
+                    </div>
                 </div>
 
             </div>
