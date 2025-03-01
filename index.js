@@ -17,11 +17,19 @@ function displayPhoneCards() {
         const phoneCard = document.createElement("div");
         phoneCard.classList.add("phoneCard");
 
+        phoneCard.onclick = function () {
+            localStorage.setItem("selectedPhone", phone.id);
+            console.log(localStorage.getItem("selectedPhone")); // This is fine for debugging.
+            window.location.href = "./telefonoldala/index.html"; // This will load the new page.
+        };
+        
+
         phoneCard.style.gridColumn = `${2 + index * 2} / span 2`;
 
         const phoneImage = document.createElement("img");
         phoneImage.classList.add("phoneImage");
         phoneImage.src = phone.imageUrl || "./Images/image 3.png";
+        phoneImage.loading = "lazy"
 
         const phoneName = document.createElement("div");
         phoneName.classList.add("phoneName");
@@ -47,12 +55,14 @@ function displayPhoneCards() {
         compareButton.classList.add("button");
         const compareImg = document.createElement("img");
         compareImg.src = "./Images/compare-removebg-preview 1.png";
+        compareImg.loading = "lazy"
         compareButton.appendChild(compareImg);
 
         const cartButton = document.createElement("div");
         cartButton.classList.add("button");
         const cartImg = document.createElement("img");
         cartImg.src = "./Images/cart-removebg-preview 1.png";
+        cartImg.loading = "lazy"
         cartButton.appendChild(cartImg);
 
         cardButtons.appendChild(compareButton);
@@ -77,6 +87,42 @@ function getPhoneDatas() {
         })
         .catch(error => console.error('Hiba a JSON betöltésekor:', error));
 }
+getPhoneDatas();
+
+function telDataShow(allPhonesData) {
+    let dataPlace = document.getElementById("telData");
+    let selectedPhoneID = localStorage.getItem("selectedPhone");
+
+    if (!selectedPhoneID) {
+        console.error("No selected phone found in localStorage.");
+        return;
+    }
+
+    let selectedPhone = allPhonesData.find(item => item.id == selectedPhoneID);
+    
+    if (selectedPhone) {
+        dataPlace.innerHTML = selectedPhone.name;
+    } else {
+        console.error("No phone found with the given ID.");
+    }
+}
+
+window.onload = function () {
+    // Get the current page path
+    let currentPage = window.location.pathname;
+
+    // Check if the page is 'telefonoldala/index.html'
+    if (currentPage.includes("telefonoldala/index.html")) {
+        fetch(allPhonesURL)
+            .then(response => response.json())
+            .then(data => {
+                telDataShow(data);
+            })
+            .catch(error => console.error("Error loading phone data:", error));
+    }
+};
+
+
 
 // A carousel váltása
 function changeCarousel(direction) {
@@ -85,7 +131,6 @@ function changeCarousel(direction) {
     displayPhoneCards();
 }
 
-getPhoneDatas();
 
 function dateTest(){
     let date = document.getElementById("dateInput").value;
