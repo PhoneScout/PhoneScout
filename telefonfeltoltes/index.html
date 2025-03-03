@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,38 +8,332 @@
     <link rel="stylesheet" href="index.css">
     <script src="https://kit.fontawesome.com/40786368ae.js" crossorigin="anonymous"></script>
 
-    
+
 
 </head>
+
 <body>
 
-    
-    <a href="../index.html" id="homeButton"><i class="fa-solid fa-house"></i></a>
 
+    <a href="../index.html" id="homeButton"><i class="fa-solid fa-house"></i></a>
+    <div class="row">
+
+        <div class="textBox">
+            <input type="text" id="name" class="textBoxInput" placeholder=" " />
+            <label for="textBoxInput" class="textBoxLabel">Név</label>
+        </div>
+        <div class="textBox">
+            <input type="text" id="price" class="textBoxInput" placeholder=" " />
+            <label for="textBoxInput" class="textBoxLabel">Ár</label>
+        </div>
+
+        <div>
+            <label for="inStore">Raktáron</label>
+            <input type="checkbox" name="inStore" id="inStore">
+        </div>
+
+        <div>
+            <input id="dateInput" type="date">
+            <button onclick="dateTest()">Teszt</button>
+        </div>
+
+
+        <button onclick="postPhone()">button</button>
+    </div>
+
+    <h1>CPU</h1>
     <div class="textBox">
-        <input type="text" id="name" class="textBoxInput" placeholder=" " />
-        <label for="textBoxInput" class="textBoxLabel">Név</label>
+        <input type="text" id="CpuName" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Processzor neve</label>
     </div>
     <div class="textBox">
-        <input type="text" id="price" class="textBoxInput" placeholder=" " />
-        <label for="textBoxInput" class="textBoxLabel">Ár</label>
+        <input type="text" id="Antutu" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Antutu pontszám</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="MaxClockspeed" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Max órajele</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="CoreNumber" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Magok száma</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="ManufacturingTechnology" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Gyártási technológia</label>
+    </div>
+
+
+    <h1>Kijelző</h1>
+    <div class="textBox">
+        <input type="text" id="DisplayType" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Típusa</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="Resolution" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Felbontás</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="Size" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Mérete</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="RefreshRate" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Frissítési ráta</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="MaxBrightness" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Max fényerő</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="PixelDensity" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Élessége/Kepsűrűség</label>
+    </div>
+
+
+    <h1>Csatlakoztathatóság</h1>
+    <div class="textBox">
+        <input type="text" id="Wifi" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Wifi</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="Bluetooth" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Bluetooth</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="MobileNetwork" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">mobilhálózat</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="DualSIM" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Dual SIM</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="ESIM" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">E-SIM</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="NFC" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">nfc</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="ChargerType" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Töltő típusa</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="ConnectorSpeed" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Csatlakozó gyorsasága</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="Jack" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">3,5mm jack</label>
+    </div>
+
+
+    <h1>Szenzorok/Érzékelők</h1>
+    <div class="textBox">
+        <input type="text" id="FingerprintSensor" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Ujjlenyomat-olvasó</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="Infrared" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Infravörös</label>
+    </div>
+
+
+    <h1>RAM/Storage</h1>
+    <div class="textBox">
+        <input type="text" id="RAMAmount" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">RAM mennyisége</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="RAMSpeed" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">RAM sebessége</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="StorageAmount" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Tárhely mennyisége</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="StorageSpeed" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Tárhely sebessége</label>
+    </div>
+
+
+    <h1>Battery & Charging</h1>
+    <div class="textBox">
+        <input type="text" id="BatteryCapacity" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">akksi kapacitása</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="BatteryType" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">akksi típusa</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="WiredChargingSpeed" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Vezetékes töltés</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="WirelessChargingSpeed" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Vezetknélküli töltés</label>
+    </div>
+
+    <h1>Főkamera</h1>
+    <div class="textBox">
+        <input type="text" id="CameraName" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Neve</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="CameraResolution" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Felbontása</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="Aperture" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Rekeszértéke</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="FocalLength" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Fókusztávolság (focal length)</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="OIS" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Optikai képstabilizátor (OIS)</label>
+    </div>
+
+    <h1>Előlapi kamera</h1>
+    <div class="textBox">
+        <input type="text" id="CameraName" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Neve</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="CameraResolution" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Felbontása</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="Aperture" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Rekeszértéke</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="FocalLength" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Fókusztávolság (focal length)</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="OIS" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Optikai képstabilizátor (OIS)</label>
+    </div>
+
+    <h1>2x telefotó kamera</h1>
+    <div class="textBox">
+        <input type="text" id="CameraName" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Neve</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="CameraResolution" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Felbontása</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="Aperture" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Rekeszértéke</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="FocalLength" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Fókusztávolság (focal length)</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="OIS" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Optikai képstabilizátor (OIS)</label>
+    </div>
+
+    <h1>3x telefotó kamera</h1>
+    <div class="textBox">
+        <input type="text" id="CameraName" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Neve</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="CameraResolution" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Felbontása</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="Aperture" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Rekeszértéke</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="FocalLength" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Fókusztávolság (focal length)</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="OIS" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Optikai képstabilizátor (OIS)</label>
+    </div>
+
+    <h1>5x telefotó kamera</h1>
+    <div class="textBox">
+        <input type="text" id="CameraName" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Neve</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="CameraResolution" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Felbontása</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="Aperture" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Rekeszértéke</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="FocalLength" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Fókusztávolság (focal length)</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="OIS" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Optikai képstabilizátor (OIS)</label>
+    </div>
+    
+    <h1>Makró kamera</h1>
+    <div class="textBox">
+        <input type="text" id="CameraName" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Neve</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="CameraResolution" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Felbontása</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="Aperture" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Rekeszértéke</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="FocalLength" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Fókusztávolság (focal length)</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="OIS" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Optikai képstabilizátor (OIS)</label>
     </div>   
 
-    <div>
-        <label for="inStore">Raktáron</label>
-        <input type="checkbox" name="inStore" id="inStore">        
+
+    <h1>Test/Ház/Külső</h1>
+    <div class="textBox">
+        <input type="text" id="Height" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Magasság</label>
     </div>
-
-    <div>
-        <input id="dateInput" type="date">
-        <button onclick="dateTest()">Teszt</button>
+    <div class="textBox">
+        <input type="text" id="Width" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Szélesség</label>
     </div>
-
-    
-    <button onclick="postPhone()">button</button>
-
-
+    <div class="textBox">
+        <input type="text" id="Thickness" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Vastagság</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="WaterResistance" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Vízállóság</label>
+    </div>
+    <div class="textBox">
+        <input type="text" id="BackMaterial" class="textBoxInput" placeholder=" " />
+        <label for="textBoxInput" class="textBoxLabel">Hátlap anyaga</label>
+    </div>
 
     <script src="/index.js"></script>
 </body>
+
 </html>
