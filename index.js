@@ -310,10 +310,17 @@ function logout() {
 
 
 
-function showUsername() {
+async function showUsername() {
     const username = localStorage.getItem("username");
     if (username) {
+        // Bejelentkezett felhasználó esetén
         document.getElementById("userName").innerText = username;
+        document.getElementById("dropdownMenu").style.display = 'block';
+        document.getElementById("loginText").style.display = 'none';
+    } else {
+        // Ha nincs bejelentkezve
+        document.getElementById("dropdownMenu").style.display = 'none';
+        document.getElementById("loginText").style.display = 'block';
     }
 }
 

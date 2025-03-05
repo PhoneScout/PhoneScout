@@ -448,15 +448,16 @@ a{
     touch-action: manipulation;
     vertical-align: middle;
     margin: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 .logout_button:hover,
 .logout_button:active {
-    background-color: initial;
-    background-position: 0 0;
+    background-color: #FFFFFF;
     color: #FF4742;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
 }
 
 .logout_button:active {
-    opacity: .5;
+    opacity: 0.7;
 }
