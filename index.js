@@ -22,7 +22,7 @@ function displayPhoneCards() {
             console.log(localStorage.getItem("selectedPhone")); // This is fine for debugging.
             window.location.href = "./telefonoldala/index.html"; // This will load the new page.
         };
-        
+
 
         phoneCard.style.gridColumn = `${2 + index * 2} / span 2`;
 
@@ -68,6 +68,12 @@ function displayPhoneCards() {
         cardButtons.appendChild(compareButton);
         cardButtons.appendChild(cartButton);
 
+        if (phone.inStore=="van") {
+            phoneStock.style.color = "green";
+
+        }
+       
+
         phoneCard.appendChild(phoneImage);
         phoneCard.appendChild(phoneName);
         phoneCard.appendChild(phonePrice);
@@ -99,7 +105,7 @@ function telDataShow(allPhonesData) {
     }
 
     let selectedPhone = allPhonesData.find(item => item.id == selectedPhoneID);
-    
+
     if (selectedPhone) {
         dataPlace.innerHTML = selectedPhone.name;
     } else {
@@ -132,7 +138,7 @@ function changeCarousel(direction) {
 }
 
 
-function dateTest(){
+function dateTest() {
     let date = document.getElementById("dateInput").value;
     console.log(date)
 }
@@ -147,13 +153,13 @@ function postPhone() {
     let phoneInStore = "nincs"
     let phoneReleaseDate = document.getElementById("dateInput").value;
 
-    if(phoneInStoreCheck){ 
+    if (phoneInStoreCheck) {
         phoneInStore = "van"
     }
-    if(phoneReleaseDate == ""){
+    if (phoneReleaseDate == "") {
         phoneReleaseDate = null
     }
-    
+
 
     fetch(`${allPhonesURL}/phonePost`, {
         method: "POST",
