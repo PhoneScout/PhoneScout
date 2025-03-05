@@ -30,7 +30,7 @@ h2 {
     margin-bottom: 15px;
 }
 
-input[type="text"], input[type="password"] {
+input[type="text"], input[type="password"], input[type="email"] {
     width: 100%;
     padding: 10px;
     margin: 5px 0;
@@ -102,4 +102,10 @@ a:link {
 
 a:visited {
     color: green;
+}
+i{
+    height: 20px;
+}
+.fa-solid{
+    font-size: 12px;
 }

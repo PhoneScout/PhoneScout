@@ -223,15 +223,30 @@ async function register() {
     const email = document.getElementById("registerEmail").value;
     const password = document.getElementById("registerPassword").value;
 
-    const response = await fetch(`${apiUrl}/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ username, email, password })
-    });
+    try {
+        const response = await fetch(`${apiUrl}/register`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ username, email, password })
+        });
 
-    const data = await response.text();
-    document.getElementById("alertReg").innerText = data;
+        const data = await response.text();
+
+        if (response.ok) {
+            document.getElementById("alertReg").innerText = `Registration successful! You can now log in with your username.`;
+            setTimeout(() => {
+                window.location.href = "login.html";
+            }, 1000);
+        } else {
+            document.getElementById("alertReg").innerText = `Registration failed: ${data}`;
+        }
+
+    } catch (error) {
+        console.error("Registration error:", error);
+        document.getElementById("alertReg").innerText = "An error occurred during registration.";
+    }
 }
+
 
 async function login() {
     const username = document.getElementById("loginUsername").value;
