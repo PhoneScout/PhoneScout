@@ -111,7 +111,7 @@ function telDataShow(allPhonesData) {
     } else {
         console.error("No phone found with the given ID.");
     }
-}
+}ol
 
 window.onload = function () {
     // Get the current page path
@@ -133,7 +133,7 @@ window.onload = function () {
 // A carousel váltása
 function changeCarousel(direction) {
     const maxPages = Math.ceil(allPhonesData.length / phonesPerPage) - 1;
-    currentPage = Math.max(0, Math.min(currentPage + direction, maxPages));  // Korábbi és következő oldal között navigálás
+    currentPage = Math.max(0, Math.min(currentPage + direction, maxPages)); 
     displayPhoneCards();
 }
 

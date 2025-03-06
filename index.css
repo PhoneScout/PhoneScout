@@ -97,12 +97,11 @@
 }
 
 
-/* Asztali nézet: 12 oszlopos grid, ahol az 1. és a 12. oszlop üresen marad */
 #contentRow {
     display: grid;
     grid-template-columns: 1fr repeat(10, 1fr) 1fr;
-    gap: 20px;
-    justify-content: center; /* A teljes grid középre igazítása */
+    gap: 80px;
+    justify-content: center; 
   }
   
   .phoneCard {
@@ -123,8 +122,8 @@
   }
 
   .phoneCard:hover {
-    transform: scale(1.07);
-    border: 2px solid #008fb3;
+    transform: scale(1.05);
+    border: 2px solid rgb(5, 138, 172);
   }
 
   .phonestockFalse{
@@ -184,8 +183,8 @@
 }
 
 .button {
-    width: 75px;
-    height: 74px;
+    width: 60px;
+    height: 60px;
     background: #68F145;
     border: 2px solid #000000;
     border-radius: 15px;
