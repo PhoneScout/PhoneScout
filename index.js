@@ -1,5 +1,7 @@
 const apiUrl = "http://localhost:5287/api/auth";
-const allPhonesURL = "http://localhost:5287/api/Phone";
+const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
+//const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
+
 
 let currentPage = 0;
 let phonesPerPage = 5;
@@ -89,6 +91,7 @@ function getPhoneDatas() {
         .then(response => response.json())
         .then(data => {
             allPhonesData = data;
+            console.log(allPhonesData)
             displayPhoneCards();
         })
         .catch(error => console.error('Hiba a JSON betöltésekor:', error));
@@ -111,7 +114,7 @@ function telDataShow(allPhonesData) {
     } else {
         console.error("No phone found with the given ID.");
     }
-}ol
+}
 
 window.onload = function () {
     // Get the current page path
@@ -144,7 +147,7 @@ function dateTest() {
 }
 
 
-function postPhone() {
+function postPhone() { //RÉGI BACKEND
     console.log("Telefonfeltöltés")
 
     let phoneName = document.getElementById("name").value;
@@ -275,6 +278,7 @@ async function login() {
 
             setTimeout(() => {
                 window.location.href = "../index.html";
+                
             }, 1000);
         } else {
             document.getElementById("alertLog").innerText = "Login failed.";
@@ -318,6 +322,7 @@ function logout() {
 
 async function showUsername() {
     const username = localStorage.getItem("username");
+    console.log(username)
     if (username) {
         // Bejelentkezett felhasználó esetén
         document.getElementById("userName").innerText = username;
@@ -332,6 +337,69 @@ async function showUsername() {
 
 // Call showUsername when the page loads
 document.addEventListener("DOMContentLoaded", showUsername);
+
+
+//ÚJ TELEFONFELTÖLTÉS
+
+function NewPostPhone(allPhonesData){
+    console.log("NEW")
+    let phonename = document.getElementById("PhoneName").value
+
+
+
+
+}
+
+/*function postPhone() { //RÉGI BACKEND
+    console.log("Telefonfeltöltés")
+
+    let phoneName = document.getElementById("name").value;
+    let phonePrice = document.getElementById("price").value;
+    let phoneInStoreCheck = document.getElementById("inStore").checked;
+    let phoneInStore = "nincs"
+    let phoneReleaseDate = document.getElementById("dateInput").value;
+
+    if (phoneInStoreCheck) {
+        phoneInStore = "van"
+    }
+    if (phoneReleaseDate == "") {
+        phoneReleaseDate = null
+    }
+
+
+    fetch(`${allPhonesURL}/phonePost`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name: phoneName, price: phonePrice, inStore: phoneInStore, releaseDate: phoneReleaseDate })
+    })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+        })
+        .catch(error => console.error("Error:", error));
+    ;
+
+    setTimeout(() => {
+        window.location.href = "../index.html";
+    }, 1000);
+}
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //ezek kellenek majd még :
