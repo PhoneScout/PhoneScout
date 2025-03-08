@@ -440,3 +440,9 @@ document.getElementById('contentRow').innerHTML = newArrivalsContent;
 updateButtonSizes('newArrivalsBtn');
 
 */
+
+document.querySelectorAll('.carouselButton').forEach(button => {
+    button.addEventListener('mouseup', function () {
+        this.blur();
+    });
+});
