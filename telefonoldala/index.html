@@ -137,33 +137,94 @@
                             data-bs-target="#carouselExample" data-bs-slide-to="6" alt="...">
                         <img src="../Images/RedMagicTesztTelefonHatulKep.jpg" class="img-thumbnail mx-1"
                             data-bs-target="#carouselExample" data-bs-slide-to="7" alt="...">
-                       
+
                     </div>
 
                 </div>
             </div>
         </div>
+
+        <div class="col-3 colorAndVersionPicker">
+            <div class="szinValaszto">
+                <h4>Szín kiválasztása:</h4>
+                <br>
+                <div class="color-picker">
+                    <button class="color-option" style="background: white;" onclick="selectColor(this)"></button>
+                    <button class="color-option" style="background: green;" onclick="selectColor(this)"></button>
+                    <button class="color-option" style="background: yellow;" onclick="selectColor(this)"></button>
+                    <button class="color-option" style="background: black;" onclick="selectColor(this)"></button>
+                    <button class="color-option" style="background: blue;" onclick="selectColor(this)"></button>
+                    <button class="color-option" style="background: lightblue;" onclick="selectColor(this)"></button>
+
+                </div>
+            </div>
+
+
+            <div class="ramStoragePicker">
+                <h4>RAM/Tárhely kiválasztása:</h4>
+                <div class="ramStorageOptionPicker">
+                    <button class="ramStorageOption" onclick="selectRamStorage(this)">8/128 GB</button>
+                    <button class="ramStorageOption" onclick="selectRamStorage(this)">8/256 GB</button>
+                    <button class="ramStorageOption" onclick="selectRamStorage(this)">12/256 GB</button>
+                    <button class="ramStorageOption" onclick="selectRamStorage(this)">12/512 GB</button>
+                    <button class="ramStorageOption" onclick="selectRamStorage(this)">16/256 GB</button>
+                    <button class="ramStorageOption" onclick="selectRamStorage(this)">16/512 GB</button>
+                </div>
+            </div>
+
+            <script>
+                function selectColor(element) {
+                    document.querySelectorAll('.color-option').forEach(option => {
+                        option.style.border = '1px solid black';
+                    });
+                    element.style.border = '2px solid black';
+                }
+
+                function selectRamStorage(element) {
+                    document.querySelectorAll('.ramStorageOption').forEach(option => {
+                        option.style.border = '1px solid black';
+                    });
+                    element.style.border = '2px solid black';
+                }
+            </script>
+        </div>
+        <div class="col-5 rightSide">
+            <div class="phoneName">
+                Telefon márka-Ilyen széria 2025
+            </div>
+            <br>
+            <div class="phoneStock">
+                Nincs raktáron
+            </div>
+            <br>
+            <div class="price">
+                1.200.000 Ft
+            </div>
+
+            <button class="phoneSiteButton phoneSiteCartButton">Kosárba rakom</button>
+            <br>
+            <button class="phoneSiteButton phoneSiteCompareButton">Összehasonlítás</button>
+
+        </div>
     </div>
 
-
-
     <!--
-    ezek valamiért nem jók ha a saját fájlukba rakom őket, de ha ide rakom akkor jók :):):):):):):)
-    -->
-    <script>
-        document.querySelectorAll('.carouselButton').forEach(button => {
-            button.addEventListener('mouseup', function () {
-                this.blur(); // Eltávolítja a fókuszt a kattintás után
-            });
-        });
-    </script>
+    <div class="row">
+        <div class="col-4">
+
+        </div>
+
+        <div class="col-6  moreInfoAboutPhone">
+            Információk telefonról
+        </div>
+        
+        <div class="col 2">
+
+        </div>
+    </div>
+-->
 
     <style>
-        #carouselExample {
-            width: auto;
-            height: auto;
-        }
-
         .carouselButton:active span,
         .carouselButton:focus span {
             color: black !important;
@@ -173,11 +234,13 @@
             max-height: auto;
             max-width: auto;
             object-fit: contain;
+            user-select: none;
         }
 
         .carousel-thumbnails-container {
             width: auto;
             margin: auto;
+            user-select: none;
         }
 
         .carousel-thumbnails {
@@ -233,16 +296,19 @@
             top: 50%;
             transform: translateY(-50%);
         }
-        .carouselDiv{
-            max-width: auto;
-            max-height: auto; padding: 5%;
-        }
     </style>
+    <script>
+        document.querySelectorAll('.carouselButton').forEach(button => {
+            button.addEventListener('mouseup', function () {
+                this.blur();
+            });
+        });
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-    <script src="index.js"></script>
+    <script src="../index.js"></script>
 </body>
 
 </html>

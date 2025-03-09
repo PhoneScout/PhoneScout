@@ -1,6 +1,6 @@
 const apiUrl = "http://localhost:5287/api/auth";
-const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
-//const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
+//const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
+const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
 
 
 let currentPage = 0;
@@ -446,3 +446,16 @@ document.querySelectorAll('.carouselButton').forEach(button => {
         this.blur();
     });
 });
+
+function selectColor(element) {
+    document.querySelectorAll('.color-option').forEach(option => {
+        option.style.border = '1px solid black'; 
+        option.style.boxShadow = 'none';
+    });
+    element.style.border = '2px solid black'; 
+    const color = window.getComputedStyle(element).backgroundColor;
+    element.style.boxShadow = `0 0 15px ${color}`;
+}
+
+
+

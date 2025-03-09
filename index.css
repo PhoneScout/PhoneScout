@@ -38,6 +38,9 @@
     user-select: none;
     cursor:default;
 }
+br{
+    user-select: none;
+}
 #title1{
     color: #2300B3;
 }
