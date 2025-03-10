@@ -457,5 +457,22 @@ function selectColor(element) {
     element.style.boxShadow = `0 0 15px ${color}`;
 }
 
-
-
+function addSvgHoverEffect(svgId, elementId) {
+    const svgObject = document.getElementById(svgId); // Az object elem ID-ja
+    
+    svgObject.addEventListener("load", function () {
+        const svgDoc = svgObject.contentDocument;
+        if (!svgDoc) return;
+        
+        const targetElement = svgDoc.getElementById(elementId);
+        if (targetElement) {
+            targetElement.addEventListener("mouseenter", function () {
+                targetElement.style.fill = "#00FF00"; // Zöld szín
+            });
+            
+            targetElement.addEventListener("mouseleave", function () {
+                targetElement.style.fill = ""; // Visszaáll az eredeti színre
+            });
+        }
+    });
+}
