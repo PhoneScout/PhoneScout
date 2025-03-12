@@ -231,28 +231,44 @@ async function register() {
     const username = document.getElementById("registerUsername").value;
     const email = document.getElementById("registerEmail").value;
     const password = document.getElementById("registerPassword").value;
+    const passwordFix = document.getElementById("registerPasswordAgain").value;
 
-    try {
-        const response = await fetch(`${apiUrl}/register`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, email, password })
-        });
+    if(password == passwordFix){
+        try {
+            const response = await fetch(`${apiUrl}/register`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ username, email, password })
+            });
 
-        const data = await response.text();
+            const data = await response.text();
 
-        if (response.ok) {
-            document.getElementById("alertReg").innerText = `Registration successful! You can now log in with your username.`;
-            setTimeout(() => {
-                window.location.href = "login.html";
-            }, 1000);
-        } else {
-            document.getElementById("alertReg").innerText = `Registration failed: ${data}`;
+            if (response.ok) {
+                document.getElementById("alertReg").innerText = `Sikeres regisztráció! Már be tudsz jelentkezni a fiókodba.`;
+                document.getElementById("alertReg").style.color="green";
+                setTimeout(() => {
+                    window.location.href = "login.html";
+                }, 1000);
+            } else {
+                document.getElementById("alertReg").innerText = `Regisztrációs hiba: ${data}`;
+                document.getElementById("alertReg").style.color="red";
+                document.getElementById("registerPassword").value = "";
+                document.getElementById("registerPasswordAgain").value = "";
+            }
+
+        } catch (error) {
+            console.error("Registration error:", error);
+            document.getElementById("alertReg").innerText = "Hiba lépett fel regisztráció közben. Próbáld újra";
+            document.getElementById("alertReg").style.color="red";
+            document.getElementById("registerPassword").value = "";
+            document.getElementById("registerPasswordAgain").value = "";
         }
-
-    } catch (error) {
-        console.error("Registration error:", error);
-        document.getElementById("alertReg").innerText = "An error occurred during registration.";
+    }
+    else{
+        document.getElementById("alertReg").innerText = "A két megadott jelszavad nem egyezik!";
+        document.getElementById("alertReg").style.color="red";
+        document.getElementById("registerPassword").value = "";
+        document.getElementById("registerPasswordAgain").value = "";
     }
 }
 
@@ -273,19 +289,23 @@ async function login() {
         if (data.token) {
             localStorage.setItem("jwtToken", data.token);
             localStorage.setItem("username", username);
-            document.getElementById("alertLog").innerText = `Login successful! Welcome ${username}`;
-
+            document.getElementById("alertLog").innerText = `Sikeres bejelentkezés! Üdvözlünk ${username}`;
+            document.getElementById("alertLog").style.color="green";
 
             setTimeout(() => {
                 window.location.href = "../index.html";
                 
             }, 1000);
         } else {
-            document.getElementById("alertLog").innerText = "Login failed.";
+            document.getElementById("alertLog").innerText = "Sikertelen bejelentkezés.";
+            document.getElementById("loginPassword").value = "";
+            document.getElementById("alertLog").style.color="red";
         }
     } catch (error) {
         console.error("Login error:", error);
-        document.getElementById("alertLog").innerText = "An error occurred.";
+        document.getElementById("alertLog").innerText = "Hiba lépett fel bejelentkezés közben, próbáld újra";
+        document.getElementById("loginPassword").value = "";
+        document.getElementById("alertLog").style.color="red";
     }
 }
 
@@ -295,7 +315,7 @@ async function login() {
 async function accessProtectedResource() {
     const token = localStorage.getItem("jwtToken");
     if (!token) {
-        document.getElementById("response").innerText = "Please log in first.";
+        document.getElementById("response").innerText = "Először be kell jelentkezned.";
         return;
     }
 
@@ -312,9 +332,9 @@ async function accessProtectedResource() {
 function logout() {
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("username");
-    alert("Logged out successfully!");
+    alert("Sikeres kijelentkezés!");
     setTimeout(() => {
-        window.location.href = "index.html"; // Redirect back
+        window.location.href = "index.html";
     }, 1000);
 }
 

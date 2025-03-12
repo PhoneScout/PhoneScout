@@ -103,9 +103,11 @@ a:link {
 a:visited {
     color: green;
 }
+
 i{
     height: 20px;
 }
+
 .fa-solid{
     font-size: 12px;
 }
