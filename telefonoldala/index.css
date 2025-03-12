@@ -445,3 +445,7 @@ br{
 #mySvg{
     margin-top: 200px;
 }
+
+.svg-container{
+    user-select: none;
+}
