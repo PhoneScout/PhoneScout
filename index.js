@@ -1,6 +1,6 @@
 const apiUrl = "http://localhost:5287/api/auth";
-//const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
-const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
+const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
+//const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
 
 
 let currentPage = 0;
@@ -363,10 +363,22 @@ document.addEventListener("DOMContentLoaded", showUsername);
 
 function NewPostPhone(allPhonesData){
     console.log("NEW")
-    let phonename = document.getElementById("PhoneName").value
+    let toltoTipusa = document.getElementById("ChargerType").value
+    console.log(toltoTipusa)
 
-
-
+    fetch(`http://localhost:5287/api/allPhones/phonePost`, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ toltoTipus : toltoTipusa})
+    })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+        })
+        .catch(error => console.error("Error:", error));
+    ;
 
 }
 
