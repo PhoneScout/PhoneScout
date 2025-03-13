@@ -77,9 +77,7 @@ br{
 #fullLogin{
     margin-right: 5%;
 }
-#fullLogin:hover{
-    scale: 110%;
-}
+
 #userChange {
     display: flex;
     align-items: center;

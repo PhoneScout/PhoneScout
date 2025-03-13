@@ -1,6 +1,6 @@
 const apiUrl = "http://localhost:5287/api/auth";
-const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
-//const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
+//const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
+const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
 
 
 let currentPage = 0;
