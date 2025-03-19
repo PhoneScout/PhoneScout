@@ -357,10 +357,8 @@ br{
     user-select: none;
 }
 
-.moreInfoAboutPhone{
-    font-size: 400%;
-    
-}
+
+
 
 .carouselButton:active span,
 .carouselButton:focus span {
@@ -448,4 +446,8 @@ br{
 
 .svg-container{
     user-select: none;
+}
+
+.ramTárhelyOption{
+    margin-top: 3px;
 }

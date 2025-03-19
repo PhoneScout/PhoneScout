@@ -7,6 +7,8 @@ let currentPage = 0;
 let phonesPerPage = 5;
 let allPhonesData = [];
 
+let kosar = [];
+
 function displayPhoneCards() {
     const contentRow = document.getElementById("contentRow");
     contentRow.innerHTML = '';
@@ -96,7 +98,7 @@ function getPhoneDatas() {
         })
         .catch(error => console.error('Hiba a JSON betöltésekor:', error));
 }
-getPhoneDatas();
+getPhoneDatas();    
 
 function telDataShow(allPhonesData) {
     let dataPlace = document.getElementById("telData");
@@ -116,20 +118,54 @@ function telDataShow(allPhonesData) {
     }
 }
 
-window.onload = function () {
-    // Get the current page path
-    let currentPage = window.location.pathname;
-
-    // Check if the page is 'telefonoldala/index.html'
-    if (currentPage.includes("telefonoldala/index.html")) {
-        fetch(allPhonesURL)
-            .then(response => response.json())
-            .then(data => {
-                telDataShow(data);
-            })
-            .catch(error => console.error("Error loading phone data:", error));
-    }
+window.onload = function() {
+    // Betöltéskor hívja meg a telefon adatait
+    fetch(allPhonesURL)
+        .then(response => response.json())
+        .then(data => {
+            telDataShow(data);  // Hívja meg a funkciót, miután a DOM betöltődött
+        })
+        .catch(error => console.error("Hiba a telefon adatok betöltésekor:", error));
 };
+
+function telDataShow(allPhonesData) {
+    let dataPlace = document.getElementById("telData");
+    let selectedPhoneID = localStorage.getItem("selectedPhone");
+
+    if (!selectedPhoneID) {
+        console.error("No selected phone found in localStorage.");
+        return;
+    }
+
+    let selectedPhone = allPhonesData.find(item => item.id == selectedPhoneID);
+
+    if (selectedPhone) {
+        const phoneName = selectedPhone.name;
+        const phoneStock = selectedPhone.inStore === "van" ? "Raktáron" : "Nincs raktáron";
+        const phonePrice = `${selectedPhone.price} Ft`;
+        
+        dataPlace.innerHTML = `
+                <div class="phoneName" id="showRequestedDataName">
+                    ${phoneName}
+                </div>
+                <br>
+                <div class="phoneStock">
+                    ${phoneStock}
+                </div>
+                <br>
+                <div class="price">
+                    ${phonePrice}
+                </div>
+
+                <button class="phoneSiteButton phoneSiteCartButton">Kosárba rakom</button>
+                <br>
+                <button class="phoneSiteButton phoneSiteCompareButton">Összehasonlítás</button>
+            
+        `;
+    } else {
+        console.error("No phone found with the given ID.");
+    }
+}
 
 
 
@@ -221,6 +257,9 @@ function displayEventCard() {
 }
 
 displayEventCard();
+
+
+
 
 
 
