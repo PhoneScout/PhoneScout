@@ -22,7 +22,7 @@ function displayPhoneCards() {
         phoneCard.classList.add("phoneCard");
 
         phoneCard.onclick = function () {
-            localStorage.setItem("selectedPhone", phone.id);
+            localStorage.setItem("selectedPhone", phone.phoneID);
             console.log(localStorage.getItem("selectedPhone")); // This is fine for debugging.
             window.location.href = "./telefonoldala/index.html"; // This will load the new page.
         };
@@ -72,11 +72,11 @@ function displayPhoneCards() {
         cardButtons.appendChild(compareButton);
         cardButtons.appendChild(cartButton);
 
-        if (phone.inStore=="van") {
+        if (phone.inStore == "van") {
             phoneStock.style.color = "green";
 
         }
-       
+
 
         phoneCard.appendChild(phoneImage);
         phoneCard.appendChild(phoneName);
@@ -98,7 +98,7 @@ function getPhoneDatas() {
         })
         .catch(error => console.error('Hiba a JSON betöltésekor:', error));
 }
-getPhoneDatas();    
+getPhoneDatas();
 
 function telDataShow(allPhonesData) {
     let dataPlace = document.getElementById("telData");
@@ -118,7 +118,7 @@ function telDataShow(allPhonesData) {
     }
 }
 
-window.onload = function() {
+window.onload = function () {
     // Betöltéskor hívja meg a telefon adatait
     fetch(allPhonesURL)
         .then(response => response.json())
@@ -143,7 +143,7 @@ function telDataShow(allPhonesData) {
         const phoneName = selectedPhone.name;
         const phoneStock = selectedPhone.inStore === "van" ? "Raktáron" : "Nincs raktáron";
         const phonePrice = `${selectedPhone.price} Ft`;
-        
+
         dataPlace.innerHTML = `
                 <div class="phoneName" id="showRequestedDataName">
                     ${phoneName}
@@ -257,7 +257,7 @@ function telDataShow(allPhonesData) {
 // A carousel váltása
 function changeCarousel(direction) {
     const maxPages = Math.ceil(allPhonesData.length / phonesPerPage) - 1;
-    currentPage = Math.max(0, Math.min(currentPage + direction, maxPages)); 
+    currentPage = Math.max(0, Math.min(currentPage + direction, maxPages));
     displayPhoneCards();
 }
 
@@ -357,7 +357,7 @@ async function register() {
     const password = document.getElementById("registerPassword").value;
     const passwordFix = document.getElementById("registerPasswordAgain").value;
 
-    if(password == passwordFix){
+    if (password == passwordFix) {
         try {
             const response = await fetch(`${apiUrl}/register`, {
                 method: "POST",
@@ -369,13 +369,13 @@ async function register() {
 
             if (response.ok) {
                 document.getElementById("alertReg").innerText = `Sikeres regisztráció! Már be tudsz jelentkezni a fiókodba.`;
-                document.getElementById("alertReg").style.color="green";
+                document.getElementById("alertReg").style.color = "green";
                 setTimeout(() => {
                     window.location.href = "login.html";
                 }, 1000);
             } else {
                 document.getElementById("alertReg").innerText = `Regisztrációs hiba: ${data}`;
-                document.getElementById("alertReg").style.color="red";
+                document.getElementById("alertReg").style.color = "red";
                 document.getElementById("registerPassword").value = "";
                 document.getElementById("registerPasswordAgain").value = "";
             }
@@ -383,14 +383,14 @@ async function register() {
         } catch (error) {
             console.error("Registration error:", error);
             document.getElementById("alertReg").innerText = "Hiba lépett fel regisztráció közben. Próbáld újra";
-            document.getElementById("alertReg").style.color="red";
+            document.getElementById("alertReg").style.color = "red";
             document.getElementById("registerPassword").value = "";
             document.getElementById("registerPasswordAgain").value = "";
         }
     }
-    else{
+    else {
         document.getElementById("alertReg").innerText = "A két megadott jelszavad nem egyezik!";
-        document.getElementById("alertReg").style.color="red";
+        document.getElementById("alertReg").style.color = "red";
         document.getElementById("registerPassword").value = "";
         document.getElementById("registerPasswordAgain").value = "";
     }
@@ -414,22 +414,22 @@ async function login() {
             localStorage.setItem("jwtToken", data.token);
             localStorage.setItem("username", username);
             document.getElementById("alertLog").innerText = `Sikeres bejelentkezés! Üdvözlünk ${username}`;
-            document.getElementById("alertLog").style.color="green";
+            document.getElementById("alertLog").style.color = "green";
 
             setTimeout(() => {
                 window.location.href = "../index.html";
-                
+
             }, 1000);
         } else {
             document.getElementById("alertLog").innerText = "Sikertelen bejelentkezés.";
             document.getElementById("loginPassword").value = "";
-            document.getElementById("alertLog").style.color="red";
+            document.getElementById("alertLog").style.color = "red";
         }
     } catch (error) {
         console.error("Login error:", error);
         document.getElementById("alertLog").innerText = "Hiba lépett fel bejelentkezés közben, próbáld újra";
         document.getElementById("loginPassword").value = "";
-        document.getElementById("alertLog").style.color="red";
+        document.getElementById("alertLog").style.color = "red";
     }
 }
 
@@ -485,26 +485,76 @@ document.addEventListener("DOMContentLoaded", showUsername);
 
 //ÚJ TELEFONFELTÖLTÉS
 
-function NewPostPhone(allPhonesData){
-    console.log("NEW")
-    let toltoTipusa = document.getElementById("ChargerType").value
-    console.log(toltoTipusa)
+function PhonePOST() {
+    const phoneDataPOST = {
+        PhoneNev: document.getElementById("PhoneName").value || "",
+        cpuNev: document.getElementById("CpuName").value || "",
+        antutu: document.getElementById("Antutu").value || 0,
+        cpuMaxOrajel: document.getElementById("MaxClockspeed").value || 0.0,
+        cpuMagokSzama: document.getElementById("CoreNumber").value || 0,
+        CPUGyartasiTechnologia: document.getElementById("ManufacturingTechnology").value || 0,
+        KijelzoTipusa: document.getElementById("DisplayType").value || "",
+        KijelzoFelbontasMagassag: document.getElementById("ResolutionH").value || 0,
+        KijelzoFelbontasSzelesseg: document.getElementById("ResolutionW").value || 0,
+        KijelzoMerete: document.getElementById("Size").value || 0,
+        KijelzoFrissitesiRata: document.getElementById("RefreshRate").value || 0,
+        KijelzoMaxFenyero: document.getElementById("MaxBrightness").value || 0,
+        KijelzoElesseg: document.getElementById("PixelDensity").value || 0,
+        CsatlakoztathatosagWifi: document.getElementById("Wifi").value || 0,
+        CsatlakoztathatosagBluetooth: document.getElementById("Bluetooth").value || 0.0,
+        CsatlakoztathatosagMobilhalozat: document.getElementById("MobileNetwork").value || 0,
+        CsatlakoztathatosagDualSim: document.getElementById("DualSIM").value || "nincs",
+        CsatlakoztathatosagESim: document.getElementById("ESIM").value || "nincs",
+        CsatlakoztathatosagNfc: document.getElementById("NFC").value || "nincs",
+        ToltoTipus: document.getElementById("ChargerType").value || "",
+        CsatlakoztathatosagCsatlakozoGyorsasaga: document.getElementById("ConnectorSpeed").value || 0.0,
+        CsatlakoztathatosagJackCsatlakozo: document.getElementById("Jack").value || "nincs",
+        SzenzorokUjjlenyomatHely: document.getElementById("FingerprintSensorP").value || "",
+        SzenzorokUjjlenyomatTipus: document.getElementById("FingerprintSensorT").value || "",
+        SzenzorokInfravoros: document.getElementById("Infrared").value || "nincs",
+        RamMennyiseg: document.getElementById("RAMAmount").value || 0,
+        RamSebesseg: document.getElementById("RAMSpeed").value || "",
+        StorageMennyiseg: document.getElementById("StorageAmount").value || 0,
+        StorageSebesseg: document.getElementById("StorageSpeed").value || "",
+        AkkumulatorKapacitas: document.getElementById("BatteryCapacity").value || 0,
+        AkkumulatorTipusa: document.getElementById("BatteryType").value || "",
+        ToltoVezetekes: document.getElementById("WiredChargingSpeed").value || 0,
+        ToltoVezeteknelkuli: document.getElementById("WirelessChargingSpeed").value || 0,
 
+        KameraNev: document.getElementById("CameraName").value || "",
+        KameraFelbontas: document.getElementById("CameraResolution").value || 0,
+        KameraRekeszertek: document.getElementById("Aperture").value || "",
+        KameraFokusztavolsag: document.getElementById("FocalLength").value || 0,
+        KameraOptikaiKepStabilizator: document.getElementById("OIS").value || "nincs",
+            
+        TestMagassag: document.getElementById("Height").value || 0.0,
+        TestSzelesseg: document.getElementById("Width").value || 0.0,
+        TestVastagsag: document.getElementById("Thickness").value || 0.0,
+        TestVizalossag: document.getElementById("WaterResistance").value || "",
+        TestHatlapAnyaga: document.getElementById("BackMaterial").value || "",
+
+    };
+
+    // Check the data before sending
+
+
+
+
+    console.log("NEW");
     fetch(`http://localhost:5287/api/allPhones/phonePost`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
         },
-        body: JSON.stringify({ toltoTipus : toltoTipusa})
+        body: JSON.stringify(phoneDataPOST) // Send the full object
     })
         .then(response => response.text())
         .then(data => {
             alert(data);
         })
         .catch(error => console.error("Error:", error));
-    ;
-
 }
+
 
 /*function postPhone() { //RÉGI BACKEND
     console.log("Telefonfeltöltés")
@@ -605,27 +655,27 @@ document.querySelectorAll('.carouselButton').forEach(button => {
 
 function selectColor(element) {
     document.querySelectorAll('.color-option').forEach(option => {
-        option.style.border = '1px solid black'; 
+        option.style.border = '1px solid black';
         option.style.boxShadow = 'none';
     });
-    element.style.border = '2px solid black'; 
+    element.style.border = '2px solid black';
     const color = window.getComputedStyle(element).backgroundColor;
     element.style.boxShadow = `0 0 15px ${color}`;
 }
 
 function addSvgHoverEffect(svgId, elementId) {
     const svgObject = document.getElementById(svgId); // Az object elem ID-ja
-    
+
     svgObject.addEventListener("load", function () {
         const svgDoc = svgObject.contentDocument;
         if (!svgDoc) return;
-        
+
         const targetElement = svgDoc.getElementById(elementId);
         if (targetElement) {
             targetElement.addEventListener("mouseenter", function () {
                 targetElement.style.fill = "#00FF00"; // Zöld szín
             });
-            
+
             targetElement.addEventListener("mouseleave", function () {
                 targetElement.style.fill = ""; // Visszaáll az eredeti színre
             });
