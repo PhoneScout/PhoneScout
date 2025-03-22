@@ -1,6 +1,6 @@
 const apiUrl = "http://localhost:5287/api/auth";
-//const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
-const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
+const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
+//const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
 
 
 let currentPage = 0;
@@ -167,7 +167,92 @@ function telDataShow(allPhonesData) {
     }
 }
 
+function telDataShow(allPhonesData) {
+    let dataPlace = document.getElementById("telData");
+    let selectedPhoneID = localStorage.getItem("selectedPhone");
 
+    if (!selectedPhoneID) {
+        console.error("No selected phone found in localStorage.");
+        return;
+    }
+
+    let selectedPhone = allPhonesData.find(item => item.PhoneID == selectedPhoneID);
+
+    if (selectedPhone) {
+        dataPlace.innerHTML = `
+            <div class="container">
+                <div class="row align-items-center">
+                    <div class="col-4 svg-container">
+                        <object id="mySvg" data="Untitled-1.svg" type="image/svg+xml"></object>
+                    </div>
+                    <div class="col-md-8 table-container">
+                        <table class="table table-striped table-bordered text-center">
+                            <thead>
+                                <tr>
+                                    <th>Név</th>
+                                    <th>${selectedPhone.PhoneNev}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr><td colspan="2"><strong>CPU:</strong></td></tr>
+                                <tr><td>Név</td><td>${selectedPhone.CPUNev}</td></tr>
+                                <tr><td>Antutu pontszám</td><td>${selectedPhone.CPUAntutu}</td></tr>
+                                <tr><td>Max Órajel</td><td>${selectedPhone.CPUMaxOrajel} GHz</td></tr>
+                                <tr><td>Magok száma</td><td>${selectedPhone.CPUMagokSzama}</td></tr>
+                                <tr><td>Gyártási technológia</td><td>${selectedPhone.CPUGyartasiTechnologia} nm</td></tr>
+                                <tr><td colspan="2"><strong>Kijelző</strong></td></tr>
+                                <tr><td>Típusa</td><td>${selectedPhone.KijelzoTipusa}</td></tr>
+                                <tr><td>Felbontás</td><td>${selectedPhone.KijelzoFelbontasMagassag} x ${selectedPhone.KijelzoFelbontasSzelesseg} px</td></tr>
+                                <tr><td>Mérete</td><td>${selectedPhone.KijelzoMerete}”</td></tr>
+                                <tr><td>Frissítési ráta</td><td>${selectedPhone.KijelzoFrissitesiRata} Hz</td></tr>
+                                <tr><td>Max fényerő</td><td>${selectedPhone.KijelzoMaxFenyero} nit</td></tr>
+                                <tr><td>Élessége/Képpontsűrűség</td><td>${selectedPhone.KijelzoElesseg} ppi</td></tr>
+                                <tr><td colspan="2"><strong>Csatlakoztathatóság</strong></td></tr>
+                                <tr><td>Wi-Fi</td><td>${selectedPhone.CsatlakoztathatosagWifi}</td></tr>
+                                <tr><td>Bluetooth</td><td>${selectedPhone.CsatlakoztathatosagBluetooth}</td></tr>
+                                <tr><td>Mobilhálózat</td><td>${selectedPhone.CsatlakoztathatosagMobilhalozat}</td></tr>
+                                <tr><td>Dual SIM</td><td>${selectedPhone.CsatlakoztathatosagDualSim}</td></tr>
+                                <tr><td>E-SIM</td><td>${selectedPhone.CsatlakoztathatosagESim}</td></tr>
+                                <tr><td>NFC</td><td>${selectedPhone.CsatlakoztathatosagNfc}</td></tr>
+                                <tr><td>Töltő típusa</td><td>${selectedPhone.ToltoTipus}</td></tr>
+                                <tr><td>Csatlakozó gyorsasága</td><td>${selectedPhone.CsatlakoztathatosagCsatlakozoGyorsasaga}</td></tr>
+                                <tr><td>3,5mm jack</td><td>${selectedPhone.CsatlakoztathatosagJack}</td></tr>
+                                <tr><td colspan="2"><strong>Szenzorok/Érzékelők:</strong></td></tr>
+                                <tr><td>Ujjlenyomat-olvasó</td><td>${selectedPhone.SzenzorokUjjlenyomatHely}, ${selectedPhone.SzenzorokUjjlenyomatTipus}</td></tr>
+                                <tr><td>Infravörös</td><td>${selectedPhone.SzenzorokInfravoros}</td></tr>
+                                <tr><td colspan="2"><strong>RAM/Tárhely</strong></td></tr>
+                                <tr><td>RAM mennyisége</td><td>${selectedPhone.RamMennyiseg}GB</td></tr>
+                                <tr><td>RAM sebesség</td><td>${selectedPhone.RamSebesseg}</td></tr>
+                                <tr><td>Tárhely mennyisége</td><td>${selectedPhone.StorageMennyiseg}GB</td></tr>
+                                <tr><td>Tárhely sebesség</td><td>${selectedPhone.StorageSebesseg}</td></tr>
+                                <tr><td colspan="2"><strong>Akkumulátor & Töltés</strong></td></tr>
+                                <tr><td>Akkumulátor kapacitása</td><td>${selectedPhone.AkkumulatorKapacitas}mAh</td></tr>
+                                <tr><td>Akkumulátor típusa</td><td>${selectedPhone.AkkumulatorTipusa}</td></tr>
+                                <tr><td>Töltő típusa</td><td>${selectedPhone.ToltoTipus}</td></tr>
+                                <tr><td>Vezetékes töltés max sebessége</td><td>${selectedPhone.ToltoVezetekes}W</td></tr>
+                                <tr><td>Vezeték nélküli töltés max sebessége</td><td>${selectedPhone.ToltoVezeteknelkuli}W</td></tr>
+                                <tr><td colspan="2"><strong>Kamera</strong></td></tr>
+                                <tr><td>Kamera neve</td><td>${selectedPhone.KameraNev}</td></tr>
+                                <tr><td>Kamera felbontása</td><td>${selectedPhone.KameraFelbontas}MP</td></tr>
+                                <tr><td>Kamera rekeszértéke</td><td>${selectedPhone.KameraRekeszertek}</td></tr>
+                                <tr><td>Fókusztávolság</td><td>${selectedPhone.KameraFokusztavolsag}mm</td></tr>
+                                <tr><td>Optikai képstabilizátor (OIS)</td><td>${selectedPhone.KameraOptikaiKepStabilizator}</td></tr>
+                                <tr><td colspan="2"><strong>Test/Ház/Külső</strong></td></tr>
+                                <tr><td>Magasság</td><td>${selectedPhone.TestMagassag} mm</td></tr>
+                                <tr><td>Szélesség</td><td>${selectedPhone.TestSzelesseg} mm</td></tr>
+                                <tr><td>Vastagság</td><td>${selectedPhone.TestVastagsag} mm</td></tr>
+                                <tr><td>Vízállóság</td><td>${selectedPhone.TestVizalossag}</td></tr>
+                                <tr><td>Hátlap anyaga</td><td>${selectedPhone.TestHatlapAnyaga}</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `;
+    } else {
+        console.error("No phone found with the given ID.");
+    }
+}
 
 // A carousel váltása
 function changeCarousel(direction) {

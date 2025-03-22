@@ -21,8 +21,12 @@
         <div class="col-12">
             <div id="navbar">
                 <div id="fullLogo">
-                    <div><img id="logo" src="./Images/ImagePhoneScoutLogo.png" alt="logo" id=""></div>
-                    <div id="title">
+                    <a href="./index.html" style="text-decoration: none;">
+                        <div><img id="logo" src="./Images/ImagePhoneScoutLogo.png" alt="logo"></div>
+
+                    </a>
+                    
+                    <div id="title" onclick="location.href='./index.html'" style="cursor: pointer;">
                         <div id="title1">Phone</div>
                         <div id="title2">Scout</div>
                     </div>
@@ -67,7 +71,8 @@
                             </ul>
                         </div>
                         <div id="loginText" style="display: block;">
-                            <a href="./login_register/login.html" id="userName" style="text-decoration: none;">Bejelentkezés</a>
+                            <a href="./login_register/login.html" id="userName"
+                                style="text-decoration: none;">Bejelentkezés</a>
                         </div>
                     </div>
 
@@ -78,61 +83,62 @@
         </div>
 
 
-<div class="">
-        <div class="row category-row">
-            <class class="col-1"></class>
-            <class class="col-3"><button id="newArrivalsBtn" class="category-btn">Újdonságok</button>
-                <button id="popularBtn" class="category-btn">Legnépszerűbbek</button>
-            </class>
-        </div>
-
-        <div class="row">
-            <div class="col-1">
-                <button onclick="changeCarousel(-1)" class="carouselButton"><i
-                        class="fa-solid fa-arrow-left"></i></button>
+        <div class="">
+            <div class="row category-row">
+                <class class="col-1"></class>
+                <class class="col-3"><button id="newArrivalsBtn" class="category-btn">Újdonságok</button>
+                    <button id="popularBtn" class="category-btn">Legnépszerűbbek</button>
+                </class>
             </div>
-            <div class="col-10">
-                <div id="contentRow" class="contentRow">
 
+            <div class="row">
+                <div class="col-1">
+                    <button onclick="changeCarousel(-1)" class="carouselButton"><i
+                            class="fa-solid fa-arrow-left"></i></button>
+                </div>
+                <div class="col-10">
+                    <div id="contentRow" class="contentRow">
+
+                    </div>
+                </div>
+                <div class="col-1">
+                    <button onclick="changeCarousel(1)" class="carouselButton"><i
+                            class="fa-solid fa-arrow-right"></i></button>
                 </div>
             </div>
-            <div class="col-1">
-                <button onclick="changeCarousel(1)" class="carouselButton"><i
-                        class="fa-solid fa-arrow-right"></i></button>
+
+
+            <div class="hr">
+                <hr size="5">
             </div>
-        </div>
 
-
-        <div class="hr">
-            <hr size="5">
-        </div>
-
-        <div class="container service-section">
-            <div class="row align-items-center">
-                <div class="col-lg-6 service-text">
-                    <h2>Gyors és Megbízható Szerviz</h2>
-                    <p>
-                        Meghibásodott a telefonod? Ne aggódj! Nálunk gyors és szakszerű javítást kapsz,
-                        hogy minél hamarabb újra használhasd a készüléked. Tapasztalt szakembereink és
-                        prémium minőségű alkatrészeink garantálják a hosszú távú megbízhatóságot.
-                    </p>
-                    <p>
-                        Miért válassz minket?
-                    <ul>
-                        <li>Gyors javítás, akár néhány órán belül</li>
-                        <li>Kedvező árak és átlátható költségek</li>
-                        <li>Eredeti vagy prémium minőségű alkatrészek</li>
-                        <li>Garancia minden javításra</li>
-                    </ul>
-                    </p>
-                    <button class="btn btn-primary service-btn">Irány a <strong>szervíz</strong> oldal</button>
-                </div>
-                <div class="col-lg-6 service-image">
-                    <img loading="lazy" src="./Images/telefonservice.png" alt="Telefon Szervíz" class="rounded-image">
+            <div class="container service-section">
+                <div class="row align-items-center">
+                    <div class="col-lg-6 service-text">
+                        <h2>Gyors és Megbízható Szerviz</h2>
+                        <p>
+                            Meghibásodott a telefonod? Ne aggódj! Nálunk gyors és szakszerű javítást kapsz,
+                            hogy minél hamarabb újra használhasd a készüléked. Tapasztalt szakembereink és
+                            prémium minőségű alkatrészeink garantálják a hosszú távú megbízhatóságot.
+                        </p>
+                        <p>
+                            Miért válassz minket?
+                        <ul>
+                            <li>Gyors javítás, akár néhány órán belül</li>
+                            <li>Kedvező árak és átlátható költségek</li>
+                            <li>Eredeti vagy prémium minőségű alkatrészek</li>
+                            <li>Garancia minden javításra</li>
+                        </ul>
+                        </p>
+                        <button class="btn btn-primary service-btn">Irány a <strong>szervíz</strong> oldal</button>
+                    </div>
+                    <div class="col-lg-6 service-image">
+                        <img loading="lazy" src="./Images/telefonservice.png" alt="Telefon Szervíz"
+                            class="rounded-image">
+                    </div>
                 </div>
             </div>
         </div>
-</div>
         <footer>
             <h3>Partnereink</h3>
             <div class="partner-logos">
