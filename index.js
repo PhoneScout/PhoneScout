@@ -353,9 +353,12 @@ displayEventCard();
 
 async function register() {
     const username = document.getElementById("registerUsername").value;
+    const nev = document.getElementById("registerNev").value;
     const email = document.getElementById("registerEmail").value;
     const password = document.getElementById("registerPassword").value;
     const passwordFix = document.getElementById("registerPasswordAgain").value;
+    const address = document.getElementById("registerAddress").value;
+    const phoneNumber = document.getElementById("registerPhoneNU").value;
 
     if (password == passwordFix) {
         try {
