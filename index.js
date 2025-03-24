@@ -170,14 +170,14 @@ function telDataShow(allPhonesData) {
 function telDataShow(allPhonesData) {
     let dataPlace = document.getElementById("telData");
     let selectedPhoneID = localStorage.getItem("selectedPhone");
-
+    console.log(selectedPhoneID)
     if (!selectedPhoneID) {
         console.error("No selected phone found in localStorage.");
         return;
     }
 
-    let selectedPhone = allPhonesData.find(item => item.PhoneID == selectedPhoneID);
-
+    let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID);
+    console.log(selectedPhone)
     if (selectedPhone) {
         dataPlace.innerHTML = `
             <div class="container">
@@ -190,12 +190,12 @@ function telDataShow(allPhonesData) {
                             <thead>
                                 <tr>
                                     <th>Név</th>
-                                    <th>${selectedPhone.PhoneNev}</th>
+                                    <th>${selectedPhone.phoneNev}</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr><td colspan="2"><strong>CPU:</strong></td></tr>
-                                <tr><td>Név</td><td>${selectedPhone.CPUNev}</td></tr>
+                                <tr><td>Név</td><td>${selectedPhone.cpuNev}</td></tr>
                                 <tr><td>Antutu pontszám</td><td>${selectedPhone.CPUAntutu}</td></tr>
                                 <tr><td>Max Órajel</td><td>${selectedPhone.CPUMaxOrajel} GHz</td></tr>
                                 <tr><td>Magok száma</td><td>${selectedPhone.CPUMagokSzama}</td></tr>
