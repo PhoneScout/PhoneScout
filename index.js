@@ -140,13 +140,13 @@ function telDataShow(allPhonesData) {
     let selectedPhone = allPhonesData.find(item => item.id == selectedPhoneID);
 
     if (selectedPhone) {
-        const phoneName = selectedPhone.name;
+        const phoneName = selectedPhone.phoneNev;
         const phoneStock = selectedPhone.inStore === "van" ? "Raktáron" : "Nincs raktáron";
         const phonePrice = `${selectedPhone.price} Ft`;
 
         dataPlace.innerHTML = `
                 <div class="phoneName" id="showRequestedDataName">
-                    ${phoneName}
+                ${selectedPhone.cpuNev}
                 </div>
                 <br>
                 <div class="phoneStock">
@@ -168,7 +168,7 @@ function telDataShow(allPhonesData) {
 }
 
 function telDataShow(allPhonesData) {
-    let dataPlace = document.getElementById("telData");
+    let dataPlace = document.getElementById("telDataShowTable");
     let selectedPhoneID = localStorage.getItem("selectedPhone");
     console.log(selectedPhoneID)
     if (!selectedPhoneID) {
@@ -180,73 +180,64 @@ function telDataShow(allPhonesData) {
     console.log(selectedPhone)
     if (selectedPhone) {
         dataPlace.innerHTML = `
-            <div class="container">
                 <div class="row align-items-center">
-                    <div class="col-4 svg-container">
-                        <object id="mySvg" data="Untitled-1.svg" type="image/svg+xml"></object>
-                    </div>
-                    <div class="col-md-8 table-container">
                         <table class="table table-striped table-bordered text-center">
                             <thead>
                                 <tr>
-                                    <th>Név</th>
-                                    <th>${selectedPhone.phoneNev}</th>
+                                    <th colspan="2">${selectedPhone.phoneNev} telefon adatai</th>
                                 </tr>
-                            </thead>
                             <tbody>
-                                <tr><td colspan="2"><strong>CPU:</strong></td></tr>
+                                <tr><td colspan="2"><strong>CPU</strong></td></tr>
                                 <tr><td>Név</td><td>${selectedPhone.cpuNev}</td></tr>
-                                <tr><td>Antutu pontszám</td><td>${selectedPhone.CPUAntutu}</td></tr>
-                                <tr><td>Max Órajel</td><td>${selectedPhone.CPUMaxOrajel} GHz</td></tr>
-                                <tr><td>Magok száma</td><td>${selectedPhone.CPUMagokSzama}</td></tr>
-                                <tr><td>Gyártási technológia</td><td>${selectedPhone.CPUGyartasiTechnologia} nm</td></tr>
+                                <tr><td>Antutu pontszám</td><td>${selectedPhone.cpuAntutu}</td></tr>
+                                <tr><td>Max Órajel</td><td>${selectedPhone.cpuMaxOrajel} GHz</td></tr>
+                                <tr><td>Magok száma</td><td>${selectedPhone.cpuMagokSzama}</td></tr>
+                                <tr><td>Gyártási technológia</td><td>${selectedPhone.cpuGyartasiTechnologia} nm</td></tr>
                                 <tr><td colspan="2"><strong>Kijelző</strong></td></tr>
-                                <tr><td>Típusa</td><td>${selectedPhone.KijelzoTipusa}</td></tr>
-                                <tr><td>Felbontás</td><td>${selectedPhone.KijelzoFelbontasMagassag} x ${selectedPhone.KijelzoFelbontasSzelesseg} px</td></tr>
-                                <tr><td>Mérete</td><td>${selectedPhone.KijelzoMerete}”</td></tr>
-                                <tr><td>Frissítési ráta</td><td>${selectedPhone.KijelzoFrissitesiRata} Hz</td></tr>
-                                <tr><td>Max fényerő</td><td>${selectedPhone.KijelzoMaxFenyero} nit</td></tr>
-                                <tr><td>Élessége/Képpontsűrűség</td><td>${selectedPhone.KijelzoElesseg} ppi</td></tr>
+                                <tr><td>Típusa</td><td>${selectedPhone.kijelzoTipusa}</td></tr>
+                                <tr><td>Felbontás</td><td>${selectedPhone.kijelzoFelbontasMagassag} x ${selectedPhone.kijelzoFelbontasSzelesseg} px</td></tr>
+                                <tr><td>Mérete</td><td>${selectedPhone.kijelzoMerete}”</td></tr>
+                                <tr><td>Frissítési ráta</td><td>${selectedPhone.kijelzoFrissitesiRata} Hz</td></tr>
+                                <tr><td>Max fényerő</td><td>${selectedPhone.kijelzoMaxFenyero} nit</td></tr>
+                                <tr><td>Élessége/Képpontsűrűség</td><td>${selectedPhone.kijelzoElesseg} ppi</td></tr>
                                 <tr><td colspan="2"><strong>Csatlakoztathatóság</strong></td></tr>
-                                <tr><td>Wi-Fi</td><td>${selectedPhone.CsatlakoztathatosagWifi}</td></tr>
-                                <tr><td>Bluetooth</td><td>${selectedPhone.CsatlakoztathatosagBluetooth}</td></tr>
-                                <tr><td>Mobilhálózat</td><td>${selectedPhone.CsatlakoztathatosagMobilhalozat}</td></tr>
-                                <tr><td>Dual SIM</td><td>${selectedPhone.CsatlakoztathatosagDualSim}</td></tr>
-                                <tr><td>E-SIM</td><td>${selectedPhone.CsatlakoztathatosagESim}</td></tr>
-                                <tr><td>NFC</td><td>${selectedPhone.CsatlakoztathatosagNfc}</td></tr>
-                                <tr><td>Töltő típusa</td><td>${selectedPhone.ToltoTipus}</td></tr>
-                                <tr><td>Csatlakozó gyorsasága</td><td>${selectedPhone.CsatlakoztathatosagCsatlakozoGyorsasaga}</td></tr>
-                                <tr><td>3,5mm jack</td><td>${selectedPhone.CsatlakoztathatosagJack}</td></tr>
+                                <tr><td>Wi-Fi</td><td>Wifi ${selectedPhone.csatlakoztathatosagWifi}</td></tr>
+                                <tr><td>Bluetooth</td><td>Bluetooth ${selectedPhone.csatlakoztathatosagBluetooth}</td></tr>
+                                <tr><td>Mobilhálózat</td><td>${selectedPhone.csatlakoztathatosagMobilhalozat}</td></tr>
+                                <tr><td>Dual SIM</td><td>${selectedPhone.csatlakoztathatosagDualSim}</td></tr>
+                                <tr><td>E-SIM</td><td>${selectedPhone.csatlakoztathatosagESim}</td></tr>
+                                <tr><td>NFC</td><td>${selectedPhone.csatlakoztathatosagNfc}</td></tr>
+                                <tr><td>Töltő típusa</td><td>${selectedPhone.toltoTipus}</td></tr>
+                                <tr><td>Csatlakozó gyorsasága</td><td>${selectedPhone.csatlakoztathatosagCsatlakozoGyorsasaga}</td></tr>
+                                <tr><td>3,5mm jack</td><td>${selectedPhone.csatlakoztathatosagJackCsatlakozo}</td></tr>
                                 <tr><td colspan="2"><strong>Szenzorok/Érzékelők:</strong></td></tr>
-                                <tr><td>Ujjlenyomat-olvasó</td><td>${selectedPhone.SzenzorokUjjlenyomatHely}, ${selectedPhone.SzenzorokUjjlenyomatTipus}</td></tr>
-                                <tr><td>Infravörös</td><td>${selectedPhone.SzenzorokInfravoros}</td></tr>
+                                <tr><td>Ujjlenyomat-olvasó helye és típusa</td><td>${selectedPhone.szenzorokUjjlenyomatHely}, ${selectedPhone.szenzorokUjjlenyomatTipus}</td></tr>
+                                <tr><td>Infravörös</td><td>${selectedPhone.szenzorokInfravoros}</td></tr>
                                 <tr><td colspan="2"><strong>RAM/Tárhely</strong></td></tr>
-                                <tr><td>RAM mennyisége</td><td>${selectedPhone.RamMennyiseg}GB</td></tr>
-                                <tr><td>RAM sebesség</td><td>${selectedPhone.RamSebesseg}</td></tr>
-                                <tr><td>Tárhely mennyisége</td><td>${selectedPhone.StorageMennyiseg}GB</td></tr>
-                                <tr><td>Tárhely sebesség</td><td>${selectedPhone.StorageSebesseg}</td></tr>
+                                <tr><td>RAM/tárhely mennyisége</td><td>${selectedPhone.ramMennyiseg}/${selectedPhone.storageMennyiseg}GB</td></tr>
+                                <tr><td>RAM sebesség</td><td>${selectedPhone.ramSebesseg}</td></tr>
+                                <tr><td>Tárhely sebesség</td><td>${selectedPhone.storageSebesseg}</td></tr>
                                 <tr><td colspan="2"><strong>Akkumulátor & Töltés</strong></td></tr>
-                                <tr><td>Akkumulátor kapacitása</td><td>${selectedPhone.AkkumulatorKapacitas}mAh</td></tr>
-                                <tr><td>Akkumulátor típusa</td><td>${selectedPhone.AkkumulatorTipusa}</td></tr>
-                                <tr><td>Töltő típusa</td><td>${selectedPhone.ToltoTipus}</td></tr>
-                                <tr><td>Vezetékes töltés max sebessége</td><td>${selectedPhone.ToltoVezetekes}W</td></tr>
-                                <tr><td>Vezeték nélküli töltés max sebessége</td><td>${selectedPhone.ToltoVezeteknelkuli}W</td></tr>
+                                <tr><td>Akkumulátor kapacitása</td><td>${selectedPhone.akkumulatorKapacitas} mAh</td></tr>
+                                <tr><td>Akkumulátor típusa</td><td>${selectedPhone.akkumulatorTipusa}</td></tr>
+                                <tr><td>Töltő típusa</td><td>${selectedPhone.toltoTipus}</td></tr>
+                                <tr><td>Vezetékes töltés max sebessége</td><td>${selectedPhone.toltoVezetekes}W</td></tr>
+                                <tr><td>Vezeték nélküli töltés max sebessége</td><td>${selectedPhone.toltoVezeteknelkuli}W</td></tr>
                                 <tr><td colspan="2"><strong>Kamera</strong></td></tr>
-                                <tr><td>Kamera neve</td><td>${selectedPhone.KameraNev}</td></tr>
-                                <tr><td>Kamera felbontása</td><td>${selectedPhone.KameraFelbontas}MP</td></tr>
-                                <tr><td>Kamera rekeszértéke</td><td>${selectedPhone.KameraRekeszertek}</td></tr>
-                                <tr><td>Fókusztávolság</td><td>${selectedPhone.KameraFokusztavolsag}mm</td></tr>
-                                <tr><td>Optikai képstabilizátor (OIS)</td><td>${selectedPhone.KameraOptikaiKepStabilizator}</td></tr>
+                                <tr><td>Kamera neve</td><td>${selectedPhone.kameraNev}</td></tr>
+                                <tr><td>Kamera felbontása</td><td>${selectedPhone.kameraFelbontas}MP</td></tr>
+                                <tr><td>Kamera rekeszértéke</td><td>${selectedPhone.kameraRekeszertek}</td></tr>
+                                <tr><td>Fókusztávolság</td><td>${selectedPhone.kameraFokusztavolsag}mm</td></tr>
+                                <tr><td>Optikai képstabilizátor (OIS)</td><td>${selectedPhone.kameraOptikaiKepStabilizator}</td></tr>
                                 <tr><td colspan="2"><strong>Test/Ház/Külső</strong></td></tr>
-                                <tr><td>Magasság</td><td>${selectedPhone.TestMagassag} mm</td></tr>
-                                <tr><td>Szélesség</td><td>${selectedPhone.TestSzelesseg} mm</td></tr>
-                                <tr><td>Vastagság</td><td>${selectedPhone.TestVastagsag} mm</td></tr>
-                                <tr><td>Vízállóság</td><td>${selectedPhone.TestVizalossag}</td></tr>
-                                <tr><td>Hátlap anyaga</td><td>${selectedPhone.TestHatlapAnyaga}</td></tr>
+                                <tr><td>Magasság</td><td>${selectedPhone.testMagassag} mm</td></tr>
+                                <tr><td>Szélesség</td><td>${selectedPhone.testSzelesseg} mm</td></tr>
+                                <tr><td>Vastagság</td><td>${selectedPhone.testVastagsag} mm</td></tr>
+                                <tr><td>Vízállóság</td><td>${selectedPhone.testVizalossag}</td></tr>
+                                <tr><td>Hátlap anyaga</td><td>${selectedPhone.testHatlapAnyaga}</td></tr>
                             </tbody>
                         </table>
-                    </div>
-                </div>
+                    </div>               
             </div>
         `;
     } else {
@@ -529,7 +520,7 @@ function PhonePOST() {
         KameraRekeszertek: document.getElementById("Aperture").value || "",
         KameraFokusztavolsag: document.getElementById("FocalLength").value || 0,
         KameraOptikaiKepStabilizator: document.getElementById("OIS").value || "nincs",
-            
+
         TestMagassag: document.getElementById("Height").value || 0.0,
         TestSzelesseg: document.getElementById("Width").value || 0.0,
         TestVastagsag: document.getElementById("Thickness").value || 0.0,
