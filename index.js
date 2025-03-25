@@ -37,7 +37,7 @@ function displayPhoneCards() {
 
         const phoneName = document.createElement("div");
         phoneName.classList.add("phoneName");
-        phoneName.textContent = phone.name;
+        phoneName.textContent = phone.phoneNev;
 
         // Dinamikusan csökkentjük a betűméretet, ha túl hosszú a név
         if (phoneName.textContent.length > 20) {
@@ -100,7 +100,7 @@ function getPhoneDatas() {
 }
 getPhoneDatas();
 
-function telDataShow(allPhonesData) {
+/*function telDataShow(allPhonesData) {
     let dataPlace = document.getElementById("telData");
     let selectedPhoneID = localStorage.getItem("selectedPhone");
 
@@ -117,18 +117,19 @@ function telDataShow(allPhonesData) {
         console.error("No phone found with the given ID.");
     }
 }
-
+*/
 window.onload = function () {
     // Betöltéskor hívja meg a telefon adatait
     fetch(allPhonesURL)
         .then(response => response.json())
         .then(data => {
             telDataShow(data);  // Hívja meg a funkciót, miután a DOM betöltődött
+            telDataShowMain(data)
         })
         .catch(error => console.error("Hiba a telefon adatok betöltésekor:", error));
 };
 
-function telDataShow(allPhonesData) {
+function telDataShowMain(allPhonesData) {
     let dataPlace = document.getElementById("telData");
     let selectedPhoneID = localStorage.getItem("selectedPhone");
 
@@ -137,7 +138,8 @@ function telDataShow(allPhonesData) {
         return;
     }
 
-    let selectedPhone = allPhonesData.find(item => item.id == selectedPhoneID);
+    let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID);
+    console.log(selectedPhone)
 
     if (selectedPhone) {
         const phoneName = selectedPhone.phoneNev;
@@ -146,7 +148,7 @@ function telDataShow(allPhonesData) {
 
         dataPlace.innerHTML = `
                 <div class="phoneName" id="showRequestedDataName">
-                ${selectedPhone.cpuNev}
+                ${phoneName}
                 </div>
                 <br>
                 <div class="phoneStock">
