@@ -1,0 +1,607 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "PhonesAPI3",
+    "version": "1.0"
+  },
+  "paths": {
+    "/api/allPhones": {
+      "get": {
+        "tags": [
+          "allPhones"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/allPhones"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/allPhones"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/allPhones"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/allPhones/phonePost": {
+      "post": {
+        "tags": [
+          "allPhones"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/allPhones"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/allPhones"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/allPhones"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/register": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUser"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUser"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUser"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUser"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginUser"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/auth/protected-resource": {
+      "get": {
+        "tags": [
+          "Auth"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/Phone": {
+      "get": {
+        "tags": [
+          "Phone"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Phone"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Phone"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Phone"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/Phone/phonePost": {
+      "post": {
+        "tags": [
+          "Phone"
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Phone"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Phone"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/Phone"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/api/test": {
+      "get": {
+        "tags": [
+          "test"
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Phone"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Phone"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Phone"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/WeatherForecast": {
+      "get": {
+        "tags": [
+          "WeatherForecast"
+        ],
+        "operationId": "GetWeatherForecast",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "text/plain": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              },
+              "text/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WeatherForecast"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "DateOnly": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "month": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "day": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "dayOfWeek": {
+            "$ref": "#/components/schemas/DayOfWeek"
+          },
+          "dayOfYear": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "dayNumber": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "DayOfWeek": {
+        "enum": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "type": "integer",
+        "format": "int32"
+      },
+      "LoginUser": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "Phone": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "price": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "inStore": {
+            "type": "string",
+            "nullable": true
+          },
+          "releaseDate": {
+            "$ref": "#/components/schemas/DateOnly"
+          }
+        },
+        "additionalProperties": false
+      },
+      "RegisterUser": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "nullable": true
+          },
+          "email": {
+            "type": "string",
+            "nullable": true
+          },
+          "password": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "WeatherForecast": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "$ref": "#/components/schemas/DateOnly"
+          },
+          "temperatureC": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "temperatureF": {
+            "type": "integer",
+            "format": "int32",
+            "readOnly": true
+          },
+          "summary": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "allPhones": {
+        "type": "object",
+        "properties": {
+          "phoneID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "phoneNev": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpuNev": {
+            "type": "string",
+            "nullable": true
+          },
+          "cpuAntutu": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cpuMaxOrajel": {
+            "type": "number",
+            "format": "double"
+          },
+          "cpuMagokSzama": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "cpuGyartasiTechnologia": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kijelzoTipusa": {
+            "type": "string",
+            "nullable": true
+          },
+          "kijelzoFelbontasMagassag": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kijelzoFelbontasSzelesseg": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kijelzoMerete": {
+            "type": "number",
+            "format": "double"
+          },
+          "kijelzoFrissitesiRata": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kijelzoMaxFenyero": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kijelzoElesseg": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "csatlakoztathatosagWifi": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "csatlakoztathatosagBluetooth": {
+            "type": "number",
+            "format": "double"
+          },
+          "csatlakoztathatosagMobilhalozat": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "csatlakoztathatosagDualSim": {
+            "type": "string",
+            "nullable": true
+          },
+          "csatlakoztathatosagESim": {
+            "type": "string",
+            "nullable": true
+          },
+          "csatlakoztathatosagNfc": {
+            "type": "string",
+            "nullable": true
+          },
+          "csatlakoztathatosagCsatlakozoGyorsasaga": {
+            "type": "number",
+            "format": "double"
+          },
+          "csatlakoztathatosagJackCsatlakozo": {
+            "type": "string",
+            "nullable": true
+          },
+          "szenzorokUjjlenyomatHely": {
+            "type": "string",
+            "nullable": true
+          },
+          "szenzorokUjjlenyomatTipus": {
+            "type": "string",
+            "nullable": true
+          },
+          "szenzorokInfravoros": {
+            "type": "string",
+            "nullable": true
+          },
+          "ramMennyiseg": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "storageMennyiseg": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "ramSebesseg": {
+            "type": "string",
+            "nullable": true
+          },
+          "storageSebesseg": {
+            "type": "string",
+            "nullable": true
+          },
+          "akkumulatorKapacitas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "akkumulatorTipusa": {
+            "type": "string",
+            "nullable": true
+          },
+          "toltoTipus": {
+            "type": "string",
+            "nullable": true
+          },
+          "toltoVezetekes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "toltoVezeteknelkuli": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kameraNev": {
+            "type": "string",
+            "nullable": true
+          },
+          "kameraFelbontas": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kameraRekeszertek": {
+            "type": "string",
+            "nullable": true
+          },
+          "kameraFokusztavolsag": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "kameraOptikaiKepStabilizator": {
+            "type": "string",
+            "nullable": true
+          },
+          "testMagassag": {
+            "type": "number",
+            "format": "double"
+          },
+          "testSzelesseg": {
+            "type": "number",
+            "format": "double"
+          },
+          "testVastagsag": {
+            "type": "number",
+            "format": "double"
+          },
+          "testVizalossag": {
+            "type": "string",
+            "nullable": true
+          },
+          "testHatlapAnyaga": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  }
+}
