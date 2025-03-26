@@ -30,7 +30,7 @@ h2 {
     margin-bottom: 15px;
 }
 
-input[type="text"], input[type="password"], input[type="email"] {
+input[type="text"], input[type="password"], input[type="email"], input[type="tel"] {
     width: 100%;
     padding: 10px;
     margin: 5px 0;
