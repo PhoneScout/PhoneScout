@@ -1,0 +1,6 @@
+@PhonesAPI3_HostAddress = http://localhost:5287
+
+GET {{PhonesAPI3_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
