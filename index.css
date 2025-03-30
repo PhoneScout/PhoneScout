@@ -90,11 +90,6 @@ br{
     color: rgb(0, 0, 0);
 }
 #userIcon {
-    margin-left: 10% ;
-    color: rgb(255, 255, 255);
-    background-color: rgb(0, 0, 0);
-    padding: 5%;
-    border-radius: 50px;
 }
 
 
@@ -107,7 +102,7 @@ br{
   
   .phoneCard {
     margin-top: 10%;
-    width: 250px;       
+    width: 250px;     
     height: auto;      
     border: 2px solid #07b7e4;
     border-radius: 25px;
@@ -316,6 +311,7 @@ br{
     cursor: pointer;
     font-weight: bold;
     text-transform: uppercase;
+    color: white;
 }
 .service-btn .btn-link {
     text-decoration: none;

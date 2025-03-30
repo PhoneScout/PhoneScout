@@ -27,21 +27,23 @@ function displayPhoneCards() {
             window.location.href = "./telefonoldala/index.html"; // This will load the new page.
         };
 
-
         phoneCard.style.gridColumn = `${2 + index * 2} / span 2`;
 
         const phoneImage = document.createElement("img");
         phoneImage.classList.add("phoneImage");
         phoneImage.src = phone.imageUrl || "./Images/image 3.png";
-        phoneImage.loading = "lazy"
+        phoneImage.loading = "lazy";
 
         const phoneName = document.createElement("div");
         phoneName.classList.add("phoneName");
         phoneName.textContent = phone.phoneNev;
 
-        // Dinamikusan csökkentjük a betűméretet, ha túl hosszú a név
-        if (phoneName.textContent.length > 20) {
-            phoneName.style.fontSize = "150%"; // Csökkentett betűméret
+        if (phoneName.textContent.length > 8) {
+            phoneName.style.whiteSpace = "normal"; // Engedélyezzük a sortörést
+            phoneName.style.wordWrap = "break-word"; // Tördeljük a szavakat, ha szükséges
+        }
+        if (phoneName.textContent.length > 15) {
+            phoneName.style.fontSize = "200%";
         }
 
         const phonePrice = document.createElement("div");
@@ -59,24 +61,44 @@ function displayPhoneCards() {
         compareButton.classList.add("button");
         const compareImg = document.createElement("img");
         compareImg.src = "./Images/compare-removebg-preview 1.png";
-        compareImg.loading = "lazy"
+        compareImg.loading = "lazy";
         compareButton.appendChild(compareImg);
+
+        compareButton.onclick = function (event) {
+            event.stopPropagation(); // Prevent triggering the phoneCard click event
+            console.log(`Compare clicked for phone ID: ${phone.phoneID}`);
+            // Add your compare logic here
+        };
 
         const cartButton = document.createElement("div");
         cartButton.classList.add("button");
         const cartImg = document.createElement("img");
         cartImg.src = "./Images/cart-removebg-preview 1.png";
-        cartImg.loading = "lazy"
+        cartImg.loading = "lazy";
         cartButton.appendChild(cartImg);
+
+        cartButton.onclick = function (event) {
+            event.stopPropagation(); // Prevent triggering the phoneCard click event
+            console.log(`Add to cart clicked for phone ID: ${phone.phoneID}`);
+            
+            // Retrieve the existing cart from localStorage or initialize an empty object
+            let cart = JSON.parse(localStorage.getItem("cart")) || {};
+
+            // Increment the quantity for the phone ID, or set it to 1 if it doesn't exist
+            cart[phone.phoneID] = (cart[phone.phoneID] || 0) + 1;
+
+            // Save the updated cart back to localStorage
+            localStorage.setItem("cart", JSON.stringify(cart));
+            
+            console.log("Current cart:", cart);
+        };
 
         cardButtons.appendChild(compareButton);
         cardButtons.appendChild(cartButton);
 
         if (phone.inStore == "van") {
             phoneStock.style.color = "green";
-
         }
-
 
         phoneCard.appendChild(phoneImage);
         phoneCard.appendChild(phoneName);
