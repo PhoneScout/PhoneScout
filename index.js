@@ -484,6 +484,8 @@ document.addEventListener("DOMContentLoaded", showUsername);
 function PhonePOST() {
     const phoneDataPOST = {
         PhoneNev: document.getElementById("PhoneName").value || "",
+        GyartoNev: document.getElementById("ManufacturerName").value || "",
+        GyartoLink : document.getElementById("ManufacturerLink").value || "",
         cpuNev: document.getElementById("CpuName").value || "",
         antutu: document.getElementById("Antutu").value || 0,
         cpuMaxOrajel: document.getElementById("MaxClockspeed").value || 0.0,
@@ -508,9 +510,9 @@ function PhonePOST() {
         SzenzorokUjjlenyomatHely: document.getElementById("FingerprintSensorP").value || "",
         SzenzorokUjjlenyomatTipus: document.getElementById("FingerprintSensorT").value || "",
         SzenzorokInfravoros: document.getElementById("Infrared").value || "nincs",
-        RamMennyiseg: document.getElementById("RAMAmount").value || 0,
+        RamMennyiseg: document.getElementById("RAMAmount").value || "",
         RamSebesseg: document.getElementById("RAMSpeed").value || "",
-        StorageMennyiseg: document.getElementById("StorageAmount").value || 0,
+        StorageMennyiseg: document.getElementById("StorageAmount").value || "",
         StorageSebesseg: document.getElementById("StorageSpeed").value || "",
         AkkumulatorKapacitas: document.getElementById("BatteryCapacity").value || 0,
         AkkumulatorTipusa: document.getElementById("BatteryType").value || "",
@@ -528,6 +530,9 @@ function PhonePOST() {
         TestVastagsag: document.getElementById("Thickness").value || 0.0,
         TestVizalossag: document.getElementById("WaterResistance").value || "",
         TestHatlapAnyaga: document.getElementById("BackMaterial").value || "",
+
+        SzinNev: document.getElementById("ColorName").value || "",
+        SzinHex: document.getElementById("ColorHex").value || "",
 
     };
 
