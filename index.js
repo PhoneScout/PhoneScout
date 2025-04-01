@@ -168,23 +168,18 @@ function telDataShowMain(allPhonesData) {
         const phoneStock = selectedPhone.inStore === "van" ? "Raktáron" : "Nincs raktáron";
         const phonePrice = `${selectedPhone.price} Ft`;
 
-        dataPlace.innerHTML = `
-                <div class="phoneName" id="showRequestedDataName">
+        document.getElementById("telData").innerHTML = `
+            <div class="phoneName" id="showRequestedDataName">
                 ${phoneName}
-                </div>
-                <br>
-                <div class="phoneStock">
-                    ${phoneStock}
-                </div>
-                <br>
-                <div class="price">
-                    ${phonePrice}
-                </div>
-
-                <button class="phoneSiteButton phoneSiteCartButton">Kosárba rakom</button>
-                <br>
-                <button class="phoneSiteButton phoneSiteCompareButton">Összehasonlítás</button>
-            
+            </div>
+            <div class="phoneStock">
+                ${phoneStock}
+            </div>
+            <div class="price">
+                ${phonePrice}
+            </div>
+            <button class="phoneSiteButton phoneSiteCartButton">Kosárba rakom</button>
+            <button class="phoneSiteButton phoneSiteCompareButton">Összehasonlítás</button>
         `;
     } else {
         console.error("No phone found with the given ID.");
