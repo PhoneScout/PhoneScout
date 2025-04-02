@@ -178,6 +178,10 @@ br{
     margin-top: 7%;    
 }
 
+.button:active {
+    background-color: blueviolet;
+}
+
 .button {
     width: 60px;
     height: 60px;
