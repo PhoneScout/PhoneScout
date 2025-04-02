@@ -183,7 +183,7 @@ function telDataShow(allPhonesData) {
     if (selectedPhone) {
         dataPlace.innerHTML = `
                 <div class="row align-items-center">
-                        <table class="table table-striped table-bordered text-center">
+                        <table class="table table-striped table-bordered text-center" style="border: solid black 1px">
                             <thead>
                                 <tr>
                                     <th colspan="2">${selectedPhone.phoneNev} telefon adatai</th>
@@ -277,8 +277,6 @@ function selectColor(element) {
 
 
 function addSvgHoverEffect(svgId, elementId, tableClass) {
-
-    
     const svgObject = document.getElementById(svgId); // Az object elem ID-ja
 
     svgObject.addEventListener("load", function () {
@@ -288,12 +286,12 @@ function addSvgHoverEffect(svgId, elementId, tableClass) {
         const targetElement = svgDoc.getElementById(elementId);
         if (targetElement) {
             targetElement.addEventListener("mouseenter", function () {
-                targetElement.style.fill = "#00FF00"; // Zöld szín
+                targetElement.style.fill = "#38ec38dc"; // Zöld szín
 
                 // A táblázat sorok színezése
                 const tableRows = document.querySelectorAll(`.${tableClass}`);
                 tableRows.forEach(function(row) {
-                    row.style.backgroundColor = "#00FF00"; // Zöld háttér
+                    row.style.backgroundColor = "#38ec38bd"; // Zöld háttér
                 });
             });
 

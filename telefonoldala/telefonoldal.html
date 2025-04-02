@@ -25,8 +25,8 @@
                         <div><img id="logo" src="../Images/ImagePhoneScoutLogo.png" alt="logo"></div>
 
                     </a>
-
-                    <div id="title" onclick="location.href='../index.html'" style="cursor: pointer;">
+                    
+                    <div id="title" onclick="location.href='./index.html'" style="cursor: pointer;">
                         <div id="title1">Phone</div>
                         <div id="title2">Scout</div>
                     </div>
@@ -36,8 +36,11 @@
                     <div id="allPhones">Mind</div>
                     <div id="repair">Szerviz</div>
                     <div id="compare">Összehasonlítás</div>
-                     <a href="../kosar/kosar.html" style="text-decoration: none;">
+                    <a href="../kosar/kosar.html" style="text-decoration: none;">
                         <div id="cart">Kosár</div>
+                    </a>
+                    <a href="../telefonfeltoltes/telefonfeltoltes.html" style="text-decoration: none;">
+                        <div id="phoneUpload">Telefonfeltöltés (teszt)</div>
                     </a>
                 </div>
 
@@ -57,7 +60,7 @@
                                 aria-expanded="false">
                                 <div id="userChange">
                                     <div id="userName">Bejelentkezés</div>
-                                    <div id="userIcon"><i class="fa-solid fa-user"></i></div>
+                                    <div id="userIcon"><img src="../Images/doneUserIcon1.png" alt="" style="max-width: 80px; margin-left: 10px;"></i></div>
                                 </div>
                             </a>
                             <ul class="dropdown-menu" aria-labelledby="loginDropdown">
@@ -70,14 +73,14 @@
                             </ul>
                         </div>
                         <div id="loginText" style="display: block;">
-                            <a href="../login_register/login.html" style="text-decoration: none;">Bejelentkezés</a>
+                            <a class="userIcon" href="../login_register/login.html" id="userName"
+                                style="text-decoration: none;"><img  src="../Images/doneBejelentkezesIcon.png" alt="Bejelentkezés" style="max-width: 80px;"></a>
                         </div>
                     </div>
 
 
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -203,15 +206,14 @@
     
     <div class="row align-items-start">
        
-        <div class="col-4 svg-container">
-            <i class="fa-solid fa-arrow-down"></i>
-            <object id="mySvg" data="Untitled-1.svg" type="image/svg+xml"></object>
-        </div>
+        <div class="col-1"> </div>
         <div class="col-7">
             <div id="telDataShowTable"></div>
         </div>
-        <div class="col-1"> </div>
-        
+        <div class="col-4 svg-container">
+
+            <object id="mySvg" data="Untitled-1.svg" type="image/svg+xml"></object>
+        </div>
     </div>
     <div class="container">
         <div class="row align-items-center">

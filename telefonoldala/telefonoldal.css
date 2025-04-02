@@ -320,17 +320,14 @@
 
 .phoneName {
     font-size: 350%;
-    margin-right: 15%;
 }
 
 .phoneStock {
     color: red;
-    margin-right: 15%;
     font-size: 200%;
 }
 
 .price {
-    margin-right: 68%;
     font-size: 200%;
     font-weight: bold;
 }
@@ -442,10 +439,29 @@ br{
 
 #mySvg{
     margin-top: 5%;
+    display: block;
+}
+
+#mySvg:not([data]) {
+    display: none;
 }
 
 .svg-container{
     user-select: none;
+    position: sticky;
+    top: 10px; /* Tetszőleges távolság */
+    width: 30%;
+    z-index: 10;
+    right: 0;
+}
+
+.table-container {
+    height: 400px;
+    overflow-y: auto;
+}
+
+#phoneTable {
+    min-width: 600px;
 }
 
 .ramTárhelyOption{
@@ -486,4 +502,19 @@ br{
 .phoneSiteCompareButton {
     background-color: #f0f0f0;
     color: black;
+}
+
+.row {
+    display: flex;
+    justify-content: space-between;
+}
+
+@media (max-width: 768px) {
+    .svg-container {
+        width: 100%;
+    }
+
+    .col-8, .table-container {
+        width: 100%;
+    }
 }
