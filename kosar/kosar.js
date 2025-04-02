@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateTotalPrice(cartPhones) {
         const totalPrice = cartPhones.reduce((sum, phone) => {
             const quantity = cart[phone.phoneID] || 0;
-            return sum + phone.price * quantity;
+            return sum + phone.ar * quantity;
         }, 0);
 
         const totalPriceDiv = document.querySelector(".totalPrice");
@@ -63,7 +63,7 @@ document.addEventListener("DOMContentLoaded", function () {
                         <h3 style="margin: 0; font-size: 1.2em;">${phone.phoneNev}</h3>
                     </div>
                     <div class="phonePrice" style="flex: 2; text-align: center;">
-                        <p style="margin: 0; font-size: 1em;">${phone.price} Ft</p>
+                        <p style="margin: 0; font-size: 1em;">${phone.ar} Ft</p>
                     </div>
                     <div class="phoneQuantity" style="flex: 3; text-align: center; display: flex; align-items: center; justify-content: center;">
                         <button class="decreaseQuantity" style="margin-right: 10px;">-</button>

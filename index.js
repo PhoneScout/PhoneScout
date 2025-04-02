@@ -48,11 +48,11 @@ function displayPhoneCards() {
 
         const phonePrice = document.createElement("div");
         phonePrice.classList.add("phonePrice");
-        phonePrice.textContent = `${phone.price} Ft`;
+        phonePrice.textContent = `${phone.ar} Ft`;
 
         const phoneStock = document.createElement("div");
         phoneStock.classList.add("phoneStock");
-        phoneStock.textContent = phone.inStore === "van" ? "Raktáron" : "Nincs Raktáron";
+        phoneStock.textContent = phone.raktaron === "van" ? "Raktáron" : "Nincs Raktáron";
 
         const cardButtons = document.createElement("div");
         cardButtons.classList.add("cardButtons");
