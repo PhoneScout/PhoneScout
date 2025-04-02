@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhoneScout</title>
-    <link rel="stylesheet" href="index.css">
+    <link rel="stylesheet" href="../telefonoldala/telefonoldal.css">
     <script src="https://kit.fontawesome.com/40786368ae.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -184,21 +184,6 @@
                 Információk telefonról
             </div>
 
-            <script>
-                function selectColor(element) {
-                    document.querySelectorAll('.color-option').forEach(option => {
-                        option.style.border = '1px solid black';
-                    });
-                    element.style.border = '2px solid black';
-                }
-
-                function selectRamTárhely(element) {
-                    document.querySelectorAll('.ramTárhelyOption').forEach(option => {
-                        option.style.border = '1px solid black';
-                    });
-                    element.style.border = '2px solid black';
-                }
-            </script>
         </div>
 
         <div class="col-5 rightSide">
@@ -224,207 +209,7 @@
             <div id="telDataShowTable"></div>
         </div>
         <div class="col-1"> </div>
-        <!--
-            <div class="col-md-8 table-container">
-                <table class="table table-striped table-bordered text-center">
-                    <thead>
-                        <tr>
-                            <th>Név</th>
-                            <th>Xiaomi 13T</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td colspan="2"><strong>CPU:</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Név</td>
-                            <td>Mediatek Dimensity 8200 Ultra</td>
-                        </tr>
-                        <tr>
-                            <td>Antutu pontszám</td>
-                            <td>905 364</td>
-                        </tr>
-                        <tr>
-                            <td>Max Órajel</td>
-                            <td>3,1 GHz</td>
-                        </tr>
-                        <tr>
-                            <td>Magok száma</td>
-                            <td>8</td>
-                        </tr>
-                        <tr>
-                            <td>Gyártási technológia</td>
-                            <td>4nm</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><strong>Kijelző</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Típusa</td>
-                            <td>AMOLED</td>
-                        </tr>
-                        <tr>
-                            <td>Felbontás</td>
-                            <td>2712 x 1220 px</td>
-                        </tr>
-                        <tr>
-                            <td>Mérete</td>
-                            <td>6,67”</td>
-                        </tr>
-                        <tr>
-                            <td>Frissítési ráta</td>
-                            <td>144 Hz</td>
-                        </tr>
-                        <tr>
-                            <td>Max fényerő</td>
-                            <td>2600 nit</td>
-                        </tr>
-                        <tr>
-                            <td>Élessége/Képpontsűrűség</td>
-                            <td>466ppi</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><strong>Csatlakoztathatóság</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Wi-Fi</td>
-                            <td>6, 7</td>
-                        </tr>
-                        <tr>
-                            <td>Bluetooth</td>
-                            <td>5.3</td>
-                        </tr>
-                        <tr>
-                            <td>Mobilhálózat</td>
-                            <td>4G, 5G</td>
-                        </tr>
-                        <tr>
-                            <td>Dual SIM</td>
-                            <td>Van</td>
-                        </tr>
-                        <tr>
-                            <td>E-SIM</td>
-                            <td>Van</td>
-                        </tr>
-                        <tr>
-                            <td>NFC</td>
-                            <td>Van</td>
-                        </tr>
-                        <tr>
-                            <td>Töltő típusa</td>
-                            <td>USB type-C</td>
-                        </tr>
-                        <tr>
-                            <td>Csatlakozó gyorsasága</td>
-                            <td>2.0</td>
-                        </tr>
-                        <tr>
-                            <td>3,5mm jack</td>
-                            <td>Nincs</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><strong>Szenzorok/Érzékelők:</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Ujjlenyomat-olvasó</td>
-                            <td>Kijelzőben, optikai</td>
-                        </tr>
-                        <tr>
-                            <td>Infravörös</td>
-                            <td>Van</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><strong>RAM/Tárhely</strong></td>
-                        </tr>
-                        <tr>
-                            <td>RAM mennyisége</td>
-                            <td>12GB</td>
-                        </tr>
-                        <tr>
-                            <td>RAM sebesség</td>
-                            <td>LPDDR5</td>
-                        </tr>
-                        <tr>
-                            <td>Tárhely mennyisége</td>
-                            <td>256GB</td>
-                        </tr>
-                        <tr>
-                            <td>Tárhely sebesség</td>
-                            <td>UFS 3.1</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><strong>Akkumulátor & Töltés</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Akkumulátor kapacitása</td>
-                            <td>5000mAh</td>
-                        </tr>
-                        <tr>
-                            <td>Akkumulátor típusa</td>
-                            <td>Li-Po</td>
-                        </tr>
-                        <tr>
-                            <td>Töltő típusa</td>
-                            <td>USB type-C</td>
-                        </tr>
-                        <tr>
-                            <td>Vezetékes töltés max sebessége</td>
-                            <td>67W</td>
-                        </tr>
-                        <tr>
-                            <td>Vezeték nélküli töltés max sebessége</td>
-                            <td>0W</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><strong>Kamera</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Kamera neve</td>
-                            <td>Sony IMX707</td>
-                        </tr>
-                        <tr>
-                            <td>Kamera felbontása</td>
-                            <td>50MP</td>
-                        </tr>
-                        <tr>
-                            <td>Kamera rekeszértéke</td>
-                            <td>f/1.9</td>
-                        </tr>
-                        <tr>
-                            <td>Fókusztávolság</td>
-                            <td>24mm</td>
-                        </tr>
-                        <tr>
-                            <td>Optikai képstabilizátor (OIS)</td>
-                            <td>Igen</td>
-                        </tr>
-                        <tr>
-                            <td colspan="2"><strong>Test/Ház/Külső</strong></td>
-                        </tr>
-                        <tr>
-                            <td>Magasság</td>
-                            <td>162,2 mm</td>
-                        </tr>
-                        <tr>
-                            <td>Szélesség</td>
-                            <td>75,5 mm</td>
-                        </tr>
-                        <tr>
-                            <td>Vastagság</td>
-                            <td>8,49 mm</td>
-                        </tr>
-                        <tr>
-                            <td>Vízállóság</td>
-                            <td>IP68</td>
-                        </tr>
-                        <tr>
-                            <td>Hátlap anyaga</td>
-                            <td>Vegán műbőr</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>-->
+        
     </div>
     <div class="container">
         <div class="row align-items-center">
@@ -436,22 +221,7 @@
         </div>
     </div>
 
-    <script>
-        document.querySelectorAll('.carouselButton').forEach(button => {
-            button.addEventListener('mouseup', function () {
-                this.blur();
-            });
-        });
-
-        document.addEventListener("DOMContentLoaded", function () {
-            addSvgHoverEffect("mySvg", "ram_storage", "ram_storage_table");
-            addSvgHoverEffect("mySvg", "akkumulator_tolto", "akkumulator_table");
-            addSvgHoverEffect("mySvg", "halozat", "csatlakozo_table");
-            addSvgHoverEffect("mySvg", "cpu", "cpu_table");
-            addSvgHoverEffect("mySvg", "kamera", "camera_table");
-
-        });
-    </script>
+    
 
     <style>
         .carouselButton {
@@ -497,7 +267,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-    <script src="../index.js"></script>
+    <script src="../telefonoldala/telefonoldal.js"></script>
 </body>
 
 </html>
