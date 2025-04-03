@@ -1,5 +1,5 @@
 const apiUrl = "http://localhost:5287/api/auth";
-const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
+const allPhonesURL = "http://localhost:5287/api/getMainPhones"; //ÚJ BACKEND
 //const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
 
 
@@ -36,7 +36,7 @@ function displayPhoneCards() {
 
         const phoneName = document.createElement("div");
         phoneName.classList.add("phoneName");
-        phoneName.textContent = phone.phoneNev;
+        phoneName.textContent = phone.phoneName;
 
         if (phoneName.textContent.length > 8) {
             phoneName.style.whiteSpace = "normal"; // Engedélyezzük a sortörést
@@ -48,11 +48,11 @@ function displayPhoneCards() {
 
         const phonePrice = document.createElement("div");
         phonePrice.classList.add("phonePrice");
-        phonePrice.textContent = `${phone.ar} Ft`;
+        phonePrice.textContent = `${phone.phonePrice} Ft`;
 
         const phoneStock = document.createElement("div");
         phoneStock.classList.add("phoneStock");
-        phoneStock.textContent = phone.raktaron === "van" ? "Raktáron" : "Nincs Raktáron";
+        phoneStock.textContent = phone.phoneInStore === "van" ? "Raktáron" : "Nincs Raktáron";
 
         const cardButtons = document.createElement("div");
         cardButtons.classList.add("cardButtons");
