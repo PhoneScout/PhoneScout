@@ -23,6 +23,73 @@
     user-select: none;
 }
 
+#fullLogin{
+    margin-right: 5%;
+}
+
+#userChange {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-style: italic;
+    margin-right: 5%;
+}
+#userName {
+    margin-right: 5px;
+    color: rgb(0, 0, 0);
+}
+.dropdown-menu {
+    min-width: 160px;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+.dropdown-menu li {
+    list-style: none;
+    text-align: center;
+}
+#loginDropdown::after {
+    display: none;
+}
+.logout_button {
+    background: #FF4742;
+    border: 1px solid #FF4742;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    margin: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.logout_button:hover,
+.logout_button:active {
+    background-color: #FFFFFF;
+    color: #FF4742;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+}
+
+.logout_button:active {
+    opacity: 0.7;
+}
+
+
 #title {
     margin-left: 10px;
     font-size: 24px;
@@ -77,34 +144,7 @@
     color: black;
 }
 
-#fullLogin {
-    margin-right: 5%;
-}
 
-#fullLogin:hover {
-    scale: 110%;
-}
-
-#userChange {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    font-style: italic;
-    margin-right: 5%;
-}
-
-#userName {
-    margin-right: 5px;
-    color: rgb(0, 0, 0);
-}
-
-#userIcon {
-    margin-left: 10%;
-    color: rgb(255, 255, 255);
-    background-color: rgb(0, 0, 0);
-    padding: 5%;
-    border-radius: 50px;
-}
 
 .textBox {
     position: relative;

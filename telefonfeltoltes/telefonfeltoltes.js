@@ -95,3 +95,32 @@ function PhonePOST() {
         .catch(error => console.error("Error:", error));
 }
 
+
+async function showUsername() {
+    const username = localStorage.getItem("username");
+    console.log(username)
+    if (username) {
+        // Bejelentkezett felhasználó esetén
+        document.getElementById("userName").innerText = username;
+        document.getElementById("dropdownMenu").style.display = 'block';
+        document.getElementById("loginText").style.display = 'none';
+    } else {
+        // Ha nincs bejelentkezve
+        document.getElementById("dropdownMenu").style.display = 'none';
+        document.getElementById("loginText").style.display = 'block';
+    }
+}
+
+function logout() {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("jogosultsag");
+    alert("Sikeres kijelentkezés!");
+    setTimeout(() => {
+        window.location.href = "../index.html";
+    }, 1000);
+}
+
+
+// Call showUsername when the page loads
+document.addEventListener("DOMContentLoaded", showUsername);

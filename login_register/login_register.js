@@ -1,10 +1,7 @@
 const apiUrl = "http://localhost:5287/api/auth";
-const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
+const allPhonesURL = "http://localhost:5287/api/allPhones"; // ÚJ BACKEND
 
-
-//Bejelentkezés
-
-
+// Regisztráció
 async function register() {
     const username = document.getElementById("registerUsername").value;
     const email = document.getElementById("registerEmail").value;
@@ -14,12 +11,15 @@ async function register() {
     const address = document.getElementById("registerAddress").value;
     const phoneNumber = document.getElementById("registerPhoneNU").value;
 
-    if (password == passwordFix) {
+    // Fix: define jogosultsag in proper scope
+    let jogosultsag = (username === "admin") ? 1 : 0;
+
+    if (password === passwordFix) {
         try {
             const response = await fetch(`${apiUrl}/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, email, password })
+                body: JSON.stringify({ username, email, password, name, address, phoneNumber, jogosultsag })
             });
 
             const data = await response.text();
@@ -33,19 +33,19 @@ async function register() {
             } else {
                 document.getElementById("alertReg").innerText = `Regisztrációs hiba: ${data}`;
                 document.getElementById("alertReg").style.color = "red";
-                document.getElementById("registerPassword").value = "";
-                document.getElementById("registerPasswordAgain").value = "";
             }
 
         } catch (error) {
             console.error("Registration error:", error);
             document.getElementById("alertReg").innerText = "Hiba lépett fel regisztráció közben. Próbáld újra";
             document.getElementById("alertReg").style.color = "red";
-            document.getElementById("registerPassword").value = "";
-            document.getElementById("registerPasswordAgain").value = "";
         }
-    }
-    else {
+
+        // Clear password fields
+        document.getElementById("registerPassword").value = "";
+        document.getElementById("registerPasswordAgain").value = "";
+
+    } else {
         document.getElementById("alertReg").innerText = "A két megadott jelszavad nem egyezik!";
         document.getElementById("alertReg").style.color = "red";
         document.getElementById("registerPassword").value = "";
@@ -53,7 +53,7 @@ async function register() {
     }
 }
 
-
+// Bejelentkezés
 async function login() {
     const username = document.getElementById("loginUsername").value;
     const password = document.getElementById("loginPassword").value;
@@ -70,12 +70,17 @@ async function login() {
         if (data.token) {
             localStorage.setItem("jwtToken", data.token);
             localStorage.setItem("username", username);
+
+            const decoded = parseJwt(data.token);
+            if (decoded && decoded.Jogosultsag !== undefined) {
+                localStorage.setItem("jogosultsag", decoded.Jogosultsag);
+            }
+
             document.getElementById("alertLog").innerText = `Sikeres bejelentkezés! Üdvözlünk ${username}`;
             document.getElementById("alertLog").style.color = "green";
 
             setTimeout(() => {
                 window.location.href = "../index.html";
-
             }, 1000);
         } else {
             document.getElementById("alertLog").innerText = "Sikertelen bejelentkezés.";
@@ -90,9 +95,25 @@ async function login() {
     }
 }
 
+// JWT dekódoló
+function parseJwt(token) {
+    try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(
+            atob(base64)
+                .split('')
+                .map(c => `%${('00' + c.charCodeAt(0).toString(16)).slice(-2)}`)
+                .join('')
+        );
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        console.error("JWT parsing error:", e);
+        return null;
+    }
+}
 
-
-
+// Védett erőforrás elérése
 async function accessProtectedResource() {
     const token = localStorage.getItem("jwtToken");
     if (!token) {
@@ -109,12 +130,13 @@ async function accessProtectedResource() {
     document.getElementById("response").innerText = data;
 }
 
-
+// Kijelentkezés
 function logout() {
     localStorage.removeItem("jwtToken");
     localStorage.removeItem("username");
+    localStorage.removeItem("jogosultsag");
     alert("Sikeres kijelentkezés!");
     setTimeout(() => {
-        window.location.href = "index.html";
+        window.location.href = "../index.html";
     }, 1000);
 }

@@ -14,8 +14,8 @@ function getPhoneDatas() {
     return fetch(allPhonesURL)
         .then(response => response.json())
         .then(data => {
-            allPhonesData = data;           
-            
+            allPhonesData = data;
+
         })
         .catch(error => console.error('Hiba a JSON betöltésekor:', error));
 }
@@ -92,7 +92,7 @@ function displayPhoneCards() {
         cartButton.onclick = function (event) {
             event.stopPropagation(); // Prevent triggering the phoneCard click event
             console.log(`Add to cart clicked for phone ID: ${phone.phoneID}`);
-            
+
             // Retrieve the existing cart from localStorage or initialize an empty object
             let cart = JSON.parse(localStorage.getItem("cart")) || {};
 
@@ -101,7 +101,7 @@ function displayPhoneCards() {
 
             // Save the updated cart back to localStorage
             localStorage.setItem("cart", JSON.stringify(cart));
-            
+
             console.log("Current cart:", cart);
         };
 
@@ -125,7 +125,8 @@ function displayPhoneCards() {
 
 window.onload = function () {
     // Betöltéskor hívja meg a telefon adatait
-    fetch(allPhonesURL)
+    let selectedPhoneID = localStorage.getItem("selectedPhone")
+    fetch(allPhonesURL + "/" + selectedPhoneID)
         .then(response => response.json())
         .then(data => {
             telDataShow(data);  // Hívja meg a funkciót, miután a DOM betöltődött
@@ -179,7 +180,7 @@ function telDataShow(allPhonesData) {
     }
 
     let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID);
-    console.log(selectedPhone)
+    console.log(selectedPhone.szinHex)
     if (selectedPhone) {
         dataPlace.innerHTML = `
                 <div class="row align-items-center">
@@ -189,6 +190,13 @@ function telDataShow(allPhonesData) {
                                     <th colspan="2">${selectedPhone.phoneNev} telefon adatai</th>
                                 </tr>
                             <tbody>
+                            
+                                
+                                <!--td class="cpu_table" style="background-color: ${'#' + selectedPhone.szinHex}">${selectedPhone.szinHex}</td-->
+                                
+
+
+
                                 <tr><td colspan="2" class="cpu_table"><strong>CPU</strong></td></tr>
                                 <tr><td class="cpu_table">Név</td><td class="cpu_table">${selectedPhone.cpuNev}</td></tr>
                                 <tr><td class="cpu_table">Antutu pontszám</td><td class="cpu_table">${selectedPhone.cpuAntutu}</td></tr>
@@ -266,7 +274,7 @@ function selectRamTárhely(element) {
 }
 
 function selectColor(element) {
-    document.querySelectorAll('.color-option').forEach(option => { 
+    document.querySelectorAll('.color-option').forEach(option => {
         option.style.border = '1px solid black';
         option.style.boxShadow = 'none';
     });
@@ -290,7 +298,7 @@ function addSvgHoverEffect(svgId, elementId, tableClass) {
 
                 // A táblázat sorok színezése
                 const tableRows = document.querySelectorAll(`.${tableClass}`);
-                tableRows.forEach(function(row) {
+                tableRows.forEach(function (row) {
                     row.style.backgroundColor = "#38ec38bd"; // Zöld háttér
                 });
             });
@@ -300,10 +308,37 @@ function addSvgHoverEffect(svgId, elementId, tableClass) {
 
                 // A táblázat sorok eredeti színének visszaállítása
                 const tableRows = document.querySelectorAll(`.${tableClass}`);
-                tableRows.forEach(function(row) {
+                tableRows.forEach(function (row) {
                     row.style.backgroundColor = ""; // Eredeti háttér
                 });
             });
         }
     });
 }
+
+async function showUsername() {
+    const username = localStorage.getItem("username");
+    console.log(username)
+    if (username) {
+        // Bejelentkezett felhasználó esetén
+        document.getElementById("userName").innerText = username;
+        document.getElementById("dropdownMenu").style.display = 'block';
+        document.getElementById("loginText").style.display = 'none';
+    } else {
+        // Ha nincs bejelentkezve
+        document.getElementById("dropdownMenu").style.display = 'none';
+        document.getElementById("loginText").style.display = 'block';
+    }
+}
+function logout() {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("jogosultsag");
+    alert("Sikeres kijelentkezés!");
+    setTimeout(() => {
+        window.location.href = "../index.html";
+    }, 1000);
+}
+
+// Call showUsername when the page loads
+document.addEventListener("DOMContentLoaded", showUsername);

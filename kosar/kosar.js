@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
     function updateTotalPrice(cartPhones) {
         const totalPrice = cartPhones.reduce((sum, phone) => {
             const quantity = cart[phone.phoneID] || 0;
-            return sum + phone.ar * quantity;
+            return sum + phone.phonePrice * quantity;
         }, 0);
 
         const totalPriceDiv = document.querySelector(".totalPrice");
@@ -34,7 +34,7 @@ document.addEventListener("DOMContentLoaded", function () {
     checkEmptyCart();
 
     // Fetch all phone data to match IDs
-    fetch("http://localhost:5287/api/allPhones")
+    fetch("http://localhost:5287/api/getMainPhones")
         .then(response => response.json())
         .then(allPhones => {
             // Filter the phones in the cart with quantity > 0
@@ -57,13 +57,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 phoneRow.innerHTML = `
                     <div class="phoneImage" style="flex: 1; text-align: center;">
-                        <img src="${phone.imageUrl || '../Images/image 3.png'}" alt="${phone.phoneNev}" loading="lazy" style="max-width: 80px; max-height: 80px;">
+                        <img src="${phone.imageUrl || '../Images/image 3.png'}" alt="${phone.phoneName}" loading="lazy" style="max-width: 80px; max-height: 80px;">
                     </div>
                     <div class="phoneDetails" style="flex: 3; padding-left: 15px;">
-                        <h3 style="margin: 0; font-size: 1.2em;">${phone.phoneNev}</h3>
+                        <h3 style="margin: 0; font-size: 1.2em;">${phone.phoneName}</h3>
                     </div>
                     <div class="phonePrice" style="flex: 2; text-align: center;">
-                        <p style="margin: 0; font-size: 1em;">${phone.ar} Ft</p>
+                        <p style="margin: 0; font-size: 1em;">${phone.phonePrice} Ft</p>
                     </div>
                     <div class="phoneQuantity" style="flex: 3; text-align: center; display: flex; align-items: center; justify-content: center;">
                         <button class="decreaseQuantity" style="margin-right: 10px;">-</button>
@@ -118,3 +118,32 @@ document.addEventListener("DOMContentLoaded", function () {
             kosarDiv.innerHTML = "<p>Hiba történt a kosár betöltésekor.</p>";
         });
 });
+
+async function showUsername() {
+    const username = localStorage.getItem("username");
+    console.log(username)
+    if (username) {
+        // Bejelentkezett felhasználó esetén
+        document.getElementById("userName").innerText = username;
+        document.getElementById("dropdownMenu").style.display = 'block';
+        document.getElementById("loginText").style.display = 'none';
+    } else {
+        // Ha nincs bejelentkezve
+        document.getElementById("dropdownMenu").style.display = 'none';
+        document.getElementById("loginText").style.display = 'block';
+    }
+}
+
+function logout() {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("username");
+    localStorage.removeItem("jogosultsag");
+    alert("Sikeres kijelentkezés!");
+    setTimeout(() => {
+        window.location.href = "../index.html";
+    }, 1000);
+}
+
+
+// Call showUsername when the page loads
+document.addEventListener("DOMContentLoaded", showUsername);
