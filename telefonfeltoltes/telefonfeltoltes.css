@@ -11,11 +11,136 @@
     margin-right: auto;
     box-shadow: 0px 4px 0px rgb(205, 205, 205);
 }
+.row{
+    text-align: center;
+}
 
+.specifikaciok{
+    margin-top: 5%;
+}
+
+.megjelenes{
+    border: 1px solid black;
+    padding: 3%;
+    border-radius: 5px;
+}
+
+.dropdown-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.dropdown {
+    width: auto;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+    margin: 5%;
+}
+
+.dropdown-header {
+    background-color: #f0f0f0;
+    padding: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    text-align: center;
+    border: 2px solid black;
+    transition: border-color 0.3s ease;
+}
+
+.dropdown-content {
+    height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: height 0.3s ease-out, opacity 0.3s ease-out;
+    padding: 0 10px;
+}
+
+.dropdown-content.open {
+    height: auto;
+    opacity: 1;
+    padding: 10px;
+}
+.fa-plus{
+    color: black;   
+    font-size: xx-large;
+    width: 60px;
+    height: 60px;
+    background-color: rgba(206, 199, 199, 0.377);
+    border: 1px solid black;
+    border-radius: 5px;
+    padding:22%;
+}
+.phonePost{
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.01s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .phonePost:active {
+        background-color: #0056b3;
+        transform: translateY(2px);
+    }
+
+.upload-button {
+    display: inline-block;
+    cursor: pointer;
+    font-size: 24px;
+    margin-right: 10px;
+}
+.kepfeltolto{
+    border: 1px solid black;
+    border-radius: 5px;
+}
+.image-upload{
+    margin-top: 3%;
+    margin-bottom: auto;
+}
+.image-preview-container {
+    display: flex;
+    overflow-x: auto;
+    gap: 10px;
+    margin-top: 10px;
+    padding: 5px;
+    border-radius: 5px;
+    white-space: nowrap;
+}
+
+.image-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.image-preview-container::-webkit-scrollbar {
+    height: 8px;
+}
+
+.image-preview-container::-webkit-scrollbar-thumb {
+    background: #ccc;
+    border-radius: 4px;
+}
+
+.image-preview-container::-webkit-scrollbar-thumb:hover {
+    background: #999;
+}
 .textBox {
     position: relative;
-    width: 200px;
+    width: auto;
     margin-right: 2%;
+    margin: 2%;
 }
 .textBoxLabel {
     position: absolute;
@@ -30,7 +155,8 @@
 .textBoxInput {
     width: 100%;
     padding: 10px;
-    height: 30px;
+    height: auto;
+
 }
 .textBoxInput:focus + .textBoxLabel,
 .textBoxInput:not(:placeholder-shown) + .textBoxLabel {
@@ -48,3 +174,4 @@
     color: black;
     font-size: 150%;
 }
+

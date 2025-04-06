@@ -9,7 +9,7 @@ function getPhoneDatas() {
         .then(response => response.json())
         .then(data => {
             allPhonesData = data;
-            
+
         })
         .catch(error => console.error('Hiba a JSON betöltésekor:', error));
 }
@@ -24,7 +24,7 @@ function PhonePOST() {
         Ar: document.getElementById("Price").value || 0,
         Raktaron: document.getElementById("InStore").value || "",
         GyartoNev: document.getElementById("ManufacturerName").value || "",
-        GyartoLink : document.getElementById("ManufacturerLink").value || "",
+        GyartoLink: document.getElementById("ManufacturerLink").value || "",
         cpuNev: document.getElementById("CpuName").value || "",
         antutu: document.getElementById("Antutu").value || 0,
         cpuMaxOrajel: document.getElementById("MaxClockspeed").value || 0.0,
@@ -124,3 +124,80 @@ function logout() {
 
 // Call showUsername when the page loads
 document.addEventListener("DOMContentLoaded", showUsername);
+
+function toggleDropdown(header) {
+    const content = header.nextElementSibling;
+
+    if (content.classList.contains('open')) {
+        content.style.height = content.scrollHeight + 'px';
+        requestAnimationFrame(() => {
+            content.style.height = '0';
+            content.style.opacity = '0';
+        });
+        content.addEventListener('transitionend', () => {
+            content.classList.remove('open');
+            content.style.height = '';
+        }, { once: true });
+    } else {
+        content.classList.add('open');
+        content.style.height = '0';
+        content.style.opacity = '0';
+        requestAnimationFrame(() => {
+            content.style.height = content.scrollHeight + 'px';
+            content.style.opacity = '1';
+        });
+        content.addEventListener('transitionend', () => {
+            content.style.height = '';
+        }, { once: true });
+    }
+}
+
+function updateCategoryBorder(dropdown) {
+    const inputs = dropdown.querySelectorAll('.textBoxInput');
+    let filledCount = 0;
+
+    inputs.forEach(input => {
+        if (input.value.trim() !== '') {
+            filledCount++;
+        }
+    });
+
+    const header = dropdown.querySelector('.dropdown-header');
+    if (filledCount === 0) {
+        header.style.borderColor = 'black';
+    } else if (filledCount === inputs.length) {
+        header.style.borderColor = 'green';
+    } else {
+        header.style.borderColor = 'orange';
+    }
+}
+
+function monitorInputs() {
+    const dropdowns = document.querySelectorAll('.dropdown');
+    dropdowns.forEach(dropdown => {
+        const inputs = dropdown.querySelectorAll('.textBoxInput');
+        inputs.forEach(input => {
+            input.addEventListener('input', () => updateCategoryBorder(dropdown));
+        });
+        updateCategoryBorder(dropdown);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', monitorInputs);
+
+const imageInput = document.getElementById('imageInput');
+const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+
+imageInput.addEventListener('change', function () {
+    Array.from(this.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const img = document.createElement('img');
+            img.src = e.target.result;
+            img.alt = file.name;
+            img.classList.add('image-preview');
+            imagePreviewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+});
