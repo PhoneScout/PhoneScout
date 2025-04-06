@@ -274,7 +274,7 @@ function selectRamTárhely(element) {
 }
 
 function selectColor(element) {
-    document.querySelectorAll('.color-option').forEach(option => {
+    document.querySelectorAll('.color-option').forEach(option => { 
         option.style.border = '1px solid black';
         option.style.boxShadow = 'none';
     });
@@ -298,7 +298,7 @@ function addSvgHoverEffect(svgId, elementId, tableClass) {
 
                 // A táblázat sorok színezése
                 const tableRows = document.querySelectorAll(`.${tableClass}`);
-                tableRows.forEach(function (row) {
+                tableRows.forEach(function(row) {
                     row.style.backgroundColor = "#38ec38bd"; // Zöld háttér
                 });
             });
@@ -308,7 +308,7 @@ function addSvgHoverEffect(svgId, elementId, tableClass) {
 
                 // A táblázat sorok eredeti színének visszaállítása
                 const tableRows = document.querySelectorAll(`.${tableClass}`);
-                tableRows.forEach(function (row) {
+                tableRows.forEach(function(row) {
                     row.style.backgroundColor = ""; // Eredeti háttér
                 });
             });
