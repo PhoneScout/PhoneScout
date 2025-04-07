@@ -100,13 +100,13 @@ viewBox="0 0 21000 29700"
    </g>
    <circle class="fil0 str0" cx="3085.97" cy="5476.67" r="170.87"/>
   </g>
-  <rect id="akkumulator_tolto" class="fil2 str0" x="1792.87" y="6529.78" width="4944.95" height="9237.07" rx="81.41" ry="117.52"/>
+  <rect id="akkumulátoréstöltés" class="fil2 str0" x="1792.87" y="6529.78" width="4944.95" height="9237.07" rx="81.41" ry="117.52"/>
   <path class="fil1 str0" d="M1431.21 5649.59l-0.03 0c-61.24,0 -111.32,21.37 -111.32,47.49l0 720.01c0,26.12 50.08,47.49 111.32,47.49l0.03 0"/>
   <text x="3440.77" y="14568.74" transform="rotate(-90, 3440.77, 14568.74)" class="fil3 fnt1">AKKUMULÁTOR</text>
   <text x="4571.73" y="11514.61" transform="rotate(-90, 4571.73, 11514.61)" class="fil3 fnt1">&amp;</text>
   <text x="3472.67" y="10500.48" transform="rotate(-90, 5700.67, 10500.48)" class="fil3 fnt1">TÖLTŐ</text>
   <polygon class="fil2 str0" points="7093.27,16645.58 8675.51,16645.58 8675.51,6133.27 8675.51,1226.35 5273.1,1226.35 5273.1,6351.98 7093.46,6351.98 7093.28,15916.96 1777.78,15916.94 1777.78,16645.58 "/>
-  <rect id="ram_storage" class="fil0 str0" x="7382.02" y="7020.11" width="998.75" height="7365.96" rx="100" ry="260.3"/>
+  <rect id="ram/tárhely" class="fil0 str0" x="7382.02" y="7020.11" width="998.75" height="7365.96" rx="100" ry="260.3"/>
     <g transform="matrix(2.64845E-14 -1 1 2.64845E-14 -6665.48 24569.6)">
     <text x="10500" y="14850"  class="fil3 fnt1">RAM / </text>
     <text x="13087.14" y="14850"  class="fil3 fnt1">TÁRHELY</text>
@@ -115,7 +115,7 @@ viewBox="0 0 21000 29700"
    <rect class="fil2 str0" x="4547.99" y="16088.31" width="1313.8" height="393.67" rx="300" ry="365.99"/>
    <rect class="fil4 str0" x="4762.4" y="16246.08" width="884.95" height="78.15" rx="300000" ry="300000"/>
   </g>
-  <rect id="halozat" class="fil0 str0" x="5572.48" y="4942.28" width="2793.96" height="1083.51" rx="100.01" ry="34.4"/>
+  <rect id="csatlakoztathatóság" class="fil0 str0" x="5572.48" y="4942.28" width="2793.96" height="1083.51" rx="100.01" ry="34.4"/>
   <text x="5788" y="5660.85"  class="fil3 fnt2">HÁLÓZAT</text>
   <g id="_2892127767072">
    <rect id="cpu" class="fil0 str0" x="5582.61" y="1905.2" width="2793.96" height="2793.96" rx="100.01" ry="88.7"/>

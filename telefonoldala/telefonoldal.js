@@ -220,12 +220,12 @@ function telDataShow(allPhonesData) {
                                 <tr><td class="csatlakozo_table">E-SIM</td><td class="csatlakozo_table">${selectedPhone.csatlakoztathatosagESim}</td></tr>
                                 <tr><td class="csatlakozo_table">NFC</td><td class="csatlakozo_table">${selectedPhone.csatlakoztathatosagNfc}</td></tr>
 
-                                <tr><td colspan="2" class="ram_storage_table"><strong>RAM/Tárhely</strong></td></tr>
+                                <tr><td colspan="2" class="ram_storage_table"><strong>RAM / Tárhely</strong></td></tr>
                                 <tr><td class="ram_storage_table">RAM/tárhely mennyisége</td><td class="ram_storage_table">${selectedPhone.ramMennyiseg}/${selectedPhone.storageMennyiseg}GB</td></tr>
                                 <tr><td class="ram_storage_table">RAM sebesség</td><td class="ram_storage_table">${selectedPhone.ramSebesseg}</td></tr>
                                 <tr><td class="ram_storage_table">Tárhely sebesség</td><td class="ram_storage_table">${selectedPhone.storageSebesseg}</td></tr>
 
-                                <tr><td colspan="2" class="akkumulator_table"><strong>Akkumulátor & Töltés</strong></td></tr>
+                                <tr><td colspan="2" class="akkumulator_table"><strong>Akkumulátor és Töltés</strong></td></tr>
                                 <tr><td class="akkumulator_table">Akkumulátor kapacitása</td><td class="akkumulator_table">${selectedPhone.akkumulatorKapacitas} mAh</td></tr>
                                 <tr><td class="akkumulator_table">Akkumulátor típusa</td><td class="akkumulator_table">${selectedPhone.akkumulatorTipusa}</td></tr>
                                 <tr><td class="akkumulator_table">Vezetékes töltés max sebessége</td><td class="akkumulator_table">${selectedPhone.toltoVezetekes}W</td></tr>
@@ -259,9 +259,9 @@ document.querySelectorAll('.carouselButton').forEach(button => {
 });
 
 document.addEventListener("DOMContentLoaded", function () {
-    addSvgHoverEffect("mySvg", "ram_storage", "ram_storage_table");
-    addSvgHoverEffect("mySvg", "akkumulator_tolto", "akkumulator_table");
-    addSvgHoverEffect("mySvg", "halozat", "csatlakozo_table");
+    addSvgHoverEffect("mySvg", "ram/tárhely", "ram_storage_table");
+    addSvgHoverEffect("mySvg", "akkumulátoréstöltés", "akkumulator_table");
+    addSvgHoverEffect("mySvg", "csatlakoztathatóság", "csatlakozo_table");
     addSvgHoverEffect("mySvg", "cpu", "cpu_table");
     addSvgHoverEffect("mySvg", "kamera", "camera_table");
 });
@@ -285,7 +285,7 @@ function selectColor(element) {
 
 
 function addSvgHoverEffect(svgId, elementId, tableClass) {
-    const svgObject = document.getElementById(svgId); // Az object elem ID-ja
+    const svgObject = document.getElementById(svgId);
 
     svgObject.addEventListener("load", function () {
         const svgDoc = svgObject.contentDocument;
@@ -294,22 +294,35 @@ function addSvgHoverEffect(svgId, elementId, tableClass) {
         const targetElement = svgDoc.getElementById(elementId);
         if (targetElement) {
             targetElement.addEventListener("mouseenter", function () {
-                targetElement.style.fill = "#38ec38dc"; // Zöld szín
+                targetElement.style.fill = "#38ec38dc";
 
-                // A táblázat sorok színezése
                 const tableRows = document.querySelectorAll(`.${tableClass}`);
                 tableRows.forEach(function(row) {
-                    row.style.backgroundColor = "#38ec38bd"; // Zöld háttér
+                    row.style.backgroundColor = "#38ec38bd";
                 });
             });
 
             targetElement.addEventListener("mouseleave", function () {
-                targetElement.style.fill = ""; // Visszaáll az eredeti színre
+                targetElement.style.fill = "";
 
-                // A táblázat sorok eredeti színének visszaállítása
                 const tableRows = document.querySelectorAll(`.${tableClass}`);
                 tableRows.forEach(function(row) {
-                    row.style.backgroundColor = ""; // Eredeti háttér
+                    row.style.backgroundColor = "";
+                });
+            });
+
+            targetElement.addEventListener("click", function () {
+                const tableRows = document.querySelectorAll(`.${tableClass}`);
+                tableRows.forEach(function(row) {
+                    const strongTag = row.querySelector("strong");
+                    if (strongTag) {
+                        const rowText = strongTag.textContent.trim().replace(/\s+/g, '').toLowerCase();
+                        const elementText = elementId.replace(/\s+/g, '').toLowerCase();
+                        
+                        if (rowText === elementText) {
+                            row.scrollIntoView({ behavior: "smooth", block: "center" });
+                        }
+                    }
                 });
             });
         }
@@ -339,6 +352,17 @@ function logout() {
         window.location.href = "../index.html";
     }, 1000);
 }
+
+document.querySelector('.moreInfoAboutPhone').addEventListener('click', function () {
+    // Kiválasztjuk a táblázat első sorát (az első <tr> elemet)
+    const firstRow = document.querySelector('table tr');
+    
+    // Görgetünk az első sorhoz
+    if (firstRow) {
+        firstRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+});
+
 
 // Call showUsername when the page loads
 document.addEventListener("DOMContentLoaded", showUsername);
