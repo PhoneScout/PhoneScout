@@ -10,16 +10,7 @@ let allPhonesData = [];
 
 let kosar = [];
 
-function getPhoneDatas() {
-    return fetch(allPhonesURL)
-        .then(response => response.json())
-        .then(data => {
-            allPhonesData = data;
 
-        })
-        .catch(error => console.error('Hiba a JSON betöltésekor:', error));
-}
-getPhoneDatas();
 
 function displayPhoneCards() {
     const contentRow = document.getElementById("contentRow");
@@ -126,11 +117,13 @@ function displayPhoneCards() {
 window.onload = function () {
     // Betöltéskor hívja meg a telefon adatait
     let selectedPhoneID = localStorage.getItem("selectedPhone")
+    console.log(selectedPhoneID)
     fetch(allPhonesURL + "/" + selectedPhoneID)
         .then(response => response.json())
         .then(data => {
             telDataShow(data);  // Hívja meg a funkciót, miután a DOM betöltődött
             telDataShowMain(data)
+            allPhonesData = data;
         })
         .catch(error => console.error("Hiba a telefon adatok betöltésekor:", error));
 };
@@ -145,12 +138,12 @@ function telDataShowMain(allPhonesData) {
     }
 
     let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID);
-    console.log(selectedPhone)
+    console.log(allPhonesData)
 
     if (selectedPhone) {
         const phoneName = selectedPhone.phoneNev;
         const phoneStock = selectedPhone.inStore === "van" ? "Raktáron" : "Nincs raktáron";
-        const phonePrice = `${selectedPhone.price} Ft`;
+        const phonePrice = `${selectedPhone.ar} Ft`;
 
         document.getElementById("telData").innerHTML = `
             <div class="phoneName" id="showRequestedDataName">
@@ -180,7 +173,6 @@ function telDataShow(allPhonesData) {
     }
 
     let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID);
-    console.log(selectedPhone.szinHex)
     if (selectedPhone) {
         dataPlace.innerHTML = `
                 <div class="row align-items-center">
@@ -189,11 +181,7 @@ function telDataShow(allPhonesData) {
                                 <tr>
                                     <th colspan="2">${selectedPhone.phoneNev} telefon adatai</th>
                                 </tr>
-                            <tbody>
-                            
-                                
-                                <!--td class="cpu_table" style="background-color: ${'#' + selectedPhone.szinHex}">${selectedPhone.szinHex}</td-->
-                                
+                            <tbody>                          
 
 
 
