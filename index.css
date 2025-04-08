@@ -169,7 +169,6 @@ br{
     color: red;
     margin-top: 5px;
 }
-
 .cardButtons {
     display: flex;
     gap: 10px;
@@ -177,7 +176,9 @@ br{
 }
 
 .button:active {
-    background-color: blueviolet;
+    background-color: rgb(7, 224, 79);
+    transform: scale(0.97); /* Picit benyomódik nyomásra */
+    transition: transform 0.1s ease; /* Simább animáció */
 }
 
 .button {

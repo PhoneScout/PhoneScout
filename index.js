@@ -78,19 +78,18 @@ function displayPhoneCards() {
         cartButton.appendChild(cartImg);
 
         cartButton.onclick = function (event) {
-            event.stopPropagation(); // Prevent triggering the phoneCard click event
+            event.stopPropagation(); 
             console.log(`Add to cart clicked for phone ID: ${phone.phoneID}`);
             
-            // Retrieve the existing cart from localStorage or initialize an empty object
             let cart = JSON.parse(localStorage.getItem("cart")) || {};
 
-            // Increment the quantity for the phone ID, or set it to 1 if it doesn't exist
             cart[phone.phoneID] = (cart[phone.phoneID] || 0) + 1;
 
-            // Save the updated cart back to localStorage
             localStorage.setItem("cart", JSON.stringify(cart));
-            
+
             console.log("Current cart:", cart);
+
+            updateCartCount();
         };
 
         cardButtons.appendChild(compareButton);
@@ -110,6 +109,13 @@ function displayPhoneCards() {
     });
 }
 
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || {};
+    const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
+    const cartElement = document.getElementById("cart");
+    cartElement.textContent = `Kosár (${itemCount})`;
+}
+
 function getPhoneDatas() {
     return fetch(allPhonesURL)
         .then(response => response.json())
@@ -117,6 +123,7 @@ function getPhoneDatas() {
             allPhonesData = data;
             console.log(allPhonesData)
             displayPhoneCards();
+            updateCartCount(); // Ensure cart count is updated on page load
         })
         .catch(error => console.error('Hiba a JSON betöltésekor:', error));
 }
@@ -204,7 +211,7 @@ async function showUsername() {
         document.getElementById("dropdownMenu").style.display = 'none';
         document.getElementById("loginText").style.display = 'block';
     }
-    if(jogosultsag == 1){
+    if (jogosultsag == 1) {
         document.getElementById("admin").style.display = "block";
     }
 }
