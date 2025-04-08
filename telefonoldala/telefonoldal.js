@@ -113,7 +113,13 @@ function displayPhoneCards() {
     });
 }
 
-
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || {};
+    const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
+    const cartElement = document.getElementById("cart");
+    cartElement.textContent = `Kosár(${itemCount})`;
+}
+updateCartCount
 window.onload = function () {
     // Betöltéskor hívja meg a telefon adatait
     let selectedPhoneID = localStorage.getItem("selectedPhone")
@@ -155,9 +161,25 @@ function telDataShowMain(allPhonesData) {
             <div class="price">
                 ${phonePrice}
             </div>
-            <button class="phoneSiteButton phoneSiteCartButton">Kosárba rakom</button>
+            <button class="phoneSiteButton phoneSiteCartButton" id="addToCartButton">Kosárba rakom</button>
             <button class="phoneSiteButton phoneSiteCompareButton">Összehasonlítás</button>
         `;
+
+        // Kosárba rakás logika
+        document.getElementById("addToCartButton").onclick = function () {
+            let cart = JSON.parse(localStorage.getItem("cart")) || {};
+            cart[selectedPhone.phoneID] = (cart[selectedPhone.phoneID] || 0) + 1;
+            localStorage.setItem("cart", JSON.stringify(cart));
+            console.log("Kosár frissítve:", cart);
+
+            // Frissítse a kosár számlálót
+            updateCartCount();
+        };
+
+        // Az oldal betöltésekor frissítse a kosár számlálót
+        updateCartCount();
+
+
     } else {
         console.error("No phone found with the given ID.");
     }
