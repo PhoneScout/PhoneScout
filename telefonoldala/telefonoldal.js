@@ -119,7 +119,7 @@ function updateCartCount() {
     const cartElement = document.getElementById("cart");
     cartElement.textContent = `Kosár(${itemCount})`;
 }
-updateCartCount
+updateCartCount()
 window.onload = function () {
     // Betöltéskor hívja meg a telefon adatait
     let selectedPhoneID = localStorage.getItem("selectedPhone")

@@ -222,9 +222,10 @@ function logout() {
     localStorage.removeItem("jogosultsag");
     alert("Sikeres kijelentkezés!");
     setTimeout(() => {
-        window.location.href = "../index.html";
+        window.location.href = "./index.html";
     }, 1000);
 }
+
 
 
 // Call showUsername when the page loads
