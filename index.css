@@ -92,11 +92,12 @@ br{
 
 
 #contentRow {
-    display: grid;
-    grid-template-columns: 1fr repeat(10, 1fr) 1fr;
-    gap: 80px;
-    justify-content: center; 
-  }
+    display: flex;
+    flex-direction: column; /* Az elemek egymás alá kerülnek */
+    gap: 15px; /* Távolság a kártyák között */
+    justify-content: flex-start; /* Igazítás a tetejére */
+    align-items: stretch; /* Kártyák szélessége kitölti a szülőt */
+}
   
   .phoneCard {
     margin-top: 10%;
@@ -168,11 +169,14 @@ br{
     font-weight: 400;
     color: red;
     margin-top: 5px;
+    margin-right: 20px; /* Több hely a jobb oldalon */
 }
 .cardButtons {
     display: flex;
-    gap: 10px;
-    margin-top: 7%;    
+    flex-direction: row; /* Gombok egymás mellé helyezése */
+    align-items: center; /* Középre igazítás függőlegesen */
+    justify-content: center; /* Középre igazítás vízszintesen */
+    gap: 10px; /* Távolság a gombok között */
 }
 
 .button:active {
@@ -182,11 +186,11 @@ br{
 }
 
 .button {
-    width: 60px;
-    height: 60px;
+    width: 50px; /* Másfélszeres szélesség */
+    height: 50px; /* Másfélszeres magasság */
     background: #68F145;
     border: 2px solid #000000;
-    border-radius: 15px;
+    border-radius: 8px; /* Kevésbé lekerekített sarkok */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -194,7 +198,7 @@ br{
 }
 
 .button img {
-    width: 80%;
+    width: 80%; /* Ikonméret növelése */
     height: auto;
 }
 
@@ -474,4 +478,15 @@ a{
 
 .logout_button:active {
     opacity: 0.7;
+}
+
+.phoneRow {
+    display: flex;
+    align-items: center; /* Középre igazítás függőlegesen */
+    margin-bottom: 10px; /* Csökkentett távolság a kártyák között */
+    border: 1px solid #ccc; /* Keret minden oldalra */
+    padding: 10px; /* Belülről távolság */
+    border-radius: 8px; /* Lekerekített sarkok */
+    background-color: #f9f9f9; /* Háttérszín */
+    height: auto; /* Automatikus magasság */
 }
