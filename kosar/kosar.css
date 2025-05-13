@@ -18,20 +18,22 @@
     display: flex;
 }
 
-
 .dropdown-menu {
     min-width: 160px;
     display: flex;
     justify-content: center;
     padding: 10px;
 }
+
 .dropdown-menu li {
     list-style: none;
     text-align: center;
 }
+
 #loginDropdown::after {
     display: none;
 }
+
 .logout_button {
     background: #FF4742;
     border: 1px solid #FF4742;
@@ -69,7 +71,6 @@
 .logout_button:active {
     opacity: 0.7;
 }
-
 
 #logo {
     width: auto;
@@ -157,13 +158,11 @@ br {
     color: rgb(0, 0, 0);
 }
 
-
 footer {
     background-color: #ddd;
     padding: 20px 0;
     text-align: center;
     margin-top: 50px;
-
 }
 
 footer h3 {
@@ -242,6 +241,185 @@ footer .address {
     font-style: normal;
 }
 
+.phoneRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    height: auto;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+
+
+.phoneImage {
+    flex: 1;
+    text-align: center;
+}
+
+.phoneImage img {
+    max-width: 80px;
+    max-height: 80px;
+    loading: lazy;
+}
+
+.phoneDetails {
+    flex: 3;
+    padding-left: 15px;
+}
+
+.phoneDetails h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.phonePrice {
+    flex: 2;
+    text-align: center;
+}
+
+.phonePrice p {
+    margin: 0;
+    font-size: 1em;
+}
+
+.phoneQuantity {
+    flex: 3;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.phoneQuantity button {
+    margin: 0 10px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.phoneQuantity .decreaseQuantity,
+.phoneQuantity .increaseQuantity {
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+}
+
+.phoneQuantity .removeFromCart {
+    background-color: red;
+    color: white;
+    border-radius: 4px;
+}
+
+.totalPrice {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
 .kosaradText {
     text-align: center;
 }
+
+.paymentButton {
+    display: inline-block;
+    margin: 20px auto 0 auto;
+    padding: 10px 24px;
+    font-size: 1em;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-weight: 600;
+    margin-bottom: 3% ;
+}
+.paymentButton:hover {
+    background: #0056b3;
+}
+
+#paymentFormContainer {
+    display: block;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin: 0 auto;
+    padding: 0 24px;
+    background: #f8f9fa;
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    max-width: 350px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: max-height 1.2s cubic-bezier(.4,2,.6,1), opacity 0.3s, padding 0.3s;
+}
+
+#paymentFormContainer.open {
+    max-height: 600px; /* elég nagy legyen, hogy minden beleférjen */
+    opacity: 1;
+    padding: 18px 24px;
+    margin-top: 16px;
+    overflow: visible;
+}
+
+#paymentFormContainer label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+#paymentFormContainer input {
+    width: 100%;
+    padding: 7px 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#paymentFormContainer .closePaymentForm {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    float: right;
+    margin-top: -8px;
+    margin-right: -8px;
+}
+#paymentFormContainer .closePaymentForm:hover {
+    background: #a71d2a;
+}
+
+.payment-success-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+.payment-success-content {
+    background: #fff;
+    padding: 32px 36px;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    font-size: 1.2em;
+    color: #198754;
+    text-align: center;
+    font-weight: 600;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.95em;
+    margin-bottom: 8px;
+    min-height: 18px;
+}
+

@@ -16,7 +16,6 @@ function displayPhoneCards() {
     const startIndex = currentPage * phonesPerPage;
     const endIndex = startIndex + phonesPerPage;
 
-    // Az oldal telefonjainak a megjelenítése
     allPhonesData.slice(startIndex, endIndex).forEach((phone) => {
         const phoneRow = document.createElement("div");
         phoneRow.classList.add("phoneRow");
@@ -26,7 +25,6 @@ function displayPhoneCards() {
         phoneRow.style.borderBottom = "1px solid #ccc";
         phoneRow.style.paddingBottom = "10px";
 
-        // Telefon kép
         const phoneImage = document.createElement("div");
         phoneImage.classList.add("phoneImage");
         phoneImage.style.flex = "1";
@@ -35,7 +33,6 @@ function displayPhoneCards() {
             <img src="${phone.imageUrl || './Images/image 3.png'}" alt="${phone.phoneName}" loading="lazy" style="max-width: 80px; max-height: 80px;">
         `;
 
-        // Telefon név
         const phoneName = document.createElement("div");
         phoneName.classList.add("phoneDetails");
         phoneName.style.flex = "3";
@@ -44,7 +41,6 @@ function displayPhoneCards() {
             <h3 style="margin: 0; font-size: 1.2em;">${phone.phoneName}</h3>
         `;
 
-        // Telefon ár
         const phonePrice = document.createElement("div");
         phonePrice.classList.add("phonePrice");
         phonePrice.style.flex = "2";
@@ -52,14 +48,14 @@ function displayPhoneCards() {
         phonePrice.innerHTML = `
             <p style="margin: 0; font-size: 1em;">${phone.phonePrice} Ft</p>
         `;
-
-        // Telefon raktárkészlet
         const phoneStock = document.createElement("div");
         phoneStock.classList.add("phoneStock");
         phoneStock.textContent = phone.phoneInStore === "van" ? "Raktáron" : "Nincs Raktáron";
         phoneStock.style.color = phone.phoneInStore === "van" ? "green" : "red";
+        if (phone.phoneInStore === "van") {
+            phoneStock.style.marginLeft = "3.5%";
+        }
 
-        // Gombok (Összehasonlítás és Kosárba)
         const cardButtons = document.createElement("div");
         cardButtons.classList.add("cardButtons");
         cardButtons.style.display = "flex";
@@ -74,9 +70,8 @@ function displayPhoneCards() {
         compareButton.appendChild(compareImg);
 
         compareButton.onclick = function (event) {
-            event.stopPropagation(); // Prevent triggering the phoneCard click event
+            event.stopPropagation(); 
             console.log(`Compare clicked for phone ID: ${phone.phoneID}`);
-            // Add your compare logic here
         };
 
         const cartButton = document.createElement("div");
@@ -104,7 +99,6 @@ function displayPhoneCards() {
         cardButtons.appendChild(compareButton);
         cardButtons.appendChild(cartButton);
 
-        // Összeállítás
         phoneRow.appendChild(phoneImage);
         phoneRow.appendChild(phoneName);
         phoneRow.appendChild(phonePrice);
@@ -157,15 +151,13 @@ getPhoneDatas();
 
 
 
-// A carousel váltása
 function changeCarousel(direction) {
     const maxPages = Math.ceil(allPhonesData.length / phonesPerPage) - 1;
     currentPage = Math.max(0, Math.min(currentPage + direction, maxPages));
     displayPhoneCards();
-    updateCarouselIndicator(); // Frissítjük az oldalszám jelzőt
+    updateCarouselIndicator(); 
 }
 
-// Frissíti a carousel oldalszám jelzőjét
 function updateCarouselIndicator() {
     const indicator = document.getElementById("carouselIndicator");
     const totalPages = Math.ceil(allPhonesData.length / phonesPerPage);
@@ -173,11 +165,10 @@ function updateCarouselIndicator() {
     if (totalPages > 0) {
         indicator.textContent = `Oldal: ${currentPage + 1} / ${totalPages}`;
     } else {
-        indicator.textContent = `Oldal: 0 / 0`; // Ha nincs adat
+        indicator.textContent = `Oldal: 0 / 0`; 
     }
 }
 
-// Az oldal betöltésekor létrehozzuk az oldalszám jelzőt
 document.addEventListener("DOMContentLoaded", () => {
     const contentRow = document.getElementById("contentRow");
 
@@ -188,11 +179,10 @@ document.addEventListener("DOMContentLoaded", () => {
     indicator.style.fontSize = "1.2em";
     indicator.style.fontWeight = "bold";
 
-    contentRow.parentElement.appendChild(indicator); // A contentRow alá helyezzük
-    updateCarouselIndicator(); // Inicializáljuk az oldalszám jelzőt
+    contentRow.parentElement.appendChild(indicator); 
+    updateCarouselIndicator(); 
 });
 
-//Event Card
 function displayEventCard() {
     const contentRow = document.getElementById("contentRow");
 
