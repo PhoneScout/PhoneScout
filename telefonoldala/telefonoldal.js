@@ -137,7 +137,7 @@ window.onload = function () {
 function telDataShowMain(allPhonesData) {
     let dataPlace = document.getElementById("telData");
     let selectedPhoneID = localStorage.getItem("selectedPhone");
-
+    console.log(selectedPhoneID)
     if (!selectedPhoneID) {
         console.error("No selected phone found in localStorage.");
         return;

@@ -25,6 +25,14 @@ function displayPhoneCards() {
         phoneRow.style.borderBottom = "1px solid #ccc";
         phoneRow.style.paddingBottom = "10px";
 
+        phoneRow.onclick = function () {
+            localStorage.setItem("selectedPhone", phone.phoneID);
+            console.log(localStorage.getItem("selectedPhone")); // This is fine for debugging.
+            window.location.href = "./telefonoldala/telefonoldal.html"; // This will load the new page.
+        };
+
+
+
         const phoneImage = document.createElement("div");
         phoneImage.classList.add("phoneImage");
         phoneImage.style.flex = "1";
