@@ -198,12 +198,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 kosarDiv.appendChild(phoneRow);
 
-                phoneRow.onclick = function () {
-                    localStorage.setItem("selectedPhone", phone.phoneID);
-                    console.log(localStorage.getItem("selectedPhone")); // This is fine for debugging.
-                    window.location.href = "../telefonoldala/telefonoldal.html"; // This will load the new page.
-                };
-        
+                
 
                 // Add event listeners for the +, -, and remove buttons
                 const decreaseButton = phoneRow.querySelector(".decreaseQuantity");
