@@ -3,12 +3,16 @@ const allPhonesURL = "http://localhost:5287/api/allPhones"; // ÚJ BACKEND
 
 // Regisztráció
 async function register() {
-    const username = document.getElementById("registerUsername").value;
+    const lastname = document.getElementById("registerLastName").value;
+    const firstname = document.getElementById("registerFirstName").value;
+    const middlename = document.getElementById("registerMiddleName").value;
     const email = document.getElementById("registerEmail").value;
     const password = document.getElementById("registerPassword").value;
     const passwordFix = document.getElementById("registerPasswordAgain").value;
-    const name = document.getElementById("registerName").value;
-    const address = document.getElementById("registerAddress").value;
+    const postalcode = document.getElementById("registerPostalCode").value;
+    const city = document.getElementById("registerCity").value;
+    const street = document.getElementById("registerStreet").value;
+    const houseNumber = document.getElementById("registerHouseNumber").value;
     const phoneNumber = document.getElementById("registerPhoneNU").value;
 
     // Fix: define jogosultsag in proper scope
@@ -19,7 +23,7 @@ async function register() {
             const response = await fetch(`${apiUrl}/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ username, email, password, name, address, phoneNumber, jogosultsag })
+                body: JSON.stringify({ lastname, firstname, middlename,  email, password, postalcode, city, street, houseNumber, phoneNumber, jogosultsag })
             });
 
             const data = await response.text();
@@ -55,28 +59,28 @@ async function register() {
 
 // Bejelentkezés
 async function login() {
-    const username = document.getElementById("loginUsername").value;
+    const email = document.getElementById("loginEmail").value;
     const password = document.getElementById("loginPassword").value;
 
     try {
         const response = await fetch(`${apiUrl}/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ username, password })
+            body: JSON.stringify({ email, password })
         });
 
         const data = await response.json();
 
         if (data.token) {
             localStorage.setItem("jwtToken", data.token);
-            localStorage.setItem("username", username);
+            localStorage.setItem("firstname", firstname);
 
             const decoded = parseJwt(data.token);
             if (decoded && decoded.Jogosultsag !== undefined) {
                 localStorage.setItem("jogosultsag", decoded.Jogosultsag);
             }
 
-            document.getElementById("alertLog").innerText = `Sikeres bejelentkezés! Üdvözlünk ${username}`;
+            document.getElementById("alertLog").innerText = `Sikeres bejelentkezés! Üdvözlünk ${firstname}`;
             document.getElementById("alertLog").style.color = "green";
 
             setTimeout(() => {
@@ -133,7 +137,7 @@ async function accessProtectedResource() {
 // Kijelentkezés
 function logout() {
     localStorage.removeItem("jwtToken");
-    localStorage.removeItem("username");
+    localStorage.removeItem("firstname");
     localStorage.removeItem("jogosultsag");
     alert("Sikeres kijelentkezés!");
     setTimeout(() => {

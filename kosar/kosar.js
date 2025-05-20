@@ -278,11 +278,13 @@ document.addEventListener("input", function(e) {
 });
 
 async function showUsername() {
-    const username = localStorage.getItem("username");
-    console.log(username)
-    if (username) {
+    const firstname = localStorage.getItem("firstname");
+    const jogosultsag = localStorage.getItem("jogosultsag");
+
+    console.log(firstname)
+    if (firstname) {
         // Bejelentkezett felhasználó esetén
-        document.getElementById("userName").innerText = username;
+        document.getElementById("firstName").innerText = firstname;
         document.getElementById("dropdownMenu").style.display = 'block';
         document.getElementById("loginText").style.display = 'none';
     } else {
@@ -294,11 +296,11 @@ async function showUsername() {
 
 function logout() {
     localStorage.removeItem("jwtToken");
-    localStorage.removeItem("username");
+    localStorage.removeItem("firstname");
     localStorage.removeItem("jogosultsag");
     alert("Sikeres kijelentkezés!");
     setTimeout(() => {
-        window.location.href = "../index.html";
+        window.location.href = "./index.html";
     }, 1000);
 }
 
