@@ -30,7 +30,7 @@
                 <input type="text" id="phoneName" class="textBoxInput" placeholder=" " />
                 <label for="phoneName" class="textBoxLabel">Telefon neve</label>
             </div>
-            
+
             <div class="textBox">
                 <input type="text" id="phonePrice" class="textBoxInput" placeholder=" " />
                 <label for="phonePrice" class="textBoxLabel">Telefon ára</label>
@@ -40,8 +40,8 @@
                 <input type="text" id="ManufacturerLink" class="textBoxInput" placeholder=" " />
                 <label for="ManufacturerLink" class="textBoxLabel">Link a gyártó oldalára</label>
             </div>
-            
-            <button onclick="PhonePOST()" class="phonePost">Új feltöltés teszt gomb</button>
+
+            <button onclick="getValues()" class="phonePost">Új feltöltés teszt gomb</button>
 
         </div>
 
@@ -265,12 +265,20 @@
                             <label for="textBoxInput" class="textBoxLabel">RAM mennyisége</label>
                         </div>
                         <div class="textBox">
-                            <input type="text" id="RAMSpeed" class="textBoxInput" placeholder=" " />
-                            <label for="RAMSpeed" class="textBoxLabel">RAM sebessége</label>
-                        </div>
-                        <div class="textBox">
                             <input type="text" id="StorageAmount" class="textBoxInput" placeholder=" " />
                             <label for="StorageAmount" class="textBoxLabel">Tárhely mennyisége</label>
+                        </div>
+                        <button onclick="generateRamStorageCards()"></button>
+                        <div id="ramstoragePlace">
+
+                        </div>
+
+                        <button onclick="getValues()"></button>
+
+
+                        <div class="textBox">
+                            <input type="text" id="RAMSpeed" class="textBoxInput" placeholder=" " />
+                            <label for="RAMSpeed" class="textBoxLabel">RAM sebessége</label>
                         </div>
                         <div class="textBox">
                             <input type="text" id="StorageSpeed" class="textBoxInput" placeholder=" " />
@@ -279,7 +287,29 @@
                     </div>
                 </div>
 
+                <div class="dropdown">
+                    <div class="dropdown-header" onclick="toggleDropdown(this)">Színek</div>
+                    <div class="dropdown-content">
 
+                        <div class="textBox">
+                            <input type="text" id="colorName" class="textBoxInput" placeholder=" " />
+                            <label for="textBoxInput" class="textBoxLabel">Szín név</label>
+                        </div>
+                        <div class="textBox">
+                            <input type="text" id="colorHEX" class="textBoxInput" placeholder=" " />
+                            <label for="StorageAmount" class="textBoxLabel">Szín HEX</label>
+                        </div>
+                        <button onclick="generateColorCards()"></button>
+                        <div id="colorPlace">
+
+                        </div>
+
+                        <button onclick="getValues()"></button>
+
+
+                        
+                    </div>
+                </div>
 
                 <div class="dropdown">
                     <div class="dropdown-header" onclick="toggleDropdown(this)">Battery & Charging</div>
@@ -379,6 +409,15 @@
                         <div class="textBox">
                             <input type="text" id="OIS" class="textBoxInput" placeholder=" " />
                             <label for="OIS" class="textBoxLabel">Optikai képstabilizátor (OIS)</label>
+                        </div>
+                        <div class="textBox">
+                            <input type="text" id="cameraType" class="textBoxInput" placeholder=" " />
+                            <label for="cameraType" class="textBoxLabel">kameratípus</label>
+                        </div>
+
+                        <button onclick="generateCameraCards()"></button>
+                        <div id="cameraPlace">
+
                         </div>
                     </div>
                 </div>
