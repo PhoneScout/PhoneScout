@@ -88,29 +88,20 @@
         </div>
 
 
-        <div class="">
-            <div class="row category-row">
-                <class class="col-1"></class>
-                <class class="col-3"><button id="newArrivalsBtn" class="category-btn">Újdonságok</button>
-                    <button id="popularBtn" class="category-btn">Legnépszerűbbek</button>
-                </class>
+        <div class="row">
+            <div class="col-1" id="leftButtonContainer">
+                
             </div>
-
-            <div class="row">
-                <div class="col-1">
-                    <button onclick="changeCarousel(-1)" class="carouselButton"><i
-                            class="fa-solid fa-arrow-left"></i></button>
-                </div>
-                <div class="col-10">
-                    <div id="contentRow" class="contentRow">
-
-                    </div>
-                </div>
-                <div class="col-1">
-                    <button onclick="changeCarousel(1)" class="carouselButton"><i
-                            class="fa-solid fa-arrow-right"></i></button>
-                </div>
+            <div class="col-10">
+                <div id="contentRow" class="contentRow"></div>
             </div>
+            <div class="col-1">
+                <button onclick="changeCarousel(1)" id="carouselButtonRight" class="carouselButton">
+                    <i class="fa-solid fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+        
 
 
             <div class="hr">

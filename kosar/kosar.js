@@ -63,6 +63,28 @@ document.addEventListener("DOMContentLoaded", function () {
                     <button type="submit" style="background:#007bff;color:#fff;border:none;border-radius:4px;padding:8px 16px;cursor:pointer;width:100%;font-weight:600;">Fizetés megerősítése</button>
                 </form>
             `;
+
+            let paymentFormContainer2 = document.createElement("div");
+            paymentFormContainer2.id = "paymentFormContainer2";
+            paymentFormContainer2.innerHTML = `
+                <button class="closePaymentForm" title="Bezárás">&times;</button>
+                <form id="paymentForm">
+                    <label for="cardName">Név a kártyán</label>
+                    <input type="text" id="cardName" maxlength="40" placeholder="Név a kártyán" required>
+                    <span id="cardNameError" style="color: red; font-size: 0.9em;"></span>
+                    <label for="cardNumber">Bankkártyaszám</label>
+                    <input type="text" id="cardNumber" maxlength="19" placeholder="1234 5678 9012 3456" required>
+                    <span id="cardNumberError" style="color: red; font-size: 0.9em;"></span>
+                    <label for="expiry">Lejárat (HH/ÉÉ)</label>
+                    <input type="text" id="expiry" maxlength="5" placeholder="12/25" required>
+                    <span id="expiryError" style="color: red; font-size: 0.9em;"></span>
+                    <label for="cvc">CVC</label>
+                    <input type="text" id="cvc" maxlength="4" placeholder="123" required>
+                    <span id="cvcError" style="color: red; font-size: 0.9em;"></span>
+                    <b
+                    LŰÉK utton type="submit" style="background:#007bff;color:#fff;border:none;border-radius:4px;padding:8px 16px;cursor:pointer;width:100%;font-weight:600;">Fizetés megerősítése</button>
+                </form>
+            `;
             paymentFormContainer.style.display = "none";
             paymentButton.insertAdjacentElement("afterend", paymentFormContainer);
 
@@ -157,7 +179,7 @@ document.addEventListener("DOMContentLoaded", function () {
     checkEmptyCart();
 
     // Fetch all phone data to match IDs
-    fetch("http://localhost:5287/api/getMainPhones")
+    fetch("http://localhost:5165/api/GETmainPage")
         .then(response => response.json())
         .then(allPhones => {
             // Filter the phones in the cart with quantity > 0

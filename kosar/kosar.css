@@ -12,6 +12,31 @@
     box-shadow: 0px 4px 0px rgb(205, 205, 205);
     margin-bottom: 20px;
 }
+.paymentFormsWrapper {
+    display: flex; /* Flexbox elrendezés */
+    gap: 20px; /* Távolság a két form között */
+    justify-content: space-between;
+}
+
+.paymentFormBox {
+    width: 48%; /* Minden form box szélessége 48% */
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-sizing: border-box;
+}
+
+.paymentForm {
+    width: 100%; /* A form teljes szélességű */
+}
+
+.paymentForm input, .paymentForm button {
+    width: 100%; /* Az inputok és a gombok is teljes szélességűek legyenek */
+}
+
+.paymentForm button {
+    margin-top: 10px;
+}
 
 #fullLogo {
     margin-left: 5%;
