@@ -1,10 +1,11 @@
 const apiUrl = "http://localhost:5287/api/auth";
-const allPhonesURL = "http://localhost:5287/api/getMainPhones"; //ÚJ BACKEND
+const allPhonesURL = "http://localhost:5165/api/GETmainPage"; //ÚJ BACKEND
 //const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
 
 
 let currentPage = 0;
-let phonesPerPage = 5;
+let phonesPerPage = 4;
+
 let allPhonesData = [];
 
 let kosar = [];
@@ -27,8 +28,8 @@ function displayPhoneCards() {
 
         phoneRow.onclick = function () {
             localStorage.setItem("selectedPhone", phone.phoneID);
-            console.log(localStorage.getItem("selectedPhone")); // This is fine for debugging.
-            window.location.href = "./telefonoldala/telefonoldal.html"; // This will load the new page.
+            console.log(localStorage.getItem("selectedPhone"));
+            window.location.href = "./telefonoldala/telefonoldal.html";
         };
 
 
@@ -78,7 +79,7 @@ function displayPhoneCards() {
         compareButton.appendChild(compareImg);
 
         compareButton.onclick = function (event) {
-            event.stopPropagation(); 
+            event.stopPropagation();
             console.log(`Compare clicked for phone ID: ${phone.phoneID}`);
         };
 
@@ -157,14 +158,42 @@ getPhoneDatas();
 }
 */
 
+function updateCarouselButtons() {
+    const rightButton = document.getElementById("carouselButtonRight");
+
+    if (currentPage === 1) {
+        rightButton.style.display = "none";
+    } else {
+        rightButton.style.display = "inline-block";
+    }
+}
+
+function updateCarouselButtons1() {
+    const rightButton = document.getElementById("carouselButtonLeft");
+
+   // Bal gomb megjelenítése csak ha currentPage > 0
+   if (currentPage > 0) {
+    leftButtonContainer.innerHTML = `
+        <button onclick="changeCarousel(-1)" id="carouselButtonLeft" class="carouselButton">
+            <i class="fa-solid fa-arrow-left"></i>
+        </button>
+    `;
+} else {
+    leftButtonContainer.innerHTML = ""; // törli a bal gombot, ha az első oldalon vagy
+}
+}
 
 
 function changeCarousel(direction) {
     const maxPages = Math.ceil(allPhonesData.length / phonesPerPage) - 1;
     currentPage = Math.max(0, Math.min(currentPage + direction, maxPages));
+
     displayPhoneCards();
-    updateCarouselIndicator(); 
+    updateCarouselIndicator();
+    updateCarouselButtons();
+    updateCarouselButtons1();
 }
+
 
 function updateCarouselIndicator() {
     const indicator = document.getElementById("carouselIndicator");
@@ -173,7 +202,7 @@ function updateCarouselIndicator() {
     if (totalPages > 0) {
         indicator.textContent = `Oldal: ${currentPage + 1} / ${totalPages}`;
     } else {
-        indicator.textContent = `Oldal: 0 / 0`; 
+        indicator.textContent = `Oldal: 0 / 0`;
     }
 }
 
@@ -187,8 +216,8 @@ document.addEventListener("DOMContentLoaded", () => {
     indicator.style.fontSize = "1.2em";
     indicator.style.fontWeight = "bold";
 
-    contentRow.parentElement.appendChild(indicator); 
-    updateCarouselIndicator(); 
+    contentRow.parentElement.appendChild(indicator);
+    updateCarouselIndicator();
 });
 
 function displayEventCard() {

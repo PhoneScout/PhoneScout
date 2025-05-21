@@ -13,6 +13,12 @@
 
 }
 
+.noCarouselButton{
+    background-color: white;
+    border-radius: 100%;
+}
+
+
 #fullLogo {
     margin-left: 5%;
     display: flex;
