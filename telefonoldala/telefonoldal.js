@@ -1,5 +1,5 @@
 const apiUrl = "http://localhost:5287/api/auth";
-const allPhonesURL = "http://localhost:5287/api/allPhones"; //ÚJ BACKEND
+const allPhonesURL = "http://localhost:5165/api/GETphonePage"; //ÚJ BACKEND
 //const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
 
 console.log("telefonoldala")
@@ -9,8 +9,6 @@ let phonesPerPage = 5;
 let allPhonesData = [];
 
 let kosar = [];
-
-
 
 function displayPhoneCards() {
     const contentRow = document.getElementById("contentRow");
@@ -124,9 +122,10 @@ window.onload = function () {
     // Betöltéskor hívja meg a telefon adatait
     let selectedPhoneID = localStorage.getItem("selectedPhone")
     console.log(selectedPhoneID)
-    fetch(allPhonesURL + "/" + selectedPhoneID)
+    fetch(allPhonesURL + "/" + 57)//telefon ID, át kell írni az éppen aktívra
         .then(response => response.json())
         .then(data => {
+            console.log(data)
             telDataShow(data);  // Hívja meg a funkciót, miután a DOM betöltődött
             telDataShowMain(data)
             allPhonesData = data;
@@ -143,7 +142,23 @@ function telDataShowMain(allPhonesData) {
         return;
     }
 
-    let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID);
+    
+    let selectedPhone = allPhonesData.find(item => item.phoneID == 57);//telefon ID, át kell írni az éppen aktívra
+
+    let colorPlace = document.getElementById("colorPlace")
+
+    console.log(selectedPhone.color.colorHex.length)
+
+    console.log(selectedPhone)
+
+    //színek adatbázisból
+    for (let i = 0; i < selectedPhone.color.colorName.length; i++) {
+        let colorHTML = `<button class="color-option" style="background: ${selectedPhone.color.colorHex[i]};" onclick="selectColor(this)"></button>`
+        colorPlace.innerHTML += colorHTML        
+    }
+
+
+
     console.log(allPhonesData)
 
     if (selectedPhone) {

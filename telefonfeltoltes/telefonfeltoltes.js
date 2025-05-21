@@ -184,6 +184,8 @@ function PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValue
         sensorsFingerprintType: document.getElementById("FingerprintSensorT").value || "",
         storageSpeed: document.getElementById("StorageSpeed").value || "",
         waterproofType: document.getElementById("WaterResistance").value || "",
+        speakerType: document.getElementById("speaker").value || "",
+        phoneWeight: document.getElementById("weight").value || 0.0,
 
         // Complex nested data
         ramStorage: {
