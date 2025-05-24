@@ -19,64 +19,212 @@ getPhoneDatas();
 
 function generateRamStorageCards() {
     let place = document.getElementById("ramstoragePlace");
-    let ramstorageCard = `
-    <div class="textBox">
-                            <input type="text" class="RAMAmount" id="RAMAmount" class="textBoxInput" placeholder=" " />
-                            <label for="textBoxInput" class="textBoxLabel">RAM mennyisége</label>
-                        </div>                       
-                        <div class="textBox">
-                            <input type="text" class="StorageAmount" id="StorageAmount" class="textBoxInput" placeholder=" " />
-                            <label for="StorageAmount" class="textBoxLabel">Tárhely mennyisége</label>
-                        </div>
-    `
-    place.innerHTML += ramstorageCard
+    let ramStorageCard = document.createElement("div");
+    ramStorageCard.classList.add("ramStorage-card");
+
+    ramStorageCard.innerHTML = `
+    <div class="dropdown">
+        <div class="dropdown-header" onclick="toggleDropdown(this)"> 
+            <span class="ramStorageDropdownName">Új Ram / Tárhely</span>
+            <button onclick="removeRamStorageCard(this)" class="deleteBtn">X</button>
+        </div>
+        <div class="dropdown-content">
+            <div class="memoryInputs">
+                <div class="textBox">
+                    <input type="text" class="textBoxInput RAMInput" placeholder=" "
+                        onkeyup="modifyMemoryName(this)" />
+                    <label class="textBoxLabel">RAM mennyisége</label>
+                </div>
+                <div class="separator">/</div>
+                <div class="textBox">
+                    <input type="text" class="textBoxInput StorageInput" placeholder=" "
+                        onkeyup="modifyMemoryName(this)" />
+                    <label class="textBoxLabel">Tárhely mennyisége</label>
+                </div>
+            </div>
+        </div>
+    </div>
+    `;
+    place.appendChild(ramStorageCard);   
 }
 
-function generateColorCards() {
-    let place = document.getElementById("colorPlace");
-    let ramstorageCard = `
-<div class="textBox">
-                            <input type="text" class="colorName" class="textBoxInput" placeholder=" " />
-                            <label for="textBoxInput" class="textBoxLabel">Szín név</label>
-                        </div>
-                        <div class="textBox">
-                            <input type="text" class="colorHEX" class="textBoxInput" placeholder=" " />
-                            <label for="StorageAmount" class="textBoxLabel">Szín HEX</label>
-                        </div>
-    `
-    place.innerHTML += ramstorageCard
+function modifyMemoryName(changedInput) {
+    const wrapper = changedInput.closest('.dropdown');
+    const nameDisplay = wrapper.querySelector('.ramStorageDropdownName');
+
+    const ram = wrapper.querySelector('.RAMInput')?.value || "";
+    const storage = wrapper.querySelector('.StorageInput')?.value || "";
+
+    const title = ram && storage ? `${ram}/${storage}` :
+        ram ? `${ram}/...` :
+            storage ? `.../${storage}` :
+                "Új Ram / Tárhely";
+
+    if (nameDisplay) nameDisplay.innerText = title;
 }
+
+function removeRamStorageCard(button) {
+    const card = button.closest(".ramStorage-card");
+    if (card) {
+        card.remove();
+    }
+}
+
+
+
+
+
+function generateColorCards() {
+  let place = document.getElementById("colorPlace");
+
+  let colorCard = document.createElement("div");
+  colorCard.classList.add("color-card");
+
+  colorCard.innerHTML = `
+    <div class="dropdown">
+      <div class="dropdown-header" onclick="toggleDropdown(this)">
+        <span class="colorDropdownName">Új Szín</span>
+        <button onclick="removeColorCard(this)" class="deleteBtn">X</button>
+      </div>
+      <div class="dropdown-content">
+        <div class="textBox">
+          <input type="text" class="colorName textBoxInput" placeholder=" " onkeyup="modifyColorName(this)" />
+          <label class="textBoxLabel">Szín név</label>
+        </div>
+        <div class="textBox">
+          <input type="color" class="colorPicker" value="#000000" onchange="syncColorInputs(this)" />
+          <label class="textBoxLabel">Szín választó</label>
+        </div>
+        <div class="textBox">
+          <input type="text" class="colorHEX textBoxInput" oninput="syncHEXInput(this)" />
+          <label class="textBoxLabel">Szín HEX</label>
+        </div>
+        <div class="textBox">
+          <input type="text" class="colorRGB textBoxInput" readonly/>
+          <label class="textBoxLabel">Szín RGB</label>
+        </div>
+      </div>
+    </div>
+  `;
+
+  place.appendChild(colorCard);
+}
+
+function modifyColorName(inputElement) {
+  const wrapper = inputElement.closest('.dropdown');
+  const nameDisplay = wrapper.querySelector('.colorDropdownName');
+  if (nameDisplay) {
+    nameDisplay.innerText = inputElement.value || "Új Szín";
+  }
+}
+
+// Sync color picker and HEX input when color picker changes
+function syncColorInputs(colorPicker) {
+  const wrapper = colorPicker.closest('.dropdown');
+  const hexInput = wrapper.querySelector('.colorHEX');
+  const rgbInput = wrapper.querySelector('.colorRGB');
+
+  if (!hexInput || !rgbInput) return;
+
+  hexInput.value = colorPicker.value.toUpperCase();
+  rgbInput.value = hexToRgb(colorPicker.value);
+}
+
+// Sync color picker and RGB when HEX input changes
+function syncHEXInput(hexInput) {
+  const wrapper = hexInput.closest('.dropdown');
+  const colorPicker = wrapper.querySelector('.colorPicker');
+  const rgbInput = wrapper.querySelector('.colorRGB');
+  
+  let hex = hexInput.value.trim();
+
+  // Validate hex code format #RRGGBB
+  if (/^#([0-9A-Fa-f]{6})$/.test(hex)) {
+    if (colorPicker) colorPicker.value = hex;
+    if (rgbInput) rgbInput.value = hexToRgb(hex);
+  } else {
+    if (rgbInput) rgbInput.value = "Invalid HEX";
+  }
+}
+
+// Helper function to convert HEX to RGB string
+function hexToRgb(hex) {
+  let r = parseInt(hex.substr(1, 2), 16);
+  let g = parseInt(hex.substr(3, 2), 16);
+  let b = parseInt(hex.substr(5, 2), 16);
+  return `rgb(${r}, ${g}, ${b})`;
+}
+
+function removeColorCard(button) {
+  const card = button.closest(".color-card");
+  if (card) {
+    card.remove();
+  }
+}
+
 
 function generateCameraCards() {
     let place = document.getElementById("cameraPlace");
-    let ramstorageCard = `
-<div class="textBox">
-                            <input type="text" class="CameraName" class="textBoxInput" placeholder=" " />
-                            <label for="CameraName" class="textBoxLabel">Neve</label>
+    let cameraCard = document.createElement("div");
+    cameraCard.classList.add("camera-card");
+
+    cameraCard.innerHTML = `
+    <div class="dropdown">
+                            <div class="dropdown-header" onclick="toggleDropdown(this)"> <span
+                                    class="cameraDropdownName">Új Kamera</span>
+                                    <button onclick="removeCameraCard(this)" class="deleteBtn">X</button>
+
+                            </div>
+                            <div class="dropdown-content">
+
+                                <div class="textBox">
+                                    <input type="text" class="textBoxInput" placeholder=" "
+                                        onkeyup="modifyCameraName(this)" />
+                                    <label for="CameraName" class="textBoxLabel">Neve</label>
+                                </div>
+                                <div class="textBox">
+                                    <input type="text" id="CameraResolution" class="textBoxInput" placeholder=" " />
+                                    <label for="CameraResolution" class="textBoxLabel">Felbontása</label>
+                                </div>
+                                <div class="textBox">
+                                    <input type="text" id="Aperture" class="textBoxInput" placeholder=" " />
+                                    <label for="Aperture" class="textBoxLabel">Rekeszértéke</label>
+                                </div>
+                                <div class="textBox">
+                                    <input type="text" id="FocalLength" class="textBoxInput" placeholder=" " />
+                                    <label for="FocalLength" class="textBoxLabel">Fókusztávolság (focal length)</label>
+                                </div>
+                                <div class="textBox">
+                                    <input type="text" id="OIS" class="textBoxInput" placeholder=" " />
+                                    <label for="OIS" class="textBoxLabel">Optikai képstabilizátor (OIS)</label>
+                                </div>
+                                <div class="textBox">
+                                    <input type="text" id="cameraType" class="textBoxInput" placeholder=" " />
+                                    <label for="cameraType" class="textBoxLabel">kameratípus</label>
+                                </div>
+
+                            </div>
                         </div>
-                        <div class="textBox">
-                            <input type="text" class="CameraResolution" class="textBoxInput" placeholder=" " />
-                            <label for="CameraResolution" class="textBoxLabel">Felbontása</label>
-                        </div>
-                        <div class="textBox">
-                            <input type="text" class="Aperture" class="textBoxInput" placeholder=" " />
-                            <label for="Aperture" class="textBoxLabel">Rekeszértéke</label>
-                        </div>
-                        <div class="textBox">
-                            <input type="text" class="FocalLength" class="textBoxInput" placeholder=" " />
-                            <label for="FocalLength" class="textBoxLabel">Fókusztávolság (focal length)</label>
-                        </div>
-                        <div class="textBox">
-                            <input type="text" class="OIS" class="textBoxInput" placeholder=" " />
-                            <label for="OIS" class="textBoxLabel">Optikai képstabilizátor (OIS)</label>
-                        </div>
-                        <div class="textBox">
-                            <input type="text" class="cameraType" class="textBoxInput" placeholder=" " />
-                            <label for="cameraType" class="textBoxLabel">kameratípus</label>
-                        </div>
-    `
-    place.innerHTML += ramstorageCard
+    `;
+
+    place.appendChild(cameraCard);
 }
+
+function modifyCameraName(inputElement) {
+    const wrapper = inputElement.closest('.dropdown');
+    const nameDisplay = wrapper.querySelector('.cameraDropdownName');
+    if (nameDisplay) {
+        nameDisplay.innerText = inputElement.value || "Új Kamera";
+    }
+}
+
+function removeCameraCard(button) {
+    const card = button.closest(".camera-card");
+    if (card) {
+        card.remove();
+    }
+}
+
 
 function getValues() {
     //ramstorage
@@ -96,7 +244,7 @@ function getValues() {
         input.value || ""
     );
     const hexValues = Array.from(document.querySelectorAll(".colorHEX")).map(input =>
-        "#"+input.value || ""
+        "#" + input.value || ""
     );
     let colorIDs = [];
     for (let i = 0; i < colorNames.length; i++) {
@@ -300,11 +448,15 @@ function updateCategoryBorder(dropdown) {
     if (filledCount === 0) {
         header.style.borderColor = 'black';
     } else if (filledCount === inputs.length) {
-        header.style.borderColor = 'green';
+        header.style.backgroundColor = 'rgb(112, 255, 117)'; // Green
+        header.style.color = 'black';
     } else {
-        header.style.borderColor = 'orange';
+        header.style.backgroundColor = 'rgb(254, 219, 136)'; // Yellow
+        header.style.color = 'black';
     }
 }
+
+//style="background-color: rgb(254, 219, 136); color: black;
 
 function monitorInputs() {
     const dropdowns = document.querySelectorAll('.dropdown');
@@ -313,10 +465,18 @@ function monitorInputs() {
         inputs.forEach(input => {
             input.addEventListener('input', () => updateCategoryBorder(dropdown));
         });
-        updateCategoryBorder(dropdown);
+        updateCategoryBorder(dropdown); // Initial state
     });
 }
 
+// Observe new elements added to the body
+const observer = new MutationObserver(() => {
+    monitorInputs(); // Re-attach event listeners to new inputs
+});
+
+observer.observe(document.body, { childList: true, subtree: true });
+
+// Run once initially for existing inputs
 document.addEventListener('DOMContentLoaded', monitorInputs);
 
 const imageInput = document.getElementById('imageInput');
@@ -334,4 +494,31 @@ imageInput.addEventListener('change', function () {
         };
         reader.readAsDataURL(file);
     });
+});
+
+function showStoreAmount() {
+    if (document.getElementById("InStore").checked) {
+        document.getElementById("storeAmount").style.display = "block"
+    }
+    else {
+        document.getElementById("storeAmount").style.display = "none"
+    }
+}
+
+function updateSpeakerLabel(switchElem) {
+    const mono = document.getElementById("labelMono");
+    const stereo = document.getElementById("labelStereo");
+
+    if (switchElem.checked) {
+        stereo.style.fontWeight = "bold";
+        mono.style.fontWeight = "normal";
+    } else {
+        mono.style.fontWeight = "bold";
+        stereo.style.fontWeight = "normal";
+    }
+}
+
+// Set initial state on load
+window.addEventListener("DOMContentLoaded", function () {
+    updateSpeakerLabel(document.getElementById("speakerTypeSwitch"));
 });

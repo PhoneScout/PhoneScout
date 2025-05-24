@@ -1,25 +1,153 @@
 #navbar {
-    background-color: #ffffff;
-    border-bottom-right-radius: 15px;
+    background-color: #fff;
     border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+    box-shadow: 0px 4px 0px rgb(205, 205, 205);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 0 auto;
+}
+
+#fullLogo {
+    margin-left: 5%;
+    display: flex;
+}
+
+#logo {
+    width: auto;
+    height: 60px;
+    user-select: none;
+}
+
+#fullLogin {
+    margin-right: 5%;
+}
+
+#userChange {
     display: flex;
     align-items: center;
-    padding: 10px;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-left: auto;
-    margin-right: auto;
-    box-shadow: 0px 4px 0px rgb(205, 205, 205);
+    cursor: pointer;
+    font-style: italic;
+    margin-right: 5%;
 }
-.row{
+
+#userName {
+    margin-right: 5px;
+    color: #000;
+}
+
+#loginDropdown::after {
+    display: none;
+}
+
+.dropdown-menu {
+    min-width: 160px;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.dropdown-menu li {
+    list-style: none;
     text-align: center;
 }
 
-.specifikaciok{
+/* Reusable logout button styles */
+.logout_button {
+    background: #FF4742;
+    border: 1px solid #FF4742;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 12px 14px;
+    text-align: center;
+    user-select: none;
+    vertical-align: middle;
+    margin: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.logout_button:hover,
+.logout_button:active {
+    background-color: #fff;
+    color: #FF4742;
+}
+
+.logout_button:active {
+    opacity: 0.7;
+}
+
+#title {
+    margin: auto 0 auto 10px;
+    font-size: 24px;
+    font-weight: bold;
+    font-style: italic;
+    letter-spacing: 2px;
+    user-select: none;
+    cursor: default;
+    display: flex;
+}
+
+#title1 {
+    color: #2300B3;
+}
+
+#title2 {
+    color: #68F145;
+}
+
+#menu-options {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto;
+}
+
+#allPhones,
+#repair,
+#compare,
+#cart,
+#phoneUpload {
+    color: #212121;
+    cursor: pointer;
+    text-align: center;
+    font-size: 105%;
+    margin: 0 2%;
+    transition: 0.2s ease;
+}
+
+#allPhones:hover,
+#repair:hover,
+#compare:hover,
+#cart:hover,
+#phoneUpload:hover {
+    scale: 110%;
+    text-shadow: 1px 0 0 black;
+    padding-bottom: 1%;
+    color: black;
+}
+
+/* General layout */
+.row {
+    text-align: center;
+}
+
+.specifikaciok {
     margin-top: 5%;
 }
 
-.megjelenes{
+.megjelenes {
     border: 1px solid black;
     padding: 3%;
     border-radius: 5px;
@@ -40,6 +168,13 @@
 }
 
 .dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* pushes button to the right */
+    color: white;
+    font-weight: bold;
+    border-radius: 6px;
+    cursor: pointer;
     background-color: #f0f0f0;
     padding: 10px;
     cursor: pointer;
@@ -48,6 +183,9 @@
     border: 2px solid black;
     transition: border-color 0.3s ease;
 }
+
+
+
 
 .dropdown-content {
     height: 0;
@@ -62,35 +200,59 @@
     opacity: 1;
     padding: 10px;
 }
-.fa-plus{
-    color: black;   
+
+.fa-plus {
+    color: black;
     font-size: xx-large;
     width: 60px;
     height: 60px;
     background-color: rgba(206, 199, 199, 0.377);
     border: 1px solid black;
     border-radius: 5px;
-    padding:22%;
+    padding: 22%;
 }
-.phonePost{
+
+.addCard{
+    display: inline-block;
+    padding: 5px 15px;
+    font-size: 16px;
+    font-weight: bold;
+    color: black;
+    background-color: #68F145;
+    border: none;
+    border-radius: 15px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.01s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+
+.addCard:hover {
+    background-color: #11c900;
+}
+
+
+/* Upload button */
+.phonePost {
     display: inline-block;
     padding: 10px 20px;
     font-size: 16px;
     font-weight: bold;
     color: white;
-    background-color: #007BFF;
+    background-color: #2300B3;
     border: none;
     border-radius: 5px;
     text-align: center;
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.01s ease;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    }
+}
 
-    .phonePost:active {
-        background-color: #0056b3;
-        transform: translateY(2px);
-    }
+.phonePost:hover {
+    color: white;
+    background-color: #0069d8;
+}
 
 .upload-button {
     display: inline-block;
@@ -98,14 +260,17 @@
     font-size: 24px;
     margin-right: 10px;
 }
-.kepfeltolto{
+
+.kepfeltolto {
     border: 1px solid black;
     border-radius: 5px;
 }
-.image-upload{
+
+.image-upload {
     margin-top: 3%;
     margin-bottom: auto;
 }
+
 .image-preview-container {
     display: flex;
     overflow-x: auto;
@@ -117,13 +282,14 @@
 }
 
 .image-preview {
-    width: auto;
     height: 200px;
+    width: auto;
     object-fit: cover;
     border: 1px solid #ccc;
     border-radius: 5px;
 }
 
+/* Scrollbar for image previews */
 .image-preview-container::-webkit-scrollbar {
     height: 8px;
 }
@@ -136,12 +302,14 @@
 .image-preview-container::-webkit-scrollbar-thumb:hover {
     background: #999;
 }
+
+/* TextBox */
 .textBox {
     position: relative;
     width: auto;
-    margin-right: 2%;
     margin: 2%;
 }
+
 .textBoxLabel {
     position: absolute;
     top: 50%;
@@ -152,12 +320,12 @@
     transition: 0.2s ease;
     font-style: italic;
 }
+
 .textBoxInput {
     width: 100%;
     padding: 10px;
-    height: auto;
-
 }
+
 .textBoxInput:focus + .textBoxLabel,
 .textBoxInput:not(:placeholder-shown) + .textBoxLabel {
     top: -2px;
@@ -165,13 +333,69 @@
     font-size: 12px;
     color: black;
     background-color: white;
-    padding-left: 3px;
-    padding-right: 3px;
+    padding: 0 3px;
     font-style: normal;
 }
 
-#homeButton{
+/* Home button */
+#homeButton {
     color: black;
     font-size: 150%;
 }
 
+/* Neutral switch styling */
+.neutral-switch {
+    width: 50px;
+    height: 25px;
+    background-color: #ddd;
+    border: none;
+    box-shadow: none;
+    transition: background-color 0.3s;
+}
+
+.neutral-switch:checked {
+    background-color: #bbb;
+}
+
+.neutral-switch:focus {
+    box-shadow: none;
+}
+
+.dropdown-header {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 0.5em 1em;
+}
+
+.deleteBtn {
+  background: transparent;
+  border: none;
+  color: red;
+  font-weight: bold;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 0;
+  line-height: 1;
+}
+.deleteBtn:hover {
+  color: darkred;
+}
+
+
+.memoryInputs {
+  display: flex;
+  align-items: flex-end; /* Align based on the bottom of input + label */
+  gap: 0.75rem;
+}
+
+.memoryInputs .textBox {
+  flex: 1;
+  position: relative;
+}
+
+.separator {
+  font-size: 1.5rem;
+  line-height: 1;
+  padding-bottom: 0.3rem; /* Adjust to match the bottom of input field */
+}
