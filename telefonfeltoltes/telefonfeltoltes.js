@@ -45,7 +45,7 @@ function generateRamStorageCards() {
         </div>
     </div>
     `;
-    place.appendChild(ramStorageCard);   
+    place.appendChild(ramStorageCard);
 }
 
 function modifyMemoryName(changedInput) {
@@ -75,12 +75,12 @@ function removeRamStorageCard(button) {
 
 
 function generateColorCards() {
-  let place = document.getElementById("colorPlace");
+    let place = document.getElementById("colorPlace");
 
-  let colorCard = document.createElement("div");
-  colorCard.classList.add("color-card");
+    let colorCard = document.createElement("div");
+    colorCard.classList.add("color-card");
 
-  colorCard.innerHTML = `
+    colorCard.innerHTML = `
     <div class="dropdown">
       <div class="dropdown-header" onclick="toggleDropdown(this)">
         <span class="colorDropdownName">Új Szín</span>
@@ -107,59 +107,59 @@ function generateColorCards() {
     </div>
   `;
 
-  place.appendChild(colorCard);
+    place.appendChild(colorCard);
 }
 
 function modifyColorName(inputElement) {
-  const wrapper = inputElement.closest('.dropdown');
-  const nameDisplay = wrapper.querySelector('.colorDropdownName');
-  if (nameDisplay) {
-    nameDisplay.innerText = inputElement.value || "Új Szín";
-  }
+    const wrapper = inputElement.closest('.dropdown');
+    const nameDisplay = wrapper.querySelector('.colorDropdownName');
+    if (nameDisplay) {
+        nameDisplay.innerText = inputElement.value || "Új Szín";
+    }
 }
 
 // Sync color picker and HEX input when color picker changes
 function syncColorInputs(colorPicker) {
-  const wrapper = colorPicker.closest('.dropdown');
-  const hexInput = wrapper.querySelector('.colorHEX');
-  const rgbInput = wrapper.querySelector('.colorRGB');
+    const wrapper = colorPicker.closest('.dropdown');
+    const hexInput = wrapper.querySelector('.colorHEX');
+    const rgbInput = wrapper.querySelector('.colorRGB');
 
-  if (!hexInput || !rgbInput) return;
+    if (!hexInput || !rgbInput) return;
 
-  hexInput.value = colorPicker.value.toUpperCase();
-  rgbInput.value = hexToRgb(colorPicker.value);
+    hexInput.value = colorPicker.value.toUpperCase();
+    rgbInput.value = hexToRgb(colorPicker.value);
 }
 
 // Sync color picker and RGB when HEX input changes
 function syncHEXInput(hexInput) {
-  const wrapper = hexInput.closest('.dropdown');
-  const colorPicker = wrapper.querySelector('.colorPicker');
-  const rgbInput = wrapper.querySelector('.colorRGB');
-  
-  let hex = hexInput.value.trim();
+    const wrapper = hexInput.closest('.dropdown');
+    const colorPicker = wrapper.querySelector('.colorPicker');
+    const rgbInput = wrapper.querySelector('.colorRGB');
 
-  // Validate hex code format #RRGGBB
-  if (/^#([0-9A-Fa-f]{6})$/.test(hex)) {
-    if (colorPicker) colorPicker.value = hex;
-    if (rgbInput) rgbInput.value = hexToRgb(hex);
-  } else {
-    if (rgbInput) rgbInput.value = "Invalid HEX";
-  }
+    let hex = hexInput.value.trim();
+
+    // Validate hex code format #RRGGBB
+    if (/^#([0-9A-Fa-f]{6})$/.test(hex)) {
+        if (colorPicker) colorPicker.value = hex;
+        if (rgbInput) rgbInput.value = hexToRgb(hex);
+    } else {
+        if (rgbInput) rgbInput.value = "Invalid HEX";
+    }
 }
 
 // Helper function to convert HEX to RGB string
 function hexToRgb(hex) {
-  let r = parseInt(hex.substr(1, 2), 16);
-  let g = parseInt(hex.substr(3, 2), 16);
-  let b = parseInt(hex.substr(5, 2), 16);
-  return `rgb(${r}, ${g}, ${b})`;
+    let r = parseInt(hex.substr(1, 2), 16);
+    let g = parseInt(hex.substr(3, 2), 16);
+    let b = parseInt(hex.substr(5, 2), 16);
+    return `rgb(${r}, ${g}, ${b})`;
 }
 
 function removeColorCard(button) {
-  const card = button.closest(".color-card");
-  if (card) {
-    card.remove();
-  }
+    const card = button.closest(".color-card");
+    if (card) {
+        card.remove();
+    }
 }
 
 
@@ -280,6 +280,10 @@ function getValues() {
         colorIDs.push(0)
     }
 
+
+
+
+
     PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValues, colorIDs, cameraName, cameraResolution, cameraAperture, cameraFocalLength, cameraOIS, cameraType, cameraIDs, cameraTypeIDs)
 }
 
@@ -289,6 +293,8 @@ function getValues() {
 
 function PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValues, colorIDs, cameraName, cameraResolution, cameraAperture, cameraFocalLength, cameraOIS, cameraType, cameraIDs, cameraTypeIDs) {
     const phoneDataPOST = {
+
+
         // Simple data (must match the C# property names exactly)
         phoneName: document.getElementById("phoneName").value || "",
         phoneAntutu: parseInt(document.getElementById("Antutu").value) || 0,
@@ -301,12 +307,12 @@ function PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValue
         connectionMaxWifi: parseInt(document.getElementById("Wifi").value) || 0,
         connectionMaxBluetooth: parseFloat(document.getElementById("Bluetooth").value) || 0.0,
         connectionMaxMobileNetwork: parseInt(document.getElementById("MobileNetwork").value) || 0,
-        connectionDualSim: document.getElementById("DualSIM").value || "nincs",
-        connectionESim: document.getElementById("ESIM").value || "nincs",
-        connectionNfc: document.getElementById("NFC").value || "nincs",
+        connectionDualSim: document.getElementById("DualSIM").checked ? "van" : "nincs",
+        connectionESim: document.getElementById("ESIM").checked ? "van" : "nincs",
+        connectionNfc: document.getElementById("NFC").checked ? "van" : "nincs",
         connectionConnectionSpeed: parseInt(document.getElementById("ConnectorSpeed").value) || 0,
-        connectionJack: document.getElementById("Jack").value || "nincs",
-        sensorsInfrared: document.getElementById("Infrared").value || "nincs",
+        connectionJack: document.getElementById("Jack").checked ? "van" : "nincs",
+        sensorsInfrared: document.getElementById("Infrared").checked ? "van" : "nincs",
         batteryCapacity: parseInt(document.getElementById("BatteryCapacity").value) || 0,
         batteryMaxChargingWired: parseInt(document.getElementById("WiredChargingSpeed").value) || 0,
         batteryMaxChargingWireless: parseInt(document.getElementById("WirelessChargingSpeed").value) || 0,
@@ -332,8 +338,8 @@ function PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValue
         sensorsFingerprintType: document.getElementById("FingerprintSensorT").value || "",
         storageSpeed: document.getElementById("StorageSpeed").value || "",
         waterproofType: document.getElementById("WaterResistance").value || "",
-        speakerType: document.getElementById("speaker").value || "",
-        phoneWeight: document.getElementById("weight").value || 0.0,
+        speakerType: document.getElementById("speaker").checked?"stereo":"mono",
+        phoneWeight: document.getElementById("phoneWeight").value || 0.0,
 
         // Complex nested data
         ramStorage: {

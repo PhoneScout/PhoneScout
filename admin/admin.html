@@ -1,11 +1,307 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hu">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Felület</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 30px;
+        }
+
+        #phonesBox,
+        #usersBox {
+            flex: 1 1 45%;
+            background-color: #e9f0ff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            font-size: 18px;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        #phonesBox:hover,
+        #usersBox:hover {
+            transform: scale(1.02);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #7cbbff;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #e0e0e0;
+        }
+
+        #dataTable td:nth-child(1),
+        #dataTable th:nth-child(1) {
+            width: 5%;
+            /* ID */
+        }
+
+        #dataTable td:nth-child(2),
+        #dataTable th:nth-child(2) {
+            width: 30%;
+            /* Név */
+        }
+
+        #dataTable td:nth-child(3),
+        #dataTable th:nth-child(3) {
+            width: 30%;
+            /* Műveletek */
+        }
+
+        #dataTable td:nth-child(3),
+        #dataTable th:nth-child(3) {
+            width: 30%;
+            /* Műveletek */
+        }
+
+
+        .btn-group button {
+            margin-right: 5px;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .view-btn {
+            background-color: #17a2b8;
+            color: white;
+        }
+
+        .edit-btn {
+            background-color: #ffc107;
+            color: black;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+            color: white;
+        }
+    </style>
 </head>
+
 <body>
-    <h2>Admin</h2>
+
+    <div class="container">
+        <h1>Admin felület</h1>
+        <div class="row">
+            <div id="phonesBox">Összes telefon megjelenítése</div>
+            <div id="usersBox">Összes felhasználó megjelenítése</div>
+        </div>
+
+        <div id="searchContainer" style="text-align: center; margin-bottom: 20px;">
+            <input type="text" id="searchInputManufacturer" placeholder="Keresés gyártó alapján..."
+                style="padding: 8px; width: 300px; font-size: 16px;">
+            <input type="text" id="searchInputName" placeholder="Keresés név alapján..."
+                style="padding: 8px; width: 300px; font-size: 16px;">
+        </div>
+
+        <table id="dataTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Gyártó</th>
+                    <th>Név</th>
+                    <th>Műveletek</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody">
+                <!-- Rows go here -->
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        const allPhonesURL = "http://localhost:5165/api/GETadminPage";
+        let allPhonesData = [];
+
+        function loadPhonesFromBackend() {
+            fetch(allPhonesURL)
+                .then(response => response.json())
+                .then(data => {
+                    allPhonesData = data;
+                    console.log("Telefon adatok:", allPhonesData);
+                })
+                .catch(error => console.error("Hiba:", error));
+        }
+
+        function DELETEphone(phoneID) {
+            fetch(`http://localhost:5165/api/DELETEadminPage/${phoneID}`, {
+                method: 'DELETE',
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log('Delete successful!');
+                    } else if (response.status === 404) {
+                        console.log('Phone not found!');
+                    } else {
+                        console.log('Delete failed with status:', response.status);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error calling delete endpoint:', error);
+                });
+        }
+
+
+
+
+        document.getElementById("searchInputName").addEventListener("input", function () {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#tableBody tr");
+
+            rows.forEach(row => {
+                const nameCell = row.children[2]; // Second column = name
+                if (nameCell && nameCell.textContent.toLowerCase().includes(filter)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+        
+        // Replace with the actual phone ID you want to delete
+
+
+        document.getElementById("searchInputManufacturer").addEventListener("input", function () {
+            const filter = this.value.toLowerCase();
+            const rows = document.querySelectorAll("#tableBody tr");
+
+            rows.forEach(row => {
+                const nameCell = row.children[1]; // Second column = name
+                if (nameCell && nameCell.textContent.toLowerCase().includes(filter)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+
+
+        const users = [
+            { ID: 1, Név: "Kiss Péter", Email: "peter@example.com", Szerep: "Admin" },
+            { ID: 2, Név: "Nagy Anna", Email: "anna@example.com", Szerep: "Felhasználó" },
+        ];
+
+        function populateTable(data) {
+            const tableBody = document.getElementById("tableBody");
+            tableBody.innerHTML = "";
+
+            if (!data || data.length === 0) {
+                tableBody.innerHTML = `<tr><td colspan="3">Nincs adat</td></tr>`;
+                return;
+            }
+
+            data.forEach(item => {
+                const tr = document.createElement("tr");
+
+                const idCell = document.createElement("td");
+                idCell.textContent = item.phoneID || "—";
+                tr.appendChild(idCell);
+
+                const manufacturerCell = document.createElement("td");
+                manufacturerCell.textContent = item.manufacturerName || "—";
+                tr.appendChild(manufacturerCell);
+
+                const nameCell = document.createElement("td");
+                nameCell.textContent = item.phoneName || "—";
+                tr.appendChild(nameCell);
+
+                const actionsCell = document.createElement("td");
+                const btnGroup = document.createElement("div");
+                btnGroup.className = "btn-group";
+
+                const viewBtn = document.createElement("button");
+                viewBtn.textContent = "Megtekintés";
+                viewBtn.className = "view-btn";
+                viewBtn.onclick = () => window.location.href = "../telefonoldala/telefonoldal.html"
+                    ;
+
+                const editBtn = document.createElement("button");
+                editBtn.textContent = "Szerkesztés";
+                editBtn.className = "edit-btn";
+                editBtn.onclick = () => window.location.href = "../telefonfeltoltes/telefonfeltoltes.html"
+
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "Törlés";
+                deleteBtn.className = "delete-btn";
+                deleteBtn.addEventListener("click", function () {
+                    const phoneId = item.phoneID
+                    console.log("Delete clicked for phone ID:", phoneId);
+
+                    DELETEphone(phoneId)
+                });
+
+                btnGroup.append(viewBtn, editBtn, deleteBtn);
+                actionsCell.appendChild(btnGroup);
+                tr.appendChild(actionsCell);
+
+                tableBody.appendChild(tr);
+            });
+        }
+
+        document.getElementById("phonesBox").addEventListener("click", () => {
+            populateTable(allPhonesData);
+        });
+
+        document.getElementById("usersBox").addEventListener("click", () => {
+            populateTable(users);
+        });
+
+        window.onload = loadPhonesFromBackend;
+    </script>
+
 </body>
+
 </html>
