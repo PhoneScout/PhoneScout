@@ -80,7 +80,13 @@ function displayPhoneCards() {
 
         compareButton.onclick = function (event) {
             event.stopPropagation();
-            console.log(`Compare clicked for phone ID: ${phone.phoneID}`);
+            let comparePhones = JSON.parse(localStorage.getItem("comparePhones") || "[]");
+            if (!comparePhones.includes(phone.phoneID)) {
+                comparePhones.push(phone.phoneID);
+                localStorage.setItem("comparePhones", JSON.stringify(comparePhones));
+            }
+            // Opcionális: átirányítás
+            // window.location.href = "./osszehasonlitas/osszehasonlitas.html";
         };
 
         const cartButton = document.createElement("div");

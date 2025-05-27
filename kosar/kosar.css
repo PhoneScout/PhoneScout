@@ -13,17 +13,22 @@
     margin-bottom: 20px;
 }
 .paymentFormsWrapper {
-    display: flex; /* Flexbox elrendezés */
-    gap: 20px; /* Távolság a két form között */
-    justify-content: space-between;
+    display: flex;
+    gap: 32px;
+    justify-content: center;
+    align-items: flex-start;
+    margin-bottom: 32px; /* ÚJ: alsó margó */
 }
 
 .paymentFormBox {
-    width: 48%; /* Minden form box szélessége 48% */
-    padding: 10px;
-    border: 1px solid #ddd;
+    width: 350px;
+    min-width: 280px;
+    max-width: 100%;
+    padding: 0;
+    border: none;
     border-radius: 8px;
     box-sizing: border-box;
+    background: none;
 }
 
 .paymentForm {
@@ -369,7 +374,8 @@ footer .address {
     background: #0056b3;
 }
 
-#paymentFormContainer {
+#paymentFormContainer,
+#shippingFormContainer {
     display: block;
     max-height: 0;
     opacity: 0;
@@ -381,24 +387,33 @@ footer .address {
     border-radius: 8px;
     max-width: 350px;
     box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-    transition: max-height 1.2s cubic-bezier(.4,2,.6,1), opacity 0.3s, padding 0.3s;
+    transition:
+        max-height 0.5s cubic-bezier(.4,2,.6,1),
+        opacity 0.3s,
+        padding 0.3s,
+        transform 0.4s cubic-bezier(.4,2,.6,1);
+    transform: translateY(-20px) scaleY(0.97);
 }
 
-#paymentFormContainer.open {
-    max-height: 600px; /* elég nagy legyen, hogy minden beleférjen */
+#paymentFormContainer.open,
+#shippingFormContainer.open {
+    max-height: 600px;
     opacity: 1;
     padding: 18px 24px;
     margin-top: 16px;
     overflow: visible;
+    transform: translateY(0) scaleY(1);
 }
 
-#paymentFormContainer label {
+#paymentFormContainer label,
+#shippingFormContainer label {
     display: block;
     margin-bottom: 6px;
     font-weight: 500;
 }
 
-#paymentFormContainer input {
+#paymentFormContainer input,
+#shippingFormContainer input {
     width: 100%;
     padding: 7px 10px;
     margin-bottom: 12px;
