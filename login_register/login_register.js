@@ -1,29 +1,28 @@
-const apiUrl = "http://localhost:5287/api/auth";
+const apiUrl = "http://localhost:5165/api/auth";
 const allPhonesURL = "http://localhost:5287/api/allPhones"; // ÚJ BACKEND
 
 // Regisztráció
 async function register() {
-    const lastname = document.getElementById("registerLastName").value;
-    const firstname = document.getElementById("registerFirstName").value;
+    const lastName = document.getElementById("registerLastName").value;
+    const firstName = document.getElementById("registerFirstName").value;
     const middlename = document.getElementById("registerMiddleName").value;
-    const email = document.getElementById("registerEmail").value;
+    const emailAddress = document.getElementById("registerEmail").value;
     const password = document.getElementById("registerPassword").value;
     const passwordFix = document.getElementById("registerPasswordAgain").value;
-    const postalcode = document.getElementById("registerPostalCode").value;
+    const postalCode = document.getElementById("registerPostalCode").value;
     const city = document.getElementById("registerCity").value;
     const street = document.getElementById("registerStreet").value;
     const houseNumber = document.getElementById("registerHouseNumber").value;
     const phoneNumber = document.getElementById("registerPhoneNU").value;
 
-    // Fix: define jogosultsag in proper scope
-    let jogosultsag = (username === "admin") ? 1 : 0;
+    let entitlement = (lastName === "admin") ? 1 : 0;
 
     if (password === passwordFix) {
         try {
             const response = await fetch(`${apiUrl}/register`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ lastname, firstname, middlename,  email, password, postalcode, city, street, houseNumber, phoneNumber, jogosultsag })
+                body: JSON.stringify({ lastName, firstName, middlename, emailAddress, password, postalCode, city, street, houseNumber, phoneNumber, entitlement })
             });
 
             const data = await response.text();
@@ -45,7 +44,6 @@ async function register() {
             document.getElementById("alertReg").style.color = "red";
         }
 
-        // Clear password fields
         document.getElementById("registerPassword").value = "";
         document.getElementById("registerPasswordAgain").value = "";
 
@@ -59,38 +57,42 @@ async function register() {
 
 // Bejelentkezés
 async function login() {
-    const email = document.getElementById("loginEmail").value;
+    const emailAddress = document.getElementById("loginEmail").value;
     const password = document.getElementById("loginPassword").value;
 
     try {
         const response = await fetch(`${apiUrl}/login`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ email, password })
+            body: JSON.stringify({ emailAddress, password })
         });
 
         const data = await response.json();
 
         if (data.token) {
-            localStorage.setItem("jwtToken", data.token);
-            localStorage.setItem("firstname", firstname);
-
             const decoded = parseJwt(data.token);
-            if (decoded && decoded.Jogosultsag !== undefined) {
-                localStorage.setItem("jogosultsag", decoded.Jogosultsag);
-            }
+            console.log("Decoded JWT:", decoded);
 
-            document.getElementById("alertLog").innerText = `Sikeres bejelentkezés! Üdvözlünk ${firstname}`;
+            const firstName = decoded["unique_name"] || "Felhasználó";
+            const jogosultsag = decoded["Jogosultsag"];
+
+            localStorage.setItem("jwtToken", data.token);
+            localStorage.setItem("firstname", firstName);
+            localStorage.setItem("jogosultsag", jogosultsag);
+
+            document.getElementById("alertLog").innerText = `Sikeres bejelentkezés! Üdvözlünk, ${firstName}!`;
             document.getElementById("alertLog").style.color = "green";
 
             setTimeout(() => {
                 window.location.href = "../index.html";
             }, 1000);
+
         } else {
             document.getElementById("alertLog").innerText = "Sikertelen bejelentkezés.";
             document.getElementById("loginPassword").value = "";
             document.getElementById("alertLog").style.color = "red";
         }
+
     } catch (error) {
         console.error("Login error:", error);
         document.getElementById("alertLog").innerText = "Hiba lépett fel bejelentkezés közben, próbáld újra";
@@ -116,6 +118,7 @@ function parseJwt(token) {
         return null;
     }
 }
+
 
 // Védett erőforrás elérése
 async function accessProtectedResource() {

@@ -37,7 +37,7 @@ function displayPhoneCards() {
 
         const phoneName = document.createElement("div");
         phoneName.classList.add("phoneName");
-        phoneName.textContent = phone.phoneNev;
+        phoneName.textContent = phone.phoneName;
 
         if (phoneName.textContent.length > 8) {
             phoneName.style.whiteSpace = "normal"; // Engedélyezzük a sortörést
@@ -49,11 +49,11 @@ function displayPhoneCards() {
 
         const phonePrice = document.createElement("div");
         phonePrice.classList.add("phonePrice");
-        phonePrice.textContent = `${phone.price} Ft`;
+        phonePrice.textContent = `${phone.phonePrice} Ft`;
 
         const phoneStock = document.createElement("div");
         phoneStock.classList.add("phoneStock");
-        phoneStock.textContent = phone.inStore === "van" ? "Raktáron" : "Nincs Raktáron";
+        phoneStock.textContent = phone.phoneInStore === "van" ? "Raktáron" : "Nincs Raktáron";
 
         const cardButtons = document.createElement("div");
         cardButtons.classList.add("cardButtons");
@@ -142,29 +142,67 @@ function telDataShowMain(allPhonesData) {
         return;
     }
 
-    
+
     let selectedPhone = allPhonesData.find(item => item.phoneID == 57);//telefon ID, át kell írni az éppen aktívra
 
     let colorPlace = document.getElementById("colorPlace")
+    let ramStoragePlace = document.getElementById("ramStoragePlace")
 
-    console.log(selectedPhone.color.colorHex.length)
+    console.log(selectedPhone.color.colorName.length)
 
     console.log(selectedPhone)
 
     //színek adatbázisból
     for (let i = 0; i < selectedPhone.color.colorName.length; i++) {
         let colorHTML = `<button class="color-option" style="background: ${selectedPhone.color.colorHex[i]};" onclick="selectColor(this)"></button>`
-        colorPlace.innerHTML += colorHTML        
+        colorPlace.innerHTML += colorHTML
     }
+
+    for (let i = 0; i < selectedPhone.ramStorage.ramAmount.length; i++) {
+        let ramStorageHTML = `<button class="ramTárhelyOption" onclick="selectRamTárhely(this)">${selectedPhone.ramStorage.ramAmount[i]}/${selectedPhone.ramStorage.storageAmount}GB</button>`
+        ramStoragePlace.innerHTML += ramStorageHTML
+    }
+
+    // Example structure:
+    // selectedPhone.camera.cameraName = ["Main", "Ultra Wide"];
+    // selectedPhone.camera.cameraResolution = [50, 12];
+    // selectedPhone.camera.kameraAperture = ["f/1.8", "f/2.2"];
+
+    const camNames = selectedPhone.camera.cameraName;
+    const camRes = selectedPhone.camera.cameraResolution;
+    const camApertures = selectedPhone.camera.cameraAperture;
+    const camFocalLengths = selectedPhone.camera.cameraFocalLength;
+    const camOISs = selectedPhone.camera.cameraOIS;
+
+    console.log(camOISs)
+
+
+    cameraPlace.innerHTML = "";
+
+    for (let i = 0; i < camNames.length; i++) {
+        cameraPlace.innerHTML += `
+    <tr><td class="camera_table">Kamera neve</td><td class="camera_table">${camNames[i]}</td></tr>
+    <tr><td class="camera_table">Felbontás</td><td class="camera_table">${camRes[i]} MP</td></tr>
+    <tr><td class="camera_table">Rekeszérték</td><td class="camera_table">${camApertures[i]}</td></tr>
+    <tr><td class="camera_table">Fókusztávolság</td><td class="camera_table">${camFocalLengths[i]}</td></tr>
+    <tr><td class="camera_table">Opptikai képstabilizátor</td><td class="camera_table">${camOISs[i]}</td></tr>
+  `;
+    }
+
+
+
+
+
+
 
 
 
     console.log(allPhonesData)
 
     if (selectedPhone) {
-        const phoneName = selectedPhone.phoneNev;
-        const phoneStock = selectedPhone.inStore === "van" ? "Raktáron" : "Nincs raktáron";
-        const phonePrice = `${selectedPhone.ar} Ft`;
+        const phoneName = selectedPhone.phoneName;
+        const phoneStock = selectedPhone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron";
+        const phonePrice = `${selectedPhone.phonePrice} Ft`;
 
         document.getElementById("telData").innerHTML = `
             <div class="phoneName" id="showRequestedDataName">
@@ -209,68 +247,62 @@ function telDataShow(allPhonesData) {
         return;
     }
 
-    let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID);
+    let selectedPhone = allPhonesData.find(item => item.phoneID == 57); //ID!!!!!!!!!!!!!!!!!!!!!
     if (selectedPhone) {
         dataPlace.innerHTML = `
                 <div class="row align-items-center">
                         <table class="table table-striped table-bordered text-center" style="border: solid black 1px">
                             <thead>
                                 <tr>
-                                    <th colspan="2">${selectedPhone.phoneNev} telefon adatai</th>
+                                    <th colspan="2">${selectedPhone.phoneName} telefon adatai</th>
                                 </tr>
                             <tbody>                          
 
+                            
+    <tr><td colspan="2" class="cpu_table"><strong>CPU</strong></td></tr>
+    <tr><td class="cpu_table">Név</td><td class="cpu_table">${selectedPhone.cpuName}</td></tr>
+    <tr><td class="cpu_table">Antutu pontszám</td><td class="cpu_table">${selectedPhone.phoneAntutu}</td></tr>
+    <tr><td class="cpu_table">Max Órajel</td><td class="cpu_table">${selectedPhone.cpuMaxClockSpeed} GHz</td></tr>
+    <tr><td class="cpu_table">Magok száma</td><td class="cpu_table">${selectedPhone.cpuCoreNumber}</td></tr>
+    <tr><td class="cpu_table">Gyártási technológia</td><td class="cpu_table">${selectedPhone.cpuManufacturingTechnology} nm</td></tr>
 
+    <tr><td colspan="2" class="kijelzo_table"><strong>Kijelző</strong></td></tr>
+    <tr><td class="kijelzo_table">Típusa</td><td class="kijelzo_table">${selectedPhone.screenType}</td></tr>
+    <tr><td class="kijelzo_table">Felbontás</td><td class="kijelzo_table">${selectedPhone.phoneResolutionHeight} x ${selectedPhone.phoneResolutionWidth} px</td></tr>
+    <tr><td class="kijelzo_table">Mérete</td><td class="kijelzo_table">${selectedPhone.screenSize}”</td></tr>
+    <tr><td class="kijelzo_table">Frissítési ráta</td><td class="kijelzo_table">${selectedPhone.screenRefreshRate} Hz</td></tr>
+    <tr><td class="kijelzo_table">Max fényerő</td><td class="kijelzo_table">${selectedPhone.screenMaxBrightness} nit</td></tr>
+    <tr><td class="kijelzo_table">Élessége/Képpontsűrűség</td><td class="kijelzo_table">${selectedPhone.screenSharpness} ppi</td></tr>
 
-                                <tr><td colspan="2" class="cpu_table"><strong>CPU</strong></td></tr>
-                                <tr><td class="cpu_table">Név</td><td class="cpu_table">${selectedPhone.cpuNev}</td></tr>
-                                <tr><td class="cpu_table">Antutu pontszám</td><td class="cpu_table">${selectedPhone.cpuAntutu}</td></tr>
-                                <tr><td class="cpu_table">Max Órajel</td><td class="cpu_table">${selectedPhone.cpuMaxOrajel} GHz</td></tr>
-                                <tr><td class="cpu_table">Magok száma</td><td class="cpu_table">${selectedPhone.cpuMagokSzama}</td></tr>
-                                <tr><td class="cpu_table">Gyártási technológia</td><td class="cpu_table">${selectedPhone.cpuGyartasiTechnologia} nm</td></tr>
+    <tr><td colspan="2" class="csatlakozo_table"><strong>Csatlakoztathatóság</strong></td></tr>
+    <tr><td class="csatlakozo_table">Wi-Fi</td><td class="csatlakozo_table">Wifi ${selectedPhone.connectionMaxWifi}</td></tr>
+    <tr><td class="csatlakozo_table">Bluetooth</td><td class="csatlakozo_table">Bluetooth ${selectedPhone.connectionMaxBluetooth}</td></tr>
+    <tr><td class="csatlakozo_table">Mobilhálózat</td><td class="csatlakozo_table">${selectedPhone.connectionMaxMobileNetwork}</td></tr>
+    <tr><td class="csatlakozo_table">Dual SIM</td><td class="csatlakozo_table">${selectedPhone.connectionDualSim}</td></tr>
+    <tr><td class="csatlakozo_table">E-SIM</td><td class="csatlakozo_table">${selectedPhone.connectionESim}</td></tr>
+    <tr><td class="csatlakozo_table">NFC</td><td class="csatlakozo_table">${selectedPhone.connectionNfc}</td></tr>
 
-                                <tr><td colspan="2" class="kijelzo_table"><strong>Kijelző</strong></td></tr>
-                                <tr><td class="kijelzo_table">Típusa</td><td class="kijelzo_table">${selectedPhone.kijelzoTipusa}</td></tr>
-                                <tr><td class="kijelzo_table">Felbontás</td><td class="kijelzo_table">${selectedPhone.kijelzoFelbontasMagassag} x ${selectedPhone.kijelzoFelbontasSzelesseg} px</td></tr>
-                                <tr><td class="kijelzo_table">Mérete</td><td class="kijelzo_table">${selectedPhone.kijelzoMerete}”</td></tr>
-                                <tr><td class="kijelzo_table">Frissítési ráta</td><td class="kijelzo_table">${selectedPhone.kijelzoFrissitesiRata} Hz</td></tr>
-                                <tr><td class="kijelzo_table">Max fényerő</td><td class="kijelzo_table">${selectedPhone.kijelzoMaxFenyero} nit</td></tr>
-                                <tr><td class="kijelzo_table">Élessége/Képpontsűrűség</td><td class="kijelzo_table">${selectedPhone.kijelzoElesseg} ppi</td></tr>
+    <tr><td colspan="2" class="ram_storage_table"><strong>RAM / Tárhely</strong></td></tr>
+    <tr><td class="ram_storage_table">RAM sebesség</td><td class="ram_storage_table">${selectedPhone.ramSebesseg}</td></tr>
+    <tr><td class="ram_storage_table">Tárhely sebesség</td><td class="ram_storage_table">${selectedPhone.storageSebesseg}</td></tr>
 
-                                <tr><td colspan="2" class="csatlakozo_table"><strong>Csatlakoztathatóság</strong></td></tr>
-                                <tr><td class="csatlakozo_table">Wi-Fi</td><td class="csatlakozo_table">Wifi ${selectedPhone.csatlakoztathatosagWifi}</td></tr>
-                                <tr><td class="csatlakozo_table">Bluetooth</td><td class="csatlakozo_table">Bluetooth ${selectedPhone.csatlakoztathatosagBluetooth}</td></tr>
-                                <tr><td class="csatlakozo_table">Mobilhálózat</td><td class="csatlakozo_table">${selectedPhone.csatlakoztathatosagMobilhalozat}</td></tr>
-                                <tr><td class="csatlakozo_table">Dual SIM</td><td class="csatlakozo_table">${selectedPhone.csatlakoztathatosagDualSim}</td></tr>
-                                <tr><td class="csatlakozo_table">E-SIM</td><td class="csatlakozo_table">${selectedPhone.csatlakoztathatosagESim}</td></tr>
-                                <tr><td class="csatlakozo_table">NFC</td><td class="csatlakozo_table">${selectedPhone.csatlakoztathatosagNfc}</td></tr>
+    <tr><td colspan="2" class="akkumulator_table"><strong>Akkumulátor és Töltés</strong></td></tr>
+    <tr><td class="akkumulator_table">Akkumulátor kapacitása</td><td class="akkumulator_table">${selectedPhone.batteryCapacity} mAh</td></tr>
+    <tr><td class="akkumulator_table">Akkumulátor típusa</td><td class="akkumulator_table">${selectedPhone.batteryType}</td></tr>
+    <tr><td class="akkumulator_table">Vezetékes töltés max sebessége</td><td class="akkumulator_table">${selectedPhone.batteryMaxChargingWired}W</td></tr>
+    <tr><td class="akkumulator_table">Vezeték nélküli töltés max sebessége</td><td class="akkumulator_table">${selectedPhone.batteryMaxChargingWireless}W</td></tr>
 
-                                <tr><td colspan="2" class="ram_storage_table"><strong>RAM / Tárhely</strong></td></tr>
-                                <tr><td class="ram_storage_table">RAM/tárhely mennyisége</td><td class="ram_storage_table">${selectedPhone.ramMennyiseg}/${selectedPhone.storageMennyiseg}GB</td></tr>
-                                <tr><td class="ram_storage_table">RAM sebesség</td><td class="ram_storage_table">${selectedPhone.ramSebesseg}</td></tr>
-                                <tr><td class="ram_storage_table">Tárhely sebesség</td><td class="ram_storage_table">${selectedPhone.storageSebesseg}</td></tr>
+    <tr><td colspan="2" class="camera_table"><strong>Kamera</strong></td></tr>
+    <tbody id="cameraPlace"></tbody>
 
-                                <tr><td colspan="2" class="akkumulator_table"><strong>Akkumulátor és Töltés</strong></td></tr>
-                                <tr><td class="akkumulator_table">Akkumulátor kapacitása</td><td class="akkumulator_table">${selectedPhone.akkumulatorKapacitas} mAh</td></tr>
-                                <tr><td class="akkumulator_table">Akkumulátor típusa</td><td class="akkumulator_table">${selectedPhone.akkumulatorTipusa}</td></tr>
-                                <tr><td class="akkumulator_table">Vezetékes töltés max sebessége</td><td class="akkumulator_table">${selectedPhone.toltoVezetekes}W</td></tr>
-                                <tr><td class="akkumulator_table">Vezeték nélküli töltés max sebessége</td><td class="akkumulator_table">${selectedPhone.toltoVezeteknelkuli}W</td></tr>
+    <tr><td colspan="2" class="test_table"><strong>Test/Ház/Külső</strong></td></tr>
+    <tr><td class="test_table">Magasság</td><td class="test_table">${selectedPhone.caseHeight} mm</td></tr>
+    <tr><td class="test_table">Szélesség</td><td class="test_table">${selectedPhone.caseWidth} mm</td></tr>
+    <tr><td class="test_table">Vastagság</td><td class="test_table">${selectedPhone.caseThickness} mm</td></tr>
+    <tr><td class="test_table">Vízállóság</td><td class="test_table">${selectedPhone.waterproofType}</td></tr>
+    <tr><td class="test_table">Hátlap anyaga</td><td class="test_table">${selectedPhone.backMaterial}</td></tr>
+</table>
 
-                                <tr><td colspan="2" class="camera_table"><strong>Kamera</strong></td></tr>
-                                <tr><td class="camera_table">Kamera neve</td><td class="camera_table">${selectedPhone.kameraNev}</td></tr>
-                                <tr><td class="camera_table">Kamera felbontása</td><td class="camera_table">${selectedPhone.kameraFelbontas}MP</td></tr>
-                                <tr><td class="camera_table">Kamera rekeszértéke</td><td class="camera_table">${selectedPhone.kameraRekeszertek}</td></tr>
-
-                                <tr><td colspan="2" class="test_table"><strong>Test/Ház/Külső</strong></td></tr>
-                                <tr><td class="test_table">Magasság</td><td class="test_table">${selectedPhone.testMagassag} mm</td></tr>
-                                <tr><td class="test_table">Szélesség</td><td class="test_table">${selectedPhone.testSzelesseg} mm</td></tr>
-                                <tr><td class="test_table">Vastagság</td><td class="test_table">${selectedPhone.testVastagsag} mm</td></tr>
-                                <tr><td class="test_table">Vízállóság</td><td class="test_table">${selectedPhone.testVizalossag}</td></tr>
-                                <tr><td class="test_table">Hátlap anyaga</td><td class="test_table">${selectedPhone.testHatlapAnyaga}</td></tr>
-                            </tbody>
-                        </table>
-                    </div>               
-            </div>
         `;
     } else {
         console.error("No phone found with the given ID.");
@@ -299,7 +331,7 @@ function selectRamTárhely(element) {
 }
 
 function selectColor(element) {
-    document.querySelectorAll('.color-option').forEach(option => { 
+    document.querySelectorAll('.color-option').forEach(option => {
         option.style.border = '1px solid black';
         option.style.boxShadow = 'none';
     });
@@ -322,7 +354,7 @@ function addSvgHoverEffect(svgId, elementId, tableClass) {
                 targetElement.style.fill = "#38ec38dc";
 
                 const tableRows = document.querySelectorAll(`.${tableClass}`);
-                tableRows.forEach(function(row) {
+                tableRows.forEach(function (row) {
                     row.style.backgroundColor = "#38ec38bd";
                 });
             });
@@ -331,19 +363,19 @@ function addSvgHoverEffect(svgId, elementId, tableClass) {
                 targetElement.style.fill = "";
 
                 const tableRows = document.querySelectorAll(`.${tableClass}`);
-                tableRows.forEach(function(row) {
+                tableRows.forEach(function (row) {
                     row.style.backgroundColor = "";
                 });
             });
 
             targetElement.addEventListener("click", function () {
                 const tableRows = document.querySelectorAll(`.${tableClass}`);
-                tableRows.forEach(function(row) {
+                tableRows.forEach(function (row) {
                     const strongTag = row.querySelector("strong");
                     if (strongTag) {
                         const rowText = strongTag.textContent.trim().replace(/\s+/g, '').toLowerCase();
                         const elementText = elementId.replace(/\s+/g, '').toLowerCase();
-                        
+
                         if (rowText === elementText) {
                             row.scrollIntoView({ behavior: "smooth", block: "center" });
                         }
@@ -384,7 +416,7 @@ function logout() {
 document.querySelector('.moreInfoAboutPhone').addEventListener('click', function () {
     // Kiválasztjuk a táblázat első sorát (az első <tr> elemet)
     const firstRow = document.querySelector('table tr');
-    
+
     // Görgetünk az első sorhoz
     if (firstRow) {
         firstRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
