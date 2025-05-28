@@ -1,11 +1,11 @@
 const apiUrl = "http://localhost:5287/api/auth";
 //const allPhonesURL = "http://localhost:5287/api/allPhones"; //RÉGI BACKEND
 const allPhonesURL = "http://localhost:5165/api/postPhone/phonePost1"; // ÚJ BACKEND
-
+const allPhonesURLg = "http://localhost:5165/api/GETphonePage";
 let allPhonesData = [];
 
 function getPhoneDatas() {
-    return fetch(allPhonesURL)
+    return fetch(allPhonesURLg+"/"+57)
         .then(response => response.json())
         .then(data => {
             allPhonesData = data;
@@ -528,3 +528,105 @@ function updateSpeakerLabel(switchElem) {
 window.addEventListener("DOMContentLoaded", function () {
     updateSpeakerLabel(document.getElementById("speakerTypeSwitch"));
 });
+
+
+
+function fillDataByPhoneID() {
+    const phoneID = document.getElementById("phoneIDInput").value.trim();
+    if (!phoneID) {
+        alert("Adj meg egy telefonID-t!");
+        return;
+    }
+
+    const phoneData = allPhonesData.find(phone => phone.phoneID == phoneID);
+
+    if (!phoneData) {
+        alert("Nincs ilyen telefonID-hez adat!");
+        return;
+    }
+
+    function safeValue(val) {
+        if (val === null || val === undefined) return "";
+        return val.toString();
+    }
+
+    // Szöveges és számmezők kitöltése
+    document.getElementById("Width").value = safeValue(phoneData.caseWidth);
+    document.getElementById("Height").value = safeValue(phoneData.caseHeight);
+    document.getElementById("Thickness").value = safeValue(phoneData.caseThickness);
+    document.getElementById("phoneName").value = safeValue(phoneData.phoneName);
+    document.getElementById("Antutu").value = safeValue(phoneData.phoneAntutu);
+    document.getElementById("CpuName").value = safeValue(phoneData.cpuName);
+    document.getElementById("MaxClockspeed").value = safeValue(phoneData.cpuMaxClockSpeed);
+    document.getElementById("CoreNumber").value = safeValue(phoneData.cpuCoreNumber);
+    document.getElementById("ManufacturingTechnology").value = safeValue(phoneData.cpuManufacturingTechnology);
+    document.getElementById("FingerprintSensorP").value = safeValue(phoneData.sensorsFingerprintPlace);
+    document.getElementById("FingerprintSensorT").value = safeValue(phoneData.sensorsFingerprintType);
+    document.getElementById("ResolutionH").value = safeValue(phoneData.phoneResolutionHeight);
+    document.getElementById("ResolutionW").value = safeValue(phoneData.phoneResolutionWidth);
+    document.getElementById("Size").value = safeValue(phoneData.screenSize);
+    document.getElementById("RefreshRate").value = safeValue(phoneData.screenRefreshRate);
+    document.getElementById("MaxBrightness").value = safeValue(phoneData.screenMaxBrightness);
+    document.getElementById("PixelDensity").value = safeValue(phoneData.screenSharpness);
+    document.getElementById("Wifi").value = safeValue(phoneData.connectionMaxWifi);
+    document.getElementById("Bluetooth").value = safeValue(phoneData.connectionMaxBluetooth);
+    document.getElementById("MobileNetwork").value = safeValue(phoneData.connectionMaxMobileNetwork);
+    document.getElementById("ConnectorSpeed").value = safeValue(phoneData.connectionConnectionSpeed);
+    document.getElementById("BatteryCapacity").value = safeValue(phoneData.batteryCapacity);
+    document.getElementById("WiredChargingSpeed").value = safeValue(phoneData.batteryMaxChargingWired);
+    document.getElementById("WirelessChargingSpeed").value = safeValue(phoneData.batteryMaxChargingWireless);
+    document.getElementById("BatteryType").value = safeValue(phoneData.batteryType);
+    document.getElementById("ChargerType").value = safeValue(phoneData.chargerType);
+    document.getElementById("RAMSpeed").value = safeValue(phoneData.ramSpeed);
+    document.getElementById("StorageSpeed").value = safeValue(phoneData.storageSpeed);
+    document.getElementById("DisplayType").value = safeValue(phoneData.screenType);
+    document.getElementById("WaterResistance").value = safeValue(phoneData.waterproofType);
+    document.getElementById("BackMaterial").value = safeValue(phoneData.backMaterial);
+    document.getElementById("phonePrice").value = safeValue(phoneData.phonePrice);
+    document.getElementById("phoneWeight").value = safeValue(phoneData.phoneWeight);
+    document.getElementById("InStore").value = safeValue(phoneData.phoneInStore);
+
+    // Checkboxok beállítása (kisbetűsítve, booleanra konvertálva)
+    function isChecked(val) {
+        if (!val) return false;
+        return val.toString().toLowerCase() === "van";
+    }
+    document.getElementById("DualSIM").checked = isChecked(phoneData.connectionDualSim);
+    document.getElementById("ESIM").checked = isChecked(phoneData.connectionESim);
+    document.getElementById("NFC").checked = isChecked(phoneData.connectionNfc);
+    document.getElementById("Jack").checked = isChecked(phoneData.connectionJack);
+    document.getElementById("Infrared").checked = isChecked(phoneData.sensorsInfrared);
+    document.getElementById("speaker").checked = (phoneData.speakerType && phoneData.speakerType.toLowerCase() === "stereo");
+
+    // --- RAM / Storage tömbök feltöltése ---
+    const ramstoragePlace = document.getElementById("ramstoragePlace");
+    ramstoragePlace.innerHTML = "";  // törlés
+
+    if (Array.isArray(phoneData.ramStorage) && phoneData.ramStorage.length > 0) {
+        phoneData.ramStorage.forEach(item => {
+            generateRamStorageCards(item.ramSize, item.storageSize);
+        });
+    }
+
+    // --- Kamera tömb feltöltése ---
+    const cameraPlace = document.getElementById("cameraPlace");
+    cameraPlace.innerHTML = "";
+
+    if (Array.isArray(phoneData.cameras) && phoneData.cameras.length > 0) {
+        phoneData.cameras.forEach(camera => {
+            generateCameraCards(camera.name, camera.megapixels, camera.aperture, camera.features);
+        });
+    }
+
+    // --- Szín tömb feltöltése ---
+    const colorPlace = document.getElementById("colorPlace");
+    colorPlace.innerHTML = "";
+
+    if (Array.isArray(phoneData.colors) && phoneData.colors.length > 0) {
+        phoneData.colors.forEach(color => {
+            generateColorCards(color.name, color.hexCode);
+        });
+    }
+
+    alert("Adatok betöltve!");
+}

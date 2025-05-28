@@ -109,79 +109,69 @@
           <h5 class="text-center mb-3">Alap adatok</h5>
           <div class="row mb-3">
             <label class="col-md-6 col-form-label">Telefon név</label>
-            <div class="col-md-6"><input type="text" class="form-control"></div>
+            <div class="col-md-6"><input id="phoneName" type="text" class="form-control"></div>
           </div>
           <div class="row mb-3">
             <label class="col-md-6 col-form-label">CPU neve</label>
-            <div class="col-md-6"><input type="text" class="form-control"></div>
+            <div class="col-md-6"><input id="CpuName" type="text" class="form-control"></div>
           </div>
           <div class="row mb-3">
             <label class="col-md-6 col-form-label">Antutu pontszáma</label>
-            <div class="col-md-6"><input type="text" class="form-control"></div>
+            <div class="col-md-6"><input id="Antutu" type="number" class="form-control"></div>
           </div>
           <div class="row mb-3">
             <label class="col-md-6 col-form-label">Max órajel</label>
-            <div class="col-md-6"><input type="text" class="form-control"></div>
+            <div class="col-md-6"><input id="MaxClockspeed" type="number" class="form-control"></div>
           </div>
           <div class="row mb-3">
             <label class="col-md-6 col-form-label">Magok száma</label>
-            <div class="col-md-6"><input type="text" class="form-control"></div>
+            <div class="col-md-6"><input id="CoreNumber" type="number" class="form-control"></div>
           </div>
           <div class="row mb-3">
             <label class="col-md-6 col-form-label">Gyártási technológia</label>
-            <div class="col-md-6"><input type="text" class="form-control"></div>
+            <div class="col-md-6"><input id="ManufacturingTechnology" type="text" class="form-control"></div>
           </div>
         </div>
         <!-- 2. oldal -->
         <div class="form-page" id="form-page-2" style="display:none;">
           <h5 class="text-center mb-3">Kijelző</h5>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Típusa</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Felbontás</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Mérete</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Frissítési ráta</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Max fényerő</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Élesség / Képpontsűrűség</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Típusa</label><div class="col-md-6"><input id="DisplayType" type="text" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Felbontás magasság</label><div class="col-md-6"><input id="ResolutionH" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Felbontás szélesség</label><div class="col-md-6"><input id="ResolutionW" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Mérete</label><div class="col-md-6"><input id="Size" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Frissítési ráta</label><div class="col-md-6"><input id="RefreshRate" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Max fényerő</label><div class="col-md-6"><input id="MaxBrightness" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Élesség / Képpontsűrűség</label><div class="col-md-6"><input id="PixelDensity" type="number" class="form-control"></div></div>
         </div>
         <!-- 3. oldal -->
         <div class="form-page" id="form-page-3" style="display:none;">
-          <h5 class="text-center mb-3">Kapcsolatok</h5>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Wi-Fi</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Bluetooth</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Mobilhálózat</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Dual SIM</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">E-Sim</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">NFC</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
+          <h5 class="text-center mb-3">Csatlakoztathatóság</h5>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Wi-Fi</label><div class="col-md-6"><input id="Wifi" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Bluetooth</label><div class="col-md-6"><input id="Bluetooth" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Mobilhálózat</label><div class="col-md-6"><input id="MobileNetwork" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Dual SIM</label><div class="col-md-6"><input id="DualSIM" type="checkbox" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">E-Sim</label><div class="col-md-6"><input id="ESIM" type="checkbox" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">NFC</label><div class="col-md-6"><input id="NFC" type="checkbox" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Jack csatlakozó</label><div class="col-md-6"><input id="Jack" type="checkbox" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Csatlakozó gyorsasága</label><div class="col-md-6"><input id="ConnectorSpeed" type="number" class="form-control"></div></div>
         </div>
         <!-- 4. oldal -->
         <div class="form-page" id="form-page-4" style="display:none;">
-          <h5 class="text-center mb-3">Memória</h5>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">RAM / tárhely mennyiség</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">RAM sebesség</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Tárhely sebesség</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
+          <h5 class="text-center mb-3">Akkumulátor és töltés</h5>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Kapacitás</label><div class="col-md-6"><input id="BatteryCapacity" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Típusa</label><div class="col-md-6"><input id="BatteryType" type="text" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Vezetékes töltés max sebesség</label><div class="col-md-6"><input id="WiredChargingSpeed" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Vezeték nélküli töltés max sebesség</label><div class="col-md-6"><input id="WirelessChargingSpeed" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Töltő Típusa</label><div class="col-md-6"><input id="ChargerType" type="text" class="form-control"></div></div>
         </div>
         <!-- 5. oldal -->
         <div class="form-page" id="form-page-5" style="display:none;">
-          <h5 class="text-center mb-3">Akkumulátor</h5>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Kapacitás</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Típusa</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Vezetékes töltés max sebesség</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Vezeték nélküli töltés max sebesség</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-        </div>
-        <!-- 6. oldal -->
-        <div class="form-page" id="form-page-6" style="display:none;">
-          <h5 class="text-center mb-3">Kamera</h5>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Kamera neve</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Felbontás</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Rekeszérték</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-        </div>
-        <!-- 7. oldal -->
-        <div class="form-page" id="form-page-7" style="display:none;">
           <h5 class="text-center mb-3">Külső jellemzők</h5>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Magasság</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Szélesség</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Vastagság</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Vízállóság</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
-          <div class="row mb-3"><label class="col-md-6 col-form-label">Hátlap anyaga</label><div class="col-md-6"><input type="text" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Magasság</label><div class="col-md-6"><input id="Height" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Szélesség</label><div class="col-md-6"><input id="Width" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Vastagság</label><div class="col-md-6"><input id="Thickness" type="number" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Vízállóság</label><div class="col-md-6"><input id="WaterResistance" type="text" class="form-control"></div></div>
+          <div class="row mb-3"><label class="col-md-6 col-form-label">Hátlap anyaga</label><div class="col-md-6"><input id="BackMaterial" type="text" class="form-control"></div></div>
         </div>
 
         <!-- GOMBOK -->
