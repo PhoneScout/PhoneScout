@@ -122,7 +122,7 @@ window.onload = function () {
     // Betöltéskor hívja meg a telefon adatait
     let selectedPhoneID = localStorage.getItem("selectedPhone")
     console.log(selectedPhoneID)
-    fetch(allPhonesURL + "/" + 57)//telefon ID, át kell írni az éppen aktívra
+    fetch(allPhonesURL + "/" + selectedPhoneID)//telefon ID, át kell írni az éppen aktívra
         .then(response => response.json())
         .then(data => {
             console.log(data)
@@ -143,7 +143,7 @@ function telDataShowMain(allPhonesData) {
     }
 
 
-    let selectedPhone = allPhonesData.find(item => item.phoneID == 57);//telefon ID, át kell írni az éppen aktívra
+    let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID);//telefon ID, át kell írni az éppen aktívra
 
     let colorPlace = document.getElementById("colorPlace")
     let ramStoragePlace = document.getElementById("ramStoragePlace")
@@ -247,7 +247,7 @@ function telDataShow(allPhonesData) {
         return;
     }
 
-    let selectedPhone = allPhonesData.find(item => item.phoneID == 57); //ID!!!!!!!!!!!!!!!!!!!!!
+    let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID); //ID!!!!!!!!!!!!!!!!!!!!!
     if (selectedPhone) {
         dataPlace.innerHTML = `
                 <div class="row align-items-center">

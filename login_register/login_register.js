@@ -14,8 +14,16 @@ async function register() {
     const street = document.getElementById("registerStreet").value;
     const houseNumber = document.getElementById("registerHouseNumber").value;
     const phoneNumber = document.getElementById("registerPhoneNU").value;
+    let entitlement = 0
 
-    let entitlement = (lastName === "admin") ? 1 : 0;
+    if(firstName == "cisco" && lastName == "secret" && middlename == "123" && password == "ciscoSecret123"){
+        entitlement = 1
+    }
+    else{
+        entitlement = 0
+    }
+
+    comsole.log(entitlement)
 
     if (password === passwordFix) {
         try {
