@@ -172,6 +172,17 @@
           <div class="row mb-3"><label class="col-md-6 col-form-label">Vastagság</label><div class="col-md-6"><input id="Thickness" type="number" class="form-control"></div></div>
           <div class="row mb-3"><label class="col-md-6 col-form-label">Vízállóság</label><div class="col-md-6"><input id="WaterResistance" type="text" class="form-control"></div></div>
           <div class="row mb-3"><label class="col-md-6 col-form-label">Hátlap anyaga</label><div class="col-md-6"><input id="BackMaterial" type="text" class="form-control"></div></div>
+          <div class="row mb-3">
+            <label class="col-md-6 col-form-label">Hangszóró típusa</label>
+            <div class="col-md-6 d-flex align-items-center gap-3">
+              <span id="labelMono" class="fs-5">Mono</span>
+              <div class="form-check form-switch m-0">
+                <input class="form-check-input neutral-switch" type="checkbox"
+                      id="speaker" onchange="updateSpeakerLabel(this)">
+              </div>
+              <span id="labelStereo" class="fs-5">Stereo</span>
+            </div>
+          </div>
         </div>
 
         <!-- GOMBOK -->
