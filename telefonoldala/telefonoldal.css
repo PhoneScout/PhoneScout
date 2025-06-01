@@ -114,7 +114,7 @@
 #menu-options {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 10%;
     margin-left: auto;
     margin-right: auto;
 }
@@ -123,13 +123,13 @@
 #repair,
 #compare,
 #cart,
-#phoneUpload {
-    color: rgb(33, 33, 33);
+#phoneUpload,
+#adminInterface {
+    color: #212121;
     cursor: pointer;
     text-align: center;
     font-size: 105%;
-    margin-left: 2%;
-    margin-right: 2%;
+    margin: 0 2%;
     transition: 0.2s ease;
 }
 
@@ -137,7 +137,8 @@
 #repair:hover,
 #compare:hover,
 #cart:hover,
-#phoneUpload:hover {
+#phoneUpload:hover,
+#adminInterface:hover {
     scale: 110%;
     text-shadow: 1px 0 0 black;
     padding-bottom: 1%;

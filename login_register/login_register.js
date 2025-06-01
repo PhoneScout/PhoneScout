@@ -23,7 +23,6 @@ async function register() {
         entitlement = 0
     }
 
-    comsole.log(entitlement)
 
     if (password === passwordFix) {
         try {

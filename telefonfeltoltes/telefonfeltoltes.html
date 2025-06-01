@@ -33,19 +33,19 @@
                 <div id="menu-options">
                     <div id="allPhones">Mind</div>
                     <div id="repair">Szerviz</div>
-                    <div id="compare">Összehasonlítás</div>
+                    <a href="../osszehasonlitas/osszehasonlitas.html" style="text-decoration: none;">
+                        <div id="compare">Összehasonlítás</div>
+                    </a>
                     <a href="../kosar/kosar.html" style="text-decoration: none;">
                         <div id="cart">Kosár</div>
                     </a>
-                    <a href="../telefonfeltoltes/telefonfeltoltes.html" style="text-decoration: none;">
-                        <div id="phoneUpload">Telefonfeltöltés (teszt)</div>
+                    <a href="../telefonfeltoltes/telefonfeltoltes.html" style="text-decoration: none; font-weight: bold;">
+                        <div id="phoneUpload">Telefonfeltöltés</div>
+                    </a>
+                    <a id="admin" href="../admin/admin.html" style="text-decoration: none; display: none;">
+                        <div id="adminInterface">Admin felület</div>
                     </a>
                 </div>
-
-
-              
-
-
 
 
                 <div id="fullLogin">
@@ -88,7 +88,10 @@
         <div class="col-12">
             <div id="phoneUploadTitle">
 
-                <h1>Telefon feltöltés <br> <button onclick="getValues()" class="phonePost">Telefon feltöltése</button></h1>
+                <h1>Telefon feltöltés <br> <button onclick="getValues()" class="phonePost">Telefon feltöltése</button> <a href="../telefonfeltolto_reszletes/telefonfeltolto_reszletes.html"><button class="phonePostNEW">ÚJ Telefon feltöltése</button></a>
+                </h1>
+                
+                
                 <br>
                 <input type="text" id="phoneIDInput" placeholder="Telefon ID" />
                 <button onclick="fillDataByPhoneID()">Betöltés</button>
@@ -140,8 +143,8 @@
                         <label for="InStore" class="form-check-label ms-2 fs-4">Raktáron</label>
 
                         <div class="textBox" id="storeAmount" style="display: none;">
-                            <input type="number" id="ManufacturerLink" class="textBoxInput" placeholder=" " />
-                            <label for="ManufacturerLink" class="textBoxLabel">Darabszám</label>
+                            <input type="number" id="InStoreAmount" class="textBoxInput" placeholder=" " />
+                            <label for="InStoreAmount" class="textBoxLabel">Darabszám</label>
                         </div>
                     </div>
 
@@ -174,13 +177,10 @@
 
                     <div class="d-flex justify-content-center align-items-center checkbox-group mb-2">
                         <input type="checkbox" id="option1" class="form-check-input custom-checkbox" />
-                        <label for="option1" class="form-check-label ms-2">Opció 1 (ide jön a szöveg)</label>
+                        <label for="option1" class="form-check-label ms-2">Telefon adatainak elrejtése megjelenésig</label>
                     </div>
 
-                    <div class="d-flex justify-content-center align-items-center checkbox-group">
-                        <input type="checkbox" id="option2" class="form-check-input custom-checkbox" />
-                        <label for="option2" class="form-check-label ms-2">Opció 2 (ide jön a szöveg)</label>
-                    </div>
+                    
 
 
                 </fieldset>
@@ -312,12 +312,12 @@
                             <input type="checkbox" id="Jack" class="form-check-input custom-checkbox m-2" />
                             <label for="InStore" class="form-check-label ms-2 fs-5">Jack csatlakozó</label>
 
-                        </div>                        
+                        </div>
                         <div class="textBox">
                             <input type="number" id="ConnectorSpeed" class="textBoxInput" placeholder=" " />
                             <label for="ConnectorSpeed" class="textBoxLabel">Csatlakozó gyorsasága</label>
                         </div>
-                       
+
                     </div>
                 </div>
 
@@ -332,11 +332,12 @@
                         </div>
                         <div class="textBox">
                             <input type="text" id="BatteryType" class="textBoxInput" placeholder=" " />
-                            <label for="BatteryType" class="textBoxLabel">Akkumulátor típusa típusa</label>
+                            <label for="BatteryType" class="textBoxLabel">Akkumulátor típusa</label>
                         </div>
                         <div class="textBox">
                             <input type="number" id="WiredChargingSpeed" class="textBoxInput" placeholder=" " />
-                            <label for="textBoWiredChargingSpeedxInput" class="textBoxLabel">MAX Vezetékes töltés</label>
+                            <label for="textBoWiredChargingSpeedxInput" class="textBoxLabel">MAX Vezetékes
+                                töltés</label>
                         </div>
                         <div class="textBox">
                             <input type="number" id="WirelessChargingSpeed" class="textBoxInput" placeholder=" " />
@@ -389,8 +390,8 @@
                                     <span id="labelMono" class="fs-5">Mono</span>
 
                                     <div class="form-check form-switch m-0">
-                                        <input class="form-check-input neutral-switch" type="checkbox"
-                                            id="speaker" onchange="updateSpeakerLabel(this)">
+                                        <input class="form-check-input neutral-switch" type="checkbox" id="speaker"
+                                            onchange="updateSpeakerLabel(this)">
                                     </div>
 
                                     <span id="labelStereo" class="fs-5">Stereo</span>

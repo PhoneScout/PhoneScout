@@ -401,6 +401,11 @@ async function showUsername() {
         document.getElementById("dropdownMenu").style.display = 'none';
         document.getElementById("loginText").style.display = 'block';
     }
+    if (jogosultsag == 1) {
+        document.getElementById("admin").style.display = "block";
+        document.getElementById("upload").style.display = "block";
+        
+    }
 }
 
 function logout() {
@@ -409,7 +414,7 @@ function logout() {
     localStorage.removeItem("jogosultsag");
     alert("Sikeres kijelentkezés!");
     setTimeout(() => {
-        window.location.href = "./index.html";
+        window.location.href = "./telefonoldal.html";
     }, 1000);
 }
 

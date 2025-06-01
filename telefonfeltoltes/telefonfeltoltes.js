@@ -178,28 +178,28 @@ function generateCameraCards() {
                             <div class="dropdown-content">
 
                                 <div class="textBox">
-                                    <input type="text" class="textBoxInput" placeholder=" "
+                                    <input type="text" class="textBoxInput CameraName" placeholder=" "
                                         onkeyup="modifyCameraName(this)" />
                                     <label for="CameraName" class="textBoxLabel">Neve</label>
                                 </div>
                                 <div class="textBox">
-                                    <input type="text" id="CameraResolution" class="textBoxInput" placeholder=" " />
+                                    <input type="text" id="CameraResolution" class="textBoxInput CameraResolution" placeholder=" " />
                                     <label for="CameraResolution" class="textBoxLabel">Felbontása</label>
                                 </div>
                                 <div class="textBox">
-                                    <input type="text" id="Aperture" class="textBoxInput" placeholder=" " />
+                                    <input type="text" id="Aperture" class="textBoxInput Aperture" placeholder=" " />
                                     <label for="Aperture" class="textBoxLabel">Rekeszértéke</label>
                                 </div>
                                 <div class="textBox">
-                                    <input type="text" id="FocalLength" class="textBoxInput" placeholder=" " />
+                                    <input type="text" id="FocalLength" class="textBoxInput FocalLength" placeholder=" " />
                                     <label for="FocalLength" class="textBoxLabel">Fókusztávolság (focal length)</label>
                                 </div>
                                 <div class="textBox">
-                                    <input type="text" id="OIS" class="textBoxInput" placeholder=" " />
+                                    <input type="text" id="OIS" class="textBoxInput OIS" placeholder=" " />
                                     <label for="OIS" class="textBoxLabel">Optikai képstabilizátor (OIS)</label>
                                 </div>
                                 <div class="textBox">
-                                    <input type="text" id="cameraType" class="textBoxInput" placeholder=" " />
+                                    <input type="text" id="cameraType" class="textBoxInput cameraType" placeholder=" " />
                                     <label for="cameraType" class="textBoxLabel">kameratípus</label>
                                 </div>
 
@@ -228,10 +228,10 @@ function removeCameraCard(button) {
 
 function getValues() {
     //ramstorage
-    const ramValues = Array.from(document.querySelectorAll(".RAMAmount")).map(input =>
+    const ramValues = Array.from(document.querySelectorAll(".RAMInput")).map(input =>
         parseInt(input.value) || 0
     );
-    const storageValues = Array.from(document.querySelectorAll(".StorageAmount")).map(input =>
+    const storageValues = Array.from(document.querySelectorAll(".StorageInput")).map(input =>
         parseInt(input.value) || 0
     );
     let ramStorageIDs = [];
@@ -243,8 +243,9 @@ function getValues() {
     const colorNames = Array.from(document.querySelectorAll(".colorName")).map(input =>
         input.value || ""
     );
+    console.log(colorNames)
     const hexValues = Array.from(document.querySelectorAll(".colorHEX")).map(input =>
-        "#" + input.value || ""
+        input.value || ""
     );
     let colorIDs = [];
     for (let i = 0; i < colorNames.length; i++) {
@@ -253,35 +254,34 @@ function getValues() {
 
     //camera
     const cameraName = Array.from(document.querySelectorAll(".CameraName")).map(input =>
-        parseInt(input.value) || 0
+        parseFloat(input.value) || ""
     );
     const cameraResolution = Array.from(document.querySelectorAll(".CameraResolution")).map(input =>
         parseInt(input.value) || 0
     );
     const cameraAperture = Array.from(document.querySelectorAll(".Aperture")).map(input =>
-        parseInt(input.value) || 0
+        parseFloat(input.value) || ""
     );
     const cameraFocalLength = Array.from(document.querySelectorAll(".FocalLength")).map(input =>
         parseInt(input.value) || 0
     );
     const cameraOIS = Array.from(document.querySelectorAll(".OIS")).map(input =>
-        parseInt(input.value) || 0
+        parseFloat(input.value) || ""
     );
     const cameraType = Array.from(document.querySelectorAll(".cameraType")).map(input =>
-        parseInt(input.value) || 0
+        parseFloat(input.value) || ""
     );
     let cameraIDs = [];
     let cameraTypeIDs = [];
 
     for (let i = 0; i < cameraName.length; i++) {
-        colorIDs.push(0)
+        cameraIDs.push(0)
     }
     for (let i = 0; i < cameraType.length; i++) {
-        colorIDs.push(0)
+        cameraTypeIDs.push(0)
     }
 
-
-
+    console.log(parseFloat(document.getElementById("releaseDate").value))
 
 
     PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValues, colorIDs, cameraName, cameraResolution, cameraAperture, cameraFocalLength, cameraOIS, cameraType, cameraIDs, cameraTypeIDs)
@@ -293,7 +293,7 @@ function getValues() {
 
 function PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValues, colorIDs, cameraName, cameraResolution, cameraAperture, cameraFocalLength, cameraOIS, cameraType, cameraIDs, cameraTypeIDs) {
     const phoneDataPOST = {
-
+        
 
         // Simple data (must match the C# property names exactly)
         phoneName: document.getElementById("phoneName").value || "",
@@ -319,8 +319,10 @@ function PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValue
         caseHeight: parseFloat(document.getElementById("Height").value) || 0.0,
         caseWidth: parseFloat(document.getElementById("Width").value) || 0.0,
         caseThickness: parseFloat(document.getElementById("Thickness").value) || 0.0,
+        phoneReleaseDate: document.getElementById("releaseDate").value || "",
         phonePrice: parseInt(document.getElementById("phonePrice").value) || 0,
-        phoneInStore: document.getElementById("InStore").value || "",
+        phoneInStore: document.getElementById("InStore").checked ? "van" : "nincs",
+        phoneInStoreAmount: parseInt(document.getElementById("InStoreAmount").value) || 0,
 
         // Connection table data
         backMaterial: document.getElementById("BackMaterial").value || "",
@@ -630,3 +632,50 @@ function fillDataByPhoneID() {
 
     alert("Adatok betöltve!");
 }
+
+async function showUsername() {
+    const firstname = localStorage.getItem("firstname");
+    const jogosultsag = localStorage.getItem("jogosultsag");
+
+    console.log(firstname)
+    if (firstname) {
+        // Bejelentkezett felhasználó esetén
+        document.getElementById("firstName").innerText = firstname;
+        document.getElementById("dropdownMenu").style.display = 'block';
+        document.getElementById("loginText").style.display = 'none';
+    } else {
+        // Ha nincs bejelentkezve
+        document.getElementById("dropdownMenu").style.display = 'none';
+        document.getElementById("loginText").style.display = 'block';
+    }
+    if (jogosultsag == 1) {
+        document.getElementById("admin").style.display = "block";
+        document.getElementById("upload").style.display = "block";
+        
+    }
+}
+
+function logout() {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("firstname");
+    localStorage.removeItem("jogosultsag");
+    alert("Sikeres kijelentkezés!");
+    setTimeout(() => {
+        window.location.href = "../index.html";
+    }, 1000);
+}
+
+
+
+// Call showUsername when the page loads
+document.addEventListener("DOMContentLoaded", showUsername);
+
+
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || {};
+    const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
+    const cartElement = document.getElementById("cart");
+    cartElement.textContent = `Kosár(${itemCount})`;
+}
+
+updateCartCount()

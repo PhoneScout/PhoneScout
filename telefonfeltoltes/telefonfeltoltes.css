@@ -110,7 +110,7 @@
 #menu-options {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 10%;
     margin: 0 auto;
 }
 
@@ -118,7 +118,8 @@
 #repair,
 #compare,
 #cart,
-#phoneUpload {
+#phoneUpload,
+#adminInterface {
     color: #212121;
     cursor: pointer;
     text-align: center;
@@ -131,7 +132,8 @@
 #repair:hover,
 #compare:hover,
 #cart:hover,
-#phoneUpload:hover {
+#phoneUpload:hover,
+#adminInterface:hover {
     scale: 110%;
     text-shadow: 1px 0 0 black;
     padding-bottom: 1%;
@@ -252,6 +254,26 @@
 .phonePost:hover {
     color: white;
     background-color: #0069d8;
+}
+
+.phonePostNEW {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    color: white;
+    background-color: #68F145;
+    border: none;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.01s ease;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.phonePostNEW:hover {
+    color: white;
+    background-color: #4aab32;
 }
 
 .upload-button {

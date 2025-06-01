@@ -1,15 +1,14 @@
 #navbar {
-    background-color: #ffffff;
-    border-bottom-right-radius: 15px;
+    background-color: #fff;
     border-bottom-left-radius: 15px;
-    display: flex;
-    align-items: center;
-    padding: 10px;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-left: auto;
-    margin-right: auto;
+    border-bottom-right-radius: 15px;
     box-shadow: 0px 4px 0px rgb(205, 205, 205);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    margin: 0 auto;
 }
 
 #fullLogo {
@@ -23,78 +22,8 @@
     user-select: none;
 }
 
-#fullLogin{
+#fullLogin {
     margin-right: 5%;
-}
-
-#allPhones,
-#repair,
-#compare,
-#cart,
-#phoneUpload,
-#adminInterface {
-    color: rgb(33, 33, 33);
-    cursor: pointer;
-    text-align: center;
-    font-size: 80%;
-    margin-bottom: 5px;
-    font-size: 105%;
-    margin-left: 2%;
-    margin-right: 2%;
-    transition: 0.2s ease;
-
-}
-
-#allPhones:hover,
-#repair:hover,
-#compare:hover,
-#cart:hover,
-#phoneUpload:hover,
-#adminInterface:hover {
-    scale: 110%;
-    text-shadow:
-        1px 0 0 black;
-    padding-bottom: 1%;
-    color: black;
-}
-
-.textBox {
-    position: relative;
-    width: 200px;
-    margin-right: 2%;
-}
-
-.textBoxLabel {
-    position: absolute;
-    top: 50%;
-    left: 10px;
-    transform: translateY(-50%);
-    color: grey;
-    pointer-events: none;
-    transition: 0.2s ease;
-    font-style: italic;
-}
-
-.textBoxInput {
-    width: 100%;
-    padding: 10px;
-    height: 30px;
-}
-
-.textBoxInput:hover {
-    border: 1px solid #2300B3;
-}
-
-.textBoxInput:focus+.textBoxLabel,
-.textBoxInput:not(:placeholder-shown)+.textBoxLabel {
-    top: -2px;
-    left: 3px;
-    font-size: 12px;
-    color: black;
-    background-color: white;
-    padding-left: 3px;
-    padding-right: 3px;
-    font-style: normal;
 }
 
 #userChange {
@@ -104,30 +33,35 @@
     font-style: italic;
     margin-right: 5%;
 }
+
 #userName {
     margin-right: 5px;
-    color: rgb(0, 0, 0);
+    color: #000;
 }
+
+#loginDropdown::after {
+    display: none;
+}
+
 .dropdown-menu {
     min-width: 160px;
     display: flex;
     justify-content: center;
     padding: 10px;
 }
+
 .dropdown-menu li {
     list-style: none;
     text-align: center;
 }
-#loginDropdown::after {
-    display: none;
-}
+
+/* Reusable logout button styles */
 .logout_button {
     background: #FF4742;
     border: 1px solid #FF4742;
     border-radius: 6px;
     box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
-    box-sizing: border-box;
-    color: #FFFFFF;
+    color: #fff;
     cursor: pointer;
     display: inline-block;
     font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
@@ -138,11 +72,7 @@
     outline: 0;
     padding: 12px 14px;
     text-align: center;
-    text-rendering: geometricprecision;
-    text-transform: none;
     user-select: none;
-    -webkit-user-select: none;
-    touch-action: manipulation;
     vertical-align: middle;
     margin: 0;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -150,27 +80,23 @@
 
 .logout_button:hover,
 .logout_button:active {
-    background-color: #FFFFFF;
+    background-color: #fff;
     color: #FF4742;
-    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
 }
 
 .logout_button:active {
     opacity: 0.7;
 }
 
-
 #title {
-    margin-left: 10px;
+    margin: auto 0 auto 10px;
     font-size: 24px;
     font-weight: bold;
-    display: flex;
     font-style: italic;
     letter-spacing: 2px;
-    margin-top: auto;
-    margin-bottom: auto;
     user-select: none;
     cursor: default;
+    display: flex;
 }
 
 #title1 {
@@ -184,10 +110,34 @@
 #menu-options {
     display: flex;
     align-items: center;
-    gap: 10px;
-    margin-left: auto;
-    margin-right: auto;
+    gap: 10%;
+    margin: 0 auto;
+}
 
+#allPhones,
+#repair,
+#compare,
+#cart,
+#phoneUpload,
+#adminInterface {
+    color: #212121;
+    cursor: pointer;
+    text-align: center;
+    font-size: 105%;
+    margin: 0 2%;
+    transition: 0.2s ease;
+}
+
+#allPhones:hover,
+#repair:hover,
+#compare:hover,
+#cart:hover,
+#phoneUpload:hover,
+#adminInterface:hover {
+    scale: 110%;
+    text-shadow: 1px 0 0 black;
+    padding-bottom: 1%;
+    color: black;
 }
 
 

@@ -131,6 +131,7 @@ function updateCartCount() {
     cartElement.textContent = `Kosár(${itemCount})`;
 }
 
+
 function getPhoneDatas() {
     return fetch(allPhonesURL)
         .then(response => response.json())
@@ -281,6 +282,8 @@ async function showUsername() {
     }
     if (jogosultsag == 1) {
         document.getElementById("admin").style.display = "block";
+        document.getElementById("upload").style.display = "block";
+        
     }
 }
 
@@ -290,7 +293,7 @@ function logout() {
     localStorage.removeItem("jogosultsag");
     alert("Sikeres kijelentkezés!");
     setTimeout(() => {
-        window.location.href = "./index.html";
+        window.location.href = "./kosar.html";
     }, 1000);
 }
 
