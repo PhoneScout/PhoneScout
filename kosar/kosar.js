@@ -275,14 +275,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 decreaseButton.addEventListener("click", () => {
                     if (cart[phone.phoneID] > 1) {
-                        cart[phone.phoneID] -= 1; 
-                        delete cart[phone.phoneID]; // Remove item if quantity is 0
-                        phoneRow.remove(); // Remove the row from the DOM
+                        cart[phone.phoneID] -= 1; // Csökkentjük eggyel
+                        quantityDisplay.textContent = cart[phone.phoneID]; // Frissítjük a kijelzett mennyiséget
+                        localStorage.setItem("cart", JSON.stringify(cart)); // Mentjük a localStorage-ba
+                        updateTotalPrice(cartPhones); // Frissítjük az árat
+                        checkEmptyCart(); // Ellenőrizzük az ürességet
+                    } else if (cart[phone.phoneID] === 1) {
+                        delete cart[phone.phoneID]; // Ha már csak 1 volt, töröljük a kosárból
+                        phoneRow.remove(); // Eltávolítjuk a DOM-ból
+                        localStorage.setItem("cart", JSON.stringify(cart));
+                        updateTotalPrice(cartPhones);
+                        checkEmptyCart();
                     }
-                    localStorage.setItem("cart", JSON.stringify(cart)); // Update localStorage
-                    quantityDisplay.textContent = cart[phone.phoneID] || 0; // Update displayed quantity
-                    updateTotalPrice(cartPhones); // Update total price
-                    checkEmptyCart(); // Check if the cart is empty
                 });
 
                 increaseButton.addEventListener("click", () => {
