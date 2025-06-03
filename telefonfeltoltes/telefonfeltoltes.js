@@ -254,22 +254,22 @@ function getValues() {
 
     //camera
     const cameraName = Array.from(document.querySelectorAll(".CameraName")).map(input =>
-        parseFloat(input.value) || ""
+        input.value || ""
     );
     const cameraResolution = Array.from(document.querySelectorAll(".CameraResolution")).map(input =>
         parseInt(input.value) || 0
     );
     const cameraAperture = Array.from(document.querySelectorAll(".Aperture")).map(input =>
-        parseFloat(input.value) || ""
+        input.value || ""
     );
     const cameraFocalLength = Array.from(document.querySelectorAll(".FocalLength")).map(input =>
         parseInt(input.value) || 0
     );
     const cameraOIS = Array.from(document.querySelectorAll(".OIS")).map(input =>
-        parseFloat(input.value) || ""
+        input.value || ""
     );
     const cameraType = Array.from(document.querySelectorAll(".cameraType")).map(input =>
-        parseFloat(input.value) || ""
+        input.value || ""
     );
     let cameraIDs = [];
     let cameraTypeIDs = [];

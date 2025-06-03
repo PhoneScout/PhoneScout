@@ -148,7 +148,6 @@ function telDataShowMain(allPhonesData) {
     let colorPlace = document.getElementById("colorPlace")
     let ramStoragePlace = document.getElementById("ramStoragePlace")
 
-    console.log(selectedPhone.color.colorName.length)
 
     console.log(selectedPhone)
 
@@ -159,7 +158,7 @@ function telDataShowMain(allPhonesData) {
     }
 
     for (let i = 0; i < selectedPhone.ramStorage.ramAmount.length; i++) {
-        let ramStorageHTML = `<button class="ramTárhelyOption" onclick="selectRamTárhely(this)">${selectedPhone.ramStorage.ramAmount[i]}/${selectedPhone.ramStorage.storageAmount}GB</button>`
+        let ramStorageHTML = `<button class="ramTárhelyOption" onclick="selectRamTárhely(this)">${selectedPhone.ramStorage.ramAmount[i]}/${selectedPhone.ramStorage.storageAmount[i]}GB</button>`
         ramStoragePlace.innerHTML += ramStorageHTML
     }
 
@@ -269,14 +268,14 @@ function telDataShow(allPhonesData) {
     <tr><td colspan="2" class="kijelzo_table"><strong>Kijelző</strong></td></tr>
     <tr><td class="kijelzo_table">Típusa</td><td class="kijelzo_table">${selectedPhone.screenType}</td></tr>
     <tr><td class="kijelzo_table">Felbontás</td><td class="kijelzo_table">${selectedPhone.phoneResolutionHeight} x ${selectedPhone.phoneResolutionWidth} px</td></tr>
-    <tr><td class="kijelzo_table">Mérete</td><td class="kijelzo_table">${selectedPhone.screenSize}”</td></tr>
-    <tr><td class="kijelzo_table">Frissítési ráta</td><td class="kijelzo_table">${selectedPhone.screenRefreshRate} Hz</td></tr>
-    <tr><td class="kijelzo_table">Max fényerő</td><td class="kijelzo_table">${selectedPhone.screenMaxBrightness} nit</td></tr>
-    <tr><td class="kijelzo_table">Élessége/Képpontsűrűség</td><td class="kijelzo_table">${selectedPhone.screenSharpness} ppi</td></tr>
+    <tr><td class="kijelzo_table">Mérete</td><td class="kijelzo_table">${selectedPhone.screenSize.toFixed(2)}”</td></tr>
+    <tr><td class="kijelzo_table">Frissítési ráta</td><td class="kijelzo_table">${selectedPhone.screenRefreshRate.toFixed(2)} Hz</td></tr>
+    <tr><td class="kijelzo_table">Max fényerő</td><td class="kijelzo_table">${selectedPhone.screenMaxBrightness.toFixed(2)} nit</td></tr>
+    <tr><td class="kijelzo_table">Élessége/Képpontsűrűség</td><td class="kijelzo_table">${selectedPhone.screenSharpness.toFixed(2)} ppi</td></tr>
 
     <tr><td colspan="2" class="csatlakozo_table"><strong>Csatlakoztathatóság</strong></td></tr>
     <tr><td class="csatlakozo_table">Wi-Fi</td><td class="csatlakozo_table">Wifi ${selectedPhone.connectionMaxWifi}</td></tr>
-    <tr><td class="csatlakozo_table">Bluetooth</td><td class="csatlakozo_table">Bluetooth ${selectedPhone.connectionMaxBluetooth}</td></tr>
+    <tr><td class="csatlakozo_table">Bluetooth</td><td class="csatlakozo_table">Bluetooth ${selectedPhone.connectionMaxBluetooth.toFixed(2)}</td></tr>
     <tr><td class="csatlakozo_table">Mobilhálózat</td><td class="csatlakozo_table">${selectedPhone.connectionMaxMobileNetwork}</td></tr>
     <tr><td class="csatlakozo_table">Dual SIM</td><td class="csatlakozo_table">${selectedPhone.connectionDualSim}</td></tr>
     <tr><td class="csatlakozo_table">E-SIM</td><td class="csatlakozo_table">${selectedPhone.connectionESim}</td></tr>
@@ -296,9 +295,9 @@ function telDataShow(allPhonesData) {
     <tbody id="cameraPlace"></tbody>
 
     <tr><td colspan="2" class="test_table"><strong>Test/Ház/Külső</strong></td></tr>
-    <tr><td class="test_table">Magasság</td><td class="test_table">${selectedPhone.caseHeight} mm</td></tr>
-    <tr><td class="test_table">Szélesség</td><td class="test_table">${selectedPhone.caseWidth} mm</td></tr>
-    <tr><td class="test_table">Vastagság</td><td class="test_table">${selectedPhone.caseThickness} mm</td></tr>
+    <tr><td class="test_table">Magasság</td><td class="test_table">${selectedPhone.caseHeight.toFixed(2)} mm</td></tr>
+    <tr><td class="test_table">Szélesség</td><td class="test_table">${selectedPhone.caseWidth.toFixed(2)} mm</td></tr>
+    <tr><td class="test_table">Vastagság</td><td class="test_table">${selectedPhone.caseThickness.toFixed(2)} mm</td></tr>
     <tr><td class="test_table">Vízállóság</td><td class="test_table">${selectedPhone.waterproofType}</td></tr>
     <tr><td class="test_table">Hátlap anyaga</td><td class="test_table">${selectedPhone.backMaterial}</td></tr>
 </table>
