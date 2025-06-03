@@ -1,116 +1,141 @@
-const allPhonesURL = "http://localhost:5165/api/GETmainPage"; //ÚJ BACKEND
-const apiUrl = "http://localhost:5287/api/auth";
-
-
+const allPhonesURL = "http://localhost:5165/api/GETadminPage";
 let allPhonesData = [];
 
-
-function displayPhoneCards() {
-    const contentRow = document.getElementById("contentRow");
-    contentRow.innerHTML = '';
-
-
-    allPhonesData.forEach((phone) => {
-        const phoneRow = document.createElement("div");
-        phoneRow.classList.add("phoneRow");
-        phoneRow.style.display = "flex";
-        phoneRow.style.alignItems = "center";
-        phoneRow.style.marginBottom = "15px";
-        phoneRow.style.borderBottom = "1px solid #ccc";
-        phoneRow.style.paddingBottom = "10px";
-
-        phoneRow.onclick = function () {
-            localStorage.setItem("selectedPhone", phone.phoneID);
-            console.log(localStorage.getItem("selectedPhone"));
-            window.location.href = "./telefonoldala/telefonoldal.html";
-        };
-
-
-
-        const phoneImage = document.createElement("div");
-        phoneImage.classList.add("phoneImage");
-        phoneImage.style.flex = "1";
-        phoneImage.style.textAlign = "center";
-        phoneImage.innerHTML = `
-            <img src="${phone.imageUrl || './Images/image 3.png'}" alt="${phone.phoneName}" loading="lazy" style="max-width: 80px; max-height: 80px;">
-        `;
-
-        const phoneName = document.createElement("div");
-        phoneName.classList.add("phoneDetails");
-        phoneName.style.flex = "3";
-        phoneName.style.paddingLeft = "15px";
-        phoneName.innerHTML = `
-            <h3 style="margin: 0; font-size: 1.2em;">${phone.phoneName}</h3>
-        `;
-        
-        const phoneStock = document.createElement("div");
-        phoneStock.classList.add("phoneStock");
-        phoneStock.textContent = phone.phoneInStore === "van" ? "Raktáron" : "Nincs Raktáron";
-        phoneStock.style.color = phone.phoneInStore === "van" ? "green" : "red";
-        if (phone.phoneInStore === "van") {
-            phoneStock.style.marginLeft = "3.5%";
-        }
-
-        const cardButtons = document.createElement("div");
-        cardButtons.classList.add("cardButtons");
-        cardButtons.style.display = "flex";
-        cardButtons.style.gap = "10px";
-        cardButtons.style.justifyContent = "center";
-
-        const compareButton = document.createElement("div");
-        compareButton.classList.add("button");
-        const compareImg = document.createElement("img");
-        compareImg.src = "./Images/compare-removebg-preview 1.png";
-        compareImg.loading = "lazy";
-        compareButton.appendChild(compareImg);
-
-        compareButton.onclick = function (event) {
-            event.stopPropagation();
-            console.log(`Compare clicked for phone ID: ${phone.phoneID}`);
-        };
-
-        const cartButton = document.createElement("div");
-        cartButton.classList.add("button");
-        const cartImg = document.createElement("img");
-        cartImg.src = "./Images/cart-removebg-preview 1.png";
-        cartImg.loading = "lazy";
-        cartButton.appendChild(cartImg);
-
-        cartButton.onclick = function (event) {
-            event.stopPropagation();
-            console.log(`Add to cart clicked for phone ID: ${phone.phoneID}`);
-
-            let cart = JSON.parse(localStorage.getItem("cart")) || {};
-
-            cart[phone.phoneID] = (cart[phone.phoneID] || 0) + 1;
-
-            localStorage.setItem("cart", JSON.stringify(cart));
-
-            console.log("Current cart:", cart);
-
-            updateCartCount();
-        };
-
-        cardButtons.appendChild(compareButton);
-        cardButtons.appendChild(cartButton);
-
-        phoneRow.appendChild(phoneImage);
-        phoneRow.appendChild(phoneName);
-        phoneRow.appendChild(phoneStock);
-        phoneRow.appendChild(cardButtons);
-
-        contentRow.appendChild(phoneRow);
-    });
-}
-
-function getPhoneDatas() {
-    return fetch(allPhonesURL)
+function loadPhonesFromBackend() {
+    fetch(allPhonesURL)
         .then(response => response.json())
         .then(data => {
             allPhonesData = data;
-            console.log(allPhonesData);
-            displayPhoneCards();
+            console.log("Telefon adatok:", allPhonesData);
         })
-        .catch(error => console.error('Hiba a JSON betöltésekor:', error));
+        .catch(error => console.error("Hiba:", error));
 }
-getPhoneDatas();
+
+function DELETEphone(phoneID) {
+    fetch(`http://localhost:5165/api/DELETEadminPage/${phoneID}`, {
+        method: 'DELETE',
+    })
+        .then(response => {
+            if (response.ok) {
+                console.log('Delete successful!');
+            } else if (response.status === 404) {
+                console.log('Phone not found!');
+            } else {
+                console.log('Delete failed with status:', response.status);
+            }
+        })
+        .catch(error => {
+            console.error('Error calling delete endpoint:', error);
+        });
+}
+
+
+
+
+document.getElementById("searchInputName").addEventListener("input", function () {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#tableBody tr");
+
+    rows.forEach(row => {
+        const nameCell = row.children[2]; // Second column = name
+        if (nameCell && nameCell.textContent.toLowerCase().includes(filter)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
+
+
+// Replace with the actual phone ID you want to delete
+
+
+document.getElementById("searchInputManufacturer").addEventListener("input", function () {
+    const filter = this.value.toLowerCase();
+    const rows = document.querySelectorAll("#tableBody tr");
+
+    rows.forEach(row => {
+        const nameCell = row.children[1]; // Second column = name
+        if (nameCell && nameCell.textContent.toLowerCase().includes(filter)) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    });
+});
+
+
+const users = [
+    { ID: 1, Név: "Kiss Péter", Email: "peter@example.com", Szerep: "Admin" },
+    { ID: 2, Név: "Nagy Anna", Email: "anna@example.com", Szerep: "Felhasználó" },
+];
+
+function populateTable(data) {
+    const tableBody = document.getElementById("tableBody");
+    tableBody.innerHTML = "";
+
+    if (!data || data.length === 0) {
+        tableBody.innerHTML = `<tr><td colspan="3">Nincs adat</td></tr>`;
+        return;
+    }
+
+    data.forEach(item => {
+        const tr = document.createElement("tr");
+
+        const idCell = document.createElement("td");
+        idCell.textContent = item.phoneID || "—";
+        tr.appendChild(idCell);
+
+        const manufacturerCell = document.createElement("td");
+        manufacturerCell.textContent = item.manufacturerName || "—";
+        tr.appendChild(manufacturerCell);
+
+        const nameCell = document.createElement("td");
+        nameCell.textContent = item.phoneName || "—";
+        tr.appendChild(nameCell);
+
+        const actionsCell = document.createElement("td");
+        const btnGroup = document.createElement("div");
+        btnGroup.className = "btn-group";
+
+        const viewBtn = document.createElement("button");
+        viewBtn.textContent = "Megtekintés";
+        viewBtn.className = "view-btn";
+        viewBtn.onclick = function () {
+            localStorage.setItem("selectedPhone", item.phoneID);
+            console.log(localStorage.getItem("selectedPhone"));
+            window.location.href = "../telefonoldala/telefonoldal.html";
+        };
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Szerkesztés";
+        editBtn.className = "edit-btn";
+        editBtn.onclick = () => window.location.href = "../telefonfeltoltes/telefonfeltoltes.html"
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "Törlés";
+        deleteBtn.className = "delete-btn";
+        deleteBtn.addEventListener("click", function () {
+            const phoneId = item.phoneID
+            console.log("Delete clicked for phone ID:", phoneId);
+
+            DELETEphone(phoneId)
+        });
+
+        btnGroup.append(viewBtn, editBtn, deleteBtn);
+        actionsCell.appendChild(btnGroup);
+        tr.appendChild(actionsCell);
+
+        tableBody.appendChild(tr);
+    });
+}
+
+document.getElementById("phonesBox").addEventListener("click", () => {
+    populateTable(allPhonesData);
+});
+
+document.getElementById("usersBox").addEventListener("click", () => {
+    populateTable(users);
+});
+
+window.onload = loadPhonesFromBackend;

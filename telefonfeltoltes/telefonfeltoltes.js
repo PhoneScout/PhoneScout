@@ -4,16 +4,7 @@ const allPhonesURL = "http://localhost:5165/api/postPhone/phonePost1"; // ÚJ BA
 const allPhonesURLg = "http://localhost:5165/api/GETphonePage";
 let allPhonesData = [];
 
-function getPhoneDatas() {
-    return fetch(allPhonesURLg+"/"+57)
-        .then(response => response.json())
-        .then(data => {
-            allPhonesData = data;
 
-        })
-        .catch(error => console.error('Hiba a JSON betöltésekor:', error));
-}
-getPhoneDatas();
 
 // ram/storage generálás.
 
@@ -293,7 +284,7 @@ function getValues() {
 
 function PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValues, colorIDs, cameraName, cameraResolution, cameraAperture, cameraFocalLength, cameraOIS, cameraType, cameraIDs, cameraTypeIDs) {
     const phoneDataPOST = {
-        
+
 
         // Simple data (must match the C# property names exactly)
         phoneName: document.getElementById("phoneName").value || "",
@@ -340,7 +331,7 @@ function PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValue
         sensorsFingerprintType: document.getElementById("FingerprintSensorT").value || "",
         storageSpeed: document.getElementById("StorageSpeed").value || "",
         waterproofType: document.getElementById("WaterResistance").value || "",
-        speakerType: document.getElementById("speaker").checked?"stereo":"mono",
+        speakerType: document.getElementById("speaker").checked ? "stereo" : "mono",
         phoneWeight: document.getElementById("phoneWeight").value || 0.0,
 
         // Complex nested data
@@ -531,7 +522,9 @@ window.addEventListener("DOMContentLoaded", function () {
     updateSpeakerLabel(document.getElementById("speakerTypeSwitch"));
 });
 
+function getPhoneDatas(id) {
 
+}
 
 function fillDataByPhoneID() {
     const phoneID = document.getElementById("phoneIDInput").value.trim();
@@ -540,97 +533,108 @@ function fillDataByPhoneID() {
         return;
     }
 
-    const phoneData = allPhonesData.find(phone => phone.phoneID == phoneID);
+    return fetch(allPhonesURLg + "/" + phoneID)
+        .then(response => response.json())
+        .then(data => {
+            phoneData = data[0];
 
-    if (!phoneData) {
-        alert("Nincs ilyen telefonID-hez adat!");
-        return;
-    }
+            console.log(phoneData)
 
-    function safeValue(val) {
-        if (val === null || val === undefined) return "";
-        return val.toString();
-    }
+            if (!phoneData) {
+                alert("Nincs ilyen telefonID-hez adat!");
+                return;
+            }
 
-    // Szöveges és számmezők kitöltése
-    document.getElementById("Width").value = safeValue(phoneData.caseWidth);
-    document.getElementById("Height").value = safeValue(phoneData.caseHeight);
-    document.getElementById("Thickness").value = safeValue(phoneData.caseThickness);
-    document.getElementById("phoneName").value = safeValue(phoneData.phoneName);
-    document.getElementById("Antutu").value = safeValue(phoneData.phoneAntutu);
-    document.getElementById("CpuName").value = safeValue(phoneData.cpuName);
-    document.getElementById("MaxClockspeed").value = safeValue(phoneData.cpuMaxClockSpeed);
-    document.getElementById("CoreNumber").value = safeValue(phoneData.cpuCoreNumber);
-    document.getElementById("ManufacturingTechnology").value = safeValue(phoneData.cpuManufacturingTechnology);
-    document.getElementById("FingerprintSensorP").value = safeValue(phoneData.sensorsFingerprintPlace);
-    document.getElementById("FingerprintSensorT").value = safeValue(phoneData.sensorsFingerprintType);
-    document.getElementById("ResolutionH").value = safeValue(phoneData.phoneResolutionHeight);
-    document.getElementById("ResolutionW").value = safeValue(phoneData.phoneResolutionWidth);
-    document.getElementById("Size").value = safeValue(phoneData.screenSize);
-    document.getElementById("RefreshRate").value = safeValue(phoneData.screenRefreshRate);
-    document.getElementById("MaxBrightness").value = safeValue(phoneData.screenMaxBrightness);
-    document.getElementById("PixelDensity").value = safeValue(phoneData.screenSharpness);
-    document.getElementById("Wifi").value = safeValue(phoneData.connectionMaxWifi);
-    document.getElementById("Bluetooth").value = safeValue(phoneData.connectionMaxBluetooth);
-    document.getElementById("MobileNetwork").value = safeValue(phoneData.connectionMaxMobileNetwork);
-    document.getElementById("ConnectorSpeed").value = safeValue(phoneData.connectionConnectionSpeed);
-    document.getElementById("BatteryCapacity").value = safeValue(phoneData.batteryCapacity);
-    document.getElementById("WiredChargingSpeed").value = safeValue(phoneData.batteryMaxChargingWired);
-    document.getElementById("WirelessChargingSpeed").value = safeValue(phoneData.batteryMaxChargingWireless);
-    document.getElementById("BatteryType").value = safeValue(phoneData.batteryType);
-    document.getElementById("ChargerType").value = safeValue(phoneData.chargerType);
-    document.getElementById("RAMSpeed").value = safeValue(phoneData.ramSpeed);
-    document.getElementById("StorageSpeed").value = safeValue(phoneData.storageSpeed);
-    document.getElementById("DisplayType").value = safeValue(phoneData.screenType);
-    document.getElementById("WaterResistance").value = safeValue(phoneData.waterproofType);
-    document.getElementById("BackMaterial").value = safeValue(phoneData.backMaterial);
-    document.getElementById("phonePrice").value = safeValue(phoneData.phonePrice);
-    document.getElementById("phoneWeight").value = safeValue(phoneData.phoneWeight);
-    document.getElementById("InStore").value = safeValue(phoneData.phoneInStore);
+            console.log(phoneData.cpuName)
 
-    // Checkboxok beállítása (kisbetűsítve, booleanra konvertálva)
-    function isChecked(val) {
-        if (!val) return false;
-        return val.toString().toLowerCase() === "van";
-    }
-    document.getElementById("DualSIM").checked = isChecked(phoneData.connectionDualSim);
-    document.getElementById("ESIM").checked = isChecked(phoneData.connectionESim);
-    document.getElementById("NFC").checked = isChecked(phoneData.connectionNfc);
-    document.getElementById("Jack").checked = isChecked(phoneData.connectionJack);
-    document.getElementById("Infrared").checked = isChecked(phoneData.sensorsInfrared);
-    document.getElementById("speaker").checked = (phoneData.speakerType && phoneData.speakerType.toLowerCase() === "stereo");
+            function safeValue(val) {
+                if (val === null || val === undefined) return "";
+                return val.toString();
+            }
 
-    // --- RAM / Storage tömbök feltöltése ---
-    const ramstoragePlace = document.getElementById("ramstoragePlace");
-    ramstoragePlace.innerHTML = "";  // törlés
+            // Szöveges és számmezők kitöltése
+            document.getElementById("Width").value = safeValue(phoneData.caseWidth);
+            document.getElementById("Height").value = safeValue(phoneData.caseHeight);
+            document.getElementById("Thickness").value = safeValue(phoneData.caseThickness);
+            document.getElementById("phoneName").value = safeValue(phoneData.phoneName);
+            document.getElementById("ManufacturerName").value = safeValue(phoneData.manufacturerName);
+            document.getElementById("phoneWeight").value = safeValue(phoneData.phoneWeight);
+            document.getElementById("Antutu").value = safeValue(phoneData.phoneAntutu);
+            document.getElementById("CpuName").value = safeValue(phoneData.cpuName);
+            document.getElementById("MaxClockspeed").value = safeValue(phoneData.cpuMaxClockSpeed);
+            document.getElementById("CoreNumber").value = safeValue(phoneData.cpuCoreNumber);
+            document.getElementById("ManufacturingTechnology").value = safeValue(phoneData.cpuManufacturingTechnology);
+            document.getElementById("FingerprintSensorP").value = safeValue(phoneData.sensorsFingerprintPlace);
+            document.getElementById("FingerprintSensorT").value = safeValue(phoneData.sensorsFingerprintType);
+            document.getElementById("ResolutionH").value = safeValue(phoneData.phoneResolutionHeight);
+            document.getElementById("ResolutionW").value = safeValue(phoneData.phoneResolutionWidth);
+            document.getElementById("Size").value = safeValue(phoneData.screenSize);
+            document.getElementById("RefreshRate").value = safeValue(phoneData.screenRefreshRate);
+            document.getElementById("MaxBrightness").value = safeValue(phoneData.screenMaxBrightness);
+            document.getElementById("PixelDensity").value = safeValue(phoneData.screenSharpness);
+            document.getElementById("Wifi").value = safeValue(phoneData.connectionMaxWifi);
+            document.getElementById("Bluetooth").value = safeValue(phoneData.connectionMaxBluetooth);
+            document.getElementById("MobileNetwork").value = safeValue(phoneData.connectionMaxMobileNetwork);
+            document.getElementById("ConnectorSpeed").value = safeValue(phoneData.connectionConnectionSpeed);
+            document.getElementById("BatteryCapacity").value = safeValue(phoneData.batteryCapacity);
+            document.getElementById("WiredChargingSpeed").value = safeValue(phoneData.batteryMaxChargingWired);
+            document.getElementById("WirelessChargingSpeed").value = safeValue(phoneData.batteryMaxChargingWireless);
+            document.getElementById("BatteryType").value = safeValue(phoneData.batteryType);
+            document.getElementById("ChargerType").value = safeValue(phoneData.chargerType);
+            document.getElementById("RAMSpeed").value = safeValue(phoneData.ramSpeed);
+            document.getElementById("StorageSpeed").value = safeValue(phoneData.storageSpeed);
+            document.getElementById("DisplayType").value = safeValue(phoneData.screenType);
+            document.getElementById("WaterResistance").value = safeValue(phoneData.waterproofType);
+            document.getElementById("BackMaterial").value = safeValue(phoneData.backMaterial);
+            document.getElementById("phonePrice").value = safeValue(phoneData.phonePrice);
+            document.getElementById("phoneWeight").value = safeValue(phoneData.phoneWeight);
+            document.getElementById("InStore").value = safeValue(phoneData.phoneInStore);
 
-    if (Array.isArray(phoneData.ramStorage) && phoneData.ramStorage.length > 0) {
-        phoneData.ramStorage.forEach(item => {
-            generateRamStorageCards(item.ramSize, item.storageSize);
-        });
-    }
+            // Checkboxok beállítása (kisbetűsítve, booleanra konvertálva)
+            function isChecked(val) {
+                if (!val) return false;
+                return val.toString().toLowerCase() === "van";
+            }
+            document.getElementById("DualSIM").checked = isChecked(phoneData.connectionDualSim);
+            document.getElementById("ESIM").checked = isChecked(phoneData.connectionESim);
+            document.getElementById("NFC").checked = isChecked(phoneData.connectionNfc);
+            document.getElementById("Jack").checked = isChecked(phoneData.connectionJack);
+            document.getElementById("Infrared").checked = isChecked(phoneData.sensorsInfrared);
+            document.getElementById("speaker").checked = (phoneData.speakerType && phoneData.speakerType.toLowerCase() === "stereo");
 
-    // --- Kamera tömb feltöltése ---
-    const cameraPlace = document.getElementById("cameraPlace");
-    cameraPlace.innerHTML = "";
+            // --- RAM / Storage tömbök feltöltése ---
+            const ramstoragePlace = document.getElementById("ramstoragePlace");
+            ramstoragePlace.innerHTML = "";  // törlés
 
-    if (Array.isArray(phoneData.cameras) && phoneData.cameras.length > 0) {
-        phoneData.cameras.forEach(camera => {
-            generateCameraCards(camera.name, camera.megapixels, camera.aperture, camera.features);
-        });
-    }
+            if (Array.isArray(phoneData.ramStorage) && phoneData.ramStorage.length > 0) {
+                phoneData.ramStorage.forEach(item => {
+                    generateRamStorageCards(item.ramSize, item.storageSize);
+                });
+            }
 
-    // --- Szín tömb feltöltése ---
-    const colorPlace = document.getElementById("colorPlace");
-    colorPlace.innerHTML = "";
+            // --- Kamera tömb feltöltése ---
+            const cameraPlace = document.getElementById("cameraPlace");
+            cameraPlace.innerHTML = "";
 
-    if (Array.isArray(phoneData.colors) && phoneData.colors.length > 0) {
-        phoneData.colors.forEach(color => {
-            generateColorCards(color.name, color.hexCode);
-        });
-    }
+            if (Array.isArray(phoneData.cameras) && phoneData.cameras.length > 0) {
+                phoneData.cameras.forEach(camera => {
+                    generateCameraCards(camera.name, camera.megapixels, camera.aperture, camera.features);
+                });
+            }
 
-    alert("Adatok betöltve!");
+            // --- Szín tömb feltöltése ---
+            const colorPlace = document.getElementById("colorPlace");
+            colorPlace.innerHTML = "";
+
+            if (Array.isArray(phoneData.colors) && phoneData.colors.length > 0) {
+                phoneData.colors.forEach(color => {
+                    generateColorCards(color.name, color.hexCode);
+                });
+            }
+
+            alert("Adatok betöltve!");
+        })
+        .catch(error => console.error('Hiba a JSON betöltésekor:', error));
 }
 
 async function showUsername() {
@@ -651,7 +655,7 @@ async function showUsername() {
     if (jogosultsag == 1) {
         document.getElementById("admin").style.display = "block";
         document.getElementById("upload").style.display = "block";
-        
+
     }
 }
 
