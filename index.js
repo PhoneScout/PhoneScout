@@ -293,7 +293,7 @@ function logout() {
     localStorage.removeItem("jogosultsag");
     alert("Sikeres kijelentkezés!");
     setTimeout(() => {
-        window.location.href = "./kosar.html";
+        window.location.href = "./index.html";
     }, 1000);
 }
 
