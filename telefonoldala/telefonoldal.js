@@ -402,8 +402,7 @@ async function showUsername() {
     }
     if (jogosultsag == 1) {
         document.getElementById("admin").style.display = "block";
-        document.getElementById("upload").style.display = "block";
-        
+        document.getElementById("upload").style.display = "block";        
     }
 }
 
