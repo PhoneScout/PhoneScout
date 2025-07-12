@@ -15,71 +15,62 @@
 
 <body>
 
-    <div class="row">
-        <div class="col-12">
-            <div id="navbar">
-                <div id="fullLogo">
-                    <a href="../index.html" style="text-decoration: none;">
-                        <div><img id="logo" src="../Images/ImagePhoneScoutLogo.png" alt="logo"></div>
+    <div class="row custom-header">
+        <div class="col-3 logo-container">
+            <a href="../index.html" class="logo-link">
+                <img src="../Images/ImagePhoneScoutLogo.png" alt="PhoneScout Logo" class="logo-img">
+                <div class="logo-text blue">Phone</div>
+                <div class="logo-text green">Scout</div>
+            </a>
+        </div>
 
-                    </a>
+        <div class="col-4 nav-links">
+            <div class="menuPoints">Mind</div>
+            <div class="menuPoints">Szerviz</div>
+            <a href="../osszehasonlitas/osszehasonlitas.html" class="menuPoints">Összehasonlítás</a>
+        </div>
 
-                    <div id="title" onclick="location.href='../index.html'" style="cursor: pointer;">
-                        <div id="title1">Phone</div>
-                        <div id="title2">Scout</div>
-                    </div>
-                </div>
-
-                <div id="menu-options">
-                    <div id="allPhones">Mind</div>
-                    <div id="repair">Szerviz</div>
-                    <a href="../osszehasonlitas/osszehasonlitas.html" style="text-decoration: none;">
-                        <div id="compare">Összehasonlítás</div>
-                    </a>
-                    <a href="../kosar/kosar.html" style="text-decoration: none;">
-                        <div id="cart">Kosár</div>
-                    </a>
-                    <a href="../telefonfeltoltes/telefonfeltoltes.html" style="text-decoration: none; font-weight: bold;">
-                        <div id="phoneUpload">Telefonfeltöltés</div>
-                    </a>
-                    <a id="admin" href="../admin/admin.html" style="text-decoration: none; display: none;">
-                        <div id="adminInterface">Admin felület</div>
-                    </a>
-                </div>
-
-
-                <div id="fullLogin">
-                    <div id="fullLogin">
-                        <div class="dropdownLogin" id="dropdownMenu" style="display: none;">
-                            <a href="#" class="dropdown-toggle" id="loginDropdown" data-bs-toggle="dropdown"
-                                aria-expanded="false">
-                                <div id="userChange">
-                                    <div id="firstName">Bejelentkezés</div>
-                                    <div id="userIcon"><img src="../Images/doneUserIcon1.png" alt=""
-                                            style="max-width: 80px; margin-left: 10px;"></i></div>
-                                </div>
-                            </a>
-                            <ul class="dropdown-menu" aria-labelledby="loginDropdown">
-                                <li>
-                                    <a href="">Profil</a>
-                                </li>
-                                <li>
-                                    <button class="logout_button" onclick="logout()">Kijelentkezés</button>
-                                </li>
-                            </ul>
-                        </div>
-                        <div id="loginText" style="display: block;">
-                            <a class="userIcon" href="../login_register/login.html" id="firstName"
-                                style="text-decoration: none;"><img src="../Images/doneBejelentkezesIcon.png"
-                                    alt="Bejelentkezés" style="max-width: 80px;"></a>
-                        </div>
-                    </div>
-
-
-
-                </div>
+        <div class="col-2 search-container">
+            <div class="search-icon">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+            <div class="search-input">
+                <input placeholder="Keresés..." type="text" id="searchBox">
             </div>
         </div>
+
+        <div class="col-3 user-cart-container">
+            <div class="user-dropdown" id="dropdownMenu">
+                <div class="user-toggle userIcon" onclick="toggleDropdown()">
+                    <div id="userChange">
+                        <div id="firstName">Bejelentkezés</div>
+                        <div class="user-img-wrapper">
+                            <img src="../Images/doneUserIcon1.png" alt="">
+                        </div>
+                    </div>
+                </div>
+                <ul class="user-dropdown-menu" id="dropdownContent">
+                    <li><button class="profile_button">Profil</button></li>
+                    <li><button class="logout_button" onclick="logout()">Kijelentkezés</button></li>
+                </ul>
+            </div>
+
+            <div id="loginText">
+                <a class="userIcon" href="../login_register/login.html" id="loginLink">
+                    <div id="userChange">
+                        <div id="firstName">Bejelentkezés</div>
+                        <div class="user-img-wrapper">
+                            <img src="../Images/doneUserIcon1.png" alt="">
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="cart-icon">
+                <a href="../kosar/kosar.html"><i id="cart" class="fa-solid fa-cart-shopping"></i></a>
+            </div>
+        </div>
+
     </div>
     <br><br>
 
@@ -88,10 +79,12 @@
         <div class="col-12">
             <div id="phoneUploadTitle">
 
-                <h1>Telefon feltöltés <br> <button onclick="getValues()" class="phonePost">Telefon feltöltése</button> <a href="../telefonfeltolto_reszletes/telefonfeltolto_reszletes.html"><button class="phonePostNEW">ÚJ Telefon feltöltése</button></a>
+                <h1>Telefon feltöltés <br> <button onclick="getValues()" class="phonePost">Telefon feltöltése</button>
+                    <a href="../telefonfeltolto_reszletes/telefonfeltolto_reszletes.html"><button
+                            class="phonePostNEW">ÚJ Telefon feltöltése</button></a>
                 </h1>
-                
-                
+
+
                 <br>
                 <input type="text" id="phoneIDInput" placeholder="Telefon ID" />
                 <button onclick="fillDataByPhoneID()">Betöltés</button>
@@ -177,10 +170,11 @@
 
                     <div class="d-flex justify-content-center align-items-center checkbox-group mb-2">
                         <input type="checkbox" id="option1" class="form-check-input custom-checkbox" />
-                        <label for="option1" class="form-check-label ms-2">Telefon adatainak elrejtése megjelenésig</label>
+                        <label for="option1" class="form-check-label ms-2">Telefon adatainak elrejtése
+                            megjelenésig</label>
                     </div>
 
-                    
+
 
 
                 </fieldset>

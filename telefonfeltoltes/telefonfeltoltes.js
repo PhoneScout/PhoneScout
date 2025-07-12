@@ -665,7 +665,7 @@ function logout() {
     localStorage.removeItem("jogosultsag");
     alert("Sikeres kijelentkezés!");
     setTimeout(() => {
-        window.location.href = "../index.html";
+        window.location.href = "../telefonfeltoltes/telefonfeltoltes.html";
     }, 1000);
 }
 
@@ -679,7 +679,20 @@ function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem("cart")) || {};
     const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
     const cartElement = document.getElementById("cart");
-    cartElement.textContent = `Kosár(${itemCount})`;
+    cartElement.textContent = `${itemCount}`;
 }
 
 updateCartCount()
+
+function toggleDropdown() {
+    const dropdown = document.getElementById("dropdownMenu");
+    dropdown.classList.toggle("open");
+}
+
+// Optional: close when clicking outside
+document.addEventListener("click", function (event) {
+    const dropdown = document.getElementById("dropdownMenu");
+    if (!dropdown.contains(event.target)) {
+        dropdown.classList.remove("open");
+    }
+});

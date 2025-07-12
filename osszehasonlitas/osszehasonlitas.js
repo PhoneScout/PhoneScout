@@ -548,7 +548,7 @@ function updateCartCount() {
     const cart = JSON.parse(localStorage.getItem("cart")) || {};
     const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
     const cartElement = document.getElementById("cart");
-    cartElement.textContent = `Kosár(${itemCount})`;
+    cartElement.textContent = `${itemCount}`;
 }
 
 updateCartCount()

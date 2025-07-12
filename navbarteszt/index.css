@@ -1,0 +1,142 @@
+.menuPoints:hover{
+    /*color: #f5deb3;*/
+    color: #2300B3;
+    scale: 1.02;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    transition: all 0.3s ease;
+}
+
+.search-icon {
+    font-size: 120%;
+    margin-right: 8px;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+}
+
+.search-container:focus-within .search-icon {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.search-input input {
+    padding: 6px 10px;
+    font-size: 90%;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+    transition: border 0.3s ease;
+}
+
+.search-input input:focus {
+    outline: none;
+    border-color: #68F145;
+}
+
+.dropdown-menu {
+    min-width: 160px;
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+}
+
+.dropdown-menu li {
+    list-style: none;
+    text-align: center;
+}
+
+#loginDropdown::after {
+    display: none;
+}
+
+.logout_button {
+    background: #FF4742;
+    border: 1px solid #FF4742;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 8px 10px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    margin: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-top: 5%;
+}
+
+.logout_button:hover,
+.logout_button:active {
+    background-color: #FFFFFF;
+    color: #FF4742;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+}
+
+.logout_button:active {
+    opacity: 0.7;
+}
+
+.profile_button {
+    background: #2300B3;
+    border: 1px solid #2300B3;
+    border-radius: 6px;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+    box-sizing: border-box;
+    color: #FFFFFF;
+    cursor: pointer;
+    display: inline-block;
+    font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
+    font-size: 16px;
+    font-weight: 800;
+    line-height: 16px;
+    min-height: 40px;
+    outline: 0;
+    padding: 8px 10px;
+    text-align: center;
+    text-rendering: geometricprecision;
+    text-transform: none;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    vertical-align: middle;
+    margin: 0;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.profile_button:hover,
+.profile_button:active {
+    background-color: #FFFFFF;
+    color: #2300B3 ;
+    box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
+}
+
+.profile_button:active {
+    opacity: 0.7;
+}
+
+#userChange {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    font-style: italic;
+    margin-right: 5%;
+}
