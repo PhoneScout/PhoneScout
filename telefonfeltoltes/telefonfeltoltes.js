@@ -1,6 +1,6 @@
 const apiUrl = "http://localhost:5287/api/auth";
 //const allPhonesURL = "http://localhost:5287/api/allPhones"; //RÉGI BACKEND
-const allPhonesURL = "http://localhost:5165/api/postPhone/phonePost1"; // ÚJ BACKEND
+const allPhonesURL = "http://localhost:5165/api/UPDATEpostPhone/phonePost1"; // ÚJ BACKEND
 const allPhonesURLg = "http://localhost:5165/api/GETphonePage";
 let allPhonesData = [];
 
@@ -275,18 +275,19 @@ function getValues() {
     console.log(parseFloat(document.getElementById("releaseDate").value))
 
 
-    PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValues, colorIDs, cameraName, cameraResolution, cameraAperture, cameraFocalLength, cameraOIS, cameraType, cameraIDs, cameraTypeIDs)
+    PhoneUPDATE(ramValues, storageValues, ramStorageIDs, colorNames, hexValues, colorIDs, cameraName, cameraResolution, cameraAperture, cameraFocalLength, cameraOIS, cameraType, cameraIDs, cameraTypeIDs)
 }
 
 
 
 //ÚJ TELEFONFELTÖLTÉS
 
-function PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValues, colorIDs, cameraName, cameraResolution, cameraAperture, cameraFocalLength, cameraOIS, cameraType, cameraIDs, cameraTypeIDs) {
+function PhoneUPDATE(ramValues, storageValues, ramStorageIDs, colorNames, hexValues, colorIDs, cameraName, cameraResolution, cameraAperture, cameraFocalLength, cameraOIS, cameraType, cameraIDs, cameraTypeIDs) {
     const phoneDataPOST = {
 
 
         // Simple data (must match the C# property names exactly)
+        phoneID: localStorage.getItem("lastID"),
         phoneName: document.getElementById("phoneName").value || "",
         phoneAntutu: parseInt(document.getElementById("Antutu").value) || 0,
         phoneResolutionHeight: parseInt(document.getElementById("ResolutionH").value) || 0,
@@ -362,7 +363,7 @@ function PhonePOST(ramValues, storageValues, ramStorageIDs, colorNames, hexValue
     // Log the data and send the request
     console.log("Sending:", phoneDataPOST);
     fetch(allPhonesURL, {
-        method: "POST",
+        method: "PUT",
         headers: {
             "Content-Type": "application/json"
         },
@@ -522,12 +523,8 @@ window.addEventListener("DOMContentLoaded", function () {
     updateSpeakerLabel(document.getElementById("speakerTypeSwitch"));
 });
 
-function getPhoneDatas(id) {
-
-}
-
 function fillDataByPhoneID() {
-    const phoneID = document.getElementById("phoneIDInput").value.trim();
+    const phoneID = localStorage.getItem("lastID")
     if (!phoneID) {
         alert("Adj meg egy telefonID-t!");
         return;
@@ -637,6 +634,9 @@ function fillDataByPhoneID() {
         .catch(error => console.error('Hiba a JSON betöltésekor:', error));
 }
 
+document.addEventListener('DOMContentLoaded', fillDataByPhoneID());
+
+
 async function showUsername() {
     const firstname = localStorage.getItem("firstname");
     const jogosultsag = localStorage.getItem("jogosultsag");
@@ -684,7 +684,8 @@ function updateCartCount() {
 
 updateCartCount()
 
-function toggleDropdown() {
+function toggleDropdownN() {
+    console.log('alma')
     const dropdown = document.getElementById("dropdownMenu");
     dropdown.classList.toggle("open");
 }

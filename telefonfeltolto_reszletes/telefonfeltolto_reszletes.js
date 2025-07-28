@@ -51,9 +51,9 @@ document.addEventListener("DOMContentLoaded", function () {
             updateProgressBar(currentStep);
         } else {
             PhonePOST();
-            setTimeout(() => {
-                //window.location.href = '../telefonfeltoltes/telefonfeltoltes.html';
-            }, 1000);
+            /*setTimeout(() => {
+                window.location.href = '../telefonfeltoltes/telefonfeltoltes.html';
+            }, 1000);*/
         }
     });
 
@@ -85,6 +85,9 @@ function updateSpeakerLabel(switchElem) {
 
 function PhonePOST() {
     const phoneDataPOST = {
+
+
+        // Simple data (must match the C# property names exactly)
         phoneName: document.getElementById("phoneName").value || "",
         phoneAntutu: parseInt(document.getElementById("Antutu").value) || 0,
         phoneResolutionHeight: parseInt(document.getElementById("ResolutionH").value) || 0,
@@ -101,15 +104,19 @@ function PhonePOST() {
         connectionNfc: document.getElementById("NFC").checked ? "van" : "nincs",
         connectionConnectionSpeed: parseInt(document.getElementById("ConnectorSpeed").value) || 0,
         connectionJack: document.getElementById("Jack").checked ? "van" : "nincs",
-        sensorsInfrared: document.getElementById("Infrared")?.checked ? "van" : "nincs",
+        sensorsInfrared: "nincs",
         batteryCapacity: parseInt(document.getElementById("BatteryCapacity").value) || 0,
         batteryMaxChargingWired: parseInt(document.getElementById("WiredChargingSpeed").value) || 0,
         batteryMaxChargingWireless: parseInt(document.getElementById("WirelessChargingSpeed").value) || 0,
         caseHeight: parseFloat(document.getElementById("Height").value) || 0.0,
         caseWidth: parseFloat(document.getElementById("Width").value) || 0.0,
         caseThickness: parseFloat(document.getElementById("Thickness").value) || 0.0,
-        phonePrice: parseInt(document.getElementById("phonePrice")?.value) || 0,
-        phoneInStore: document.getElementById("InStore")?.value || "",
+        phoneReleaseDate: "",
+        phonePrice: 0,
+        phoneInStore: "nincs",
+        phoneInStoreAmount: 0,
+
+        // Connection table data
         backMaterial: document.getElementById("BackMaterial").value || "",
         batteryType: document.getElementById("BatteryType").value || "",
         chargerType: document.getElementById("ChargerType").value || "",
@@ -117,20 +124,44 @@ function PhonePOST() {
         cpuMaxClockSpeed: parseInt(document.getElementById("MaxClockspeed").value) || 0,
         cpuCoreNumber: parseInt(document.getElementById("CoreNumber").value) || 0,
         cpuManufacturingTechnology: parseInt(document.getElementById("ManufacturingTechnology").value) || 0,
-        manufacturerName: document.getElementById("ManufacturerName")?.value || "",
-        manufacturerURL: document.getElementById("ManufacturerLink")?.value || "",
-        ramSpeed: document.getElementById("RAMSpeed")?.value || "",
+        manufacturerName: "",
+        manufacturerURL: "",
+        ramSpeed: "",
         screenType: document.getElementById("DisplayType").value || "",
-        sensorsFingerprintPlace: document.getElementById("FingerprintSensorP")?.value || "",
-        sensorsFingerprintType: document.getElementById("FingerprintSensorT")?.value || "",
-        storageSpeed: document.getElementById("StorageSpeed")?.value || "",
+        sensorsFingerprintPlace: "",
+        sensorsFingerprintType: "",
+        storageSpeed: "",
         waterproofType: document.getElementById("WaterResistance").value || "",
         speakerType: document.getElementById("speaker").checked ? "stereo" : "mono",
-        phoneWeight: document.getElementById("phoneWeight")?.value || 0.0,
+        phoneWeight: 0.0,
+
+        // Complex nested data
+        ramStorage: {
+            ID: [],
+            ramAmount: [],
+            storageAmount: []
+        },
+        Color: {
+            ID: [],
+            colorName: [],
+            colorHex: []
+        },
+        Camera: {
+            ID: [],
+            cameraName: [],
+            cameraResolution: [],
+            cameraAperture: [],
+            cameraFocalLength: [],
+            cameraOIS: []
+        },
+        CameraType: {
+            ID: [],
+            cameraType: []
+        }
     };
 
+    // Log the data and send the request
     console.log("Sending:", phoneDataPOST);
-
     fetch(allPhonesURL, {
         method: "POST",
         headers: {
@@ -138,20 +169,20 @@ function PhonePOST() {
         },
         body: JSON.stringify(phoneDataPOST)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Hiba a szerverről: ${response.status} ${response.statusText}`);
-        }
-        return response.text();
-    })
-    .then(data => {
-        alert(data);
-    })
-    .catch(error => {
-        console.error("Error:", error);
-        alert("Nem sikerült az adatok elküldése. Kérlek, ellenőrizd a szerver kapcsolatot.");
-    });
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+            let lastInsertedPhoneID = data;
+            console.log(lastInsertedPhoneID)
+            localStorage.setItem("lastID", lastInsertedPhoneID)
+            setTimeout(() => {
+                window.location.href = "../telefonfeltoltes/telefonfeltoltes.html";
+            }, 1000);
+
+        })
+        .catch(error => console.error("Error:", error));
 }
+
 
 function showUsername() {
     const firstname = localStorage.getItem("firstname");
@@ -208,7 +239,7 @@ async function showUsername() {
     if (jogosultsag == 1) {
         document.getElementById("admin").style.display = "block";
         document.getElementById("upload").style.display = "block";
-        
+
     }
 }
 
