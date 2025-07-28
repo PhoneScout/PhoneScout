@@ -20,56 +20,35 @@ function displayPhoneCards() {
     allPhonesData.slice(startIndex, endIndex).forEach((phone) => {
         const phoneRow = document.createElement("div");
         phoneRow.classList.add("phoneRow");
-        phoneRow.style.display = "flex";
-        phoneRow.style.alignItems = "center";
-        phoneRow.style.marginBottom = "15px";
-        phoneRow.style.borderBottom = "1px solid #ccc";
-        phoneRow.style.paddingBottom = "10px";
 
         phoneRow.onclick = function () {
             localStorage.setItem("selectedPhone", phone.phoneID);
-            console.log(localStorage.getItem("selectedPhone"));
             window.location.href = "./telefonoldala/telefonoldal.html";
         };
 
-
-
         const phoneImage = document.createElement("div");
         phoneImage.classList.add("phoneImage");
-        phoneImage.style.flex = "1";
-        phoneImage.style.textAlign = "center";
         phoneImage.innerHTML = `
-            <img src="${phone.imageUrl || './Images/image 3.png'}" alt="${phone.phoneName}" loading="lazy" style="max-width: 80px; max-height: 80px;">
+            <img src="${phone.imageUrl || './Images/image 3.png'}" alt="${phone.phoneName}" loading="lazy">
+            <div class="stock-bubble ${phone.phoneInStore === "van" ? "phonestockTrue" : "phonestockFalse"}">
+                ${phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
+            </div>
+            <div class="price-bubble">${phone.phonePrice} Ft</div>
         `;
 
         const phoneName = document.createElement("div");
         phoneName.classList.add("phoneDetails");
-        phoneName.style.flex = "3";
-        phoneName.style.paddingLeft = "15px";
         phoneName.innerHTML = `
             <h3 style="margin: 0; font-size: 1.2em;">${phone.phoneName}</h3>
         `;
 
         const phonePrice = document.createElement("div");
         phonePrice.classList.add("phonePrice");
-        phonePrice.style.flex = "2";
-        phonePrice.style.textAlign = "center";
-        phonePrice.innerHTML = `
-            <p style="margin: 0; font-size: 1em;">${phone.phonePrice} Ft</p>
-        `;
-        const phoneStock = document.createElement("div");
-        phoneStock.classList.add("phoneStock");
-        phoneStock.textContent = phone.phoneInStore === "van" ? "Raktáron" : "Nincs Raktáron";
-        phoneStock.style.color = phone.phoneInStore === "van" ? "green" : "red";
-        if (phone.phoneInStore === "van") {
-            phoneStock.style.marginLeft = "3.5%";
-        }
+        phonePrice.textContent = `${phone.phonePrice} Ft`;
+
 
         const cardButtons = document.createElement("div");
         cardButtons.classList.add("cardButtons");
-        cardButtons.style.display = "flex";
-        cardButtons.style.gap = "10px";
-        cardButtons.style.justifyContent = "center";
 
         const compareButton = document.createElement("div");
         compareButton.classList.add("button");
@@ -85,8 +64,6 @@ function displayPhoneCards() {
                 comparePhones.push(phone.phoneID);
                 localStorage.setItem("comparePhones", JSON.stringify(comparePhones));
             }
-            // Opcionális: átirányítás
-            // window.location.href = "./osszehasonlitas/osszehasonlitas.html";
         };
 
         const cartButton = document.createElement("div");
@@ -98,17 +75,47 @@ function displayPhoneCards() {
 
         cartButton.onclick = function (event) {
             event.stopPropagation();
-            console.log(`Add to cart clicked for phone ID: ${phone.phoneID}`);
-
             let cart = JSON.parse(localStorage.getItem("cart")) || {};
-
             cart[phone.phoneID] = (cart[phone.phoneID] || 0) + 1;
-
             localStorage.setItem("cart", JSON.stringify(cart));
-
-            console.log("Current cart:", cart);
-
             updateCartCount();
+
+            const cartIcon = document.getElementById("cart");
+            const buttonRect = cartButton.getBoundingClientRect();
+            const cartRect = cartIcon.getBoundingClientRect();
+
+            const animDot = document.createElement("div");
+            animDot.style.position = "fixed";
+            animDot.style.left = (buttonRect.left + buttonRect.width / 2) + "px";
+            animDot.style.top = (buttonRect.top + buttonRect.height / 2) + "px";
+            animDot.style.width = "16px";
+            animDot.style.height = "16px";
+            animDot.style.background = "#68F145";
+            animDot.style.borderRadius = "50%";
+            animDot.style.zIndex = "9999";
+            animDot.style.pointerEvents = "none";
+            animDot.style.transition = "all 2s cubic-bezier(.4,2,.6,1)";
+            document.body.appendChild(animDot);
+
+            setTimeout(() => {
+                const cartCenterX = cartRect.left + (cartRect.width / 2);
+                const cartCenterY = cartRect.top + (cartRect.height / 2);
+
+                animDot.style.left = (cartCenterX - animDot.offsetWidth / 2) + "px";
+                animDot.style.top = (cartCenterY - animDot.offsetHeight / 2) + "px";
+                animDot.style.opacity = "0.2";
+                animDot.style.transform = "scale(0.5)";
+            }, 10);
+
+            setTimeout(() => {
+                animDot.style.transition = "all 0.5s cubic-bezier(.4,2,.6,1)";
+                animDot.style.transform = "scale(10)";
+                animDot.style.opacity = "0";
+            }, 450);
+
+            setTimeout(() => {
+                animDot.remove();
+            }, 1010);
         };
 
         cardButtons.appendChild(compareButton);
@@ -116,8 +123,6 @@ function displayPhoneCards() {
 
         phoneRow.appendChild(phoneImage);
         phoneRow.appendChild(phoneName);
-        phoneRow.appendChild(phonePrice);
-        phoneRow.appendChild(phoneStock);
         phoneRow.appendChild(cardButtons);
 
         contentRow.appendChild(phoneRow);
@@ -139,7 +144,7 @@ function getPhoneDatas() {
             allPhonesData = data;
             console.log(allPhonesData);
             displayPhoneCards();
-            updateCarouselIndicator(); // Frissítjük az oldalszám jelzőt az adatok betöltése után
+            updateCarouselIndicator();
             updateCartCount();
         })
         .catch(error => console.error('Hiba a JSON betöltésekor:', error));

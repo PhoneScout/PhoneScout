@@ -236,19 +236,31 @@
 #contentRow {
     margin-top: 2%;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;      /* Eddig column volt */
+    flex-wrap: wrap;          /* Új: több sorba törés */
     gap: 15px;
     justify-content: flex-start;
     align-items: stretch;
 }
 
-.phoneRow:hover {
-    transform: scale(1.01);
-    
+.phoneRow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 23%;
+    min-width: 220px;
+    max-width: 350px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    background-color: #f9f9f9;
+    padding: 28px 16px 24px 16px;
+    margin-bottom: 18px;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+    position: relative;
+    /* NE legyen height! */
 }
-
-
-
 
 .phonestockFalse {
     color: red;
@@ -292,18 +304,21 @@
     font-family: 'Inter', sans-serif;
     font-size: 125%;
     font-weight: 400;
+    margin-top: 10px;      
+    margin-bottom: 18px;   
     color: red;
-    margin-top: 5px;
-    margin-right: 20px;
-    /* Több hely a jobb oldalon */
+    text-align: center;    
+    width: 100%;
 }
 
 .cardButtons {
     display: flex;
     flex-direction: row;
-    align-items: center;
     justify-content: center;
     gap: 10px;
+    margin-top: auto;  
+    margin-bottom: 0;
+    width: 100%;
 }
 
 .button:hover {
@@ -340,7 +355,62 @@
 
 .phoneImage {
     width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
+    position: relative;
+}
+
+.phoneImage img {
+    width: 200px;
     height: auto;
+    object-fit: contain;
+    display: block;
+}
+
+.price-bubble {
+    position: absolute;
+    top:10px;   
+    right: 10px;
+    background: #ffffffc0;
+    color: #000;
+    font-weight: bold;
+    padding: 1px 10px;
+    border-radius: 20px;
+    font-size: 1.1em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 2;
+    border: 2px solid #00fe33;
+    pointer-events: none;
+}
+
+.stock-bubble {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: #e0ffe0a3;
+    color: #008000b6;
+    font-weight: bold;
+    padding: 1px 10px;
+    border-radius: 20px;
+    font-size: 1.1em;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    z-index: 2;
+    border: 2px solid #00fe33;
+    pointer-events: none;
+}
+
+.phonestockFalse.stock-bubble {
+    background: #ffe0e0b5;
+    color: #000000;
+    border-color: #ff4742;
+}
+
+.phoneDetails {
+    width: 100%;
+    text-align: center;
+    margin-bottom: 10px;
 }
 
 .carouselButton {
@@ -547,16 +617,4 @@ hr {
 
 a {
     text-decoration: none;
-}
-
-.phoneRow {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    padding: 10px;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    height: auto;
-    transition: transform 0.3s ease, border-color 0.3s ease;
 }
