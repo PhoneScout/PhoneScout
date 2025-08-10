@@ -110,8 +110,11 @@ function populateTable(data) {
         const editBtn = document.createElement("button");
         editBtn.textContent = "Szerkesztés";
         editBtn.className = "edit-btn";
-        editBtn.onclick = () => window.location.href = "../telefonfeltoltes/telefonfeltoltes.html"
-
+        editBtn.onclick = function () {
+            localStorage.setItem("lastID", item.phoneID);
+            console.log(localStorage.getItem("lastID"));
+            window.location.href = "../telefonfeltoltes/telefonfeltoltes.html";
+        };
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "Törlés";
         deleteBtn.className = "delete-btn";

@@ -6,6 +6,11 @@ let allPhonesData = [];
 
 
 
+
+
+
+
+
 // ram/storage generálás.
 
 function generateRamStorageCards() {
@@ -551,7 +556,7 @@ function fillDataByPhoneID() {
 
             // Szöveges és számmezők kitöltése
             document.getElementById("Width").value = safeValue(phoneData.caseWidth);
-            document.getElementById("Height").value = safeValue(phoneData.caseHeight);
+            document.getElementById("Height").value = phoneData.caseHeight;
             document.getElementById("Thickness").value = safeValue(phoneData.caseThickness);
             document.getElementById("phoneName").value = safeValue(phoneData.phoneName);
             document.getElementById("ManufacturerName").value = safeValue(phoneData.manufacturerName);
