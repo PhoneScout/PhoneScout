@@ -426,7 +426,7 @@ footer .address {
     overflow: hidden;
     margin: 0 auto;
     padding: 0 24px;
-    background: #f8f9fa;
+    background: #f9f9f9;
     border: 1px solid #007bff;
     border-radius: 8px;
     max-width: 350px;
@@ -476,7 +476,7 @@ footer .address {
     margin-top: -8px;
     margin-right: -8px;
 }
-#paymentFormContainer .closePaymentForm:hover {
+.closePaymentForm:hover {
     background: #a71d2a;
 }
 
@@ -505,5 +505,103 @@ footer .address {
     font-size: 0.95em;
     margin-bottom: 8px;
     min-height: 18px;
+}
+
+/* --- Modal fizetéshez --- */
+.paymentModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+.modalContent {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 16px;
+    min-width: 700px;
+    max-width: 90vw;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.closeModal {
+    position: absolute;
+    top: 18px;
+    right: 28px;
+    cursor: pointer;
+    font-size: 2em;
+    color: #888;
+    transition: color 0.2s;
+}
+.closeModal:hover {
+    color: #e74c3c;
+}
+.formsContainer {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.modalForm {
+    background: #f9f9f9;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    min-width: 260px;
+    flex: 1;
+
+}
+.modalForm h4 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+    color: #2d3436;
+}
+.modalForm label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+    color: #636e72;
+}
+.modalForm input {
+    width: 100%;
+    padding: 7px 10px;
+    margin-bottom: 12px;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    font-size: 1em;
+    background: #fff;
+    transition: border 0.2s;
+}
+.modalForm input:focus {
+    border-color: #0984e3;
+    outline: none;
+}
+.submitPaymentBtn {
+    display: inline-block;
+    margin: 20px auto 0 auto;
+    padding: 10px 24px;
+    font-size: 1em;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-weight: 600;
+    margin-bottom: 3% ;
+}
+.submitPaymentBtn:hover {
+    
+    background: #0056b3;
 }
 

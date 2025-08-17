@@ -43,174 +43,120 @@ document.addEventListener("DOMContentLoaded", function () {
             paymentButton.textContent = "Fizetés";
             kosarDiv.prepend(paymentButton);
 
-            // --- Két form egymás mellett egy wrapperben ---
-            let formsWrapper = document.createElement("div");
-            formsWrapper.className = "paymentFormsWrapper";
-            formsWrapper.style.display = "flex";
-            formsWrapper.style.gap = "24px";
-            formsWrapper.style.justifyContent = "center";
-            formsWrapper.style.marginTop = "16px";
-
-            // --- BANKKÁRTYA ADATOK FORM ---
-            let paymentFormContainer = document.createElement("div");
-            paymentFormContainer.id = "paymentFormContainer";
-            paymentFormContainer.className = "paymentFormBox";
-            paymentFormContainer.innerHTML = `
-                <button class="closePaymentForm" title="Bezárás" style="float:right;margin-top:-8px;margin-right:-8px;">&times;</button>
-                <form id="paymentForm" class="paymentForm">
-                    <label for="cardName">Név a kártyán</label>
-                    <input type="text" id="cardName" maxlength="40" placeholder="Név a kártyán" required>
-                    <span id="cardNameError" style="color: red; font-size: 0.9em;"></span>
-                    <label for="cardNumber">Bankkártyaszám</label>
-                    <input type="text" id="cardNumber" maxlength="19" placeholder="1234 5678 9012 3456" required>
-                    <span id="cardNumberError" style="color: red; font-size: 0.9em;"></span>
-                    <label for="expiry">Lejárat (HH/ÉÉ)</label>
-                    <input type="text" id="expiry" maxlength="5" placeholder="12/25" required>
-                    <span id="expiryError" style="color: red; font-size: 0.9em;"></span>
-                    <label for="cvc">CVC</label>
-                    <input type="text" id="cvc" maxlength="4" placeholder="123" required>
-                    <span id="cvcError" style="color: red; font-size: 0.9em;"></span>
-                </form>
+            // Modal létrehozása két formmal, egymás mellett
+            let modal = document.createElement("div");
+            modal.classList.add("paymentModal");
+            modal.style.display = "none";
+            modal.innerHTML = `
+                <div class="modalContent">
+                    <span class="closeModal">&times;</span>
+                    <h2 class="modalTitle">Fizetés</h2>
+                    <div class="formsContainer">
+                        <form id="paymentForm" class="modalForm">
+                            <h4>Bankkártya adatok</h4>
+                            <label>Kártyaszám:</label>
+                            <input type="text" id="cardNumber" maxlength="19" required placeholder="1234 5678 9012 3456">
+                            <div class="invalid-feedback"></div>
+                            <label>Lejárat:</label>
+                            <input type="text" id="expiry" maxlength="5" required placeholder="MM/YY">
+                            <div class="invalid-feedback"></div>
+                            <label>CVC:</label>
+                            <input type="text" id="cvc" maxlength="3" required placeholder="123">
+                            <div class="invalid-feedback"></div>
+                            <label>Kártyán szereplő név:</label>
+                            <input type="text" id="cardName" required placeholder="Név">
+                            <div class="invalid-feedback"></div>
+                        </form>
+                        <form id="shippingForm" class="modalForm">
+                            <h4>Szállítási adatok</h4>
+                            <label>Teljes név:</label>
+                            <input type="text" id="fullName" required placeholder="Név">
+                            <div class="invalid-feedback"></div>
+                            <label>Város:</label>
+                            <input type="text" id="city" required placeholder="Város">
+                            <div class="invalid-feedback"></div>
+                            <label>Irányítószám:</label>
+                            <input type="text" id="zip" maxlength="4" required placeholder="1234">
+                            <div class="invalid-feedback"></div>
+                            <label>Cím:</label>
+                            <input type="text" id="address" required placeholder="Utca, házszám">
+                            <div class="invalid-feedback"></div>
+                            <label>Telefonszám:</label>
+                            <input type="text" id="phone" maxlength="11" required placeholder="36301234567">
+                            <div class="invalid-feedback"></div>
+                        </form>
+                    </div>
+                    <button id="submitPayment" class="submitPaymentBtn paymentButton">Fizetés leadása</button>
+                </div>
             `;
+            document.body.appendChild(modal);
 
-            // --- SZÁLLÍTÁSI ADATOK FORM ---
-            let shippingFormContainer = document.createElement("div");
-            shippingFormContainer.id = "shippingFormContainer";
-            shippingFormContainer.className = "paymentFormBox";
-            shippingFormContainer.innerHTML = `
-                <form id="shippingForm" class="paymentForm">
-                    <label for="fullName">Teljes név</label>
-                    <input type="text" id="fullName" maxlength="40" placeholder="Teljes név" required>
-                    <span id="fullNameError" style="color: red; font-size: 0.9em;"></span>
-                    <label for="address">Szállítási cím</label>
-                    <input type="text" id="address" maxlength="80" placeholder="Cím (utca, házszám)" required>
-                    <span id="addressError" style="color: red; font-size: 0.9em;"></span>
-                    <label for="city">Város</label>
-                    <input type="text" id="city" maxlength="40" placeholder="Város" required>
-                    <span id="cityError" style="color: red; font-size: 0.9em;"></span>
-                    <label for="zip">Irányítószám</label>
-                    <input type="text" id="zip" maxlength="10" placeholder="Irányítószám" required>
-                    <span id="zipError" style="color: red; font-size: 0.9em;"></span>
-                    <label for="phone">Telefonszám</label>
-                    <input type="text" id="phone" maxlength="20" placeholder="Telefonszám" required>
-                    <span id="phoneError" style="color: red; font-size: 0.9em;"></span>
-                    <button type="submit" style="background:#007bff;color:#fff;border:none;border-radius:4px;padding:8px 16px;cursor:pointer;width:100%;font-weight:600;margin-top:10px;">Rendelés leadása</button>
-                </form>
-            `;
-
-            formsWrapper.appendChild(paymentFormContainer);
-            formsWrapper.appendChild(shippingFormContainer);
-            paymentButton.insertAdjacentElement("afterend", formsWrapper);
-
-            paymentFormContainer.classList.remove("open");
-            shippingFormContainer.classList.remove("open");
-
-            // --- ANIMÁLT LENYITÁS/ÖSSZECSUKÁS ---
             paymentButton.addEventListener("click", () => {
-                const open = paymentFormContainer.classList.contains("open");
-                if (open) {
-                    paymentFormContainer.classList.remove("open");
-                    shippingFormContainer.classList.remove("open");
-                } else {
-                    paymentFormContainer.classList.add("open");
-                    shippingFormContainer.classList.add("open");
+                modal.style.display = "flex";
+            });
+
+            modal.querySelector(".closeModal").addEventListener("click", () => {
+                modal.style.display = "none";
+            });
+
+            window.addEventListener("keydown", function(e) {
+                if (e.key === "Escape") {
+                    modal.style.display = "none";
                 }
             });
 
-            paymentFormContainer.querySelector(".closePaymentForm").onclick = function() {
-                paymentFormContainer.classList.remove("open");
-                shippingFormContainer.classList.remove("open");
-            };
-
-            // --- VALIDÁCIÓ ÉS SUBMIT ---
-            shippingFormContainer.querySelector("#shippingForm").onsubmit = function(e) {
+            modal.querySelector("#submitPayment").addEventListener("click", function(e) {
                 e.preventDefault();
 
-                // Hibák törlése
-                document.getElementById("fullNameError").textContent = "";
-                document.getElementById("addressError").textContent = "";
-                document.getElementById("cityError").textContent = "";
-                document.getElementById("zipError").textContent = "";
-                document.getElementById("phoneError").textContent = "";
-                document.getElementById("cardNameError").textContent = "";
-                document.getElementById("cardNumberError").textContent = "";
-                document.getElementById("expiryError").textContent = "";
-                document.getElementById("cvcError").textContent = "";
+                let valid = true;
+                [...modal.querySelectorAll("#paymentForm input, #shippingForm input")].forEach(input => {
+                    const feedback = input.nextElementSibling;
+                    if (!input.value.trim()) {
+                        feedback.textContent = "A mező kitöltése kötelező!";
+                        feedback.style.color = "#d32f2f";
+                        feedback.style.fontSize = "0.95em";
+                        feedback.style.marginTop = "2px";
+                        input.classList.add("is-invalid");
+                        valid = false;
+                    } else {
+                        feedback.textContent = "";
+                        input.classList.remove("is-invalid");
+                    }
+                });
 
-                let hasError = false;
+                if (!valid) return;
 
-                // Bankkártya validáció
-                const cardNumber = document.getElementById("cardNumber").value.replace(/\s/g, "");
-                if (cardNumber.length !== 16) {
-                    document.getElementById("cardNumberError").textContent = "A bankkártyaszámnak pontosan 16 számjegyből kell állnia!";
-                    hasError = true;
-                }
-                const cvc = document.getElementById("cvc").value;
-                if (cvc.length !== 3) {
-                    document.getElementById("cvcError").textContent = "A CVC-nek pontosan 3 számjegyből kell állnia!";
-                    hasError = true;
-                }
-                const expiry = document.getElementById("expiry").value;
-                if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiry)) {
-                    document.getElementById("expiryError").textContent = "A lejárat formátuma helytelen (HH/ÉÉ)!";
-                    hasError = true;
-                }
-                const cardName = document.getElementById("cardName").value.trim();
-                if (cardName.length === 0) {
-                    document.getElementById("cardNameError").textContent = "A név megadása kötelező!";
-                    hasError = true;
-                }
+                localStorage.setItem("cart", JSON.stringify({}));
+                updateCartCount();
 
-                // Szállítási adatok validáció
-                const fullName = document.getElementById("fullName").value.trim();
-                if (fullName.length === 0) {
-                    document.getElementById("fullNameError").textContent = "A név megadása kötelező!";
-                    hasError = true;
-                }
-                const address = document.getElementById("address").value.trim();
-                if (address.length === 0) {
-                    document.getElementById("addressError").textContent = "A cím megadása kötelező!";
-                    hasError = true;
-                }
-                const city = document.getElementById("city").value.trim();
-                if (city.length === 0) {
-                    document.getElementById("cityError").textContent = "A város megadása kötelező!";
-                    hasError = true;
-                }
-                const zip = document.getElementById("zip").value.trim();
-                if (!/^\d{4}$/.test(zip)) {
-                    document.getElementById("zipError").textContent = "Az irányítószám 4 számjegy legyen!";
-                    hasError = true;
-                }
-                const phone = document.getElementById("phone").value.trim();
-                if (!/^[0-9+\-\s]{7,}$/.test(phone)) {
-                    document.getElementById("phoneError").textContent = "Adj meg érvényes telefonszámot!";
-                    hasError = true;
-                }
-
-                if (hasError) return;
-
-                // Sikeres rendelés
-                paymentFormContainer.classList.remove("open");
-                shippingFormContainer.classList.remove("open");
-                localStorage.removeItem("cart");
-                cart = {};
-                kosarDiv.innerHTML = "<p>A kosarad üres.</p>";
-                const paymentButton = document.querySelector(".paymentButton");
-                if (paymentButton) paymentButton.style.display = "none";
-
-                const modal = document.createElement("div");
-                modal.className = "payment-success-modal";
-                modal.innerHTML = `
+                let successModal = document.createElement("div");
+                successModal.className = "payment-success-modal";
+                successModal.innerHTML = `
                     <div class="payment-success-content">
-                        Köszönjük a rendelést!<br>
-                        <button style="margin-top:18px;padding:8px 24px;border:none;border-radius:6px;background:#007bff;color:#fff;cursor:pointer;font-size:1em;">OK</button>
+                        <h2>Fizetés sikeres!</h2>
+                        <p>Köszönjük a vásárlást!</p>
+                        <button id="closeSuccessModal" class="submitPaymentBtn paymentButton" style="margin-top:20px;">Bezárás</button>
                     </div>
                 `;
-                modal.querySelector("button").onclick = () => modal.remove();
-                modal.onclick = e => { if (e.target === modal) modal.remove(); };
-                document.body.appendChild(modal);
-            };
+                document.body.appendChild(successModal);
+
+                successModal.querySelector("#closeSuccessModal").addEventListener("click", function() {
+                    successModal.remove();
+                    modal.style.display = "none";
+                    location.reload(); 
+                });
+
+                window.addEventListener("keydown", function escHandler(e) {
+                    if (e.key === "Escape") {
+                        successModal.remove();
+                        modal.style.display = "none";
+                        window.removeEventListener("keydown", escHandler);
+                        location.reload();
+                    }
+                });
+
+                modal.style.display = "none";
+            });
         }
     }
 
@@ -360,7 +306,6 @@ document.addEventListener("input", function(e) {
         value = value.slice(0, 4);
         e.target.value = value;
     }
-    // Telefonszám: csak számok, max 20 karakter
     if (e.target.id === "phone") {
         let value = e.target.value.replace(/\D/g, "");
         value = value.slice(0, 20);

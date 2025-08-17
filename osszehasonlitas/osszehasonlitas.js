@@ -150,10 +150,16 @@ document.addEventListener("DOMContentLoaded", async function() {
     </div>
     `;
 
-    // Általános csoport beszúrása
     filterHtml += `<div class="filter-title h5 mb-3">Kiemelés szűrő</div>`;
-    groupedProps.forEach(group => {
-        filterHtml += `<div class="filter-group"><div class="filter-group-title">${group.group}</div>`;
+    groupedProps.forEach((group, idx) => {
+        const dropdownId = `filter-group-dropdown-${idx}`;
+        filterHtml += `
+        <div class="filter-group-dropdown">
+            <button type="button" class="filter-group-toggle" data-target="${dropdownId}">
+                ${group.group} <span class="dropdown-arrow">&#9660;</span>
+            </button>
+            <div class="filter-group-content" id="${dropdownId}">
+        `;
         group.props.forEach(prop => {
             const checkboxId = `filter-${group.group}-${prop.key}`;
             const isDisabled = nonNumericProps.includes(prop.key);
@@ -162,9 +168,17 @@ document.addEventListener("DOMContentLoaded", async function() {
                 <label for="${checkboxId}"${isDisabled ? ' style="color:#aaa;cursor:not-allowed;" title="Nem összehasonlítható adat/infó"' : ""}>${prop.label}</label>
             </div>`;
         });
-        filterHtml += `</div>`;
+        filterHtml += `</div></div>`;
     });
     filterPanel.innerHTML = filterHtml;
+
+    filterPanel.querySelectorAll('.filter-group-toggle').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const target = document.getElementById(this.dataset.target);
+            target.classList.toggle('open');
+            this.querySelector('.dropdown-arrow').innerHTML = target.classList.contains('open') ? "&#9650;" : "&#9660;";
+        });
+    });
 
     // Különbségek kiemelése checkbox eseménykezelő
     document.getElementById("highlightDifferences").addEventListener("change", function () {
