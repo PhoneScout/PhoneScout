@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhoneScout</title>
+    <link rel="stylesheet" href="./szerviz.css">
+    <script src="https://kit.fontawesome.com/40786368ae.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="icon" type="image/x-icon" href="./Images/PhoneScoutLogo.png">
+
+</head>
+
+<body>
+
+
+    <div class="row custom-header">
+        <div class="col-3 logo-container">
+            <a href="../index.html" class="logo-link">
+                <img src="../Images/ImagePhoneScoutLogo.png" alt="PhoneScout Logo" class="logo-img">
+                <div class="logo-text blue">Phone</div>
+                <div class="logo-text green">Scout</div>
+            </a>
+        </div>
+
+        <div class="col-4 nav-links">
+            <div class="menuPoints">Mind</div>
+            <a href="../index.html" class="menuPoints">Webshop</a>
+        </div>
+
+       
+
+        <div class="col-3 user-cart-container">
+            <div class="dropdown" id="dropdownMenu">
+                <a href="#" class="dropdown-toggle userIcon" id="loginDropdown" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <div id="userChange">
+                        <div id="firstName">Bejelentkezés</div>
+                        <div class="user-img-wrapper">
+                            <img src="../Images/doneUserIcon1.png" alt="">
+                        </div>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="loginDropdown">
+                    <li><button service-det="profile_button">Profil</button></li>
+                    <li><button class="logout_button" onclick="logout()">Kijelentkezés</button></li>
+                </ul>
+            </div>
+
+            <div id="loginText">
+                <a class="userIcon" href="../login_register/login.html" id="loginLink">
+                    <div id="userChange">
+                        <div id="firstName">Bejelentkezés</div>
+                        <div class="user-img-wrapper">
+                            <img src="../Images/doneUserIcon1.png" alt="">
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container service-section">
+        <div class="row align-items-center">
+            <div class="col-lg-6 service-text left-side">
+                <h2>Gyors és Megbízható Szerviz</h2>
+                <p>
+                    Meghibásodott a telefonod? Ne aggódj! Nálunk gyors és szakszerű javítást kapsz,
+                    hogy minél hamarabb újra használhasd a készüléked. Tapasztalt szakembereink és
+                    prémium minőségű alkatrészeink garantálják a hosszú távú megbízhatóságot.
+                </p>
+                <p>
+                    Miért válassz minket?
+                </p>
+                <ul id="serviceList">
+                    <li id="slide-javitas" data-bs-target="#serviceCarousel" data-bs-slide-to="0" style="cursor:pointer;">Gyors javítás, akár néhány órán belül</li>
+                    <li id="slide-arak" data-bs-target="#serviceCarousel" data-bs-slide-to="1" style="cursor:pointer;">Kedvező árak és átlátható költségek</li>
+                    <li id="slide-minoseg" data-bs-target="#serviceCarousel" data-bs-slide-to="2" style="cursor:pointer;">Eredeti vagy prémium minőségű alkatrészek</li>
+                    <li id="slide-garancia" data-bs-target="#serviceCarousel" data-bs-slide-to="3" style="cursor:pointer;">Garancia minden javításra</li>
+                    <li id="slide-chatbot" data-bs-target="#serviceCarousel" data-bs-slide-to="4" style="cursor:pointer;">Derítsd ki mi baja a telefonodnak</li>
+                </ul>
+                
+            </div>
+            <div class="col-lg-6 service-text">
+                <div id="serviceCarousel" class="carousel slide" data-bs-ride="carousel">
+                    <div class="carousel-inner">
+                        <div class="carousel-item active" id="slide-javitas">
+                            <div class="service-details-title" style="color:#2300B3;">Gyors javítás</div>
+                            <div class="service-details-text">
+                                Szakembereink a legtöbb hibát akár néhány órán belül elhárítják, hogy ne maradj sokáig telefon nélkül. Modern eszközökkel dolgozunk, így a javítás gyors és precíz.
+                            </div>
+                            <img src="../Images/telefonservice.png" alt="Gyors javítás" class="carousel-img mt-3">
+                        </div>
+                        <div class="carousel-item" id="slide-arak">
+                            <div class="service-details-title" style="color:#68F145;">Kedvező árak és átlátható költségek</div>
+                            <div class="service-details-text">
+                                Szervizünkben minden javítás előtt pontos árajánlatot kapsz, rejtett költségek nélkül. Áraink versenyképesek, a minőségből nem engedünk.
+                            </div>
+                            <img src="../Images/service2.png" alt="Kedvező árak" class="carousel-img mt-3">
+                        </div>
+                        <div class="carousel-item" id="slide-minoseg">
+                            <div class="service-details-title" style="color:#3E9696;">Eredeti vagy prémium minőségű alkatrészek</div>
+                            <div class="service-details-text">
+                                Csak eredeti vagy prémium minőségű alkatrészeket használunk, hogy készüléked hosszú távon megbízható maradjon. Minden alkatrészre garanciát vállalunk.
+                            </div>
+                            <img src="../Images/service3.png" alt="Minőségi alkatrészek" class="carousel-img mt-3">
+                        </div>
+                        <div class="carousel-item" id="slide-garancia">
+                            <div class="service-details-title" style="color:#FF4742;">Garancia minden javításra</div>
+                            <div class="service-details-text">
+                                Minden elvégzett munkára garanciát adunk, így biztos lehetsz benne, hogy a javítás után is számíthatsz ránk. Ha bármi gond lenne, visszahozhatod a készüléket.
+                            </div>
+                            <img src="../Images/service4.png" alt="Garancia" class="carousel-img mt-3">
+                        </div>
+                        <div class="carousel-item" id="slide-chatbot">
+                            <div class="service-details-title" style="color:#9ccd8c;">Derítsd ki mi baja a telefonodnak</div>
+                            <div class="service-details-text">
+                                Használd a chatbotunkat, hogy gyorsan és egyszerűen megtudd, mi lehet a probléma a telefonoddal. Csak válaszolj néhány kérdésre, és mi segítünk!
+                            </div>
+                            <img src="../Images/service5.png" alt="Garancia" class="carousel-img mt-3">
+                        </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#serviceCarousel" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Előző</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#serviceCarousel" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Következő</span>
+                    </button>
+                </div>
+                
+            </div>
+            
+            <button class="btn btn-outline-info mt-4 w-100" id="chatbotBtn">
+                <i class="fas fa-robot"></i> Chatbot: Segítség a hibához
+            </button>
+            <button class="btn btn-success mt-2 w-100" onclick="window.location.href='../szervizkerese/szervizkerese.html'">
+                Szerviz igénylése
+            </button>
+        </div>
+    </div>
+
+
+    <div class="hr">
+        <hr size="5">
+    </div>
+
+
+    <footer>
+        <h3>Partnereink</h3>
+        <div class="partner-logos">
+            <img loading="lazy" src="../Images/XiaomiLogo.png" alt="Xiaomi">
+            <img loading="lazy" src="../Images/samsung_logo.png" alt="Samsung">
+            <img loading="lazy" src="../Images/apple_logo.png" alt="Apple">
+            <img loading="lazy" src="../Images/huawei_logo.png" alt="Huawei">
+            <img loading="lazy" src="../Images/sony_logo.png" alt="Sony">
+        </div>
+        <h3>PhoneScout</h3>
+        <div class="footer-nav">
+            <a href="./elerhetosegek">Elérhetőségek</a>
+            <a href="./rolunk">Rólunk</a>
+            <a href="./kapcsolat">Kapcsolat</a>
+            <a href="./bolt">Bolt</a>
+        </div>
+        <div class="address">Miskolc, Palóczy László utca 3, 3525</div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="./szerviz.js"></script>
+</body>
+
+</html>

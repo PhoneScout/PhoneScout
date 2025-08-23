@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="hu">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PhoneScout</title>
+    <link rel="stylesheet" href="./szervizkerese.css">
+    <script src="https://kit.fontawesome.com/40786368ae.js" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <link rel="icon" type="image/x-icon" href="./Images/PhoneScoutLogo.png">
+
+</head>
+
+<body>
+
+
+    <div class="row custom-header">
+        <div class="col-3 logo-container">
+            <a href="../index.html" class="logo-link">
+                <img src="../Images/ImagePhoneScoutLogo.png" alt="PhoneScout Logo" class="logo-img">
+                <div class="logo-text blue">Phone</div>
+                <div class="logo-text green">Scout</div>
+            </a>
+        </div>
+
+        <div class="col-4 nav-links">
+            <div class="menuPoints">Mind</div>
+            <a href="../index.html" class="menuPoints">Webshop</a>
+        </div>
+
+
+
+        <div class="col-3 user-cart-container">
+            <div class="dropdown" id="dropdownMenu">
+                <a href="#" class="dropdown-toggle userIcon" id="loginDropdown" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    <div id="userChange">
+                        <div id="firstName">Bejelentkezés</div>
+                        <div class="user-img-wrapper">
+                            <img src="../Images/doneUserIcon1.png" alt="">
+                        </div>
+                    </div>
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="loginDropdown">
+                    <li><button class="profile_button">Profil</button></li>
+                    <li><button class="logout_button" onclick="logout()">Kijelentkezés</button></li>
+                </ul>
+            </div>
+
+            <div id="loginText">
+                <a class="userIcon" href="../login_register/login.html" id="loginLink">
+                    <div id="userChange">
+                        <div id="firstName">Bejelentkezés</div>
+                        <div class="user-img-wrapper">
+                            <img src="../Images/doneUserIcon1.png" alt="">
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container mt-3 mb-2 text-end">
+        <button id="chatbotBtn" class="btn btn-outline-info">
+            <i class="fas fa-robot"></i> Chatbot: Segítség a hibához
+        </button>
+    </div>
+
+
+
+    <div class="container my-5">
+        <h2>Szervizelés igénylése</h2>
+        <form id="szervizForm" class="row g-3">
+            <div class="col-md-6">
+                <label for="name" class="form-label">Név</label>
+                <input type="text" class="form-control" id="name" required>
+            </div>
+            <div class="col-md-6">
+                <label for="email" class="form-label">Email cím</label>
+                <input type="email" class="form-control" id="email" required>
+            </div>
+            <div class="col-md-6">
+                <label for="phone" class="form-label">Telefonszám</label>
+                <input type="tel" class="form-control" id="phone" required>
+            </div>
+            <div class="col-md-6">
+                <label for="device" class="form-label">Készülék gyártója</label>
+                <input type="text" class="form-control" id="device" required>
+            </div>
+            <div class="col-md-6">
+                <label for="problemType" class="form-label">Mivel van baj?</label>
+                <select class="form-select" id="problemType" required>
+                    <option value="">Válassz...</option>
+                    <option value="kijelzo">Kijelző</option>
+                    <option value="akku">Akkumulátor</option>
+                    <option value="szoftver">Szoftver</option>
+                    <option value="kamera">Kamera</option>
+                    <option value="hang">Hang</option>
+                    <option value="egyeb">Egyéb</option>
+                </select>
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="atvizsgalas">
+                    <label class="form-check-label" for="atvizsgalas">
+                        Átvizsgálás kérése
+                    </label>
+                </div>
+            </div>
+
+
+
+            <div class="col-12" id="atvizsgalasInfo" style="display:none;">
+                <div class="alert alert-secondary mt-2">
+                    Az átvizsgálás során szakembereink teljes körűen ellenőrzik a készülék állapotát, feltárják a
+                    rejtett hibákat, és javaslatot tesznek a javításra vagy cserére. Az átvizsgálás díja a vizsgálat
+                    eredményétől függően kerül megállapításra.
+                </div>
+            </div>
+            <div class="col-12">
+                <label for="problem" class="form-label">Hiba leírása</label>
+                <textarea class="form-control" id="problem" rows="3" required></textarea>
+            </div>
+            <div class="col-12">
+                <button type="submit" class="btn btn-primary">Igénylés elküldése</button>
+            </div>
+            <div id="formMessage" class="mt-3"></div>
+        </form>
+    </div>
+    <div class="hr">
+        <hr size="5">
+    </div>
+
+    <div class="container my-5">
+        <h3>Gyakran Ismételt Kérdések</h3>
+        <div class="accordion" id="faqAccordion">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq1">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse1">
+                        Mennyi idő alatt készül el a szervizelés?
+                    </button>
+                </h2>
+                <div id="collapse1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Általában 3-5 munkanap, de a pontos időt a hiba típusa és az alkatrész elérhetősége
+                        befolyásolja.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq2">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse2">
+                        Kapok árajánlatot a javítás előtt?
+                    </button>
+                </h2>
+                <div id="collapse2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        Igen, minden esetben előzetes árajánlatot küldünk az átvizsgálás után.
+                    </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="faq3">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                        data-bs-target="#collapse3">
+                        Hogyan követhetem nyomon a szerviz státuszát?
+                    </button>
+                </h2>
+                <div id="collapse3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                        A bevizsgálási kód segítségével az <a href="./szervizstatusz.html">online szerviz státusz
+                            lekérdező</a> oldalon.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer>
+        <h3>Partnereink</h3>
+        <div class="partner-logos">
+            <img loading="lazy" src="../Images/XiaomiLogo.png" alt="Xiaomi">
+            <img loading="lazy" src="../Images/samsung_logo.png" alt="Samsung">
+            <img loading="lazy" src="../Images/apple_logo.png" alt="Apple">
+            <img loading="lazy" src="../Images/huawei_logo.png" alt="Huawei">
+            <img loading="lazy" src="../Images/sony_logo.png" alt="Sony">
+        </div>
+        <h3>PhoneScout</h3>
+        <div class="footer-nav">
+            <a href="./elerhetosegek">Elérhetőségek</a>
+            <a href="./rolunk">Rólunk</a>
+            <a href="./kapcsolat">Kapcsolat</a>
+            <a href="./bolt">Bolt</a>
+        </div>
+        <div class="address">Miskolc, Palóczy László utca 3, 3525</div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <script src="./szervizkerese.js"></script>
+</body>
+
+</html>
