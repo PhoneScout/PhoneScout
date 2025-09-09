@@ -305,6 +305,9 @@
     font-size: 24px;
     line-height: 29px;
     color: #000000;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
 
 .color-option {
@@ -312,9 +315,15 @@
     width: 35px;
     height: 35px;
     border: 1px solid #000000;
-    border-radius: 7px;
+    border-radius: 50%;
     display: inline-block;
     margin-right: 5px;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+}
+
+.color-option:hover {
+    transform: scale(1.1);
 }
 
 .szinValaszto {
@@ -342,6 +351,10 @@
     margin: 1%;
     background-color: aliceblue;
     border: 1px solid rgb(68, 68, 68);
+}
+
+.ramTárhelyOptionPicker{
+    margin-right: 10px;
 }
 
 .colorAndVersionPicker {
@@ -478,6 +491,7 @@ br {
 #mySvg {
     margin-top: 5%;
     display: block;
+    margin-left: 20%;
 }
 
 #mySvg:not([data]) {
@@ -570,25 +584,6 @@ br {
     justify-content: space-between;
     flex-wrap: wrap;
     min-height: 2000px;
-}
-
-.color-picker {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-
-.color-option {
-    width: 30px;
-    height: 30px;
-    border: 1px solid #ccc;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: transform 0.2s ease;
-}
-
-.color-option:hover {
-    transform: scale(1.1);
 }
 
 footer {

@@ -246,6 +246,7 @@ function telDataShow(allPhonesData) {
         return;
     }
 
+
     let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID); //ID!!!!!!!!!!!!!!!!!!!!!
     if (selectedPhone) {
         dataPlace.innerHTML = `
@@ -256,7 +257,7 @@ function telDataShow(allPhonesData) {
                                     <th colspan="2">${selectedPhone.phoneName} telefon adatai</th>
                                 </tr>
                             <tbody>                          
-
+        
                             
     <tr><td colspan="2" class="cpu_table"><strong>CPU</strong></td></tr>
     <tr><td class="cpu_table">Név</td><td class="cpu_table">${selectedPhone.cpuName}</td></tr>
@@ -300,6 +301,11 @@ function telDataShow(allPhonesData) {
     <tr><td class="test_table">Vastagság</td><td class="test_table">${selectedPhone.caseThickness.toFixed(2)} mm</td></tr>
     <tr><td class="test_table">Vízállóság</td><td class="test_table">${selectedPhone.waterproofType}</td></tr>
     <tr><td class="test_table">Hátlap anyaga</td><td class="test_table">${selectedPhone.backMaterial}</td></tr>
+    <tr><td class="test_table">Súly</td><td class="test_table">${selectedPhone.phoneWeight}</td></tr>
+    
+    <tr><td colspan="2" class="speaker_table"><strong>Hangszóró</strong></td></tr>
+    <tr><td class="speaker_table">Hangszóró</td><td class="speaker_table">${selectedPhone.speakerType}</td></tr>
+    
 </table>
 
         `;
@@ -320,6 +326,7 @@ document.addEventListener("DOMContentLoaded", function () {
     addSvgHoverEffect("mySvg", "csatlakoztathatóság", "csatlakozo_table");
     addSvgHoverEffect("mySvg", "cpu", "cpu_table");
     addSvgHoverEffect("mySvg", "kamera", "camera_table");
+    addSvgHoverEffect("mySvg", "hangszóró", "speaker_table"); 
 });
 
 function selectRamTárhely(element) {
