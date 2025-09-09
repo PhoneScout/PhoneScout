@@ -184,7 +184,7 @@ function telDataShowMain(allPhonesData) {
     <tr><td class="camera_table">Felbontás</td><td class="camera_table">${camRes[i]} MP</td></tr>
     <tr><td class="camera_table">Rekeszérték</td><td class="camera_table">${camApertures[i]}</td></tr>
     <tr><td class="camera_table">Fókusztávolság</td><td class="camera_table">${camFocalLengths[i]}</td></tr>
-    <tr><td class="camera_table">Opptikai képstabilizátor</td><td class="camera_table">${camOISs[i]}</td></tr>
+    <tr><td class="camera_table">Optikai képstabilizátor</td><td class="camera_table">${camOISs[i]}</td></tr>
   `;
     }
 

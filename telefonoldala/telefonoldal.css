@@ -308,6 +308,8 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+    margin-top: 20px;
+    margin-bottom: 40px;
 }
 
 .color-option {
@@ -343,18 +345,22 @@
     padding: 5%;
 }
 
-.ramStoragePicker {
-    margin-top: 30%;
+.ramTárhelyPicker {
+    margin-top: 15%;
 }
 
-.ramStorageOption {
+
+.ramTárhelyOptionPicker {
     margin: 1%;
     background-color: aliceblue;
-    border: 1px solid rgb(68, 68, 68);
+    margin-bottom: 15%;
+    margin-right: 20px;
 }
 
-.ramTárhelyOptionPicker{
-    margin-right: 10px;
+
+.ramTárhelyOption {
+    margin-top: 3px;
+    margin-right: 3px;
 }
 
 .colorAndVersionPicker {
@@ -514,10 +520,6 @@ br {
 
 #phoneTable {
     min-width: 600px;
-}
-
-.ramTárhelyOption {
-    margin-top: 3px;
 }
 
 .phoneDataBox {
