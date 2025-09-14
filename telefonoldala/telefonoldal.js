@@ -157,8 +157,8 @@ function telDataShowMain(allPhonesData) {
         colorPlace.innerHTML += colorHTML
     }
 
-    for (let i = 0; i < selectedPhone.ramStorage.ramAmount.length; i++) {
-        let ramStorageHTML = `<button class="ramTárhelyOption" onclick="selectRamTárhely(this)">${selectedPhone.ramStorage.ramAmount[i]}/${selectedPhone.ramStorage.storageAmount[i]}GB</button>`
+    for (let i = 0; i < selectedPhone.ramStorageG.ramStoragePairs.length; i++) {
+        let ramStorageHTML = `<button class="ramTárhelyOption" onclick="selectRamTárhely(this)">${selectedPhone.ramStorageG.ramStoragePairs[i]} GB</button>`
         ramStoragePlace.innerHTML += ramStorageHTML
     }
 
@@ -187,14 +187,6 @@ function telDataShowMain(allPhonesData) {
     <tr><td class="camera_table">Optikai képstabilizátor</td><td class="camera_table">${camOISs[i]}</td></tr>
   `;
     }
-
-
-
-
-
-
-
-
 
     console.log(allPhonesData)
 
@@ -283,8 +275,8 @@ function telDataShow(allPhonesData) {
     <tr><td class="csatlakozo_table">NFC</td><td class="csatlakozo_table">${selectedPhone.connectionNfc}</td></tr>
 
     <tr><td colspan="2" class="ram_storage_table"><strong>RAM / Tárhely</strong></td></tr>
-    <tr><td class="ram_storage_table">RAM sebesség</td><td class="ram_storage_table">${selectedPhone.ramSebesseg}</td></tr>
-    <tr><td class="ram_storage_table">Tárhely sebesség</td><td class="ram_storage_table">${selectedPhone.storageSebesseg}</td></tr>
+    <tr><td class="ram_storage_table">RAM sebesség</td><td class="ram_storage_table">${selectedPhone.ramSpeed}</td></tr>
+    <tr><td class="ram_storage_table">Tárhely sebesség</td><td class="ram_storage_table">${selectedPhone.storageSpeed}</td></tr>
 
     <tr><td colspan="2" class="akkumulator_table"><strong>Akkumulátor és Töltés</strong></td></tr>
     <tr><td class="akkumulator_table">Akkumulátor kapacitása</td><td class="akkumulator_table">${selectedPhone.batteryCapacity} mAh</td></tr>

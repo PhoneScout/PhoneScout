@@ -13,7 +13,7 @@ let allPhonesData = [];
 
 // ram/storage generálás.
 
-function generateRamStorageCards() {
+function generateRamStorageCards(ramA,stoA) {
     let place = document.getElementById("ramstoragePlace");
     let ramStorageCard = document.createElement("div");
     ramStorageCard.classList.add("ramStorage-card");
@@ -21,20 +21,20 @@ function generateRamStorageCards() {
     ramStorageCard.innerHTML = `
     <div class="dropdown">
         <div class="dropdown-header" onclick="toggleDropdown(this)"> 
-            <span class="ramStorageDropdownName">Új Ram / Tárhely</span>
+            <span class="ramStorageDropdownName">${(ramA+"/"+stoA)?ramA+"/"+stoA:"Új Ram / Tárhely"}</span>
             <button onclick="removeRamStorageCard(this)" class="deleteBtn">X</button>
         </div>
         <div class="dropdown-content">
             <div class="memoryInputs">
                 <div class="textBox">
                     <input type="text" class="textBoxInput RAMInput" placeholder=" "
-                        onkeyup="modifyMemoryName(this)" />
+                        onkeyup="modifyMemoryName(this)" value="${(ramA)?ramA:""}" />
                     <label class="textBoxLabel">RAM mennyisége</label>
                 </div>
                 <div class="separator">/</div>
                 <div class="textBox">
                     <input type="text" class="textBoxInput StorageInput" placeholder=" "
-                        onkeyup="modifyMemoryName(this)" />
+                        onkeyup="modifyMemoryName(this)" value="${(stoA)?stoA:""}"/>
                     <label class="textBoxLabel">Tárhely mennyisége</label>
                 </div>
             </div>
@@ -70,7 +70,7 @@ function removeRamStorageCard(button) {
 
 
 
-function generateColorCards() {
+function generateColorCards(nameC,codeC) {
     let place = document.getElementById("colorPlace");
 
     let colorCard = document.createElement("div");
@@ -79,20 +79,20 @@ function generateColorCards() {
     colorCard.innerHTML = `
     <div class="dropdown">
       <div class="dropdown-header" onclick="toggleDropdown(this)">
-        <span class="colorDropdownName">Új Szín</span>
+        <span class="colorDropdownName">${(nameC)?nameC:"Új Szín"}</span>
         <button onclick="removeColorCard(this)" class="deleteBtn">X</button>
       </div>
       <div class="dropdown-content">
         <div class="textBox">
-          <input type="text" class="colorName textBoxInput" placeholder=" " onkeyup="modifyColorName(this)" />
+          <input type="text" class="colorName textBoxInput" placeholder=" " value="${(nameC)?nameC:""}" onkeyup="modifyColorName(this)" />
           <label class="textBoxLabel">Szín név</label>
         </div>
         <div class="textBox">
-          <input type="color" class="colorPicker" value="#000000" onchange="syncColorInputs(this)" />
+          <input type="color" class="colorPicker" value="${(codeC)?codeC:"#000000"}" onchange="syncColorInputs(this)" />
           <label class="textBoxLabel">Szín választó</label>
         </div>
         <div class="textBox">
-          <input type="text" class="colorHEX textBoxInput" oninput="syncHEXInput(this)" />
+          <input type="text" class="colorHEX textBoxInput" value="${(codeC)?codeC:"#000000"}" oninput="syncHEXInput(this)" />
           <label class="textBoxLabel">Szín HEX</label>
         </div>
         <div class="textBox">
@@ -159,7 +159,7 @@ function removeColorCard(button) {
 }
 
 
-function generateCameraCards() {
+function generateCameraCards(name,resolution,aperture,focalLength,ois,type) {
     let place = document.getElementById("cameraPlace");
     let cameraCard = document.createElement("div");
     cameraCard.classList.add("camera-card");
@@ -167,7 +167,7 @@ function generateCameraCards() {
     cameraCard.innerHTML = `
     <div class="dropdown">
                             <div class="dropdown-header" onclick="toggleDropdown(this)"> <span
-                                    class="cameraDropdownName">Új Kamera</span>
+                                    class="cameraDropdownName">${(name)?name:"Új kamera"}</span>
                                     <button onclick="removeCameraCard(this)" class="deleteBtn">X</button>
 
                             </div>
@@ -175,27 +175,27 @@ function generateCameraCards() {
 
                                 <div class="textBox">
                                     <input type="text" class="textBoxInput CameraName" placeholder=" "
-                                        onkeyup="modifyCameraName(this)" />
+                                        onkeyup="modifyCameraName(this)" value="${(name)?name:""}" />
                                     <label for="CameraName" class="textBoxLabel">Neve</label>
                                 </div>
                                 <div class="textBox">
-                                    <input type="text" id="CameraResolution" class="textBoxInput CameraResolution" placeholder=" " />
+                                    <input type="text" id="CameraResolution" class="textBoxInput CameraResolution" placeholder=" " value="${(resolution)?resolution:""}"/>
                                     <label for="CameraResolution" class="textBoxLabel">Felbontása</label>
                                 </div>
                                 <div class="textBox">
-                                    <input type="text" id="Aperture" class="textBoxInput Aperture" placeholder=" " />
+                                    <input type="text" id="Aperture" class="textBoxInput Aperture" placeholder=" " value="${(aperture)?aperture:""}"/>
                                     <label for="Aperture" class="textBoxLabel">Rekeszértéke</label>
                                 </div>
                                 <div class="textBox">
-                                    <input type="text" id="FocalLength" class="textBoxInput FocalLength" placeholder=" " />
+                                    <input type="text" id="FocalLength" class="textBoxInput FocalLength" placeholder=" " value="${(focalLength)?focalLength:""}"/>
                                     <label for="FocalLength" class="textBoxLabel">Fókusztávolság (focal length)</label>
                                 </div>
                                 <div class="textBox">
-                                    <input type="text" id="OIS" class="textBoxInput OIS" placeholder=" " />
+                                    <input type="text" id="OIS" class="textBoxInput OIS" placeholder=" " value="${(ois)?ois:""}"/>
                                     <label for="OIS" class="textBoxLabel">Optikai képstabilizátor (OIS)</label>
                                 </div>
                                 <div class="textBox">
-                                    <input type="text" id="cameraType" class="textBoxInput cameraType" placeholder=" " />
+                                    <input type="text" id="cameraType" class="textBoxInput cameraType" placeholder=" " value="${(type)?type:""}"/>
                                     <label for="cameraType" class="textBoxLabel">kameratípus</label>
                                 </div>
 
@@ -591,6 +591,7 @@ function fillDataByPhoneID() {
             document.getElementById("phonePrice").value = safeValue(phoneData.phonePrice);
             document.getElementById("phoneWeight").value = safeValue(phoneData.phoneWeight);
             document.getElementById("InStore").value = safeValue(phoneData.phoneInStore);
+            document.getElementById("releaseDate").value = safeValue(phoneData.phoneReleaseDate);
 
             // Checkboxok beállítása (kisbetűsítve, booleanra konvertálva)
             function isChecked(val) {
@@ -602,36 +603,34 @@ function fillDataByPhoneID() {
             document.getElementById("NFC").checked = isChecked(phoneData.connectionNfc);
             document.getElementById("Jack").checked = isChecked(phoneData.connectionJack);
             document.getElementById("Infrared").checked = isChecked(phoneData.sensorsInfrared);
-            document.getElementById("speaker").checked = (phoneData.speakerType && phoneData.speakerType.toLowerCase() === "stereo");
+            document.getElementById("speaker").checked = (phoneData.speakerType && phoneData.speakerType.toLowerCase() === "stereo");            
+
+            updateSpeakerLabel(document.getElementById("speaker"))
 
             // --- RAM / Storage tömbök feltöltése ---
             const ramstoragePlace = document.getElementById("ramstoragePlace");
             ramstoragePlace.innerHTML = "";  // törlés
 
-            if (Array.isArray(phoneData.ramStorage) && phoneData.ramStorage.length > 0) {
-                phoneData.ramStorage.forEach(item => {
-                    generateRamStorageCards(item.ramSize, item.storageSize);
-                });
+            for (let i = 0; i < phoneData.ramStorageG.ramStoragePairs.length; i++) {
+                let ramStorageArray = phoneData.ramStorageG.ramStoragePairs[i].split("/")
+                generateRamStorageCards(ramStorageArray[0],ramStorageArray[1])              
             }
+           
 
             // --- Kamera tömb feltöltése ---
             const cameraPlace = document.getElementById("cameraPlace");
             cameraPlace.innerHTML = "";
-
-            if (Array.isArray(phoneData.cameras) && phoneData.cameras.length > 0) {
-                phoneData.cameras.forEach(camera => {
-                    generateCameraCards(camera.name, camera.megapixels, camera.aperture, camera.features);
-                });
+            
+            for (let i = 0; i < phoneData.cameraType.cameraType.length; i++) {
+                generateCameraCards(phoneData.camera.cameraName[i],phoneData.camera.cameraResolution[i],phoneData.camera.cameraAperture[i],phoneData.camera.cameraFocalLength[i],phoneData.camera.cameraOIS[i],phoneData.cameraType.cameraType[i])             
             }
 
             // --- Szín tömb feltöltése ---
             const colorPlace = document.getElementById("colorPlace");
             colorPlace.innerHTML = "";
 
-            if (Array.isArray(phoneData.colors) && phoneData.colors.length > 0) {
-                phoneData.colors.forEach(color => {
-                    generateColorCards(color.name, color.hexCode);
-                });
+            for (let i = 0; i < phoneData.color.colorName.length; i++) {
+                generateColorCards(phoneData.color.colorName[i],phoneData.color.colorHex[i])                
             }
 
             alert("Adatok betöltve!");
