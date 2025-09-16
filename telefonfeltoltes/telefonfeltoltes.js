@@ -341,10 +341,14 @@ function PhoneUPDATE(ramValues, storageValues, ramStorageIDs, colorNames, hexVal
         phoneWeight: document.getElementById("phoneWeight").value || 0.0,
 
         // Complex nested data
-        ramStorage: {
+        ramStorageP: {
             ID: ramStorageIDs,
             ramAmount: ramValues,
             storageAmount: storageValues
+        },
+        ramStorageG: {
+            ID: [],
+            ramStoragePairs: [],
         },
         Color: {
             ID: colorIDs,
