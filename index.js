@@ -8,6 +8,24 @@ let phonesPerPage = 4;
 
 let allPhonesData = [];
 
+let previousPages = [
+    {link:"",pageName:"alma"},
+    {link:"",pageName:"körte"},
+    {link:"",pageName:"barack"}
+]
+console.log(previousPages[0].pageName);
+
+function showPreviousPages(){
+    let place = document.getElementById("previousPagesPlace")
+    
+    for (let i = 0; i < previousPages.length; i++) {
+        place.innerHTML += `<a href="${previousPages[i].link}"><div>${previousPages[i].pageName}</div></a>` + "/"
+        }
+}
+showPreviousPages()
+
+
+
 let kosar = [];
 
 function displayPhoneCards() {
