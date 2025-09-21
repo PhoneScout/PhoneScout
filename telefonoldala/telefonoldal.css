@@ -649,3 +649,25 @@ footer .address {
     background-color: #0056b3;
     transform: translateY(-3px);
 }
+
+#previousPagesPlace{
+    gap: 2%;
+    margin-top: 2%;
+    cursor: pointer;
+}
+.pagesHistory{
+    color: #2300B3;
+    text-decoration: none;
+    font-style: italic;
+    cursor: pointer;
+}
+.pagesHistory:hover{
+    scale: 1.02;
+}
+.pagesHistory:last-child{
+    color: #5dd83f;
+}
+.pagesHistory:last-child:hover{
+    scale: 1.00;
+    cursor: not-allowed;
+}

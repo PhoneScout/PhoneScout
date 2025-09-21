@@ -1,3 +1,42 @@
+let previousPages = JSON.parse(localStorage.getItem("pagesHistory")) || [];
+
+function showPreviousPages() {
+    let place = document.getElementById("previousPagesPlace");
+    place.innerHTML = ""; // clear before rendering
+
+    if (previousPages.length > 1) {
+        for (let i = 0; i < previousPages.length - 1; i++) {
+            place.innerHTML += `
+                <a href="${previousPages[i].pageURL}" target="_blank" class="pagesHistory" onclick="clickedLine(this)">
+                    <div>${previousPages[i].pageName}</div>
+                </a> /
+            `;
+        }
+        place.innerHTML += `<div class="pagesHistory">${previousPages[previousPages.length - 1].pageName}</div>`;
+    } else if (previousPages.length === 1) {
+        place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
+    }
+}
+
+showPreviousPages();
+
+function addToPreviousPages(line) {
+    previousPages.push({ pageName: line.textContent, pageURL: line.href });
+    localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+    showPreviousPages(); // update UI
+}
+
+function clickedLine(line) {
+    let index = previousPages.findIndex(p => p.pageURL === line.getAttribute("href"));
+    if (index !== -1) {
+        previousPages.splice(index+1); // delete from index to end
+        localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+        showPreviousPages(); // refresh UI
+    }
+}
+
+
+
 document.addEventListener("DOMContentLoaded", function () {
     const kosarDiv = document.querySelector(".kosar .col-8");
 

@@ -1,3 +1,4 @@
+
 const apiUrl = "http://localhost:5287/api/auth";
 const allPhonesURL = "http://localhost:5165/api/GETmainPage"; //ÚJ BACKEND
 //const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
@@ -8,22 +9,73 @@ let phonesPerPage = 4;
 
 let allPhonesData = [];
 
-let previousPages = [
-    {link:"",pageName:"alma"},
-    {link:"",pageName:"körte"},
-    {link:"",pageName:"barack"}
-]
-console.log(previousPages[0].pageName);
+function teszt(name, link) {
+    confirm(name);
 
-function showPreviousPages(){
-    let place = document.getElementById("previousPagesPlace")
-    
-    for (let i = 0; i < previousPages.length; i++) {
-        place.innerHTML += `<a href="${previousPages[i].link}"><div>${previousPages[i].pageName}</div></a>` + "/"
-        }
 }
-showPreviousPages()
 
+let previousPages = [
+    { pageName: "Főoldal", pageURL: "../fooldal/index.html" }
+]
+
+function showPreviousPages() {
+    let place = document.getElementById("previousPagesPlace");
+    place.innerHTML = ""; // clear before rendering
+
+    if (previousPages.length > 1) {
+        for (let i = 0; i < previousPages.length - 1; i++) {
+            place.innerHTML += `
+                <a href="${previousPages[i].pageURL}" target="_blank" class="pagesHistory" onclick="clickedLine(this)">
+                    <div>${previousPages[i].pageName}</div>
+                </a> /
+            `;
+        }
+        place.innerHTML += `<div class="pagesHistory">${previousPages[previousPages.length - 1].pageName}</div>`;
+    } else if (previousPages.length === 1) {
+        place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
+    }
+}
+
+showPreviousPages();
+
+function addToPreviousPages(line) {
+    console.log("previouspages");
+    
+    console.log(previousPages);
+    
+    let name = (line.textContent.split('\n'))
+    if (name.length != 1) {
+
+        console.log(
+            (name[name.length - 2].trim()))
+        alert("alma")
+        previousPages.push({ pageName: name[name.length - 2].trim(), pageURL: line.href });
+    }
+    else {
+        previousPages.push({ pageName: line.textContent, pageURL: line.href });
+    }
+    localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+    showPreviousPages(); // update UI
+}
+
+function clickedLine(line) {
+    console.log("clickedline");
+    
+    
+    let index = previousPages.findIndex(p => p.pageName == line.getAttribute("textContent"));
+    console.log(index);
+    console.log(line.getAttribute("href"));
+    
+    
+    if (index !== -1) {
+        previousPages.splice(index + 1); // delete from index to end
+        localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+        showPreviousPages(); // refresh UI
+    }
+    else{
+        addToPreviousPages(line)
+    }
+}
 
 
 let kosar = [];
@@ -41,7 +93,8 @@ function displayPhoneCards() {
 
         phoneRow.onclick = function () {
             localStorage.setItem("selectedPhone", phone.phoneID);
-            window.location.href = "./telefonoldala/telefonoldal.html";
+            //window.location.href = "./telefonoldala/telefonoldal.html";            
+            addToPreviousPages(this)
         };
 
         const phoneImage = document.createElement("div");
@@ -201,16 +254,16 @@ function updateCarouselButtons() {
 function updateCarouselButtons1() {
     const rightButton = document.getElementById("carouselButtonLeft");
 
-   // Bal gomb megjelenítése csak ha currentPage > 0
-   if (currentPage > 0) {
-    leftButtonContainer.innerHTML = `
+    // Bal gomb megjelenítése csak ha currentPage > 0
+    if (currentPage > 0) {
+        leftButtonContainer.innerHTML = `
         <button onclick="changeCarousel(-1)" id="carouselButtonLeft" class="carouselButton">
             <i class="fa-solid fa-arrow-left"></i>
         </button>
     `;
-} else {
-    leftButtonContainer.innerHTML = ""; // törli a bal gombot, ha az első oldalon vagy
-}
+    } else {
+        leftButtonContainer.innerHTML = ""; // törli a bal gombot, ha az első oldalon vagy
+    }
 }
 
 
@@ -306,7 +359,7 @@ async function showUsername() {
     if (jogosultsag == 1) {
         document.getElementById("admin").style.display = "block";
         document.getElementById("upload").style.display = "block";
-        
+
     }
 }
 
