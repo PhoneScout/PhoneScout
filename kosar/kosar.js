@@ -1,40 +1,66 @@
 let previousPages = JSON.parse(localStorage.getItem("pagesHistory")) || [];
 
 function showPreviousPages() {
-    let place = document.getElementById("previousPagesPlace");
-    place.innerHTML = ""; // clear before rendering
+  let place = document.getElementById("previousPagesPlace");
+  place.innerHTML = ""; // clear before rendering
 
-    if (previousPages.length > 1) {
-        for (let i = 0; i < previousPages.length - 1; i++) {
-            place.innerHTML += `
+  if (previousPages.length > 1) {
+    for (let i = 0; i < previousPages.length - 1; i++) {
+      place.innerHTML += `
                 <a href="${previousPages[i].pageURL}" target="_blank" class="pagesHistory" onclick="clickedLine(this)">
                     <div>${previousPages[i].pageName}</div>
                 </a> /
             `;
-        }
-        place.innerHTML += `<div class="pagesHistory">${previousPages[previousPages.length - 1].pageName}</div>`;
-    } else if (previousPages.length === 1) {
-        place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
     }
+    place.innerHTML += `<div class="pagesHistory">${
+      previousPages[previousPages.length - 1].pageName
+    }</div>`;
+  } else if (previousPages.length === 1) {
+    place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
+  }
 }
 
 showPreviousPages();
 
 function addToPreviousPages(line) {
+  console.log("previouspages");
+
+  console.log(previousPages);
+
+  let name = line.textContent.split("\n");
+  if (name.length != 1) {
+    console.log(name[name.length - 2].trim());
+    alert("alma");
+    previousPages.push({
+      pageName: name[name.length - 2].trim(),
+      pageURL: line.href,
+    });
+  } else {
     previousPages.push({ pageName: line.textContent, pageURL: line.href });
-    localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-    showPreviousPages(); // update UI
+  }
+  localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+  showPreviousPages(); // update UI
 }
 
 function clickedLine(line) {
-    let index = previousPages.findIndex(p => p.pageURL === line.getAttribute("href"));
-    if (index !== -1) {
-        previousPages.splice(index+1); // delete from index to end
-        localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-        showPreviousPages(); // refresh UI
-    }
-}
+  let index = 0;
 
+  for (let i = 0; i < previousPages.length; i++) {
+    {
+      if (line.textContent == previousPages[i].pageName) {
+        index = i;
+      }
+    }
+
+    if (index !== 0) {
+      previousPages.splice(index + 1); // delete from index to end
+      localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+      showPreviousPages(); // refresh UI
+    } else {
+      addToPreviousPages(line);
+    }
+  }
+}
 
 
 document.addEventListener("DOMContentLoaded", function () {
