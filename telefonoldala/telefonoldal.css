@@ -352,7 +352,6 @@
 
 .ramTárhelyOptionPicker {
     margin: 1%;
-    background-color: aliceblue;
     margin-bottom: 15%;
     margin-right: 20px;
 }
@@ -648,6 +647,18 @@ footer .address {
 .moreInfoAboutPhone:hover {
     background-color: #0056b3;
     transform: translateY(-3px);
+}
+
+.ram_storage_table, .kijelzo_table, .ram_storage_table, .akkumulator_table, .csatlakozo_table, .cpu_table, .test_table, .camera_table, .speaker_table, .more_rows{
+    border: none;
+}
+
+.more_rows{
+    height: 50px;
+}
+
+.first_row{
+    border-bottom: 6px solid black;
 }
 
 #previousPagesPlace{

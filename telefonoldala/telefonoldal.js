@@ -300,60 +300,67 @@ function telDataShow(allPhonesData) {
     let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID); //ID!!!!!!!!!!!!!!!!!!!!!
     if (selectedPhone) {
         dataPlace.innerHTML = `
-                <div class="row align-items-center">
-                        <table class="table table-striped table-bordered text-center" style="border: solid black 1px">
+                <div class="row">
+                        <table class="table text-left">
                             <thead>
                                 <tr>
                                     <th colspan="2">${selectedPhone.phoneName} telefon adatai</th>
                                 </tr>
                             <tbody>                          
         
-                            
-    <tr><td colspan="2" class="cpu_table"><strong>CPU</strong></td></tr>
+    <tr><td colspan="2" class="more_rows"></td></tr>      
+    <tr><td colspan="2" class="cpu_table first_row"><strong>CPU</strong></td></tr>
     <tr><td class="cpu_table">Név</td><td class="cpu_table">${selectedPhone.cpuName}</td></tr>
     <tr><td class="cpu_table">Antutu pontszám</td><td class="cpu_table">${selectedPhone.phoneAntutu}</td></tr>
     <tr><td class="cpu_table">Max Órajel</td><td class="cpu_table">${selectedPhone.cpuMaxClockSpeed} GHz</td></tr>
     <tr><td class="cpu_table">Magok száma</td><td class="cpu_table">${selectedPhone.cpuCoreNumber}</td></tr>
     <tr><td class="cpu_table">Gyártási technológia</td><td class="cpu_table">${selectedPhone.cpuManufacturingTechnology} nm</td></tr>
+    <tr><td colspan="2" class="more_rows"></td></tr>
 
-    <tr><td colspan="2" class="kijelzo_table"><strong>Kijelző</strong></td></tr>
+    <tr><td colspan="2" class="kijelzo_table first_row"><strong>Kijelző</strong></td></tr>
     <tr><td class="kijelzo_table">Típusa</td><td class="kijelzo_table">${selectedPhone.screenType}</td></tr>
     <tr><td class="kijelzo_table">Felbontás</td><td class="kijelzo_table">${selectedPhone.phoneResolutionHeight} x ${selectedPhone.phoneResolutionWidth} px</td></tr>
     <tr><td class="kijelzo_table">Mérete</td><td class="kijelzo_table">${selectedPhone.screenSize.toFixed(2)}”</td></tr>
     <tr><td class="kijelzo_table">Frissítési ráta</td><td class="kijelzo_table">${selectedPhone.screenRefreshRate.toFixed(2)} Hz</td></tr>
     <tr><td class="kijelzo_table">Max fényerő</td><td class="kijelzo_table">${selectedPhone.screenMaxBrightness.toFixed(2)} nit</td></tr>
     <tr><td class="kijelzo_table">Élessége/Képpontsűrűség</td><td class="kijelzo_table">${selectedPhone.screenSharpness.toFixed(2)} ppi</td></tr>
+    <tr><td colspan="2" class="more_rows"></td></tr>
 
-    <tr><td colspan="2" class="csatlakozo_table"><strong>Csatlakoztathatóság</strong></td></tr>
+    <tr><td colspan="2" class="csatlakozo_table first_row"><strong>Csatlakoztathatóság</strong></td></tr>
     <tr><td class="csatlakozo_table">Wi-Fi</td><td class="csatlakozo_table">Wifi ${selectedPhone.connectionMaxWifi}</td></tr>
     <tr><td class="csatlakozo_table">Bluetooth</td><td class="csatlakozo_table">Bluetooth ${selectedPhone.connectionMaxBluetooth.toFixed(2)}</td></tr>
     <tr><td class="csatlakozo_table">Mobilhálózat</td><td class="csatlakozo_table">${selectedPhone.connectionMaxMobileNetwork}</td></tr>
     <tr><td class="csatlakozo_table">Dual SIM</td><td class="csatlakozo_table">${selectedPhone.connectionDualSim}</td></tr>
     <tr><td class="csatlakozo_table">E-SIM</td><td class="csatlakozo_table">${selectedPhone.connectionESim}</td></tr>
     <tr><td class="csatlakozo_table">NFC</td><td class="csatlakozo_table">${selectedPhone.connectionNfc}</td></tr>
+    <tr><td colspan="2" class="more_rows"></td></tr>
 
-    <tr><td colspan="2" class="ram_storage_table"><strong>RAM / Tárhely</strong></td></tr>
+    <tr><td colspan="2" class="ram_storage_table first_row"><strong>RAM / Tárhely</strong></td></tr>
     <tr><td class="ram_storage_table">RAM sebesség</td><td class="ram_storage_table">${selectedPhone.ramSpeed}</td></tr>
     <tr><td class="ram_storage_table">Tárhely sebesség</td><td class="ram_storage_table">${selectedPhone.storageSpeed}</td></tr>
+    <tr><td colspan="2" class="more_rows"></td></tr>
 
-    <tr><td colspan="2" class="akkumulator_table"><strong>Akkumulátor és Töltés</strong></td></tr>
+    <tr><td colspan="2" class="akkumulator_table first_row"><strong>Akkumulátor és Töltés</strong></td></tr>
     <tr><td class="akkumulator_table">Akkumulátor kapacitása</td><td class="akkumulator_table">${selectedPhone.batteryCapacity} mAh</td></tr>
     <tr><td class="akkumulator_table">Akkumulátor típusa</td><td class="akkumulator_table">${selectedPhone.batteryType}</td></tr>
     <tr><td class="akkumulator_table">Vezetékes töltés max sebessége</td><td class="akkumulator_table">${selectedPhone.batteryMaxChargingWired}W</td></tr>
     <tr><td class="akkumulator_table">Vezeték nélküli töltés max sebessége</td><td class="akkumulator_table">${selectedPhone.batteryMaxChargingWireless}W</td></tr>
+    <tr><td colspan="2" class="more_rows"></td></tr>
 
-    <tr><td colspan="2" class="camera_table"><strong>Kamera</strong></td></tr>
+    <tr><td colspan="2" class="camera_table first_row"><strong>Kamera</strong></td></tr>
     <tbody id="cameraPlace"></tbody>
+    <tr><td colspan="2" class="more_rows"></td></tr>
 
-    <tr><td colspan="2" class="test_table"><strong>Test/Ház/Külső</strong></td></tr>
+    <tr><td colspan="2" class="test_table first_row"><strong>Test/Ház/Külső</strong></td></tr>
     <tr><td class="test_table">Magasság</td><td class="test_table">${selectedPhone.caseHeight.toFixed(2)} mm</td></tr>
     <tr><td class="test_table">Szélesség</td><td class="test_table">${selectedPhone.caseWidth.toFixed(2)} mm</td></tr>
     <tr><td class="test_table">Vastagság</td><td class="test_table">${selectedPhone.caseThickness.toFixed(2)} mm</td></tr>
     <tr><td class="test_table">Vízállóság</td><td class="test_table">${selectedPhone.waterproofType}</td></tr>
     <tr><td class="test_table">Hátlap anyaga</td><td class="test_table">${selectedPhone.backMaterial}</td></tr>
     <tr><td class="test_table">Súly</td><td class="test_table">${selectedPhone.phoneWeight}</td></tr>
+    <tr><td colspan="2" class="more_rows"></td></tr>
     
-    <tr><td colspan="2" class="speaker_table"><strong>Hangszóró</strong></td></tr>
+    <tr><td colspan="2" class="speaker_table first_row"><strong>Hangszóró</strong></td></tr>
     <tr><td class="speaker_table">Hangszóró</td><td class="speaker_table">${selectedPhone.speakerType}</td></tr>
     
 </table>
