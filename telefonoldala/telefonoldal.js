@@ -11,60 +11,60 @@ let allPhonesData = [];
 let previousPages = JSON.parse(localStorage.getItem("pagesHistory")) || [];
 
 function showPreviousPages() {
-  let place = document.getElementById("previousPagesPlace");
-  place.innerHTML = ""; // clear before rendering
+    let place = document.getElementById("previousPagesPlace");
+    place.innerHTML = ""; // clear before rendering
 
-  if (previousPages.length > 1) {
-    for (let i = 0; i < previousPages.length - 1; i++) {
-      place.innerHTML += `
+    if (previousPages.length > 1) {
+        for (let i = 0; i < previousPages.length - 1; i++) {
+            place.innerHTML += `
                 <a href="${previousPages[i].pageURL}" target="_blank" class="pagesHistory" onclick="clickedLine(this)">
                     <div>${previousPages[i].pageName}</div>
                 </a> /
             `;
+        }
+        place.innerHTML += `<div class="pagesHistory">${previousPages[previousPages.length - 1].pageName
+            }</div>`;
+    } else if (previousPages.length === 1) {
+        place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
     }
-    place.innerHTML += `<div class="pagesHistory">${
-      previousPages[previousPages.length - 1].pageName
-    }</div>`;
-  } else if (previousPages.length === 1) {
-    place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
-  }
 }
 
 showPreviousPages();
 
 function addToPreviousPages(line) {
-  let name = line.textContent.split("\n");
-  if (name.length != 1) {
-    previousPages.push({
-      pageName: name[name.length - 2].trim(),
-      pageURL: line.href,
-    });
-  } else {
-    previousPages.push({ pageName: line.textContent, pageURL: line.href });
-  }
-  localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-  showPreviousPages(); // update UI
+    let name = line.textContent.split("\n");
+    if (name.length != 1) {
+        previousPages.push({
+            pageName: name[name.length - 2].trim(),
+            pageURL: line.href,
+        });
+    } else {
+        previousPages.push({ pageName: line.textContent, pageURL: line.href });
+    }
+    localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+    showPreviousPages(); // update UI
 }
 
 function clickedLine(line) {
-  let index = 0;
+    let index = 0;
 
-  for (let i = 0; i < previousPages.length; i++) {
-    {
-      if (line.textContent == previousPages[i].pageName) {
-        index = i;
-      }
+    for (let i = 0; i < previousPages.length; i++) {
+        {
+            if (line.textContent == previousPages[i].pageName) {
+                index = i;
+            }
+        }
     }
 
     if (index !== 0) {
-      previousPages.splice(index + 1); // delete from index to end
-      localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-      showPreviousPages(); // refresh UI
+        previousPages.splice(index + 1); // delete from index to end
+        localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+        showPreviousPages(); // refresh UI
     } else {
-      addToPreviousPages(line);
+        addToPreviousPages(line);
     }
-  }
 }
+
 
 let kosar = [];
 
@@ -376,7 +376,7 @@ document.addEventListener("DOMContentLoaded", function () {
     addSvgHoverEffect("mySvg", "csatlakoztathatóság", "csatlakozo_table");
     addSvgHoverEffect("mySvg", "cpu", "cpu_table");
     addSvgHoverEffect("mySvg", "kamera", "camera_table");
-    addSvgHoverEffect("mySvg", "hangszóró", "speaker_table"); 
+    addSvgHoverEffect("mySvg", "hangszóró", "speaker_table");
 });
 
 function selectRamTárhely(element) {
@@ -459,7 +459,7 @@ async function showUsername() {
     }
     if (jogosultsag == 1) {
         document.getElementById("admin").style.display = "block";
-        document.getElementById("upload").style.display = "block";        
+        document.getElementById("upload").style.display = "block";
     }
 }
 

@@ -1,60 +1,59 @@
 let previousPages = JSON.parse(localStorage.getItem("pagesHistory")) || [];
 
 function showPreviousPages() {
-  let place = document.getElementById("previousPagesPlace");
-  place.innerHTML = ""; // clear before rendering
+    let place = document.getElementById("previousPagesPlace");
+    place.innerHTML = ""; // clear before rendering
 
-  if (previousPages.length > 1) {
-    for (let i = 0; i < previousPages.length - 1; i++) {
-      place.innerHTML += `
+    if (previousPages.length > 1) {
+        for (let i = 0; i < previousPages.length - 1; i++) {
+            place.innerHTML += `
                 <a href="${previousPages[i].pageURL}" target="_blank" class="pagesHistory" onclick="clickedLine(this)">
                     <div>${previousPages[i].pageName}</div>
                 </a> /
             `;
+        }
+        place.innerHTML += `<div class="pagesHistory">${previousPages[previousPages.length - 1].pageName
+            }</div>`;
+    } else if (previousPages.length === 1) {
+        place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
     }
-    place.innerHTML += `<div class="pagesHistory">${
-      previousPages[previousPages.length - 1].pageName
-    }</div>`;
-  } else if (previousPages.length === 1) {
-    place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
-  }
 }
 
 showPreviousPages();
 
 function addToPreviousPages(line) {
-  let name = line.textContent.split("\n");
-  if (name.length != 1) {
-    previousPages.push({
-      pageName: name[name.length - 2].trim(),
-      pageURL: line.href,
-    });
-  } else {
-    previousPages.push({ pageName: line.textContent, pageURL: line.href });
-  }
-  localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-  showPreviousPages(); // update UI
+    let name = line.textContent.split("\n");
+    if (name.length != 1) {
+        previousPages.push({
+            pageName: name[name.length - 2].trim(),
+            pageURL: line.href,
+        });
+    } else {
+        previousPages.push({ pageName: line.textContent, pageURL: line.href });
+    }
+    localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+    showPreviousPages(); // update UI
 }
 
 function clickedLine(line) {
-  let index = 0;
+    let index = 0;
 
-  for (let i = 0; i < previousPages.length; i++) {
-    {
-      if (line.textContent == previousPages[i].pageName) {
-        index = i;
-      }
+    for (let i = 0; i < previousPages.length; i++) {
+        {
+            if (line.textContent == previousPages[i].pageName) {
+                index = i;
+            }
+        }
     }
-
     if (index !== 0) {
-      previousPages.splice(index + 1); // delete from index to end
-      localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-      showPreviousPages(); // refresh UI
+        previousPages.splice(index + 1); // delete from index to end
+        localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+        showPreviousPages(); // refresh UI
     } else {
-      addToPreviousPages(line);
+        addToPreviousPages(line);
     }
-  }
 }
+
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -68,9 +67,9 @@ document.addEventListener("DOMContentLoaded", function () {
         const paymentButton = document.querySelector(".paymentButton");
         if (Object.keys(cart).length === 0 || Object.values(cart).every(quantity => quantity === 0)) {
             kosarDiv.innerHTML = "<p>A kosarad üres.</p>";
-            if (paymentButton) paymentButton.style.display = "none"; 
+            if (paymentButton) paymentButton.style.display = "none";
         } else {
-            if (paymentButton) paymentButton.style.display = "block"; 
+            if (paymentButton) paymentButton.style.display = "block";
         }
     }
 
@@ -158,13 +157,13 @@ document.addEventListener("DOMContentLoaded", function () {
                 modal.style.display = "none";
             });
 
-            window.addEventListener("keydown", function(e) {
+            window.addEventListener("keydown", function (e) {
                 if (e.key === "Escape") {
                     modal.style.display = "none";
                 }
             });
 
-            modal.querySelector("#submitPayment").addEventListener("click", function(e) {
+            modal.querySelector("#submitPayment").addEventListener("click", function (e) {
                 e.preventDefault();
 
                 let valid = true;
@@ -199,10 +198,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 `;
                 document.body.appendChild(successModal);
 
-                successModal.querySelector("#closeSuccessModal").addEventListener("click", function() {
+                successModal.querySelector("#closeSuccessModal").addEventListener("click", function () {
                     successModal.remove();
                     modal.style.display = "none";
-                    location.reload(); 
+                    location.reload();
                 });
 
                 window.addEventListener("keydown", function escHandler(e) {
@@ -271,7 +270,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
                 kosarDiv.appendChild(phoneRow);
 
-                
+
 
                 const decreaseButton = phoneRow.querySelector(".decreaseQuantity");
                 const increaseButton = phoneRow.querySelector(".increaseQuantity");
@@ -319,7 +318,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 
-document.addEventListener("input", function(e) {
+document.addEventListener("input", function (e) {
     // Kártyaszám formázás és validálás
     if (e.target.id === "cardNumber") {
         let value = e.target.value.replace(/\D/g, ""); // csak számok
@@ -391,7 +390,7 @@ async function showUsername() {
     if (jogosultsag == 1) {
         document.getElementById("admin").style.display = "block";
         document.getElementById("upload").style.display = "block";
-        
+
     }
 }
 

@@ -21,9 +21,8 @@ function showPreviousPages() {
                 </a> /
             `;
     }
-    place.innerHTML += `<div class="pagesHistory">${
-      previousPages[previousPages.length - 1].pageName
-    }</div>`;
+    place.innerHTML += `<div class="pagesHistory">${previousPages[previousPages.length - 1].pageName
+      }</div>`;
   } else if (previousPages.length === 1) {
     place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
   }
@@ -54,15 +53,16 @@ function clickedLine(line) {
         index = i;
       }
     }
-
-    if (index !== 0) {
-      previousPages.splice(index + 1); // delete from index to end
-      localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-      showPreviousPages(); // refresh UI
-    } else {
-      addToPreviousPages(line);
-    }
   }
+
+  if (index !== 0) {
+    previousPages.splice(index + 1); // delete from index to end
+    localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+    showPreviousPages(); // refresh UI
+  } else {
+    addToPreviousPages(line);
+  }
+
 }
 
 
@@ -81,22 +81,20 @@ function displayPhoneCards() {
 
     phoneRow.onclick = function () {
       console.log("alma");
+      clickedLine(this)
       localStorage.setItem("selectedPhone", phone.phoneID);
       window.location.href = "../telefonoldala/telefonoldal.html";
-      clickedLine(this);
     };
 
     const phoneImage = document.createElement("div");
     phoneImage.classList.add("phoneImage");
     phoneImage.innerHTML = `
-            <img src="${phone.imageUrl || "../Images/image 3.png"}" alt="${
-      phone.phoneName
-    }" loading="lazy">
-            <div class="stock-bubble ${
-              phone.phoneInStore === "van"
-                ? "phonestockTrue"
-                : "phonestockFalse"
-            }">
+            <img src="${phone.imageUrl || "../Images/image 3.png"}" alt="${phone.phoneName
+      }" loading="lazy">
+            <div class="stock-bubble ${phone.phoneInStore === "van"
+        ? "phonestockTrue"
+        : "phonestockFalse"
+      }">
                 ${phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
             </div>
             <div class="price-bubble">${phone.phonePrice} Ft</div>
