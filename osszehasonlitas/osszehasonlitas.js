@@ -1,70 +1,68 @@
 let previousPages = JSON.parse(localStorage.getItem("pagesHistory")) || [];
 
 function showPreviousPages() {
-  let place = document.getElementById("previousPagesPlace");
-  place.innerHTML = ""; // clear before rendering
+    let place = document.getElementById("previousPagesPlace");
+    place.innerHTML = ""; // clear before rendering
 
-  if (previousPages.length > 1) {
-    for (let i = 0; i < previousPages.length - 1; i++) {
-      place.innerHTML += `
+    if (previousPages.length > 1) {
+        for (let i = 0; i < previousPages.length - 1; i++) {
+            place.innerHTML += `
                 <a href="${previousPages[i].pageURL}" target="_blank" class="pagesHistory" onclick="clickedLine(this)">
                     <div>${previousPages[i].pageName}</div>
                 </a> /
             `;
+        }
+        place.innerHTML += `<div class="pagesHistory">${previousPages[previousPages.length - 1].pageName
+            }</div>`;
+    } else if (previousPages.length === 1) {
+        place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
     }
-    place.innerHTML += `<div class="pagesHistory">${
-      previousPages[previousPages.length - 1].pageName
-    }</div>`;
-  } else if (previousPages.length === 1) {
-    place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
-  }
 }
 
 showPreviousPages();
 
 function addToPreviousPages(line) {
-  console.log("previouspages");
+    console.log("previouspages");
 
-  console.log(previousPages);
+    console.log(previousPages);
 
-  let name = line.textContent.split("\n");
-  if (name.length != 1) {
-    console.log(name[name.length - 2].trim());
-    alert("alma");
-    previousPages.push({
-      pageName: name[name.length - 2].trim(),
-      pageURL: line.href,
-    });
-  } else {
-    previousPages.push({ pageName: line.textContent, pageURL: line.href });
-  }
-  localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-  showPreviousPages(); // update UI
+    let name = line.textContent.split("\n");
+    if (name.length != 1) {
+        console.log(name[name.length - 2].trim());
+        alert("alma");
+        previousPages.push({
+            pageName: name[name.length - 2].trim(),
+            pageURL: line.href,
+        });
+    } else {
+        previousPages.push({ pageName: line.textContent, pageURL: line.href });
+    }
+    localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+    showPreviousPages(); // update UI
 }
 
 function clickedLine(line) {
-  let index = 0;
+    let index = 0;
 
-  for (let i = 0; i < previousPages.length; i++) {
-    {
-      if (line.textContent == previousPages[i].pageName) {
-        index = i;
-      }
+    for (let i = 0; i < previousPages.length; i++) {
+        {
+            if (line.textContent == previousPages[i].pageName) {
+                index = i;
+            }
+        }
     }
-
     if (index !== 0) {
-      previousPages.splice(index + 1); // delete from index to end
-      localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-      showPreviousPages(); // refresh UI
+        previousPages.splice(index + 1); // delete from index to end
+        localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+        showPreviousPages(); // refresh UI
     } else {
-      addToPreviousPages(line);
+        addToPreviousPages(line);
     }
-  }
 }
 
 
 
-document.addEventListener("DOMContentLoaded", async function() {
+document.addEventListener("DOMContentLoaded", async function () {
     //ide kell majd az új végpont vagy mi a gyász
     let allPhonesData = [];
     async function fetchAllPhones() {
@@ -239,7 +237,7 @@ document.addEventListener("DOMContentLoaded", async function() {
     filterPanel.innerHTML = filterHtml;
 
     filterPanel.querySelectorAll('.filter-group-toggle').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             const target = document.getElementById(this.dataset.target);
             target.classList.toggle('open');
             this.querySelector('.dropdown-arrow').innerHTML = target.classList.contains('open') ? "&#9650;" : "&#9660;";
@@ -384,7 +382,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                         }
                     }
 
-                    
+
                     let diffStyle = "";
                     if (highlightDifferences) {
                         // Megnézzük, hogy minden telefonban ugyanaz-e az érték
@@ -476,28 +474,28 @@ document.addEventListener("DOMContentLoaded", async function() {
                 </thead>
                 <tbody>
                     ${filteredPhones.map(phone => {
-                        const idStr = String(phone.phoneID);
-                        const alreadyAdded = comparePhones.includes(phone.phoneID) || comparePhones.includes(idStr);
-                        return `
+            const idStr = String(phone.phoneID);
+            const alreadyAdded = comparePhones.includes(phone.phoneID) || comparePhones.includes(idStr);
+            return `
                             <tr>
                                 <td style="padding:4px;">${phone.phoneName}</td>
                                 <td style="padding:4px;">
                                     <button class="btn btn-sm btn-danger remove-from-compare-btn" data-id="${idStr}" ${alreadyAdded ? "" : "disabled"}>Eltávolítás</button>
                                     ${alreadyAdded
-                                        ? `<button class="btn btn-sm btn-success add-to-compare-btn" data-id="${idStr}" disabled>Hozzáadva</button>`
-                                        : `<button class="btn btn-sm btn-success add-to-compare-btn" data-id="${idStr}">Hozzáadás</button>`
-                                    }
+                    ? `<button class="btn btn-sm btn-success add-to-compare-btn" data-id="${idStr}" disabled>Hozzáadva</button>`
+                    : `<button class="btn btn-sm btn-success add-to-compare-btn" data-id="${idStr}">Hozzáadás</button>`
+                }
                                 </td>
                             </tr>
                         `;
-                    }).join("")}
+        }).join("")}
                 </tbody>
             </table>
         `;
     }
 
     // Gomb eseménykezelő
-    document.getElementById("addPhoneBtn").addEventListener("click", function() {
+    document.getElementById("addPhoneBtn").addEventListener("click", function () {
         const modal = document.getElementById("addPhoneModal");
         const modalPhoneList = document.getElementById("modalPhoneList");
         const modalPhoneSearch = document.getElementById("modalPhoneSearch");
@@ -507,7 +505,7 @@ document.addEventListener("DOMContentLoaded", async function() {
 
         // Kereső eseménykezelő
         modalPhoneSearch.value = "";
-        modalPhoneSearch.oninput = function() {
+        modalPhoneSearch.oninput = function () {
             modalPhoneList.innerHTML = renderModalPhoneList(this.value);
             attachModalPhoneListButtonEvents();
         };
@@ -515,7 +513,7 @@ document.addEventListener("DOMContentLoaded", async function() {
         // Gombok eseménykezelőit külön függvénybe tesszük, hogy kereséskor is újra lehessen őket kötni
         function attachModalPhoneListButtonEvents() {
             modalPhoneList.querySelectorAll('.add-to-compare-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const id = this.getAttribute('data-id');
                     let comparePhones = JSON.parse(localStorage.getItem("comparePhones") || "[]");
                     if (!comparePhones.includes(id)) {
@@ -528,7 +526,7 @@ document.addEventListener("DOMContentLoaded", async function() {
                 });
             });
             modalPhoneList.querySelectorAll('.remove-from-compare-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
+                btn.addEventListener('click', function () {
                     const id = this.getAttribute('data-id');
                     let comparePhones = JSON.parse(localStorage.getItem("comparePhones") || "[]");
                     comparePhones = comparePhones.filter(cid => String(cid) !== id);
@@ -545,12 +543,12 @@ document.addEventListener("DOMContentLoaded", async function() {
     });
 
     // Modal bezárás
-    document.getElementById("closeModalBtn").onclick = function() {
+    document.getElementById("closeModalBtn").onclick = function () {
         document.getElementById("addPhoneModal").style.display = "none";
         location.reload(); // Modal bezáráskor frissítjük az oldalt
     };
     // Modal bezárás háttérre kattintva
-    document.getElementById("addPhoneModal").addEventListener("click", function(e) {
+    document.getElementById("addPhoneModal").addEventListener("click", function (e) {
         if (e.target === this) {
             this.style.display = "none";
             location.reload(); // Modal bezáráskor frissítjük az oldalt
@@ -604,7 +602,7 @@ async function showUsername() {
     if (jogosultsag == 1) {
         document.getElementById("admin").style.display = "block";
         document.getElementById("upload").style.display = "block";
-        
+
     }
 }
 
