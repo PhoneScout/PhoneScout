@@ -419,3 +419,30 @@ function logout() {
 
 // Call showUsername when the page loads
 document.addEventListener("DOMContentLoaded", showUsername);
+
+
+
+
+const searchBox = document.getElementById('searchBox');
+const dropdown = document.getElementById('searchDropdown');
+
+searchBox.addEventListener('focus', () => {
+  dropdown.classList.add('active');
+});
+
+searchBox.addEventListener('blur', () => {
+  // Delay so click events can register
+  setTimeout(() => {
+    dropdown.classList.remove('active');
+  }, 50);
+});
+
+// Optional: Filtering logic
+searchBox.addEventListener('input', () => {
+  const filter = searchBox.value.toLowerCase();
+  const items = dropdown.querySelectorAll('.dropdown-item');
+  items.forEach(item => {
+    const text = item.textContent.toLowerCase();
+    item.style.display = text.includes(filter) ? 'block' : 'none';
+  });
+});

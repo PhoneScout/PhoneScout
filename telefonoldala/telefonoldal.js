@@ -8,6 +8,7 @@ let currentPage = 0;
 let phonesPerPage = 5;
 let allPhonesData = [];
 
+
 let previousPages = JSON.parse(localStorage.getItem("pagesHistory")) || [];
 
 function showPreviousPages() {
