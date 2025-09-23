@@ -138,6 +138,8 @@ function displayPhoneCards() {
     cartImg.loading = "lazy";
     cartButton.appendChild(cartImg);
 
+
+    //Kosár pont animáció
     cartButton.onclick = function (event) {
       event.stopPropagation();
       let cart = JSON.parse(localStorage.getItem("cart")) || {};
@@ -183,6 +185,54 @@ function displayPhoneCards() {
       }, 1010);
     };
 
+
+    /*
+    //Összehasonlítás pont animáció
+    compareButton.onclick = function (event) {
+      event.stopPropagation();
+      let compare = JSON.parse(localStorage.getItem("osszehasonlitas")) || {};
+      compare[phone.phoneID] = (cart[phone.phoneID] || 0) + 1;
+      localStorage.setItem("cart", JSON.stringify(compare));
+      updateCartCount();
+
+      const compareIcon = document.getElementById("osszehasonlitas");
+      const buttonRect = compareButton.getBoundingClientRect();
+      const compareRect = compareIcon.getBoundingClientRect();
+
+      const animDot = document.createElement("div");
+      animDot.style.position = "fixed";
+      animDot.style.left = buttonRect.left + buttonRect.width / 2 + "px";
+      animDot.style.top = buttonRect.top + buttonRect.height / 2 + "px";
+      animDot.style.width = "16px";
+      animDot.style.height = "16px";
+      animDot.style.background = "#68F145";
+      animDot.style.borderRadius = "50%";
+      animDot.style.zIndex = "9999";
+      animDot.style.pointerEvents = "none";
+      animDot.style.transition = "all 2s cubic-bezier(.4,2,.6,1)";
+      document.body.appendChild(animDot);
+
+      setTimeout(() => {
+        const compareCenterX = compareRect.left + compareRect.width / 2;
+        const compareCenterY = compareRect.top + compareRect.height / 2;
+
+        animDot.style.left = compareCenterX - animDot.offsetWidth / 2 + "px";
+        animDot.style.top = compareCenterY - animDot.offsetHeight / 2 + "px";
+        animDot.style.opacity = "0.2";
+        animDot.style.transform = "scale(0.5)";
+      }, 10);
+
+      setTimeout(() => {
+        animDot.style.transition = "all 0.5s cubic-bezier(.4,2,.6,1)";
+        animDot.style.transform = "scale(10)";
+        animDot.style.opacity = "0";
+      }, 450);
+
+      setTimeout(() => {
+        animDot.remove();
+      }, 1010);
+    };*/
+
     cardButtons.appendChild(compareButton);
     cardButtons.appendChild(cartButton);
 
@@ -192,6 +242,10 @@ function displayPhoneCards() {
 
     contentRow.appendChild(phoneRow);
   });
+
+
+
+
 }
 
 function updateCartCount() {
