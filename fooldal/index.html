@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhoneScout</title>
+    <title id="title">PhoneScout</title>
     <link rel="stylesheet" href="./index.css">
     <script src="https://kit.fontawesome.com/40786368ae.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
@@ -28,7 +28,7 @@
 
         <div class="col-4 nav-links">
             <div class="menuPoints">Mind</div>
-            <a class="menuPoints" href="../szerviz/szerviz.html" target="_blank" onclick="addToPreviousPages('Szerviz'), clickedLine(this)">Szerviz</a>
+            <a class="menuPoints" href="../szerviz/szerviz.html" target="_blank" onclick="clickedLine(this)">Szerviz</a>
             <a onclick="clickedLine(this)" href="../osszehasonlitas/osszehasonlitas.html" target="_blank" class="menuPoints">Összehasonlítás</a>
         </div>
 
@@ -70,7 +70,7 @@
             </div>
 
             <div class="cart-icon">
-                <a href="./kosar/kosar.html" target="_blank" onclick="teszt('Kosár','alma')"><i id="cart" class="fa-solid fa-cart-shopping"></i></a>
+                <a href="./kosar/kosar.html" target="_blank" onclick="clickedLine(this)"><i id="cart" class="fa-solid fa-cart-shopping"></i></a>
             </div>
         </div>
     </div>

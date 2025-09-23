@@ -7,10 +7,6 @@ let phonesPerPage = 4;
 
 let allPhonesData = [];
 
-function teszt(name, link) {
-  confirm(name);
-}
-
 let previousPages = [{ pageName: "Főoldal", pageURL: "../fooldal/index.html" }];
 
 function showPreviousPages() {
@@ -36,14 +32,8 @@ function showPreviousPages() {
 showPreviousPages();
 
 function addToPreviousPages(line) {
-  console.log("previouspages");
-
-  console.log(previousPages);
-
   let name = line.textContent.split("\n");
   if (name.length != 1) {
-    console.log(name[name.length - 2].trim());
-    alert("alma");
     previousPages.push({
       pageName: name[name.length - 2].trim(),
       pageURL: line.href,
@@ -75,6 +65,7 @@ function clickedLine(line) {
   }
 }
 
+
 let kosar = [];
 
 function displayPhoneCards() {
@@ -89,15 +80,16 @@ function displayPhoneCards() {
     phoneRow.classList.add("phoneRow");
 
     phoneRow.onclick = function () {
+      console.log("alma");
       localStorage.setItem("selectedPhone", phone.phoneID);
-      //window.location.href = "./telefonoldala/telefonoldal.html";
-      addToPreviousPages(this);
+      window.location.href = "../telefonoldala/telefonoldal.html";
+      clickedLine(this);
     };
 
     const phoneImage = document.createElement("div");
     phoneImage.classList.add("phoneImage");
     phoneImage.innerHTML = `
-            <img src="${phone.imageUrl || "./Images/image 3.png"}" alt="${
+            <img src="${phone.imageUrl || "../Images/image 3.png"}" alt="${
       phone.phoneName
     }" loading="lazy">
             <div class="stock-bubble ${
@@ -126,7 +118,7 @@ function displayPhoneCards() {
     const compareButton = document.createElement("div");
     compareButton.classList.add("button");
     const compareImg = document.createElement("img");
-    compareImg.src = "./Images/compare-removebg-preview 1.png";
+    compareImg.src = "../Images/compare-removebg-preview 1.png";
     compareImg.loading = "lazy";
     compareButton.appendChild(compareImg);
 
@@ -144,7 +136,7 @@ function displayPhoneCards() {
     const cartButton = document.createElement("div");
     cartButton.classList.add("button");
     const cartImg = document.createElement("img");
-    cartImg.src = "./Images/cart-removebg-preview 1.png";
+    cartImg.src = "../Images/cart-removebg-preview 1.png";
     cartImg.loading = "lazy";
     cartButton.appendChild(cartImg);
 

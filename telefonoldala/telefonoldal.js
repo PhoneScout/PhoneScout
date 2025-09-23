@@ -33,14 +33,8 @@ function showPreviousPages() {
 showPreviousPages();
 
 function addToPreviousPages(line) {
-  console.log("previouspages");
-
-  console.log(previousPages);
-
   let name = line.textContent.split("\n");
   if (name.length != 1) {
-    console.log(name[name.length - 2].trim());
-    alert("alma");
     previousPages.push({
       pageName: name[name.length - 2].trim(),
       pageURL: line.href,
