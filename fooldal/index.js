@@ -8,7 +8,27 @@ let phonesPerPage = 4;
 let allPhonesData = [];
 
 let previousPages = [{ pageName: "Főoldal", pageURL: "../fooldal/index.html" }];
+let previousPagesPlace = document.getElementById("previousPagesPlace");
 
+function checkPagesHistory(name, url) {
+	let pagePlace = 0
+	for (const page of previousPages) {
+		if(page.pageName == name){
+			pagePlace = 
+		}
+	}
+
+	if(pageExist){
+	let place = `<a href="" target="_blank" class="pagesHistory" onclick="clickedLine(this)"><div>${name}</div>
+                </a>`;
+	previousPagesPlace.innerHTML += place;
+	}
+	else{
+
+	}
+}
+
+/*
 function showPreviousPages() {
   let place = document.getElementById("previousPagesPlace");
   place.innerHTML = ""; // clear before rendering
@@ -16,15 +36,14 @@ function showPreviousPages() {
   if (previousPages.length > 1) {
     for (let i = 0; i < previousPages.length - 1; i++) {
       place.innerHTML += `
-                <a href="${previousPages[i].pageURL}" target="_blank" class="pagesHistory" onclick="clickedLine(this)">
-                    <div>${previousPages[i].pageName}</div>
+                <a href="${previousPages[i].pageURL}" target="_blank" class="pagesHistory" onclick="clickedLine(this)">                    <div>${previousPages[i].pageName}</div>
                 </a> /
             `;
     }
-    place.innerHTML += `<div class="pagesHistory">${previousPages[previousPages.length - 1].pageName
+    place.innerHTML += `<div class="pagesHistory" onclick="clickedLine(this)">${previousPages[previousPages.length - 1].pageName
       }</div>`;
   } else if (previousPages.length === 1) {
-    place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
+    place.innerHTML = `<div class="pagesHistory" onclick="clickedLine(this)">${previousPages[0].pageName}</div>`;
   }
 }
 
@@ -54,7 +73,6 @@ function clickedLine(line) {
       }
     }
   }
-
   if (index !== 0) {
     previousPages.splice(index + 1); // delete from index to end
     localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
@@ -62,9 +80,8 @@ function clickedLine(line) {
   } else {
     addToPreviousPages(line);
   }
-
 }
-
+*/
 
 let kosar = [];
 
@@ -81,7 +98,7 @@ function displayPhoneCards() {
 
     phoneRow.onclick = function () {
       console.log("alma");
-      clickedLine(this)
+      clickedLine(this);
       localStorage.setItem("selectedPhone", phone.phoneID);
       window.location.href = "../telefonoldala/telefonoldal.html";
     };
@@ -89,12 +106,14 @@ function displayPhoneCards() {
     const phoneImage = document.createElement("div");
     phoneImage.classList.add("phoneImage");
     phoneImage.innerHTML = `
-            <img src="${phone.imageUrl || "../Images/image 3.png"}" alt="${phone.phoneName
-      }" loading="lazy">
-            <div class="stock-bubble ${phone.phoneInStore === "van"
-        ? "phonestockTrue"
-        : "phonestockFalse"
-      }">
+            <img src="${phone.imageUrl || "../Images/image 3.png"}" alt="${
+      phone.phoneName
+    }" loading="lazy">
+            <div class="stock-bubble ${
+              phone.phoneInStore === "van"
+                ? "phonestockTrue"
+                : "phonestockFalse"
+            }">
                 ${phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
             </div>
             <div class="price-bubble">${phone.phonePrice} Ft</div>
@@ -137,7 +156,6 @@ function displayPhoneCards() {
     cartImg.src = "../Images/cart-removebg-preview 1.png";
     cartImg.loading = "lazy";
     cartButton.appendChild(cartImg);
-
 
     //Kosár pont animáció
     cartButton.onclick = function (event) {
@@ -184,7 +202,6 @@ function displayPhoneCards() {
         animDot.remove();
       }, 1010);
     };
-
 
     /*
     //Összehasonlítás pont animáció
@@ -242,10 +259,6 @@ function displayPhoneCards() {
 
     contentRow.appendChild(phoneRow);
   });
-
-
-
-
 }
 
 function updateCartCount() {
@@ -420,29 +433,26 @@ function logout() {
 // Call showUsername when the page loads
 document.addEventListener("DOMContentLoaded", showUsername);
 
+const searchBox = document.getElementById("searchBox");
+const dropdown = document.getElementById("searchDropdown");
 
-
-
-const searchBox = document.getElementById('searchBox');
-const dropdown = document.getElementById('searchDropdown');
-
-searchBox.addEventListener('focus', () => {
-  dropdown.classList.add('active');
+searchBox.addEventListener("focus", () => {
+  dropdown.classList.add("active");
 });
 
-searchBox.addEventListener('blur', () => {
+searchBox.addEventListener("blur", () => {
   // Delay so click events can register
   setTimeout(() => {
-    dropdown.classList.remove('active');
+    dropdown.classList.remove("active");
   }, 50);
 });
 
 // Optional: Filtering logic
-searchBox.addEventListener('input', () => {
+searchBox.addEventListener("input", () => {
   const filter = searchBox.value.toLowerCase();
-  const items = dropdown.querySelectorAll('.dropdown-item');
-  items.forEach(item => {
+  const items = dropdown.querySelectorAll(".dropdown-item");
+  items.forEach((item) => {
     const text = item.textContent.toLowerCase();
-    item.style.display = text.includes(filter) ? 'block' : 'none';
+    item.style.display = text.includes(filter) ? "block" : "none";
   });
 });

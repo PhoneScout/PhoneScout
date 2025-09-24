@@ -23,10 +23,10 @@ function showPreviousPages() {
                 </a> /
             `;
         }
-        place.innerHTML += `<div class="pagesHistory">${previousPages[previousPages.length - 1].pageName
+        place.innerHTML += `<div class="pagesHistory" onclick="clickedLine(this)">${previousPages[previousPages.length - 1].pageName
             }</div>`;
     } else if (previousPages.length === 1) {
-        place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
+        place.innerHTML = `<div class="pagesHistory" onclick="clickedLine(this)">${previousPages[0].pageName}</div>`;
     }
 }
 
@@ -188,6 +188,8 @@ window.onload = function () {
             telDataShow(data);  // Hívja meg a funkciót, miután a DOM betöltődött
             telDataShowMain(data)
             allPhonesData = data;
+            console.log(allPhonesData.phoneName);
+            
         })
         .catch(error => console.error("Hiba a telefon adatok betöltésekor:", error));
 };
@@ -203,6 +205,8 @@ function telDataShowMain(allPhonesData) {
 
 
     let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID);//telefon ID, át kell írni az éppen aktívra
+
+    document.getElementById("title").innerText = selectedPhone.phoneName
 
     let colorPlace = document.getElementById("colorPlace")
     let ramStoragePlace = document.getElementById("ramStoragePlace")

@@ -12,10 +12,10 @@ function showPreviousPages() {
                 </a> /
             `;
     }
-    place.innerHTML += `<div class="pagesHistory">${previousPages[previousPages.length - 1].pageName
+    place.innerHTML += `<div class="pagesHistory" onclick="clickedLine(this)">${previousPages[previousPages.length - 1].pageName
       }</div>`;
   } else if (previousPages.length === 1) {
-    place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
+    place.innerHTML = `<div class="pagesHistory" onclick="clickedLine(this)">${previousPages[0].pageName}</div>`;
   }
 }
 

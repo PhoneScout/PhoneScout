@@ -12,24 +12,18 @@ function showPreviousPages() {
                 </a> /
             `;
         }
-        place.innerHTML += `<div class="pagesHistory">${previousPages[previousPages.length - 1].pageName
+        place.innerHTML += `<div class="pagesHistory" onclick="clickedLine(this)>${previousPages[previousPages.length - 1].pageName
             }</div>`;
     } else if (previousPages.length === 1) {
-        place.innerHTML = `<div class="pagesHistory">${previousPages[0].pageName}</div>`;
+        place.innerHTML = `<div class="pagesHistory" onclick="clickedLine(this)">${previousPages[0].pageName}</div>`;
     }
 }
 
 showPreviousPages();
 
 function addToPreviousPages(line) {
-    console.log("previouspages");
-
-    console.log(previousPages);
-
     let name = line.textContent.split("\n");
     if (name.length != 1) {
-        console.log(name[name.length - 2].trim());
-        alert("alma");
         previousPages.push({
             pageName: name[name.length - 2].trim(),
             pageURL: line.href,
