@@ -26,8 +26,8 @@
 
         <div class="col-4 nav-links">
             <a class="menuPoints">Mind</a>
-            <a class="menuPoints" href="../szerviz/szerviz.html" onclick="clickedLine(this)">Szerviz</a>
-            <a href="../osszehasonlitas/osszehasonlitas.html" class="menuPoints" onclick="clickedLine(this)">Összehasonlítás</a>
+            <a class="menuPoints" href="../szerviz/szerviz.html" onclick="checkPagesHistory('Szerviz','../szerviz/szerviz.html')">Szerviz</a>
+            <a href="../osszehasonlitas/osszehasonlitas.html" class="menuPoints" onclick="checkPagesHistory('Összehasonlítás','../osszehasonlitas/osszehasonlitas.html')">Összehasonlítás</a>
         </div>
 
         <div class="col-2 search-container">
@@ -67,20 +67,21 @@
             </div>
 
             <div class="cart-icon">
-                <a href="../kosar/kosar.html" onclick="clickedLine(this)"><i id="cart" class="fa-solid fa-cart-shopping"></i></a>
+                <a href="../kosar/kosar.html" onclick="checkPagesHistory('Kosár','../kosar/kosar.html')"><i id="cart" class="fa-solid fa-cart-shopping"></i></a>
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-1"></div>
-        <div class="col-3">
+        <div class="col-6">
             <div style="display: flex;" id="previousPagesPlace">
-                
+
             </div>
         </div>
-        <div class="col-8"></div>
+        <div class="col-5"></div>
     </div>
+
 
     <br><br>
 

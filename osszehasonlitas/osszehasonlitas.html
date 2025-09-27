@@ -27,7 +27,7 @@
 
         <div class="col-4 nav-links">
             <div class="menuPoints">Mind</div>
-            <a href="../szerviz/szerviz.html" target="_blank" onclick="addToPreviousPages(this)" class="menuPoints">Szerviz</a>
+            <a href="../szerviz/szerviz.html" target="_blank" onclick="checkPagesHistory('Szerviz','../szerviz/szerviz.html')" class="menuPoints">Szerviz</a>
             <a href="../osszehasonlitas/osszehasonlitas.html" class="menuPoints">Összehasonlítás</a>
         </div>
 
@@ -68,19 +68,19 @@
             </div>
 
             <div class="cart-icon">
-                <a href="../kosar/kosar.html"><i id="cart" class="fa-solid fa-cart-shopping"></i></a>
+                <a href="../kosar/kosar.html" onclick="checkPagesHistory('Kosár','../kosar/kosar.html')"><i id="cart" class="fa-solid fa-cart-shopping"></i></a>
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="col-1"></div>
-        <div class="col-3">
+        <div class="col-6">
             <div style="display: flex;" id="previousPagesPlace">
 
             </div>
         </div>
-        <div class="col-8"></div>
+        <div class="col-5"></div>
     </div>
 
 

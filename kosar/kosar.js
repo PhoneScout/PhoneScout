@@ -1,59 +1,54 @@
-/*let previousPages = JSON.parse(localStorage.getItem("pagesHistory")) || [];
+// Initialize history: load from storage, or start with Főoldal
+let previousPages = JSON.parse(localStorage.getItem("pagesHistory")) || [
+    { pageName: "Főoldal", pageURL: "../fooldal/index.html" }
+];
 
-function showPreviousPages() {
-    let place = document.getElementById("previousPagesPlace");
-    place.innerHTML = ""; // clear before rendering
-
-    if (previousPages.length > 1) {
-        for (let i = 0; i < previousPages.length - 1; i++) {
-            place.innerHTML += `
-                <a href="${previousPages[i].pageURL}" target="_blank" class="pagesHistory" onclick="clickedLine(this)">
-                    <div>${previousPages[i].pageName}</div>
-                </a> /
-            `;
-        }
-        place.innerHTML += `<div class="pagesHistory" onclick="clickedLine(this)">${previousPages[previousPages.length - 1].pageName
-            }</div>`;
-    } else if (previousPages.length === 1) {
-        place.innerHTML = `<div class="pagesHistory" onclick="clickedLine(this)">${previousPages[0].pageName}</div>`;
-    }
-}
-
-showPreviousPages();
-
-function addToPreviousPages(line) {
-    let name = line.textContent.split("\n");
-    if (name.length != 1) {
-        previousPages.push({
-            pageName: name[name.length - 2].trim(),
-            pageURL: line.href,
-        });
-    } else {
-        previousPages.push({ pageName: line.textContent, pageURL: line.href });
-    }
-    localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-    showPreviousPages(); // update UI
-}
-
-function clickedLine(line) {
-    let index = 0;
+function showPagesHistory() {
+    let previousPagesPlace = document.getElementById("previousPagesPlace");
+    previousPagesPlace.innerHTML = ""; // clear before rendering
 
     for (let i = 0; i < previousPages.length; i++) {
-        {
-            if (line.textContent == previousPages[i].pageName) {
-                index = i;
-            }
+        // Add the link
+        previousPagesPlace.innerHTML += `
+        <a href="${previousPages[i].pageURL}" class="pagesHistory"
+           onclick="checkPagesHistory('${previousPages[i].pageName}', '${previousPages[i].pageURL}')">
+          <div>${previousPages[i].pageName}</div>
+        </a>
+      `;
+
+        // Add "/" only if it's not the last item
+        if (i < previousPages.length - 1) {
+            previousPagesPlace.innerHTML += " / ";
         }
     }
-    if (index !== 0) {
-        previousPages.splice(index + 1); // delete from index to end
-        localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-        showPreviousPages(); // refresh UI
-    } else {
-        addToPreviousPages(line);
-    }
 }
-*/
+
+function checkPagesHistory(name, url) {
+    console.log("Clicked:", name, url);
+
+    // Find if page already exists in history
+    let pagePlace = previousPages.findIndex(p => p.pageName === name);
+
+    if (pagePlace === -1) {
+        // Page not found → add it
+        previousPages.push({ pageName: name, pageURL: url });
+    } else {
+        // Page found → trim future history
+        previousPages.splice(pagePlace + 1);
+    }
+
+    // Save to storage
+    localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+
+    // Re-render
+    showPagesHistory();
+}
+
+// Render on load
+window.onload = function () {
+    showPagesHistory();
+};
+
 
 
 document.addEventListener("DOMContentLoaded", function () {

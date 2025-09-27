@@ -7,81 +7,59 @@ let phonesPerPage = 4;
 
 let allPhonesData = [];
 
-let previousPages = [{ pageName: "Főoldal", pageURL: "../fooldal/index.html" }];
-let previousPagesPlace = document.getElementById("previousPagesPlace");
 
-function checkPagesHistory(name, url) {
-	let pagePlace = 0
-	for (const page of previousPages) {
-		if(page.pageName == name){
-			pagePlace = 
-		}
-	}
+// Initialize history: load from storage, or start with Főoldal
+localStorage.removeItem("pagesHistory"); 
 
-	if(pageExist){
-	let place = `<a href="" target="_blank" class="pagesHistory" onclick="clickedLine(this)"><div>${name}</div>
-                </a>`;
-	previousPagesPlace.innerHTML += place;
-	}
-	else{
-
-	}
-}
-
-/*
-function showPreviousPages() {
-  let place = document.getElementById("previousPagesPlace");
-  place.innerHTML = ""; // clear before rendering
-
-  if (previousPages.length > 1) {
-    for (let i = 0; i < previousPages.length - 1; i++) {
-      place.innerHTML += `
-                <a href="${previousPages[i].pageURL}" target="_blank" class="pagesHistory" onclick="clickedLine(this)">                    <div>${previousPages[i].pageName}</div>
-                </a> /
-            `;
-    }
-    place.innerHTML += `<div class="pagesHistory" onclick="clickedLine(this)">${previousPages[previousPages.length - 1].pageName
-      }</div>`;
-  } else if (previousPages.length === 1) {
-    place.innerHTML = `<div class="pagesHistory" onclick="clickedLine(this)">${previousPages[0].pageName}</div>`;
-  }
-}
-
-showPreviousPages();
-
-function addToPreviousPages(line) {
-  let name = line.textContent.split("\n");
-  if (name.length != 1) {
-    previousPages.push({
-      pageName: name[name.length - 2].trim(),
-      pageURL: line.href,
-    });
-  } else {
-    previousPages.push({ pageName: line.textContent, pageURL: line.href });
-  }
-  localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-  showPreviousPages(); // update UI
-}
-
-function clickedLine(line) {
-  let index = 0;
+let previousPages = [
+  { pageName: "Főoldal", pageURL: "../fooldal/index.html" }
+];
+function showPagesHistory() {
+  let previousPagesPlace = document.getElementById("previousPagesPlace");
+  previousPagesPlace.innerHTML = ""; // clear before rendering
 
   for (let i = 0; i < previousPages.length; i++) {
-    {
-      if (line.textContent == previousPages[i].pageName) {
-        index = i;
-      }
+    // Add the link
+    previousPagesPlace.innerHTML += `
+        <a href="${previousPages[i].pageURL}" class="pagesHistory"
+           onclick="checkPagesHistory('${previousPages[i].pageName}', '${previousPages[i].pageURL}')">
+          <div>${previousPages[i].pageName}</div>
+        </a>
+      `;
+
+    // Add "/" only if it's not the last item
+    if (i < previousPages.length - 1) {
+      previousPagesPlace.innerHTML += " / ";
     }
   }
-  if (index !== 0) {
-    previousPages.splice(index + 1); // delete from index to end
-    localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
-    showPreviousPages(); // refresh UI
-  } else {
-    addToPreviousPages(line);
-  }
 }
-*/
+
+function checkPagesHistory(name, url) {
+  console.log("Clicked:", name, url);
+
+  // Find if page already exists in history
+  let pagePlace = previousPages.findIndex(p => p.pageName === name);
+
+  if (pagePlace === -1) {
+    // Page not found → add it
+    previousPages.push({ pageName: name, pageURL: url });
+  } else {
+    // Page found → trim future history
+    previousPages.splice(pagePlace + 1);
+  }
+
+  // Save to storage
+  localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+
+  // Re-render
+  showPagesHistory();
+}
+
+// Render on load
+window.onload = function () {
+  showPagesHistory();
+};
+
 
 let kosar = [];
 
@@ -96,24 +74,26 @@ function displayPhoneCards() {
     const phoneRow = document.createElement("div");
     phoneRow.classList.add("phoneRow");
 
-    phoneRow.onclick = function () {
-      console.log("alma");
-      clickedLine(this);
-      localStorage.setItem("selectedPhone", phone.phoneID);
-      window.location.href = "../telefonoldala/telefonoldal.html";
+    phoneRow.onclick = function () {    
+      console.log(phone.phoneName);
+      
+      setTimeout(() => {
+        checkPagesHistory(`${phone.phoneName}`,`../telefonoldala/telefonoldal.html`);
+        localStorage.setItem("selectedPhone", phone.phoneID);
+        window.location.href = "../telefonoldala/telefonoldal.html";
+      }, 2000);      
+      
     };
 
     const phoneImage = document.createElement("div");
     phoneImage.classList.add("phoneImage");
     phoneImage.innerHTML = `
-            <img src="${phone.imageUrl || "../Images/image 3.png"}" alt="${
-      phone.phoneName
-    }" loading="lazy">
-            <div class="stock-bubble ${
-              phone.phoneInStore === "van"
-                ? "phonestockTrue"
-                : "phonestockFalse"
-            }">
+            <img src="${phone.imageUrl || "../Images/image 3.png"}" alt="${phone.phoneName
+      }" loading="lazy">
+            <div class="stock-bubble ${phone.phoneInStore === "van"
+        ? "phonestockTrue"
+        : "phonestockFalse"
+      }">
                 ${phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
             </div>
             <div class="price-bubble">${phone.phonePrice} Ft</div>
