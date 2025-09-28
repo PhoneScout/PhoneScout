@@ -167,6 +167,13 @@ function updateCartCount() {
     const cartElement = document.getElementById("cart");
     cartElement.textContent = `${itemCount}`;
 }
+
+function updateCompareCount() {
+    const comparePhones = JSON.parse(localStorage.getItem("comparePhones")) || [];
+    const compareElement = document.getElementById("compareCount");
+    if (compareElement) compareElement.textContent = `(${comparePhones.length})`;
+}
+
 updateCartCount()
 window.onload = function () {
     showPagesHistory()
@@ -247,7 +254,7 @@ function telDataShowMain(allPhonesData) {
     if (selectedPhone) {
         const phoneName = selectedPhone.phoneName;
         const phoneStock = selectedPhone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron";
-        const phonePrice = `${selectedPhone.phonePrice} Ft`;
+        const phonePrice = `${formatPrice(selectedPhone.phonePrice)} Ft`;
 
         document.getElementById("telData").innerHTML = `
             <div class="phoneName" id="showRequestedDataName">
@@ -260,24 +267,105 @@ function telDataShowMain(allPhonesData) {
                 ${phonePrice}
             </div>
             <button class="phoneSiteButton phoneSiteCartButton" id="addToCartButton">Kosárba rakom</button>
-            <button class="phoneSiteButton phoneSiteCompareButton">Összehasonlítás</button>
+            <button class="phoneSiteButton phoneSiteCompareButton" id="addToCompareButton">Összehasonlítás</button>
         `;
 
-        // Kosárba rakás logika
+        // Kosárba rakás
         document.getElementById("addToCartButton").onclick = function () {
             let cart = JSON.parse(localStorage.getItem("cart")) || {};
             cart[selectedPhone.phoneID] = (cart[selectedPhone.phoneID] || 0) + 1;
             localStorage.setItem("cart", JSON.stringify(cart));
-            console.log("Kosár frissítve:", cart);
-
-            // Frissítse a kosár számlálót
             updateCartCount();
+
+            // Animáció
+            const cartIcon = document.getElementById("cart");
+            const buttonRect = this.getBoundingClientRect();
+            const cartRect = cartIcon.getBoundingClientRect();
+
+            const animDot = document.createElement("div");
+            animDot.style.position = "fixed";
+            animDot.style.left = buttonRect.left + buttonRect.width / 2 + "px";
+            animDot.style.top = buttonRect.top + buttonRect.height / 2 + "px";
+            animDot.style.width = "16px";
+            animDot.style.height = "16px";
+            animDot.style.background = "#68F145";
+            animDot.style.borderRadius = "50%";
+            animDot.style.zIndex = "9999";
+            animDot.style.pointerEvents = "none";
+            animDot.style.transition = "all 2s cubic-bezier(.4,2,.6,1)";
+            document.body.appendChild(animDot);
+
+            setTimeout(() => {
+                const cartCenterX = cartRect.left + cartRect.width / 2;
+                const cartCenterY = cartRect.top + cartRect.height / 2;
+
+                animDot.style.left = cartCenterX - animDot.offsetWidth / 2 + "px";
+                animDot.style.top = cartCenterY - animDot.offsetHeight / 2 + "px";
+                animDot.style.opacity = "0.2";
+                animDot.style.transform = "scale(0.5)";
+            }, 10);
+
+            setTimeout(() => {
+                animDot.style.transition = "all 0.5s cubic-bezier(.4,2,.6,1)";
+                animDot.style.transform = "scale(10)";
+                animDot.style.opacity = "0";
+            }, 450);
+
+            setTimeout(() => {
+                animDot.remove();
+            }, 1010);
         };
 
-        // Az oldal betöltésekor frissítse a kosár számlálót
+        // Összehasonlítás 
+        document.getElementById("addToCompareButton").onclick = function () {
+            let comparePhones = JSON.parse(localStorage.getItem("comparePhones") || "[]");
+            if (!comparePhones.includes(selectedPhone.phoneID)) {
+                comparePhones.push(selectedPhone.phoneID);
+                localStorage.setItem("comparePhones", JSON.stringify(comparePhones));
+                updateCompareCount();
+            }
+
+            // Animáció
+            const compareIcon = document.getElementById("osszehasonlitas");
+            const buttonRect = this.getBoundingClientRect();
+            const compareRect = compareIcon.getBoundingClientRect();
+
+            const animDot = document.createElement("div");
+            animDot.style.position = "fixed";
+            animDot.style.left = buttonRect.left + buttonRect.width / 2 + "px";
+            animDot.style.top = buttonRect.top + buttonRect.height / 2 + "px";
+            animDot.style.width = "16px";
+            animDot.style.height = "16px";
+            animDot.style.background = "#68F145";
+            animDot.style.borderRadius = "50%";
+            animDot.style.zIndex = "9999";
+            animDot.style.pointerEvents = "none";
+            animDot.style.transition = "all 2s cubic-bezier(.4,2,.6,1)";
+            document.body.appendChild(animDot);
+
+            setTimeout(() => {
+                const compareCenterX = compareRect.left + compareRect.width / 2;
+                const compareCenterY = compareRect.top + compareRect.height / 2;
+
+                animDot.style.left = compareCenterX - animDot.offsetWidth / 2 + "px";
+                animDot.style.top = compareCenterY - animDot.offsetHeight / 2 + "px";
+                animDot.style.opacity = "0.2";
+                animDot.style.transform = "scale(0.5)";
+            }, 10);
+
+            setTimeout(() => {
+                animDot.style.transition = "all 0.5s cubic-bezier(.4,2,.6,1)";
+                animDot.style.transform = "scale(10)";
+                animDot.style.opacity = "0";
+            }, 450);
+
+            setTimeout(() => {
+                animDot.remove();
+            }, 1010);
+        };
+
         updateCartCount();
-
-
+        updateCompareCount();
     } else {
         console.error("No phone found with the given ID.");
     }
@@ -337,10 +425,10 @@ function telDataShow(allPhonesData) {
     <tr><td colspan="2" class="more_rows"></td></tr>
 
     <tr><td colspan="2" class="akkumulator_table first_row"><strong>Akkumulátor és Töltés</strong></td></tr>
-    <tr><td class="akkumulator_table">Akkumulátor kapacitása</td><td class="akkumulator_table">${selectedPhone.batteryCapacity} mAh</td></tr>
-    <tr><td class="akkumulator_table">Akkumulátor típusa</td><td class="akkumulator_table">${selectedPhone.batteryType}</td></tr>
-    <tr><td class="akkumulator_table">Vezetékes töltés max sebessége</td><td class="akkumulator_table">${selectedPhone.batteryMaxChargingWired}W</td></tr>
-    <tr><td class="akkumulator_table">Vezeték nélküli töltés max sebessége</td><td class="akkumulator_table">${selectedPhone.batteryMaxChargingWireless}W</td></tr>
+    <tr><td class="akkumulátor_table">Akkumulátor kapacitása</td><td class="akkumulátor_table">${selectedPhone.batteryCapacity} mAh</td></tr>
+    <tr><td class="akkumulátor_table">Akkumulátor típusa</td><td class="akkumulátor_table">${selectedPhone.batteryType}</td></tr>
+    <tr><td class="akkumulátor_table">Vezetékes töltés max sebessége</td><td class="akkumulátor_table">${selectedPhone.batteryMaxChargingWired}W</td></tr>
+    <tr><td class="akkumulátor_table">Vezeték nélküli töltés max sebessége</td><td class="akkumulátor_table">${selectedPhone.batteryMaxChargingWireless}W</td></tr>
     <tr><td colspan="2" class="more_rows"></td></tr>
 
     <tr><td colspan="2" class="camera_table first_row"><strong>Kamera</strong></td></tr>
@@ -489,3 +577,12 @@ document.querySelector('.moreInfoAboutPhone').addEventListener('click', function
 
 // Call showUsername when the page loads
 document.addEventListener("DOMContentLoaded", showUsername);
+// Frissítsd a számlálót oldalbetöltéskor is!
+document.addEventListener("DOMContentLoaded", () => {
+    updateCompareCount();
+    updateCartCount();
+});
+
+function formatPrice(price) {
+    return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}

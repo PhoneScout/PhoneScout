@@ -63,6 +63,12 @@ window.onload = function () {
 
 let kosar = [];
 
+function updateCompareCount() {
+  const comparePhones = JSON.parse(localStorage.getItem("comparePhones")) || [];
+  const compareElement = document.getElementById("compareCount");
+  compareElement.textContent = `(${comparePhones.length})`;
+}
+
 function displayPhoneCards() {
   const contentRow = document.getElementById("contentRow");
   contentRow.innerHTML = "";
@@ -127,6 +133,7 @@ function displayPhoneCards() {
       if (!comparePhones.includes(phone.phoneID)) {
         comparePhones.push(phone.phoneID);
         localStorage.setItem("comparePhones", JSON.stringify(comparePhones));
+        updateCompareCount();
       }
     };
 
@@ -137,7 +144,7 @@ function displayPhoneCards() {
     cartImg.loading = "lazy";
     cartButton.appendChild(cartImg);
 
-    //Kosár pont animáció
+    // Kosár pont animáció
     cartButton.onclick = function (event) {
       event.stopPropagation();
       let cart = JSON.parse(localStorage.getItem("cart")) || {};
@@ -183,14 +190,16 @@ function displayPhoneCards() {
       }, 1010);
     };
 
-    /*
-    //Összehasonlítás pont animáció
+    
     compareButton.onclick = function (event) {
       event.stopPropagation();
-      let compare = JSON.parse(localStorage.getItem("osszehasonlitas")) || {};
-      compare[phone.phoneID] = (cart[phone.phoneID] || 0) + 1;
-      localStorage.setItem("cart", JSON.stringify(compare));
-      updateCartCount();
+
+      let comparePhones = JSON.parse(localStorage.getItem("comparePhones") || "[]");
+      if (!comparePhones.includes(phone.phoneID)) {
+        comparePhones.push(phone.phoneID);
+        localStorage.setItem("comparePhones", JSON.stringify(comparePhones));
+        updateCompareCount();
+      }
 
       const compareIcon = document.getElementById("osszehasonlitas");
       const buttonRect = compareButton.getBoundingClientRect();
@@ -228,7 +237,7 @@ function displayPhoneCards() {
       setTimeout(() => {
         animDot.remove();
       }, 1010);
-    };*/
+    };
 
     cardButtons.appendChild(compareButton);
     cardButtons.appendChild(cartButton);
@@ -253,10 +262,10 @@ function getPhoneDatas() {
     .then((response) => response.json())
     .then((data) => {
       allPhonesData = data;
-      console.log(allPhonesData);
       displayPhoneCards();
       updateCarouselIndicator();
       updateCartCount();
+      updateCompareCount();
     })
     .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
 }
@@ -339,6 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   contentRow.parentElement.appendChild(indicator);
   updateCarouselIndicator();
+  updateCompareCount();
 });
 
 function displayEventCard() {

@@ -68,6 +68,11 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+    // Ár formázasa
+    function formatPrice(price) {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    }
+
     function updateTotalPrice(cartPhones) {
         const totalPrice = cartPhones.reduce((sum, phone) => {
             const quantity = cart[phone.phoneID] || 0;
@@ -76,14 +81,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const totalPriceDiv = document.querySelector(".totalPrice");
         if (totalPriceDiv) {
-            totalPriceDiv.textContent = `Végösszeg: ${totalPrice} Ft`;
+            totalPriceDiv.textContent = `Végösszeg: ${formatPrice(totalPrice)} Ft`;
         } else {
             const newTotalPriceDiv = document.createElement("div");
             newTotalPriceDiv.classList.add("totalPrice");
             newTotalPriceDiv.style.marginBottom = "20px";
             newTotalPriceDiv.style.fontSize = "1.5em";
             newTotalPriceDiv.style.fontWeight = "bold";
-            newTotalPriceDiv.textContent = `Végösszeg: ${totalPrice} Ft`;
+            newTotalPriceDiv.textContent = `Végösszeg: ${formatPrice(totalPrice)} Ft`;
             kosarDiv.prepend(newTotalPriceDiv);
         }
     }
@@ -240,9 +245,15 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                     <div class="phoneDetails" style="flex: 3; padding-left: 15px;">
                         <h3 style="margin: 0; font-size: 1.2em;">${phone.phoneName}</h3>
+                        <p style="margin: 0.2em 0;">RAM: ${phone.ram || '-'}</p>
+                        <p style="margin: 0.2em 0;">Tárhely: ${phone.storage || '-'}</p>
+                        <p style="margin: 0.2em 0;">Szín: ${phone.color || '-'}</p>
+                        <p style="margin: 0.2em 0; color: ${phone.inStock ? 'green' : 'red'};">
+                            ${phone.inStock ? 'Raktáron' : 'Nincs raktáron'}
+                        </p>
                     </div>
                     <div class="phonePrice" style="flex: 2; text-align: center;">
-                        <p style="margin: 0; font-size: 1em;">${phone.phonePrice} Ft</p>
+                        <p style="margin: 0; font-size: 1em;">${formatPrice(phone.phonePrice)} Ft</p>
                     </div>
                     <div class="phoneQuantity" style="flex: 3; text-align: center; display: flex; align-items: center; justify-content: center;">
                         <button class="decreaseQuantity" style="margin-right: 10px;">-</button>
