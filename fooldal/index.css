@@ -622,7 +622,6 @@ a {
 #previousPagesPlace{
     gap: 2%;
     margin-top: 2%;
-    cursor: pointer;
 }
 .pagesHistory{
     color: #2300B3;

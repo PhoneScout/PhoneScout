@@ -405,14 +405,14 @@ function telDataShow(allPhonesData) {
     <tr><td class="kijelzo_table">Típusa</td><td class="kijelzo_table">${selectedPhone.screenType}</td></tr>
     <tr><td class="kijelzo_table">Felbontás</td><td class="kijelzo_table">${selectedPhone.phoneResolutionHeight} x ${selectedPhone.phoneResolutionWidth} px</td></tr>
     <tr><td class="kijelzo_table">Mérete</td><td class="kijelzo_table">${selectedPhone.screenSize.toFixed(2)}”</td></tr>
-    <tr><td class="kijelzo_table">Frissítési ráta</td><td class="kijelzo_table">${selectedPhone.screenRefreshRate.toFixed(2)} Hz</td></tr>
-    <tr><td class="kijelzo_table">Max fényerő</td><td class="kijelzo_table">${selectedPhone.screenMaxBrightness.toFixed(2)} nit</td></tr>
-    <tr><td class="kijelzo_table">Élessége/Képpontsűrűség</td><td class="kijelzo_table">${selectedPhone.screenSharpness.toFixed(2)} ppi</td></tr>
+    <tr><td class="kijelzo_table">Frissítési ráta</td><td class="kijelzo_table">${selectedPhone.screenRefreshRate.toFixed(0)} Hz</td></tr>
+    <tr><td class="kijelzo_table">Max fényerő</td><td class="kijelzo_table">${selectedPhone.screenMaxBrightness.toFixed(0)} nit</td></tr>
+    <tr><td class="kijelzo_table">Élessége/Képpontsűrűség</td><td class="kijelzo_table">${selectedPhone.screenSharpness.toFixed(0)} ppi</td></tr>
     <tr><td colspan="2" class="more_rows"></td></tr>
 
     <tr><td colspan="2" class="csatlakozo_table first_row"><strong>Csatlakoztathatóság</strong></td></tr>
     <tr><td class="csatlakozo_table">Wi-Fi</td><td class="csatlakozo_table">Wifi ${selectedPhone.connectionMaxWifi}</td></tr>
-    <tr><td class="csatlakozo_table">Bluetooth</td><td class="csatlakozo_table">Bluetooth ${selectedPhone.connectionMaxBluetooth.toFixed(2)}</td></tr>
+    <tr><td class="csatlakozo_table">Bluetooth</td><td class="csatlakozo_table">Bluetooth ${selectedPhone.connectionMaxBluetooth.toFixed(1)}</td></tr>
     <tr><td class="csatlakozo_table">Mobilhálózat</td><td class="csatlakozo_table">${selectedPhone.connectionMaxMobileNetwork}</td></tr>
     <tr><td class="csatlakozo_table">Dual SIM</td><td class="csatlakozo_table">${selectedPhone.connectionDualSim}</td></tr>
     <tr><td class="csatlakozo_table">E-SIM</td><td class="csatlakozo_table">${selectedPhone.connectionESim}</td></tr>

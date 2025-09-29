@@ -323,7 +323,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 group.props.forEach(prop => {
                     let value;
                     if (prop.format) {
-                        value = prop.format(phone[prop.key], phone);
+                        value = prop.format(phone[prop.key], phone);                        
                     } else {
                         value = phone[prop.key];
                     }
