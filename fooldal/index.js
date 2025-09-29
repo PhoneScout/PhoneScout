@@ -9,7 +9,7 @@ let allPhonesData = [];
 
 
 // Initialize history: load from storage, or start with Főoldal
-localStorage.removeItem("pagesHistory"); 
+localStorage.removeItem("pagesHistory");
 
 let previousPages = [
   { pageName: "Főoldal", pageURL: "../fooldal/index.html" }
@@ -60,6 +60,11 @@ window.onload = function () {
   showPagesHistory();
 };
 
+function searchPhones() {
+  console.log("alma");
+  console.log(allPhonesData);
+
+}
 
 let kosar = [];
 
@@ -80,15 +85,15 @@ function displayPhoneCards() {
     const phoneRow = document.createElement("div");
     phoneRow.classList.add("phoneRow");
 
-    phoneRow.onclick = function () {    
+    phoneRow.onclick = function () {
       console.log(phone.phoneName);
-      
+
       setTimeout(() => {
-        checkPagesHistory(`${phone.phoneName}`,`../telefonoldala/telefonoldal.html`);
+        checkPagesHistory(`${phone.phoneName}`, `../telefonoldala/telefonoldal.html`);
         localStorage.setItem("selectedPhone", phone.phoneID);
         window.location.href = "../telefonoldala/telefonoldal.html";
-      }, 2000);      
-      
+      }, 2000);
+
     };
 
     const phoneImage = document.createElement("div");
@@ -190,7 +195,7 @@ function displayPhoneCards() {
       }, 1010);
     };
 
-    
+
     compareButton.onclick = function (event) {
       event.stopPropagation();
 
@@ -270,6 +275,48 @@ function getPhoneDatas() {
     .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
 }
 getPhoneDatas();
+
+
+function searchPhonesGET() {
+  return fetch(allPhonesURL)
+    .then((response) => response.json())
+    .then((data) => {
+      allPhonesData = data;
+      searchPhones()
+    })
+    .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
+
+
+}
+searchPhonesGET()
+
+function searchPhones() {
+  let searchDropdown = document.getElementById("searchDropdown");
+  searchDropdown.innerHTML = "";
+
+  for (let i = 0; i < allPhonesData.length; i++) {
+    searchDropdown.innerHTML += `
+      <div class="dropdown-item" onclick="openPhonePage('${allPhonesData[i].phoneID}')">
+        ${allPhonesData[i].phoneName}
+      </div>
+    `;
+  }
+}
+
+function openPhonePage(phoneID) {
+  console.log("Clicked phone ID:", phoneID);
+  localStorage.setItem("selectedPhone", phoneID);
+  window.open('../telefonoldala/telefonoldal.html');
+}
+
+document.getElementById("searchBox").addEventListener("input", searchPhones);
+
+// Close dropdown if click outside
+document.addEventListener("click", function (e) {
+  if (!e.target.closest(".search-input")) {
+    document.getElementById("searchDropdown").classList.remove("active");
+  }
+});
 
 /*function telDataShow(allPhonesData) {
     let dataPlace = document.getElementById("telData");

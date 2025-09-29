@@ -659,13 +659,16 @@ a {
     z-index: 10;
 
     /* Limit to 5 visible items (5 * item height) */
-    max-height: 200px; /* Assuming each item is ~40px tall */
+    max-height: 180px; /* Assuming each item is ~40px tall */
     overflow-y: auto;
+    width: 150%;
+    font-size: 80%;
+    pointer-events: none;
+    
 
     /* Animation */
     opacity: 0;
     transform: translateY(-5px);
-    pointer-events: none;
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
