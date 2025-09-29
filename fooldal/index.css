@@ -613,7 +613,7 @@ hr {
     border-top: 2px solid black;
     /* Csak a felső határt adunk hozzá */
     border-radius: 10px;
-}
+} 
 
 a {
     text-decoration: none;
