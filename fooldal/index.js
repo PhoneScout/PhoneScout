@@ -88,11 +88,11 @@ function displayPhoneCards() {
     phoneRow.onclick = function () {
       console.log(phone.phoneName);
 
-      setTimeout(() => {
+     
         checkPagesHistory(`${phone.phoneName}`, `../telefonoldala/telefonoldal.html`);
         localStorage.setItem("selectedPhone", phone.phoneID);
         window.location.href = "../telefonoldala/telefonoldal.html";
-      }, 2000);
+     
 
     };
 
@@ -206,6 +206,12 @@ function displayPhoneCards() {
         updateCompareCount();
       }
 
+      if (comparePhones.includes(phone.phoneID)) {
+        compareButton.style.cursor = "not-allowed";
+        compareButton.style.backgroundColor="#1f6e0b";
+        compareButton.onclick = null; 
+      }
+
       const compareIcon = document.getElementById("osszehasonlitas");
       const buttonRect = compareButton.getBoundingClientRect();
       const compareRect = compareIcon.getBoundingClientRect();
@@ -252,6 +258,7 @@ function displayPhoneCards() {
     phoneRow.appendChild(cardButtons);
 
     contentRow.appendChild(phoneRow);
+   
   });
 }
 

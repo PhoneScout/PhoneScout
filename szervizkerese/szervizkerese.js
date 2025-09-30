@@ -16,7 +16,7 @@ async function showUsername() {
     if (jogosultsag == 1) {
         document.getElementById("admin").style.display = "block";
         document.getElementById("upload").style.display = "block";
-        
+
     }
 }
 
@@ -32,33 +32,34 @@ function logout() {
 
 
 
+
 // Call showUsername when the page loads
 document.addEventListener("DOMContentLoaded", showUsername);
 
 
-        function generateUniqueCode() {
-            const now = new Date();
-            const datePart = now.getFullYear().toString().slice(-2) +
-                (now.getMonth() + 1).toString().padStart(2, '0') +
-                now.getDate().toString().padStart(2, '0') +
-                now.getHours().toString().padStart(2, '0') +
-                now.getMinutes().toString().padStart(2, '0');
-            const randomPart = Math.floor(1000 + Math.random() * 9000);
-            return `PHNSCT-${datePart}-${randomPart}`;
-        }
+function generateUniqueCode() {
+    const now = new Date();
+    const datePart = now.getFullYear().toString().slice(-2) +
+        (now.getMonth() + 1).toString().padStart(2, '0') +
+        now.getDate().toString().padStart(2, '0') +
+        now.getHours().toString().padStart(2, '0') +
+        now.getMinutes().toString().padStart(2, '0');
+    const randomPart = Math.floor(1000 + Math.random() * 9000);
+    return `PHNSCT-${datePart}-${randomPart}`;
+}
 
-        document.getElementById('atvizsgalas').addEventListener('change', function () {
-            document.getElementById('atvizsgalasInfo').style.display = this.checked ? 'block' : 'none';
-        });
+document.getElementById('atvizsgalas').addEventListener('change', function () {
+    document.getElementById('atvizsgalasInfo').style.display = this.checked ? 'block' : 'none';
+});
 
-        document.getElementById('szervizForm').addEventListener('submit', function (e) {
-            e.preventDefault();
-            const atvizsgalas = document.getElementById('atvizsgalas').checked;
-            const kod = generateUniqueCode();
-            const feltetelLink = `<a href="../csomagolasfeltetelek.html" target="_blank" style="color:#17a2b8; text-decoration:underline;">ITT</a>`;
-            if (atvizsgalas) {
-                document.getElementById('formMessage').innerHTML =
-                    `<div class="alert alert-info">
+document.getElementById('szervizForm').addEventListener('submit', function (e) {
+    e.preventDefault();
+    const atvizsgalas = document.getElementById('atvizsgalas').checked;
+    const kod = generateUniqueCode();
+    const feltetelLink = `<a href="../csomagolasfeltetelek.html" target="_blank" style="color:#17a2b8; text-decoration:underline;">ITT</a>`;
+    if (atvizsgalas) {
+        document.getElementById('formMessage').innerHTML =
+            `<div class="alert alert-info">
                     Kérését megkaptuk, és rögzítettük.<br>
                     <b>Ön <strong>Telefon átvizsgálást</strong> kért.</b><br>
                     <strong>Kérjük, küldje el telefonját postán a következő címre:</strong><br>
@@ -77,9 +78,9 @@ document.addEventListener("DOMContentLoaded", showUsername);
                     </ul>
                     <br>
                 </div>`;
-            } else {
-                document.getElementById('formMessage').innerHTML =
-                    `<div class="alert alert-info">
+    } else {
+        document.getElementById('formMessage').innerHTML =
+            `<div class="alert alert-info">
                     Kérését megkaptuk, és rögzítettük.<br>
                     <strong>Kérjük, küldje el postán a következő címre:</strong><br>
                     <b>Cím:</b> Miskolc, Palóczy László utca 3, 3525<br>
@@ -97,7 +98,17 @@ document.addEventListener("DOMContentLoaded", showUsername);
                     </ul>
                     <br>
                 </div>`;
-            }
-            this.reset();
-            document.getElementById('atvizsgalasInfo').style.display = 'none';
-        });
+    }
+    this.reset();
+    document.getElementById('atvizsgalasInfo').style.display = 'none';
+});
+
+function updateCartCount() {
+    const cart = JSON.parse(localStorage.getItem("cart")) || {};
+    const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
+    const cartElement = document.getElementById("cart");
+    cartElement.textContent = `${itemCount}`;
+  }
+  
+
+  updateCartCount();

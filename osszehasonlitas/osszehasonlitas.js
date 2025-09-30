@@ -270,6 +270,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         // ha kell még, ide írj property-t
     };
 
+    
     function renderCards() {
         let rowClass = "compare-cards-row";
         if (phones.length > 2) rowClass += " scrollable-row";
@@ -315,7 +316,8 @@ document.addEventListener("DOMContentLoaded", async function () {
         let html = `<div class="compare-cards-wrapper"><div class="${rowClass}">`;
         html += `<div class="empty-col"></div>`;
         phones.forEach(phone => {
-            html += `<div class="compare-card">`;
+            
+            html += `<div onclick="getId('${phone.phoneID}', '${phone.phoneName}')" class="compare-card">`;
             html += `<div class="compare-card-title">${phone.phoneName || "-"}</div>`;
             html += `<div class="compare-card-parts">`;
             groupedProps.forEach(group => {
@@ -323,7 +325,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 group.props.forEach(prop => {
                     let value;
                     if (prop.format) {
-                        value = prop.format(phone[prop.key], phone);                        
+                        value = prop.format(phone[prop.key], phone);
                     } else {
                         value = phone[prop.key];
                     }
@@ -382,7 +384,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                             return p[prop.key];
                         });
                         const allEqual = values.every(v => v == values[0]);
-                        if (!allEqual) diffStyle = ' style="background:#f0f0f0;"';
+                        if (!allEqual) diffStyle = ' style="background:rgb(226, 219, 219)"';
                     }
 
                     html += `<div class="compare-part"${diffStyle}><span class="compare-part-label">${prop.label}:</span> <span class="compare-part-value">${displayValue}</span></div>`;
@@ -409,6 +411,8 @@ document.addEventListener("DOMContentLoaded", async function () {
             renderCards();
         });
     });
+
+
 
     // Kezdeti render
     selectedFilters = new Set();
@@ -621,3 +625,15 @@ function updateCartCount() {
 }
 
 updateCartCount()
+
+
+let telefonId=document.getElementsByClassName("compare-card");
+
+
+
+
+function getId(id, name) {
+    checkPagesHistory(`${name}`, `../telefonoldala/telefonoldal.html`);
+    localStorage.setItem("selectedPhone", id);
+    window.location.href = "../telefonoldala/telefonoldal.html";
+};
