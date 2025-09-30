@@ -407,7 +407,7 @@ body {
 .compare-part-group-title {
     font-size: 1.2em;
     font-weight: bold;
-    background: #f0f0f0;
+    background: rgb(190, 190, 190);
     color: #1a237e;
     padding: 6px 10px;
     margin: 10px 0 5px 0;

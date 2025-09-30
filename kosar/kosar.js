@@ -423,3 +423,40 @@ function updateCartCount() {
 }
 
 updateCartCount()
+
+function searchPhonesGET() {
+    return fetch(allPhonesURL)
+      .then((response) => response.json())
+      .then((data) => {
+        allPhonesData = data;
+        searchPhones()
+      })
+      .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
+  
+  
+  }
+  searchPhonesGET()
+  
+  function searchPhones() {
+    let searchDropdown = document.getElementById("searchDropdown");
+    searchDropdown.innerHTML = "";
+  
+    for (let i = 0; i < allPhonesData.length; i++) {
+      searchDropdown.innerHTML += `
+        <div class="dropdown-item" onclick="openPhonePage('${allPhonesData[i].phoneID}')">
+          ${allPhonesData[i].phoneName}
+        </div>
+      `;
+    }
+  }
+  
+  function openPhonePage(phoneID) {
+    console.log("Clicked phone ID:", phoneID);
+    localStorage.setItem("selectedPhone", phoneID);
+    window.open('../telefonoldala/telefonoldal.html');
+  }
+  
+  function searchBarActive(){
+    console.log("alma");
+    document.getElementById("searchDropdown").style.pointerEvents = "auto"
+  }

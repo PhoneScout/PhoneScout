@@ -60,11 +60,7 @@ window.onload = function () {
   showPagesHistory();
 };
 
-function searchPhones() {
-  console.log("alma");
-  console.log(allPhonesData);
 
-}
 
 let kosar = [];
 
@@ -86,13 +82,15 @@ function displayPhoneCards() {
     phoneRow.classList.add("phoneRow");
 
     phoneRow.onclick = function () {
-      console.log(phone.phoneName);
 
-      setTimeout(() => {
+     
         checkPagesHistory(`${phone.phoneName}`, `../telefonoldala/telefonoldal.html`);
         localStorage.setItem("selectedPhone", phone.phoneID);
         window.location.href = "../telefonoldala/telefonoldal.html";
-      }, 2000);
+     
+
+
+
 
     };
 
@@ -206,6 +204,12 @@ function displayPhoneCards() {
         updateCompareCount();
       }
 
+      if (comparePhones.includes(phone.phoneID)) {
+        compareButton.style.cursor = "not-allowed";
+        compareButton.style.backgroundColor="#1f6e0b";
+        compareButton.onclick = null; 
+      }
+
       const compareIcon = document.getElementById("osszehasonlitas");
       const buttonRect = compareButton.getBoundingClientRect();
       const compareRect = compareIcon.getBoundingClientRect();
@@ -252,6 +256,7 @@ function displayPhoneCards() {
     phoneRow.appendChild(cardButtons);
 
     contentRow.appendChild(phoneRow);
+   
   });
 }
 
@@ -309,14 +314,12 @@ function openPhonePage(phoneID) {
   window.open('../telefonoldala/telefonoldal.html');
 }
 
-document.getElementById("searchBox").addEventListener("input", searchPhones);
+function searchBarActive() {
+  console.log("alma");
+  document.getElementById("searchDropdown").style.pointerEvents = "auto"
+}
 
-// Close dropdown if click outside
-document.addEventListener("click", function (e) {
-  if (!e.target.closest(".search-input")) {
-    document.getElementById("searchDropdown").classList.remove("active");
-  }
-});
+
 
 /*function telDataShow(allPhonesData) {
     let dataPlace = document.getElementById("telData");
