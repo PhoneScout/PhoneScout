@@ -208,6 +208,7 @@ function telDataShowMain(allPhonesData) {
 
     let colorPlace = document.getElementById("colorPlace")
     let ramStoragePlace = document.getElementById("ramStoragePlace")
+    let camButtonsPlace = document.getElementById("camButtonsPlace")
 
 
     console.log(selectedPhone)
@@ -234,18 +235,25 @@ function telDataShowMain(allPhonesData) {
     const camFocalLengths = selectedPhone.camera.cameraFocalLength;
     const camOISs = selectedPhone.camera.cameraOIS;
 
-    console.log(camOISs)
+    for (let i = 0; i < camNames.length; i++) {
+        let camButtons = `<button class="cameraOption form_${i}" onclick="selectCamera(this)">${i}</button>`
+        camButtonsPlace.innerHTML += camButtons
+    }
 
+    console.log(camNames)
 
+    
     cameraPlace.innerHTML = "";
 
     for (let i = 0; i < camNames.length; i++) {
         cameraPlace.innerHTML += `
-    <tr><td class="camera_table">Kamera neve</td><td class="camera_table">${camNames[i]}</td></tr>
-    <tr><td class="camera_table">Felbontás</td><td class="camera_table">${camRes[i]} MP</td></tr>
-    <tr><td class="camera_table">Rekeszérték</td><td class="camera_table">${camApertures[i]}</td></tr>
-    <tr><td class="camera_table">Fókusztávolság</td><td class="camera_table">${camFocalLengths[i]}</td></tr>
-    <tr><td class="camera_table">Optikai képstabilizátor</td><td class="camera_table">${camOISs[i]}</td></tr>
+    <form class="from_${i}">
+        <tr><td class="camera_table">Kamera neve</td><td class="camera_table">${camNames[i]}</td></tr>
+        <tr><td class="camera_table">Felbontás</td><td class="camera_table">${camRes[i]} MP</td></tr>
+        <tr><td class="camera_table">Rekeszérték</td><td class="camera_table">${camApertures[i]}</td></tr>
+        <tr><td class="camera_table">Fókusztávolság</td><td class="camera_table">${camFocalLengths[i]}</td></tr>
+        <tr><td class="camera_table">Optikai képstabilizátor</td><td class="camera_table">${camOISs[i]}</td></tr>
+    <form>
   `;
     }
 
@@ -425,13 +433,13 @@ function telDataShow(allPhonesData) {
     <tr><td colspan="2" class="more_rows"></td></tr>
 
     <tr><td colspan="2" class="akkumulator_table first_row"><strong>Akkumulátor és Töltés</strong></td></tr>
-    <tr><td class="akkumulátor_table">Akkumulátor kapacitása</td><td class="akkumulátor_table">${selectedPhone.batteryCapacity} mAh</td></tr>
-    <tr><td class="akkumulátor_table">Akkumulátor típusa</td><td class="akkumulátor_table">${selectedPhone.batteryType}</td></tr>
-    <tr><td class="akkumulátor_table">Vezetékes töltés max sebessége</td><td class="akkumulátor_table">${selectedPhone.batteryMaxChargingWired}W</td></tr>
-    <tr><td class="akkumulátor_table">Vezeték nélküli töltés max sebessége</td><td class="akkumulátor_table">${selectedPhone.batteryMaxChargingWireless}W</td></tr>
+    <tr><td class="akkumulator_table">Akkumulátor kapacitása</td><td class="akkumulator_table">${selectedPhone.batteryCapacity} mAh</td></tr>
+    <tr><td class="akkumulator_table">Akkumulátor típusa</td><td class="akkumulator_table">${selectedPhone.batteryType}</td></tr>
+    <tr><td class="akkumulator_table">Vezetékes töltés max sebessége</td><td class="akkumulator_table">${selectedPhone.batteryMaxChargingWired}W</td></tr>
+    <tr><td class="akkumulator_table">Vezeték nélküli töltés max sebessége</td><td class="akkumulator_table">${selectedPhone.batteryMaxChargingWireless}W</td></tr>
     <tr><td colspan="2" class="more_rows"></td></tr>
 
-    <tr><td colspan="2" class="camera_table first_row"><strong>Kamera</strong></td></tr>
+    <tr><td class="camera_table first_row"><strong>Kamera</strong></td> <td id="camButtonsPlace" class="camera_table first_row"></td></tr>
     <tbody id="cameraPlace"></tbody>
     <tr><td colspan="2" class="more_rows"></td></tr>
 
@@ -472,6 +480,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
 function selectRamTárhely(element) {
     document.querySelectorAll('.ramTárhelyOption').forEach(option => {
+        option.style.border = '1px solid black';
+    });
+    element.style.border = '2px solid black';
+}
+
+function selectCamera(element){
+    document.querySelectorAll('.cameraOption').forEach(option => {
         option.style.border = '1px solid black';
     });
     element.style.border = '2px solid black';
