@@ -97,7 +97,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                         return `${w} x ${h}`;
                     }
                 },
-                { label: "Kijelző méret", key: "screenSize" },
+                { label: "Kijelző méret", key: "screenSize", format: v => v?v.toFixed(2):"-" },
                 { label: "Kijelző max fényerő", key: "screenMaxBrightness" },
                 { label: "Kijelző élesség", key: "screenSharpness" },
                 { label: "Kijelző típusa", key: "screenType" }
