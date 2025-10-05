@@ -1,3 +1,55 @@
+const allPhoneNameURL = "http://localhost:5165/api/GETphoneNames"; //ÚJ BACKEND
+
+// Initialize history: load from storage, or start with Főoldal
+let previousPages = JSON.parse(localStorage.getItem("pagesHistory")) || [
+    { pageName: "Főoldal", pageURL: "../fooldal/index.html" }
+];
+console.log("phone",previousPages);
+
+
+function showPagesHistory() {
+    let previousPagesPlace = document.getElementById("previousPagesPlace");
+    previousPagesPlace.innerHTML = ""; // clear before rendering
+    
+    for (let i = 0; i < previousPages.length; i++) {
+        // Add the link
+        previousPagesPlace.innerHTML += `
+        <a href="${previousPages[i].pageURL}" class="pagesHistory"
+           onclick="checkPagesHistory('${previousPages[i].pageName}', '${previousPages[i].pageURL}')">
+          <div>${previousPages[i].pageName}</div>
+        </a>
+      `;
+
+        // Add "/" only if it's not the last item
+        if (i < previousPages.length - 1) {
+            previousPagesPlace.innerHTML += " / ";
+        }
+    }
+}
+
+function checkPagesHistory(name, url) {
+
+    console.log("Clicked:", name, url);
+
+    // Find if page already exists in history
+    let pagePlace = previousPages.findIndex(p => p.pageName === name);
+
+    if (pagePlace === -1) {
+        // Page not found → add it
+        previousPages.push({ pageName: name, pageURL: url });
+    } else {
+        // Page found → trim future history
+        previousPages.splice(pagePlace + 1);
+    }
+
+    // Save to storage
+    localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
+
+    // Re-render
+    showPagesHistory();
+}
+
+
 async function showUsername() {
     const firstname = localStorage.getItem("firstname");
     const jogosultsag = localStorage.getItem("jogosultsag");

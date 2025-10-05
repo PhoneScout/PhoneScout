@@ -1,3 +1,5 @@
+const allPhoneNameURL = "http://localhost:5165/api/GETphoneNames"; //ÚJ BACKEND
+
 
 // Initialize history: load from storage, or start with Főoldal
 let previousPages = JSON.parse(localStorage.getItem("pagesHistory")) || [
@@ -637,3 +639,40 @@ function getId(id, name) {
     localStorage.setItem("selectedPhone", id);
     window.location.href = "../telefonoldala/telefonoldal.html";
 };
+
+function searchPhonesGET() {
+  return fetch(allPhoneNameURL)
+    .then((response) => response.json())
+    .then((data) => {
+      allPhoneName = data;
+      searchPhones()
+    })
+    .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
+
+
+}
+searchPhonesGET()
+
+function searchPhones() {
+  let searchDropdown = document.getElementById("searchDropdown");
+  searchDropdown.innerHTML = "";
+
+  for (let i = 0; i < allPhoneName.length; i++) {
+    searchDropdown.innerHTML += `
+      <div class="dropdown-item" onclick="openPhonePage('${allPhoneName[i].phoneID}')">
+        ${allPhoneName[i].phoneName}
+      </div>
+    `;
+  }
+}
+
+function openPhonePage(phoneID) {
+  console.log("Clicked phone ID:", phoneID);
+  localStorage.setItem("selectedPhone", phoneID);
+  window.open('../telefonoldala/telefonoldal.html');
+}
+
+function searchBarActive() {
+  console.log("alma");
+  document.getElementById("searchDropdown").style.pointerEvents = "auto"
+}

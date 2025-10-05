@@ -1,3 +1,8 @@
+const allPhoneNameURL = "http://localhost:5165/api/GETphoneNames"; //ÚJ BACKEND
+console.log("KOSÁR", JSON.parse(localStorage.getItem("cart")) || {});
+
+
+
 // Initialize history: load from storage, or start with Főoldal
 let previousPages = JSON.parse(localStorage.getItem("pagesHistory")) || [
     { pageName: "Főoldal", pageURL: "../fooldal/index.html" }
@@ -47,8 +52,46 @@ function checkPagesHistory(name, url) {
 // Render on load
 window.onload = function () {
     showPagesHistory();
+    searchPhonesGET()
 };
 
+function searchPhonesGET() {
+    return fetch(allPhoneNameURL)
+        .then((response) => response.json())
+        .then((data) => {
+            allPhoneName = data;
+            console.log(allPhoneName);
+
+            searchPhones()
+        })
+        .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
+
+
+}
+
+function searchPhones() {
+    let searchDropdown = document.getElementById("searchDropdown");
+    searchDropdown.innerHTML = "";
+
+    for (let i = 0; i < allPhoneName.length; i++) {
+        searchDropdown.innerHTML += `
+      <div class="dropdown-item" onclick="openPhonePage('${allPhoneName[i].phoneID}')">
+        ${allPhoneName[i].phoneName}
+      </div>
+    `;
+    }
+}
+
+function openPhonePage(phoneID) {
+    console.log("Clicked phone ID:", phoneID);
+    localStorage.setItem("selectedPhone", phoneID);
+    window.open('../telefonoldala/telefonoldal.html');
+}
+
+function searchBarActive() {
+    console.log("alma");
+    document.getElementById("searchDropdown").style.pointerEvents = "auto"
+}
 
 
 document.addEventListener("DOMContentLoaded", function () {
@@ -56,6 +99,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Retrieve the cart from localStorage
     let cart = JSON.parse(localStorage.getItem("cart")) || {};
+    console.log(cart);
+
 
     // Function to check if the cart is empty and update the UI
     function checkEmptyCart() {
@@ -144,7 +189,7 @@ document.addEventListener("DOMContentLoaded", function () {
                             <div class="invalid-feedback"></div>
                         </form>
                     </div>
-                    <button id="submitPayment" class="submitPaymentBtn paymentButton">Fizetés leadása</button>
+                    <button id="submitPayment" onclick='sendOrder()' class="submitPaymentBtn paymentButton">Fizetés leadása</button>
                 </div>
             `;
             document.body.appendChild(modal);
@@ -324,6 +369,44 @@ document.addEventListener("DOMContentLoaded", function () {
         });
 });
 
+function sendOrder() {
+    fetch("http://localhost:5165/api/GETmainPage")
+        .then(response => response.json())
+        .then(phone => {
+            let cart = JSON.parse(localStorage.getItem("cart")) || {};
+            const cartPhones = phone.filter(phone => cart[phone.phoneID] > 0);
+            const userID = localStorage.getItem("userID")
+            console.log(cartPhones);
+            let quantities = []
+            cartPhones.forEach(phone => {
+                const quantity = cart[phone.phoneID] || 0;
+                quantities.push(quantity)
+                POSTorder(userID,phone.phoneID,quantity,(parseInt(phone.phonePrice)*parseInt(quantity)),0)
+            });
+        })
+}
+function POSTorder(userID, phoneID, amount, price) {
+    const orderPOST = {
+        userID : userID,
+        phoneID : phoneID,
+        amount : amount,
+        price : price
+    }
+    // Log the data and send the request
+    console.log("Sending:", orderPOST);
+    fetch('http://localhost:5165/api/POSTorder/orderPost', {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(orderPOST)
+    })
+        .then(response => response.text())
+        .then(data => {
+            alert(data);
+        })
+        .catch(error => console.error("Error:", error));
+}
 document.addEventListener("input", function (e) {
     // Kártyaszám formázás és validálás
     if (e.target.id === "cardNumber") {
@@ -424,39 +507,3 @@ function updateCartCount() {
 
 updateCartCount()
 
-function searchPhonesGET() {
-    return fetch(allPhonesURL)
-      .then((response) => response.json())
-      .then((data) => {
-        allPhonesData = data;
-        searchPhones()
-      })
-      .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
-  
-  
-  }
-  searchPhonesGET()
-  
-  function searchPhones() {
-    let searchDropdown = document.getElementById("searchDropdown");
-    searchDropdown.innerHTML = "";
-  
-    for (let i = 0; i < allPhonesData.length; i++) {
-      searchDropdown.innerHTML += `
-        <div class="dropdown-item" onclick="openPhonePage('${allPhonesData[i].phoneID}')">
-          ${allPhonesData[i].phoneName}
-        </div>
-      `;
-    }
-  }
-  
-  function openPhonePage(phoneID) {
-    console.log("Clicked phone ID:", phoneID);
-    localStorage.setItem("selectedPhone", phoneID);
-    window.open('../telefonoldala/telefonoldal.html');
-  }
-  
-  function searchBarActive(){
-    console.log("alma");
-    document.getElementById("searchDropdown").style.pointerEvents = "auto"
-  }

@@ -80,9 +80,11 @@ async function login() {
             const decoded = parseJwt(data.token);
             console.log("Decoded JWT:", decoded);
 
+            const userID = decoded["ID"];
             const firstName = decoded["unique_name"] || "Felhasználó";
             const jogosultsag = decoded["Jogosultsag"];
 
+            localStorage.setItem("userID", userID);
             localStorage.setItem("jwtToken", data.token);
             localStorage.setItem("firstname", firstName);
             localStorage.setItem("jogosultsag", jogosultsag);

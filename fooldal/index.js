@@ -1,5 +1,6 @@
 const apiUrl = "http://localhost:5287/api/auth";
 const allPhonesURL = "http://localhost:5165/api/GETmainPage"; //ÚJ BACKEND
+const allPhoneNameURL = "http://localhost:5165/api/GETphoneNames"; //ÚJ BACKEND
 //const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
 
 let currentPage = 0;
@@ -153,7 +154,7 @@ function displayPhoneCards() {
       let cart = JSON.parse(localStorage.getItem("cart")) || {};
       cart[phone.phoneID] = (cart[phone.phoneID] || 0) + 1;
       localStorage.setItem("cart", JSON.stringify(cart));
-      updateCartCount();
+      updateCartCount();  
 
       const cartIcon = document.getElementById("cart");
       const buttonRect = cartButton.getBoundingClientRect();
@@ -283,10 +284,10 @@ getPhoneDatas();
 
 
 function searchPhonesGET() {
-  return fetch(allPhonesURL)
+  return fetch(allPhoneNameURL)
     .then((response) => response.json())
     .then((data) => {
-      allPhonesData = data;
+      allPhoneName = data;
       searchPhones()
     })
     .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
@@ -299,10 +300,10 @@ function searchPhones() {
   let searchDropdown = document.getElementById("searchDropdown");
   searchDropdown.innerHTML = "";
 
-  for (let i = 0; i < allPhonesData.length; i++) {
+  for (let i = 0; i < allPhoneName.length; i++) {
     searchDropdown.innerHTML += `
-      <div class="dropdown-item" onclick="openPhonePage('${allPhonesData[i].phoneID}')">
-        ${allPhonesData[i].phoneName}
+      <div class="dropdown-item" onclick="openPhonePage('${allPhoneName[i].phoneID}')">
+        ${allPhoneName[i].phoneName}
       </div>
     `;
   }

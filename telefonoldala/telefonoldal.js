@@ -1,5 +1,7 @@
 const apiUrl = "http://localhost:5287/api/auth";
 const allPhonesURL = "http://localhost:5165/api/GETphonePage"; //ÚJ BACKEND
+const allPhoneNameURL = "http://localhost:5165/api/GETphoneNames"; //ÚJ BACKEND
+
 //const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
 
 console.log("telefonoldala")
@@ -600,4 +602,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
 function formatPrice(price) {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+}
+
+function searchPhonesGET() {
+  return fetch(allPhoneNameURL)
+    .then((response) => response.json())
+    .then((data) => {
+      allPhoneName = data;
+      searchPhones()
+    })
+    .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
+
+
+}
+searchPhonesGET()
+
+function searchPhones() {
+  let searchDropdown = document.getElementById("searchDropdown");
+  searchDropdown.innerHTML = "";
+
+  for (let i = 0; i < allPhoneName.length; i++) {
+    searchDropdown.innerHTML += `
+      <div class="dropdown-item" onclick="openPhonePage('${allPhoneName[i].phoneID}')">
+        ${allPhoneName[i].phoneName}
+      </div>
+    `;
+  }
+}
+
+function openPhonePage(phoneID) {
+  console.log("Clicked phone ID:", phoneID);
+  localStorage.setItem("selectedPhone", phoneID);
+  window.open('../telefonoldala/telefonoldal.html');
+}
+
+function searchBarActive() {
+  console.log("alma");
+  document.getElementById("searchDropdown").style.pointerEvents = "auto"
 }
