@@ -285,23 +285,22 @@ getPhoneDatas();
 
 function searchPhonesGET() {
   return fetch(allPhoneNameURL)
-    .then((response) => response.json())
-    .then((data) => {
-      allPhoneName = data;
-      searchPhones()
-    })
-    .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
+      .then((response) => response.json())
+      .then((data) => {
+          allPhoneName = data;
+          searchPhones()
 
-
+      })
+      .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
 }
-searchPhonesGET()
 
 function searchPhones() {
+  searchBarActive()
   let searchDropdown = document.getElementById("searchDropdown");
   searchDropdown.innerHTML = "";
 
   for (let i = 0; i < allPhoneName.length; i++) {
-    searchDropdown.innerHTML += `
+      searchDropdown.innerHTML += `
       <div class="dropdown-item" onclick="openPhonePage('${allPhoneName[i].phoneID}')">
         ${allPhoneName[i].phoneName}
       </div>
