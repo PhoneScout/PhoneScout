@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PhoneScout</title>
-    <link rel="stylesheet" href="./index.css">
+    <link rel="stylesheet" href="./szuro.css">
     <script src="https://kit.fontawesome.com/40786368ae.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
@@ -27,7 +27,7 @@
         </div>
 
         <div class="col-4 nav-links">
-            <a class="menuPoints" href="../szurosoldal/szuro.html">Mind</a>
+            <div class="menuPoints">Mind</div>
             <a class="menuPoints" href="../szerviz/szerviz.html"
                 onclick="checkPagesHistory('Szerviz','../szerviz/szerviz.html')">Szerviz</a>
             <a href="../osszehasonlitas/osszehasonlitas.html" class="menuPoints" id="osszehasonlitas"
@@ -95,17 +95,14 @@
 
     <div class="container">
         <div class="row">
-            <div class="col-1" id="leftButtonContainer">
+            <div class="col-3" id="filterPanel">
 
             </div>
-            <div class="col-10">
+            
+            <div class="col-9">
                 <div id="contentRow" class="contentRow"></div>
             </div>
-            <div class="col-1">
-                <button onclick="changeCarousel(1)" id="carouselButtonRight" class="carouselButton">
-                    <i class="fa-solid fa-arrow-right"></i>
-                </button>
-            </div>
+            
         </div>
 
 
@@ -164,7 +161,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
-    <script src="./index.js"></script>
+    <script src="./szuro.js"></script>
 </body>
 
 </html>
