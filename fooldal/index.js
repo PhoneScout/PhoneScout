@@ -63,13 +63,21 @@ window.onload = function () {
 
 
 
-let kosar = [];
+
+function updateCartCount() {
+  const cart = JSON.parse(localStorage.getItem("cart")) || {};
+  const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
+  const cartElement = document.getElementById("cart");
+  cartElement.textContent = `${itemCount}`;
+}
 
 function updateCompareCount() {
   const comparePhones = JSON.parse(localStorage.getItem("comparePhones")) || [];
   const compareElement = document.getElementById("compareCount");
   compareElement.textContent = `(${comparePhones.length})`;
 }
+
+let kosar = [];
 
 function displayPhoneCards() {
   const contentRow = document.getElementById("contentRow");
@@ -261,12 +269,7 @@ function displayPhoneCards() {
   });
 }
 
-function updateCartCount() {
-  const cart = JSON.parse(localStorage.getItem("cart")) || {};
-  const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
-  const cartElement = document.getElementById("cart");
-  cartElement.textContent = `${itemCount}`;
-}
+
 
 function getPhoneDatas() {
   return fetch(allPhonesURL)
