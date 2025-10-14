@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                         return `${w} x ${h}`;
                     }
                 },
-                { label: "Kijelző méret", key: "screenSize", format: v => v?v.toFixed(2):"-" },
+                { label: "Kijelző méret", key: "screenSize", format: v => v ? v.toFixed(2) : "-" },
                 { label: "Kijelző max fényerő", key: "screenMaxBrightness" },
                 { label: "Kijelző élesség", key: "screenSharpness" },
                 { label: "Kijelző típusa", key: "screenType" }
@@ -272,7 +272,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         // ha kell még, ide írj property-t
     };
 
-    
+
     function renderCards() {
         let rowClass = "compare-cards-row";
         if (phones.length > 2) rowClass += " scrollable-row";
@@ -318,7 +318,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         let html = `<div class="compare-cards-wrapper"><div class="${rowClass}">`;
         html += `<div class="empty-col"></div>`;
         phones.forEach(phone => {
-            
+
             html += `<div onclick="getId('${phone.phoneID}', '${phone.phoneName}')" class="compare-card">`;
             html += `<div class="compare-card-title">${phone.phoneName || "-"}</div>`;
             html += `<div class="compare-card-parts">`;
@@ -629,7 +629,7 @@ function updateCartCount() {
 updateCartCount()
 
 
-let telefonId=document.getElementsByClassName("compare-card");
+let telefonId = document.getElementsByClassName("compare-card");
 
 
 
@@ -641,38 +641,38 @@ function getId(id, name) {
 };
 
 function searchPhonesGET() {
-  return fetch(allPhoneNameURL)
-    .then((response) => response.json())
-    .then((data) => {
-      allPhoneName = data;
-      searchPhones()
-    })
-    .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
+    return fetch(allPhoneNameURL)
+        .then((response) => response.json())
+        .then((data) => {
+            allPhoneName = data;
+            searchPhones()
+        })
+        .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
 
 
 }
 searchPhonesGET()
 
 function searchPhones() {
-  let searchDropdown = document.getElementById("searchDropdown");
-  searchDropdown.innerHTML = "";
+    let searchDropdown = document.getElementById("searchDropdown");
+    searchDropdown.innerHTML = "";
 
-  for (let i = 0; i < allPhoneName.length; i++) {
-    searchDropdown.innerHTML += `
+    for (let i = 0; i < allPhoneName.length; i++) {
+        searchDropdown.innerHTML += `
       <div class="dropdown-item" onclick="openPhonePage('${allPhoneName[i].phoneID}')">
         ${allPhoneName[i].phoneName}
       </div>
     `;
-  }
+    }
 }
 
 function openPhonePage(phoneID) {
-  console.log("Clicked phone ID:", phoneID);
-  localStorage.setItem("selectedPhone", phoneID);
-  window.open('../telefonoldala/telefonoldal.html');
+    console.log("Clicked phone ID:", phoneID);
+    localStorage.setItem("selectedPhone", phoneID);
+    window.open('../telefonoldala/telefonoldal.html');
 }
 
 function searchBarActive() {
-  console.log("alma");
-  document.getElementById("searchDropdown").style.pointerEvents = "auto"
+    console.log("alma");
+    document.getElementById("searchDropdown").style.pointerEvents = "auto"
 }
