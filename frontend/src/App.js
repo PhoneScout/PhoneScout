@@ -1,13 +1,13 @@
 import logo from './logo.svg';
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css';
-import Navbar from '../src/components/Navbar'
+import Home from './pages/Home';
 
 function App() {
   return (
     <div className="App">
       <h1>Halo</h1>
-      <Navbar/>
+      <Home/>
     </div>
   );
 }
