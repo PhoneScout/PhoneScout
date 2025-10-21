@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import Navbar from '../components/Navbar';
 import PhoneCard from '../components/PhoneCard';
 
