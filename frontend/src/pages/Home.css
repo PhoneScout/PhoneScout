@@ -1,0 +1,59 @@
+.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+.hr {
+    width: 85%;
+    margin: 0 auto;
+}
+
+hr {
+    margin: 20px auto;
+    /* Középre helyezzük */
+    border: 0;
+    /* A szélét eltávolítjuk */
+    border-top: 2px solid black;
+    /* Csak a felső határt adunk hozzá */
+    border-radius: 10px;
+}
+
+.dots {
+    display: flex;
+    justify-content: center;
+    /* centers horizontally */
+    align-items: center;
+    /* centers vertically if needed */
+    gap: 10px;
+    /* optional space between dots */
+    margin-top: 10px;
+    /* optional spacing above */
+}
+
+
+.dot {
+    background-color: white;
+    width: 20px;
+    height: 20px;
+    border: solid 1px black;
+    border-radius: 50%;
+}
+
+.dotActive {
+    background-color: black;
+    width: 20px;
+    height: 20px;
+    border: solid 1px black;
+    border-radius: 50%;
+}
+
+#contentRow {
+    display: flex;
+    justify-content: center;
+    /* centers cards horizontally */
+    flex-wrap: wrap;
+    /* allows cards to go to new line if needed */
+    gap: 20px;
+    /* adds space between cards */
+
+}

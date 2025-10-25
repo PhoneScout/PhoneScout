@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.css';
+import './Home.css';
 import Navbar from '../components/Navbar';
 import PhoneCard from '../components/PhoneCard';
 
 export default function Home() {
   const allPhonesURL = "http://localhost:5165/api/GETmainPage";
 
-  let currentPage = 0;
-  let activeChangeButton = "right"
-  let phonesPerPage = 4;
+  const [currentPage, setCurrentPage] = useState(0);
+  const [activeChangeButton, setActiveChangeButton] = useState("right");
+
 
 
   const [allPhonesData, setAllPhonesData] = useState([]);
@@ -23,20 +24,22 @@ export default function Home() {
   }, []);
 
 
-  function alma(direction) {
-    console.log(currentPage);
-    console.log(activeChangeButton);
-    currentPage += direction;
-    if (currentPage === 1) {
-      activeChangeButton = "left"
-    }
-    else if (currentPage === 0) {
-      activeChangeButton = "right"
+  function changePage(direction) {
+    const newPage = currentPage + direction;
+    setCurrentPage(newPage);
+
+    if (newPage === 1) {
+      setActiveChangeButton("left");
+    } else if (newPage === 0) {
+      setActiveChangeButton("right");
     }
   }
 
-  function displayPhoneCards(start) {
-    allPhonesData.slice(start, 4).map((phone) => (
+
+  function displayPhoneCards() {
+    let start = 0;
+    activeChangeButton === "right" ? start = 0 : start = 4;
+    return allPhonesData.slice(start, start + 4).map((phone) => (
       <PhoneCard phoneName={phone.phoneName} phoneInStore={(phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron")} phonePrice={phone.phonePrice} />
     ))
   }
@@ -49,40 +52,37 @@ export default function Home() {
       <div className="row">
         <div className="col-1">
           {
-            activeChangeButton === "left" ? <button onClick={() => alma(-1)} id="carouselButtonLeft" className="carouselButton">
+            activeChangeButton === "left" ? <button onClick={() => changePage(-1)} id="carouselButtonLeft" className="carouselButton">
               <i className="fa-solid fa-arrow-left"></i>
-            </button> : <button onClick={() => alma(1)} id="carouselButtonRight" className="carouselButton">
-              <i className="fa-solid fa-arrow-right"></i>
-            </button>
+            </button> : ""
           }
 
         </div>
         <div className='col-10'>
-          <div id='contentRow' className='contentRow'>
+          <div id='contentRow'>
             {allPhonesData.length === 0 ? (
               <p>Telefonok betöltése...</p>
             ) : (
-              allPhonesData.slice(0, 4).map((phone) => (
-                <PhoneCard phoneName={phone.phoneName} phoneInStore={(phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron")} phonePrice={phone.phonePrice} />
-              ))
+              displayPhoneCards()
             )}
           </div>
         </div>
         <div className="col-1">
           {
-            activeChangeButton === "right" ? <button onClick={() => alma(1)} id="carouselButtonRight" className="carouselButton">
+            activeChangeButton === "right" ? <button onClick={() => changePage(1)} id="carouselButtonRight" className="carouselButton">
               <i className="fa-solid fa-arrow-right"></i>
-            </button> : <button onClick={() => alma(-1)} id="carouselButtonLeft" className="carouselButton">
-              <i className="fa-solid fa-arrow-left"></i>
-            </button>
+            </button> : ""
           }
         </div>
+        <div className="dots">
+          <div className={`dot ${currentPage === 0 ? "dotActive" : ""}`} id="leftDot"></div>
+          <div className={`dot ${currentPage === 1 ? "dotActive" : ""}`} id="rightDot"></div>
+        </div>
+        <div className="hr">
+          <hr size="5" />
+        </div>
       </div>
-
-      <div className="hr">
-        <hr size="5" />
-      </div>
-
     </div>
+
   );
 }

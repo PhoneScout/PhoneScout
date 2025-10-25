@@ -6,7 +6,7 @@ export default function PhoneCard({ phoneName, phoneInStore, phonePrice, phoneIm
 
     <div className='phoneRow'>
       <div className='phoneImage'>
-        <img src="./images/14t.png" alt="Telefon képe" />
+        <img src="/images/14t.png" alt="Telefon képe" />
         <div className='price-bubble'>{phonePrice} Ft</div>
         <div className='stock-bubble phonestockFalse'>{phoneInStore}</div>
       </div>
@@ -15,11 +15,10 @@ export default function PhoneCard({ phoneName, phoneInStore, phonePrice, phoneIm
       </div>
       <div className='cardButtons'>
         <div className='button'>
-          <img src="..\images\cart-removebg-preview 1.png" alt="Összehasonlítás" />
+          <img src="/images/compare-removebg-preview 1.png" alt="Összehasonlítás" />
         </div>
         <div className='button'>
-          <img src="" alt="" />
-          <img src=".\images\cart-removebg-preview 1.png" alt="Kosár" />
+          <img src="/images/cart-removebg-preview 1.png" alt="Kosár" />
         </div>
       </div>
     </div>

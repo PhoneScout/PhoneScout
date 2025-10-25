@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import logo from '../images/ImagePhoneScoutLogo.png';
 import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Navbar.css';
 
@@ -89,7 +88,7 @@ export default function Navbar() {
            <div class="row custom-header">
         <div class="col-3 logo-container">
             <a href="../fooldal/index.html" class="logo-link">
-                <img src={logo} alt="PhoneScout Logo" class="logo-img"/>
+                <img src="/images/ImagePhoneScoutLogo.png" alt="PhoneScout Logo" class="logo-img"/>
                 <div class="logo-text blue">Phone</div>
                 <div class="logo-text green">Scout</div>
             </a>
