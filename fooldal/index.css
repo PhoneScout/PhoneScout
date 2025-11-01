@@ -1,5 +1,5 @@
 /* === General Header Container === */
-/*
+
 .custom-header {
     display: flex;
     align-items: center;
@@ -13,7 +13,6 @@
     margin: 0 auto;
 }
 
- === Logo Area === 
 .logo-container {
     display: flex;
     align-items: center;
@@ -50,7 +49,6 @@
     color: #2300B3;
 }
 
- === Navigation Menu === 
 .nav-links {
     display: flex;
     gap: 30px;
@@ -63,13 +61,11 @@
     color: inherit;
 }
 
-=== Hover Effects === 
 .menuPoints:hover {
     color: #2300B3;
     scale: 1.02;
 }
 
-=== Search Input === 
 .search-container {
     display: flex;
     align-items: center;
@@ -106,7 +102,6 @@
     border-color: #68F145;
 }
 
- === User & Cart Section === 
 .user-cart-container {
     display: flex;
     justify-content: flex-end;
@@ -144,7 +139,6 @@
     color: black;
 }
 
-=== Dropdown Menu === 
 .dropdown-menu {
     min-width: 160px;
     display: flex;

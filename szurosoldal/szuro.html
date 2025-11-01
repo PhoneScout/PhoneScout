@@ -4,19 +4,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhoneScout</title>
-    <link rel="stylesheet" href="./szuro.css">
+    <title>PhoneScout - Szűrés</title>
     <script src="https://kit.fontawesome.com/40786368ae.js" crossorigin="anonymous"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <link rel="stylesheet" href="./szuro.css">
     <link rel="icon" type="image/x-icon" href="../Images/PhoneScoutLogo.png">
-
 </head>
 
 <body>
-
-
     <div class="row custom-header">
         <div class="col-3 logo-container">
             <a href="../fooldal/index.html" class="logo-link">
@@ -41,11 +37,11 @@
                 <i class="fa-solid fa-magnifying-glass"></i>
             </div>
             <div class="search-input">
-                <input onclick="searchBarActive()" placeholder="Keresés..." type="text" id="searchBox" autocomplete="off">
+                <input onclick="searchBarActive()" placeholder="Keresés..." type="text" id="searchBox"
+                    autocomplete="off">
                 <div class="search-dropdown" id="searchDropdown"></div>
             </div>
         </div>
-
 
         <div class="col-3 user-cart-container">
             <div class="dropdown" id="dropdownMenu">
@@ -86,59 +82,113 @@
     <div class="row">
         <div class="col-1"></div>
         <div class="col-6">
-            <div style="display: flex;" id="previousPagesPlace">
-
-            </div>
+            <div style="display: flex;" id="previousPagesPlace"></div>
         </div>
         <div class="col-5"></div>
     </div>
 
-    <div class="container">
+    <div class="container mt-4">
         <div class="row">
-            <div class="col-3" id="filterPanel">
+            <div class="col-3">
+                <div id="filterPanel">
+                    <h3 class="mb-3">Szűrők</h3>
 
+                    <div class="filter-section">
+                        <h4>Gyártó</h4>
+                        <input type="text" id="manufacturerName" class="filter-input" placeholder="Gyártó neve">
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Processzor</h4>
+                        <input type="text" id="cpuName" class="filter-input" placeholder="Processzor neve">
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Antutu pontszám</h4>
+                        <input type="number" id="phoneAntutu" class="filter-input" placeholder="Minimum pontszám">
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Processzor órajel (GHz)</h4>
+                        <input type="number" step="0.1" id="cpuMaxClockSpeed" class="filter-input"
+                            placeholder="Minimum órajel">
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Processzor magok száma</h4>
+                        <input type="number" id="cpuCoreNumber" class="filter-input" placeholder="Minimum magok száma">
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Képernyő méret (hüvelyk)</h4>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="number" step="0.1" id="screenSizeMin" class="filter-input"
+                                    placeholder="Min">
+                            </div>
+                            <div class="col-6">
+                                <input type="number" step="0.1" id="screenSizeMax" class="filter-input"
+                                    placeholder="Max">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Képernyő frissítési gyakoriság (Hz)</h4>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="number" id="screenRefreshRateMin" class="filter-input" placeholder="Min">
+                            </div>
+                            <div class="col-6">
+                                <input type="number" id="screenRefreshRateMax" class="filter-input" placeholder="Max">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Képernyő fényerő (nits)</h4>
+                        <input type="number" id="screenMaxBrightness" class="filter-input"
+                            placeholder="Minimum fényerő">
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>RAM (GB)</h4>
+                        <input type="number" id="ramAmount" class="filter-input" placeholder="Minimum RAM">
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Tárhely (GB)</h4>
+                        <input type="number" id="storageAmount" class="filter-input" placeholder="Minimum tárhely">
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Akkumulátor kapacitás (mAh)</h4>
+                        <input type="number" id="batteryCapacity" class="filter-input" placeholder="Minimum kapacitás">
+                    </div>
+
+                    <div class="filter-section">
+                        <h4>Súly (g)</h4>
+                        <div class="row">
+                            <div class="col-6">
+                                <input type="number" id="phoneWeightMin" class="filter-input" placeholder="Min">
+                            </div>
+                            <div class="col-6">
+                                <input type="number" id="phoneWeightMax" class="filter-input" placeholder="Max">
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="filter-button" onclick="applyFilters()">Szűrés alkalmazása</button>
+                    <button class="filter-button filter-reset" onclick="resetFilters()">Szűrők törlése</button>
+                </div>
             </div>
-            
+
             <div class="col-9">
-                <div id="contentRow" class="contentRow"></div>
-            </div>
-            
-        </div>
-
-
-
-        <div class="hr">
-            <hr size="5">
-        </div>
-
-        <div class="container service-section">
-            <div class="row align-items-center">
-                <div class="col-lg-6 service-text">
-                    <h2>Gyors és Megbízható Szerviz</h2>
-                    <p>
-                        Meghibásodott a telefonod? Ne aggódj! Nálunk gyors és szakszerű javítást kapsz,
-                        hogy minél hamarabb újra használhasd a készüléked. Tapasztalt szakembereink és
-                        prémium minőségű alkatrészeink garantálják a hosszú távú megbízhatóságot.
-                    </p>
-                    <p>
-                        Miért válassz minket?
-                    <ul>
-                        <li>Gyors javítás, akár néhány órán belül</li>
-                        <li>Kedvező árak és átlátható költségek</li>
-                        <li>Eredeti vagy prémium minőségű alkatrészek</li>
-                        <li>Garancia minden javításra</li>
-                    </ul>
-                    </p>
-                    <button class="btn btn-primary service-btn"
-                        onclick="window.location.href='./szerviz/szerviz.html'">Irány a <strong>szervíz</strong>
-                        oldal</button>
-                </div>
-                <div class="col-lg-6 service-image">
-                    <img loading="lazy" src="../Images/telefonservice.png" alt="Telefon Szervíz" class="rounded-image">
-                </div>
+                <div id="contentRow"></div>
             </div>
         </div>
     </div>
+
     <footer>
         <h3>Partnereink</h3>
         <div class="partner-logos">
@@ -162,6 +212,7 @@
         integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
         crossorigin="anonymous"></script>
     <script src="./szuro.js"></script>
+
 </body>
 
 </html>
