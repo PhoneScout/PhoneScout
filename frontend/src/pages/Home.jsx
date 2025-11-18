@@ -4,6 +4,7 @@ import './Home.css';
 import Navbar from '../components/Navbar';
 import PhoneCard from '../components/PhoneCard';
 import Footer from '../components/Footer';
+import InputText from '../components/InputText';
 
 export default function Home() {
   const allPhonesURL = "http://localhost:5165/api/GETmainPage";
@@ -49,6 +50,9 @@ export default function Home() {
     <div>
       <Navbar />
       <br />
+
+      <InputText label="Telefon neve" id="phoneName" type="number"/>
+
       <br />
       <div className="row">
         <div className="col-1">
