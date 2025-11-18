@@ -3,6 +3,7 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Home.css';
 import Navbar from '../components/Navbar';
 import PhoneCard from '../components/PhoneCard';
+import Footer from '../components/Footer';
 
 export default function Home() {
   const allPhonesURL = "http://localhost:5165/api/GETmainPage";
@@ -81,7 +82,38 @@ export default function Home() {
         <div className="hr">
           <hr size="5" />
         </div>
+
+        <div class="container service-section">
+          <div class="row align-items-center">
+            <div class="col-lg-6 service-text">
+              <h2>Gyors és Megbízható Szerviz</h2>
+              <p>
+                Meghibásodott a telefonod? Ne aggódj! Nálunk gyors és szakszerű javítást kapsz,
+                hogy minél hamarabb újra használhasd a készüléked. Tapasztalt szakembereink és
+                prémium minőségű alkatrészeink garantálják a hosszú távú megbízhatóságot.
+              </p>
+              <p>
+                Miért válassz minket?
+                <ul>
+                  <li>Gyors javítás, akár néhány órán belül</li>
+                  <li>Kedvező árak és átlátható költségek</li>
+                  <li>Eredeti vagy prémium minőségű alkatrészek</li>
+                  <li>Garancia minden javításra</li>
+                </ul>
+              </p>
+              <button class="btn btn-primary service-btn"
+                onclick="window.location.href='./szerviz/szerviz.html'">Irány a <strong>szervíz</strong>
+                oldal</button>
+            </div>
+            <div class="col-lg-6 service-image">
+              <img loading="lazy" src="../Images/telefonservice.png" alt="Telefon Szervíz" class="rounded-image" />
+            </div>
+          </div>
+        </div>
+
+
       </div>
+      <Footer />
     </div>
 
   );

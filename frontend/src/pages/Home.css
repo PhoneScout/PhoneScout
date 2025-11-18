@@ -57,3 +57,65 @@ hr {
     /* adds space between cards */
 
 }
+
+.service-section {
+    margin-top: 50px;
+    padding: 40px 0;
+    text-align: justify;
+    width: 85%;
+}
+
+.service-text {
+    display: flex;
+    flex-direction: column;
+    text-align: justify;
+}
+
+.service-text h2 {
+    color: #2300B3;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.service-text p {
+    font-size: 1.1em;
+    color: #333;
+    line-height: 1.6;
+    text-align: justify;
+}
+
+.service-text ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    text-align: justify;
+}
+
+.service-btn {
+    margin-top: 20px;
+    background-color: #2300B3;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+}
+
+.service-btn .btn-link {
+    text-decoration: none;
+    color: white;
+}
+
+.service-image {
+    position: relative;
+    overflow: hidden;
+}
+
+.service-image img {
+    width: 90%;
+    max-width: none;
+    border-radius: 15px;
+    position: relative;
+    right: -10%;
+}

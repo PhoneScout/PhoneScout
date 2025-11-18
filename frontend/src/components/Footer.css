@@ -1,0 +1,48 @@
+footer {
+    background-color: #ddd;
+    padding: 20px 0;
+    text-align: center;
+    margin-top: 50px;
+
+}
+
+footer h3 {
+    margin-bottom: 15px;
+    font-weight: bold;
+}
+
+.partner-logos {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.partner-logos img {
+    width: 60px;
+    height: 60px;
+    border-radius: 15px;
+}
+
+footer .footer-nav {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+}
+
+footer .footer-nav a {
+    text-decoration: none;
+    color: black;
+    font-weight: bold;
+}
+
+footer .address {
+    margin-top: 15px;
+    font-size: 0.9em;
+    color: #333;
+}
+
+img {
+    user-select: none;
+}
