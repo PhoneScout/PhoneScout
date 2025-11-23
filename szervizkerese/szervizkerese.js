@@ -163,4 +163,31 @@ function updateCartCount() {
   }
   
 
+document.addEventListener('DOMContentLoaded', function() {
+    const dropdown = document.getElementById('problemDropdown');
+    const checkboxes = document.querySelectorAll('.dropdown-menu .form-check-input');
+    
+    checkboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const selectedLabels = Array.from(checkboxes)
+                .filter(cb => cb.checked)
+                .map(cb => cb.nextElementSibling.textContent);
+            
+            if (selectedLabels.length > 0) {
+                dropdown.textContent = selectedLabels.join(', ');
+            } else {
+                dropdown.textContent = 'Válassz problémákat...';
+            }
+        });
+    });
+    
+    // Bezárás a dropdownon kívüli kattintásra
+    document.addEventListener('click', function(e) {
+        if (!dropdown.parentElement.contains(e.target)) {
+            const dropdownMenu = document.querySelector('.dropdown-menu');
+            dropdownMenu.classList.remove('show');
+        }
+    });
+});
+
   updateCartCount();
