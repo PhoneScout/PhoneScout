@@ -51,7 +51,7 @@ export default function Home() {
       <Navbar />
       <br />
 
-      <InputText label="Telefon neve" id="phoneName" type="number"/>
+      <InputText label="Telefon neve" id="phoneName" type="checkbox"/>
 
       <br />
       <div className="row">
