@@ -1,31 +1,35 @@
-import React from "react";
 import "./InputText.css";
 
-export default function InputText({ type, id, label }) {
-  const normalTypes = ["text", "number", "password"];
-  function getInputType() {
-    if (normalTypes.includes(type)) {
-      return "normal";
-    }
+export default function InputText({ type = "text", id, label }) {
+  const isCheckbox = type === "checkbox";
+
+  if (isCheckbox) {
+    return (
+      <div className="checkboxBox">
+        <input
+          type="checkbox"
+          id={id}
+          className="checkboxInput"
+        />
+        <label htmlFor={id} className="checkboxLabel">
+          {label}
+        </label>
+      </div>
+    );
   }
 
+  // Everything else (text, number, email, password, date, color, range, etc.)
   return (
-    <div>
-      {getInputType() == "normal" ? (
-        <div class="textBox">
-          <input type={type} id={id} class="textBoxInput" placeholder=" " />
-          <label for={id} class="textBoxLabel">
-            {label}
-          </label>
-        </div>
-      ) : (
-        <div class="textBox">
-          <input type={type} id={id} class="textBoxInput" placeholder=" " />
-          <label for={id} class="textBoxLabel">
-            {label}
-          </label>
-        </div>
-      )}
+    <div className="textBox">
+      <input
+        type={type}
+        id={id}
+        className="textBoxInput"
+        placeholder=" "
+      />
+      <label htmlFor={id} className="textBoxLabel">
+        {label}
+      </label>
     </div>
   );
 }

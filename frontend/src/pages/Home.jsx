@@ -51,7 +51,7 @@ export default function Home() {
       <Navbar />
       <br />
 
-      <InputText label="Telefon neve" id="phoneName" type="checkbox"/>
+      <InputText label="Telefon neve" id="phoneName" type="text" width='60%' />
 
       <br />
       <div className="row">
@@ -97,19 +97,19 @@ export default function Home() {
                 prémium minőségű alkatrészeink garantálják a hosszú távú megbízhatóságot.
               </p>
               <p>
-                Miért válassz minket?
-                <ul>
-                  <li>Gyors javítás, akár néhány órán belül</li>
-                  <li>Kedvező árak és átlátható költségek</li>
-                  <li>Eredeti vagy prémium minőségű alkatrészek</li>
-                  <li>Garancia minden javításra</li>
-                </ul>
-              </p>
-              <button class="btn btn-primary service-btn"
-                onclick="window.location.href='./szerviz/szerviz.html'">Irány a <strong>szervíz</strong>
+                Miért válassz minket?</p>
+              <ul>
+                <li>Gyors javítás, akár néhány órán belül</li>
+                <li>Kedvező árak és átlátható költségek</li>
+                <li>Eredeti vagy prémium minőségű alkatrészek</li>
+                <li>Garancia minden javításra</li>
+              </ul>
+
+              <button className="btn btn-primary service-btn"
+                onClick="window.location.href='./szerviz/szerviz.html'">Irány a <strong>szervíz</strong>
                 oldal</button>
             </div>
-            <div class="col-lg-6 service-image">
+            <div className="col-lg-6 service-image">
               <img loading="lazy" src="../Images/telefonservice.png" alt="Telefon Szervíz" class="rounded-image" />
             </div>
           </div>

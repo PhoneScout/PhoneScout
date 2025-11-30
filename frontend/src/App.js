@@ -6,11 +6,11 @@ import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
 
 function App() {
   return (
-    <BrowserRouter>
+    
       <div className="App">
         <Home />
       </div>
-    </BrowserRouter>
+
   );
 }
 
