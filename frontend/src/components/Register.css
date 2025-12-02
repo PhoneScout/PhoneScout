@@ -1,0 +1,143 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    background-image: url('../../public/images/PhoneScoutLogo.png');
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: contain;
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 40px 5vw;
+    border-radius: 12px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+    width: 80vw;
+    max-width: 500px;
+    height: auto;
+    position: relative;
+    transition: max-width 0.4s ease-in-out;
+}
+
+.form-container.expanded {
+    max-width: 1000px;
+    max-height: 95vh;
+}
+
+.back-link-container {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    font-size: 0.9rem;
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    font-size: 3rem;
+    margin-bottom: 5.5rem;
+}
+
+h3 {
+    color: #333;
+    font-size: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.input-container {
+    position: relative;
+    margin-bottom: 25px;
+    font-size: 1.2rem;
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    padding: 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.4rem;
+    margin-top: 1rem;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+a:link, a:visited {
+    color: green;
+    text-decoration: none;
+}
+
+i {
+    height: 20px;
+    margin-right: 5px;
+}
+
+.fa-solid {
+    font-size: 12px;
+}
+
+.form-layout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+    transition: grid-template-columns 0.4s ease-in-out;
+}
+
+.form-layout.expanded {
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+}
+
+.header-row h2.main-title {
+    margin-bottom: 0;
+}
+
+.form-row .input-container {
+    flex: 1;
+    margin-right: 20px;
+}
+
+.form-row .input-container:last-child {
+    margin-right: 0;
+}
+
+.billing-placeholders label {
+    display: block;
+    color: #999;
+    font-size: 1.1rem;
+    margin-top: 0.8rem;
+}
+
+.billing-placeholders label:first-child {
+    width: 50%;
+}
+
+.checkbox-container {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+}
+
+.checkbox-container input[type="checkbox"] {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}

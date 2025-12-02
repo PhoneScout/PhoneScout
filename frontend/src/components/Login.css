@@ -1,0 +1,74 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0; 
+    background-image: url('../../public/images/PhoneScoutLogo.png');
+    background-repeat: no-repeat;
+    background-position: 50%;
+    background-size: contain; 
+}
+
+.form-container {
+    background-color: #fff;
+    padding: 8vh 5vw; 
+    border-radius: 12px; 
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25); 
+    width: 80vw; 
+    max-width: 600px; 
+    height: auto;
+    position: relative; 
+}
+
+.back-link-container {
+    position: absolute;
+    top: 20px;   
+    left: 20px;  
+    font-size: 0.9rem; 
+}
+
+h2 {
+    text-align: center;
+    color: #333;
+    font-size: 3rem; 
+    margin-bottom: 5.5rem; 
+}
+
+.input-container {
+    position: relative;
+    margin-bottom: 25px; 
+    font-size: 1.2rem;
+}
+
+button {
+    background-color: #28a745;
+    color: white;
+    padding: 18px; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.4rem; 
+    margin-top: 1rem;
+}
+
+button:hover {
+    background-color: #218838;
+}
+
+a:link, a:visited {
+    color: green;
+    text-decoration: none; 
+}
+
+i{
+    height: 20px;
+    margin-right: 5px; 
+}
+
+.fa-solid{
+    font-size: 12px;
+}

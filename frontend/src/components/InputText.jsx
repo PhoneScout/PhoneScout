@@ -1,6 +1,6 @@
 import "./InputText.css";
 
-export default function InputText({ type = "text", id, label }) {
+export default function InputText({ type, id, label }) {
   const isCheckbox = type === "checkbox";
 
   if (isCheckbox) {
