@@ -42,7 +42,7 @@ export default function Home() {
     let start = 0;
     activeChangeButton === "right" ? start = 0 : start = 4;
     return allPhonesData.slice(start, start + 4).map((phone) => (
-      <PhoneCard phoneName={phone.phoneName} phoneInStore={(phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron")} phonePrice={phone.phonePrice} />
+      <PhoneCard phoneId={phone.phoneId} phoneName={phone.phoneName} phoneInStore={(phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron")} phonePrice={phone.phonePrice} />
     ))
   }
 
