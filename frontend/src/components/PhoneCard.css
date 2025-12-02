@@ -7,14 +7,20 @@
     min-width: 220px;
     max-width: 350px;
     box-sizing: border-box;
-    border: 1px solid #ccc;
+    border: 2px solid #ccc;
     border-radius: 12px;
-    background-color: #f9f9f9;
+    background-color: #ffffff;
     padding: 28px 16px 24px 16px;
     margin-bottom: 18px;
     transition: transform 0.3s ease, border-color 0.3s ease;
     position: relative;
     cursor: pointer;
+}
+
+.phoneRow:hover {
+    transform: scale(1.01);                
+    border-color: #457bf1;                 
+    box-shadow: 0 4px 12px rgba(69, 123, 241, 0.5);  
 }
 
 .phonestockFalse {
@@ -55,14 +61,42 @@
     color: #000000;
 }
 
+
+.phone-card-link {
+    text-decoration: none;
+    /* remove underline */
+    color: inherit;
+    /* keep original text color */
+}
+
+.phone-card-link:visited {
+    color: inherit;
+}
+
+.phone-card-link:hover {
+    text-decoration: none;
+    color: inherit;
+}
+
+.phone-card-link:active {
+    text-decoration: none;
+    color: inherit;
+}
+
+.phone-card-link:focus-visible {
+    outline: none;
+    /* removes the default focus ring */
+}
+
+
 .phoneStock {
     font-family: 'Inter', sans-serif;
     font-size: 125%;
     font-weight: 400;
-    margin-top: 10px;      
-    margin-bottom: 18px;   
+    margin-top: 10px;
+    margin-bottom: 18px;
     color: red;
-    text-align: center;    
+    text-align: center;
     width: 100%;
 }
 
@@ -71,7 +105,7 @@
     flex-direction: row;
     justify-content: center;
     gap: 10px;
-    margin-top: auto;  
+    margin-top: auto;
     margin-bottom: 0;
     width: 100%;
 }
@@ -109,7 +143,8 @@
 }
 
 .phoneImage {
-    width: 100%;
+    width: 110%;
+    aspect-ratio: 1 / 1;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -117,16 +152,18 @@
     position: relative;
 }
 
+
 .phoneImage img {
-    width: 200px;
-    height: auto;
+    width: 100%;
+    height: 100%;
     object-fit: contain;
     display: block;
 }
 
+
 .price-bubble {
     position: absolute;
-    top:10px;   
+    top: 10px;
     right: 10px;
     background: #ffffffc0;
     color: #000;
@@ -134,7 +171,7 @@
     padding: 1px 10px;
     border-radius: 20px;
     font-size: 1.1em;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     z-index: 2;
     border: 2px solid #00fe33;
     pointer-events: none;
@@ -150,7 +187,7 @@
     padding: 1px 10px;
     border-radius: 20px;
     font-size: 1.1em;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     z-index: 2;
     border: 2px solid #00fe33;
     pointer-events: none;
