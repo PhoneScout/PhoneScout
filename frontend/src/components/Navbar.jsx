@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Navbar.css';
+import { Link } from 'react-router-dom'
 
 export default function Navbar() {
     // Store pages history in state
@@ -87,21 +88,20 @@ export default function Navbar() {
         <div>
            <div class="row custom-header">
         <div class="col-3 logo-container">
-            <a href="../fooldal/index.html" class="logo-link">
+            <Link to="/" class="logo-link">
                 <img src="/images/ImagePhoneScoutLogo.png" alt="PhoneScout Logo" class="logo-img"/>
                 <div class="logo-text blue">Phone</div>
                 <div class="logo-text green">Scout</div>
-            </a>
+            </Link>
         </div>
 
         <div class="col-4 nav-links">
-            <a class="menuPoints" href="../szurosoldal/szuro.html">Mind</a>
-            <a class="menuPoints" href="../szerviz/szerviz.html"
-                onclick="checkPagesHistory('Szerviz','../szerviz/szerviz.html')">Szerviz</a>
-            <a href="../osszehasonlitas/osszehasonlitas.html" class="menuPoints" id="osszehasonlitas"
+            <Link to="/szures" class="menuPoints">Minden telefon</Link>
+            <Link to="/szerviz" class="menuPoints"  onclick="checkPagesHistory('Szerviz','../szerviz/szerviz.html')">Szerviz</Link>
+            <Link to="/osszehasonlitas" href="../osszehasonlitas/osszehasonlitas.html" class="menuPoints" id="osszehasonlitas"
                 onclick="checkPagesHistory('Összehasonlítás','../osszehasonlitas/osszehasonlitas.html')">
                 Összehasonlítás <span id="compareCount">(0)</span>
-            </a>
+            </Link>
         </div>
 
         <div class="col-2 search-container">
@@ -144,9 +144,9 @@ export default function Navbar() {
             </div>
 
             <div class="cart-icon">
-                <a href="../kosar/kosar.html" target="_blank"
+                <Link to="/kosar"
                     onclick="checkPagesHistory('Kosár','../kosar/kosar.html')"><i id="cart"
-                        class="fa-solid fa-cart-shopping"></i></a>
+                        class="fa-solid fa-cart-shopping"></i></Link>
             </div>
         </div>
     </div>

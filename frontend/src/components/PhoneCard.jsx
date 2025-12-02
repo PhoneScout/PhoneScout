@@ -1,9 +1,10 @@
 import React from 'react'
 import './PhoneCard.css'
+import { Link } from 'react-router'
 
 export default function PhoneCard({ phoneName, phoneInStore, phonePrice, phoneImg }) {
   return (
-
+<Link to={`/phone/${phoneId}`} className="phone-card-link">
     <div className='phoneRow'>
       <div className='phoneImage'>
         <img src="/images/14t.png" alt="Telefon képe" />
@@ -22,6 +23,6 @@ export default function PhoneCard({ phoneName, phoneInStore, phonePrice, phoneIm
         </div>
       </div>
     </div>
-
+</Link>
   )
 }
