@@ -7,7 +7,7 @@ import Footer from '../components/Footer';
 import InputText from '../components/InputText';
 
 export default function Home() {
-  const allPhonesURL = "http://localhost:5165/api/GETmainPage";
+  const allPhonesURL = "http://localhost:5292/mainPage";
 
   const [currentPage, setCurrentPage] = useState(0);
   const [activeChangeButton, setActiveChangeButton] = useState("right");
@@ -42,7 +42,7 @@ export default function Home() {
     let start = 0;
     activeChangeButton === "right" ? start = 0 : start = 4;
     return allPhonesData.slice(start, start + 4).map((phone) => (
-      <PhoneCard phoneId={phone.phoneId} phoneName={phone.phoneName} phoneInStore={(phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron")} phonePrice={phone.phonePrice} />
+      <PhoneCard phoneId={phone.phoneID} phoneName={phone.phoneName} phoneInStore={(phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron")} phonePrice={phone.phonePrice} />
     ))
   }
 
