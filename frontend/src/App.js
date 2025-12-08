@@ -7,6 +7,7 @@ import Service from './pages/Service';
 import Cart from './pages/Cart';
 import Compare from './pages/Compare';
 import PhonePage from './pages/PhonePage';
+import Profile from './pages/Profile';
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
         <Route path='/kosar' element={<Cart />}></Route>
         <Route path='/osszehasonlitas' element={<Compare />}></Route>
         <Route path="/telefon/:phoneId" element={<PhonePage />} />
-
+        <Route path="/profil" element={<Profile />}></Route>
       </Routes>
     </div>
 

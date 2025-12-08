@@ -1,0 +1,475 @@
+
+.profile-header {
+  text-align: center;
+  padding: 3rem 2rem 2rem 2rem;
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.profile-header h1 {
+  color: #2300B3;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+  letter-spacing: 2px;
+  font-style: italic;
+}
+
+.profile-content {
+  display: flex;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  gap: 2rem;
+}
+
+.profile-sidebar {
+  flex: 0 0 250px;
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  height: fit-content;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.profile-sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.profile-sidebar li {
+  margin-bottom: 0.5rem;
+}
+
+.profile-sidebar a {
+  display: block;
+  padding: 0.75rem 1rem;
+  color: #000000;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.profile-sidebar a:hover {
+  color: #2300B3;
+  scale: 1.02;
+  background-color: rgba(35, 0, 179, 0.05);
+}
+
+.profile-sidebar a.active {
+  background-color: #68F145;
+  color: #000000;
+  font-weight: 600;
+  border: 2px solid #000000;
+}
+
+.profile-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.profile-section {
+  background-color: #f9f9f9;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 28px 16px 24px 16px;
+  margin-bottom: 18px;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  position: relative;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #ccc;
+}
+
+.section-header h2 {
+  margin: 0;
+  color: #2300B3;
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+}
+
+.btn-edit,
+.btn-cancel,
+.btn-save,
+.btn-add,
+.btn-set-primary,
+.btn-delete {
+  width: auto;
+  height: 50px;
+  background: #68F145;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  padding: 0 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.btn-edit:hover,
+.btn-add:hover {
+  transform: scale(1.05);
+}
+
+.btn-edit:active,
+.btn-add:active {
+  background-color: rgb(7, 224, 79);
+  transform: scale(0.97);
+}
+
+.btn-cancel {
+  background: #FF4742;
+  border-color: #FF4742;
+  color: #FFFFFF;
+}
+
+.btn-cancel:hover {
+  background-color: #FFFFFF;
+  color: #FF4742;
+}
+
+.btn-cancel:active {
+  opacity: 0.7;
+}
+
+.btn-save {
+  background: #2300B3;
+  border-color: #2300B3;
+  color: #FFFFFF;
+  margin-top: 0;
+}
+
+.btn-save:hover {
+  background-color: #FFFFFF;
+  color: #2300B3;
+}
+
+.btn-save:active {
+  opacity: 0.7;
+}
+
+.btn-add {
+  background: #68F145;
+  border-color: #000000;
+  color: #000000;
+  font-weight: 800;
+  font-size: 1.1rem;
+}
+
+.btn-set-primary {
+  background: #2300B3;
+  border-color: #2300B3;
+  color: #FFFFFF;
+}
+
+.btn-set-primary:hover {
+  background-color: #FFFFFF;
+  color: #2300B3;
+}
+
+.btn-delete {
+  background: #FF4742;
+  border-color: #FF4742;
+  color: #FFFFFF;
+}
+
+.btn-delete:hover {
+  background-color: #FFFFFF;
+  color: #FF4742;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: #2300B3;
+  font-weight: 500;
+  font-size: 1.05rem;
+}
+
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+  transition: border 0.3s ease;
+  background-color: white;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  outline: none;
+  border-color: #68F145;
+}
+
+.form-group input:disabled {
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.addresses-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.address-card {
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+  position: relative;
+}
+
+
+.address-card.primary {
+  border-color: #68F145;
+  border-width: 2px;
+  background: linear-gradient(white, white) padding-box,
+              linear-gradient(90deg, rgba(35, 0, 179, 0.1) 0%, rgba(60, 67, 163, 0.1) 30%, rgba(62, 150, 150, 0.1) 50%, rgba(108, 184, 111, 0.1) 70%, rgba(104, 241, 69, 0.1) 100%) border-box;
+}
+
+.address-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.address-header h3 {
+  margin: 0;
+  color: #000000;
+  font-size: 1.4rem;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.badge-primary {
+  background-color: #e0ffe0a3;
+  color: #008000b6;
+  font-weight: bold;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  border: 2px solid #00fe33;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.address-details p {
+  margin: 0.5rem 0;
+  color: #000000;
+  font-size: 1rem;
+  font-family: 'Inter', sans-serif;
+}
+
+.address-details strong {
+  color: #2300B3;
+  min-width: 100px;
+  display: inline-block;
+  font-weight: 600;
+}
+
+.address-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.address-actions button {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* === Jelszó Szakasz === */
+.password-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #ccc;
+}
+
+.password-section h3 {
+  margin: 0 0 1.5rem 0;
+  color: #2300B3;
+  font-size: 1.3rem;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+}
+
+/* === Modal === */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.modal {
+  background: #f9f9f9;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  border-bottom: 1px solid #ccc;
+  background: linear-gradient(90deg, rgba(35, 0, 179, 0.05) 0%, rgba(60, 67, 163, 0.05) 30%, rgba(62, 150, 150, 0.05) 50%, rgba(108, 184, 111, 0.05) 70%, rgba(104, 241, 69, 0.05) 100%);
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #2300B3;
+  font-size: 1.5rem;
+  font-weight: 400;
+  font-family: 'Inter', sans-serif;
+}
+
+.modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #2300B3;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+}
+
+.modal-close:hover {
+  background: rgba(35, 0, 179, 0.1);
+  transform: scale(1.1);
+}
+
+.modal form {
+  padding: 1.5rem;
+}
+
+.modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+@media (max-width: 992px) {
+  .profile-content {
+    flex-direction: column;
+  }
+  
+  .profile-sidebar {
+    flex: none;
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .profile-header {
+    padding: 2rem 1rem;
+  }
+  
+  .profile-content {
+    padding: 0 1rem;
+  }
+  
+  .profile-section {
+    padding: 1.5rem;
+  }
+  
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+  
+  .address-actions {
+    flex-direction: column;
+  }
+  
+  .address-actions button {
+    width: 100%;
+  }
+  
+  .form-actions,
+  .modal-actions {
+    flex-direction: column;
+  }
+  
+  .form-actions button,
+  .modal-actions button {
+    width: 100%;
+  }
+}

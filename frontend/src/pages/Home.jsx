@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar';
 import PhoneCard from '../components/PhoneCard';
 import Footer from '../components/Footer';
 import InputText from '../components/InputText';
+import { Link } from 'react-router';
 
 export default function Home() {
   const allPhonesURL = "http://localhost:5292/mainPage";
@@ -52,6 +53,8 @@ export default function Home() {
       <br />
 
       <InputText label="Telefon neve" id="phoneName" type="text" width='60%' />
+
+<Link to="/profil"><button>Profil oldal</button></Link>
 
       <br />
       <div className="row">
