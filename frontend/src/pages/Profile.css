@@ -1,9 +1,12 @@
 
+
+/* === Profil Fejléc === */
 .profile-header {
   text-align: center;
   padding: 3rem 2rem 2rem 2rem;
   margin-bottom: 2rem;
   position: relative;
+  
 }
 
 .profile-header h1 {
@@ -54,12 +57,6 @@
   font-weight: 500;
 }
 
-.profile-sidebar a:hover {
-  color: #2300B3;
-  scale: 1.02;
-  background-color: rgba(35, 0, 179, 0.05);
-}
-
 .profile-sidebar a.active {
   background-color: #68F145;
   color: #000000;
@@ -84,7 +81,6 @@
   position: relative;
   box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
-
 
 .section-header {
   display: flex;
@@ -260,7 +256,6 @@
   position: relative;
 }
 
-
 .address-card.primary {
   border-color: #68F145;
   border-width: 2px;
@@ -323,7 +318,6 @@
   min-width: 140px;
 }
 
-/* === Jelszó Szakasz === */
 .password-section {
   margin-top: 2rem;
   padding-top: 2rem;
@@ -338,7 +332,6 @@
   font-family: 'Inter', sans-serif;
 }
 
-/* === Modal === */
 .modal-overlay {
   position: fixed;
   top: 0;

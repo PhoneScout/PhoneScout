@@ -1,46 +1,106 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Navbar.css';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 
 export default function Navbar() {
-    // Store pages history in state
     const [previousPages, setPreviousPages] = useState(() => {
-        // Try to load from localStorage or fallback to default
         const stored = localStorage.getItem("pagesHistory");
         return stored ? JSON.parse(stored) : [{ pageName: "Főoldal", pageURL: "../fooldal/index.html" }];
     });
 
-    // Whenever previousPages changes, save to localStorage
+    // Mobile menu state
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
+
+    // Ref for mobile menu to detect clicks outside
+    const mobileMenuRef = useRef(null);
+
+    // Save to localStorage
     useEffect(() => {
         localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
     }, [previousPages]);
 
-    // Handler for clicking a page history link
+    // Handle window resize
+    useEffect(() => {
+        const handleResize = () => {
+            const width = window.innerWidth;
+            setWindowWidth(width);
+            if (width > 992) {
+                setIsMenuOpen(false);
+            }
+        };
+        
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    // Handle click outside mobile menu
+    useEffect(() => {
+        function handleClickOutside(event) {
+            if (isMenuOpen && 
+                mobileMenuRef.current && 
+                !mobileMenuRef.current.contains(event.target) &&
+                !event.target.closest('.hamburger-btn')) {
+                setIsMenuOpen(false);
+            }
+        }
+
+        // Handle escape key
+        function handleEscapeKey(event) {
+            if (event.key === 'Escape' && isMenuOpen) {
+                setIsMenuOpen(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        document.addEventListener('keydown', handleEscapeKey);
+        
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+            document.removeEventListener('keydown', handleEscapeKey);
+        };
+    }, [isMenuOpen]);
+
+    // Check if mobile view
+    const isMobileView = windowWidth <= 992;
+
+    // Handler for page history
     function checkPagesHistory(name, url) {
         const pageIndex = previousPages.findIndex(p => p.pageName === name);
         let newHistory;
 
         if (pageIndex === -1) {
-            // Add new page at the end
             newHistory = [...previousPages, { pageName: name, pageURL: url }];
         } else {
-            // Trim future history after this page
             newHistory = previousPages.slice(0, pageIndex + 1);
         }
 
         setPreviousPages(newHistory);
     }
 
-    // Render the pages history as links separated by "/"
+    // Toggle mobile menu
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    // Close mobile menu
+    const closeMobileMenu = () => {
+        if (isMobileView) {
+            setIsMenuOpen(false);
+        }
+    };
+
+    // Render pages history
     const pagesHistoryElements = previousPages.map((page, index) => (
         <React.Fragment key={page.pageName}>
             <a
                 href={page.pageURL}
                 className="pagesHistory"
                 onClick={(e) => {
-                    e.preventDefault(); // prevent default navigation for demo purposes
+                    e.preventDefault();
                     checkPagesHistory(page.pageName, page.pageURL);
+                    closeMobileMenu();
                 }}
             >
                 <div>{page.pageName}</div>
@@ -49,7 +109,7 @@ export default function Navbar() {
         </React.Fragment>
     ));
 
-    // Example: cart count state and updating it
+    // Cart state
     const [cartCount, setCartCount] = useState(0);
 
     useEffect(() => {
@@ -59,13 +119,15 @@ export default function Navbar() {
             setCartCount(itemCount);
         }
         updateCartCount();
-
-        // Optionally listen to storage changes or set interval to update
+        
+        // Listen for cart updates if you have a custom event
+        const handleCartUpdate = () => updateCartCount();
+        window.addEventListener('cartUpdated', handleCartUpdate);
+        
+        return () => window.removeEventListener('cartUpdated', handleCartUpdate);
     }, []);
 
-    // Similar for compare count...
-
-    // showUsername state
+    // User state
     const [firstname, setFirstname] = useState(null);
     const [jogosultsag, setJogosultsag] = useState(null);
 
@@ -82,74 +144,237 @@ export default function Navbar() {
         setTimeout(() => {
             window.location.href = "./index.html";
         }, 1000);
+        closeMobileMenu();
     }
 
     return (
-        <div>
-           <div class="row custom-header">
-        <div class="col-3 logo-container">
-            <Link to="/" class="logo-link">
-                <img src="/images/ImagePhoneScoutLogo.png" alt="PhoneScout Logo" class="logo-img"/>
-                <div class="logo-text blue">Phone</div>
-                <div class="logo-text green">Scout</div>
-            </Link>
-        </div>
+        <div className="navbar-wrapper">
+            {/* Main Navbar */}
+            <div className="row custom-header">
+                {/* Logo and Hamburger */}
+                <div className="col-8 col-md-4 col-lg-3 logo-container">
+                    <div className="d-flex align-items-center">
+                        {/* Hamburger button - visible only on mobile/tablet */}
+                        <button 
+                            className={`hamburger-btn ${isMobileView ? 'd-block' : 'd-none'}`}
+                            onClick={toggleMenu}
+                            aria-label="Toggle menu"
+                            aria-expanded={isMenuOpen}
+                        >
+                            <i className={`fa-solid ${isMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
+                        </button>
+                        
+                        <Link to="/" className="logo-link" onClick={closeMobileMenu}>
+                            <img src="/images/ImagePhoneScoutLogo.png" alt="PhoneScout Logo" className="logo-img"/>
+                            <div className="logo-text blue">Phone</div>
+                            <div className="logo-text green">Scout</div>
+                        </Link>
+                    </div>
+                </div>
 
-        <div class="col-4 nav-links">
-            <Link to="/szures" class="menuPoints">Minden telefon</Link>
-            <Link to="/szerviz" class="menuPoints"  onclick="checkPagesHistory('Szerviz','../szerviz/szerviz.html')">Szerviz</Link>
-            <Link to="/osszehasonlitas" href="../osszehasonlitas/osszehasonlitas.html" class="menuPoints" id="osszehasonlitas"
-                onclick="checkPagesHistory('Összehasonlítás','../osszehasonlitas/osszehasonlitas.html')">
-                Összehasonlítás <span id="compareCount">(0)</span>
-            </Link>
-        </div>
+                {/* Desktop Navigation - hidden on mobile */}
+                <div className="col-lg-4 nav-links d-none d-lg-flex">
+                    <Link to="/szures" className="menuPoints" onClick={closeMobileMenu}>Minden telefon</Link>
+                    <Link 
+                        to="/szerviz" 
+                        className="menuPoints" 
+                        onClick={() => {
+                            checkPagesHistory('Szerviz','../szerviz/szerviz.html');
+                            closeMobileMenu();
+                        }}
+                    >
+                        Szerviz
+                    </Link>
+                    <Link 
+                        to="/osszehasonlitas" 
+                        className="menuPoints" 
+                        id="osszehasonlitas"
+                        onClick={() => {
+                            checkPagesHistory('Összehasonlítás','../osszehasonlitas/osszehasonlitas.html');
+                            closeMobileMenu();
+                        }}
+                    >
+                        Összehasonlítás <span id="compareCount">(0)</span>
+                    </Link>
+                </div>
 
-        <div class="col-2 search-container">
-            <div class="search-icon">
-                <i class="fa-solid fa-magnifying-glass"></i>
+                {/* Desktop Search - hidden on mobile */}
+                <div className="col-lg-2 search-container d-none d-lg-flex">
+                    <div className="search-icon">
+                        <i className="fa-solid fa-magnifying-glass"></i>
+                    </div>
+                    <div className="search-input">
+                        <input onClick="searchPhonesGET()" placeholder="Keresés..." type="text" id="searchBox" autoComplete="off"/>
+                        <div className="search-dropdown" id="searchDropdown"></div>
+                    </div>
+                </div>
+
+                {/* Desktop User/Cart - hidden on mobile */}
+                <div className="col-lg-3 user-cart-container d-none d-lg-flex justify-content-end">
+                    <div className="dropdown" id="dropdownMenu">
+                        <a href="#" className="dropdown-toggle userIcon" id="loginDropdown" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            <div id="userChange">
+                                <div id="firstName">{firstname || "Bejelentkezés"}</div>
+                                <div className="user-img-wrapper">
+                                    <img src="../Images/doneUserIcon1.png" alt="User"/>
+                                </div>
+                            </div>
+                        </a>
+                        <ul className="dropdown-menu" aria-labelledby="loginDropdown">
+                            <li><button className="profile_button">Profil</button></li>
+                            <li><button className="logout_button" onClick={logout}>Kijelentkezés</button></li>
+                        </ul>
+                    </div>
+
+                    <div className="cart-icon">
+                        <Link 
+                            to="/kosar"
+                            onClick={() => {
+                                checkPagesHistory('Kosár','../kosar/kosar.html');
+                                closeMobileMenu();
+                            }}
+                        >
+                            <i id="cart" className="fa-solid fa-cart-shopping"></i>
+                            {cartCount > 0 && (
+                                <span className="cart-badge">{cartCount}</span>
+                            )}
+                        </Link>
+                    </div>
+                </div>
+
+                {/* Mobile Cart Icon - visible only on mobile */}
+                <div className="col-4 col-md-8 col-lg-0 d-flex d-lg-none justify-content-end align-items-center">
+                    <div className="cart-icon mobile-cart">
+                        <Link 
+                            to="/kosar"
+                            onClick={() => {
+                                checkPagesHistory('Kosár','../kosar/kosar.html');
+                                closeMobileMenu();
+                            }}
+                        >
+                            <i id="cart" className="fa-solid fa-cart-shopping"></i>
+                            {cartCount > 0 && (
+                                <span className="cart-badge">{cartCount}</span>
+                            )}
+                        </Link>
+                    </div>
+                </div>
             </div>
-            <div class="search-input">
-                <input onclick="searchPhonesGET()" placeholder="Keresés..." type="text" id="searchBox" autocomplete="off"/>
-                <div class="search-dropdown" id="searchDropdown"></div>
-            </div>
-        </div>
 
+            {/* Mobile Menu - Fixed position */}
+            {isMenuOpen && isMobileView && (
+                <div className="mobile-menu-wrapper" ref={mobileMenuRef}>
+                    <div className="mobile-menu-content">
+                        {/* Close button inside menu */}
+                        <button 
+                            className="mobile-menu-close" 
+                            onClick={() => setIsMenuOpen(false)}
+                            aria-label="Close menu"
+                        >
+                            <i className="fa-solid fa-times"></i>
+                        </button>
+                        
+                        {/* Mobile Navigation Links */}
+                        <div className="mobile-nav-links">
+                            <Link 
+                                to="/szures" 
+                                className="mobile-menu-point" 
+                                onClick={closeMobileMenu}
+                            >
+                                <i className="fa-solid fa-mobile-screen-button"></i>
+                                Minden telefon
+                            </Link>
+                            <Link 
+                                to="/szerviz" 
+                                className="mobile-menu-point"
+                                onClick={() => {
+                                    checkPagesHistory('Szerviz','../szerviz/szerviz.html');
+                                    closeMobileMenu();
+                                }}
+                            >
+                                <i className="fa-solid fa-screwdriver-wrench"></i>
+                                Szerviz
+                            </Link>
+                            <Link 
+                                to="/osszehasonlitas" 
+                                className="mobile-menu-point"
+                                onClick={() => {
+                                    checkPagesHistory('Összehasonlítás','../osszehasonlitas/osszehasonlitas.html');
+                                    closeMobileMenu();
+                                }}
+                            >
+                                <i className="fa-solid fa-code-compare"></i>
+                                Összehasonlítás
+                            </Link>
+                        </div>
 
-        <div class="col-3 user-cart-container">
-            <div class="dropdown" id="dropdownMenu">
-                <a href="#" class="dropdown-toggle userIcon" id="loginDropdown" data-bs-toggle="dropdown"
-                    aria-expanded="false">
-                    <div id="userChange">
-                        <div id="firstName">Bejelentkezés</div>
-                        <div class="user-img-wrapper">
-                            <img src="../Images/doneUserIcon1.png" alt=""/>
+                        {/* Mobile Search */}
+                        <div className="mobile-search-container">
+                            <div className="search-input">
+                                <input 
+                                    placeholder="Keresés..." 
+                                    type="text" 
+                                    id="mobileSearchBox" 
+                                    autoComplete="off"
+                                />
+                                <div className="search-icon">
+                                    <i className="fa-solid fa-magnifying-glass"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Mobile User Section */}
+                        <div className="mobile-user-section">
+                            <div className="mobile-user-info">
+                                <img src="../Images/doneUserIcon1.png" alt="User" className="mobile-user-img"/>
+                                <div className="mobile-user-text">
+                                    <div className="mobile-user-name">{firstname || "Vendég"}</div>
+                                    <div className="mobile-user-status">
+                                        {firstname ? "Bejelentkezve" : "Nincs bejelentkezve"}
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="mobile-user-actions">
+                                {firstname ? (
+                                    <>
+                                        <Link 
+                                            to="/profil" 
+                                            className="mobile-user-action-btn profile-btn"
+                                            onClick={closeMobileMenu}
+                                        >
+                                            <i className="fa-solid fa-user"></i>
+                                            Profil
+                                        </Link>
+                                        <button 
+                                            className="mobile-user-action-btn logout-btn"
+                                            onClick={logout}
+                                        >
+                                            <i className="fa-solid fa-right-from-bracket"></i>
+                                            Kijelentkezés
+                                        </button>
+                                    </>
+                                ) : (
+                                    <Link 
+                                        to="/login_register/login.html" 
+                                        className="mobile-user-action-btn login-btn"
+                                        onClick={closeMobileMenu}
+                                    >
+                                        <i className="fa-solid fa-right-to-bracket"></i>
+                                        Bejelentkezés
+                                    </Link>
+                                )}
+                            </div>
                         </div>
                     </div>
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="loginDropdown">
-                    <li><button class="profile_button">Profil</button></li>
-                    <li><button class="logout_button" onclick="logout()">Kijelentkezés</button></li>
-                </ul>
-            </div>
+                </div>
+            )}
 
-            <div id="loginText">
-                <a class="userIcon" href="../login_register/login.html" id="loginLink">
-                    <div id="userChange">
-                        <div id="firstName">Bejelentkezés</div>
-                        <div class="user-img-wrapper">
-                            <img src="../Images/doneUserIcon1.png" alt=""/>
-                        </div>
-                    </div>
-                </a>
+            {/* Pages History - Always visible */}
+            <div className="container mt-2" id="previousPagesPlace">
+                {pagesHistoryElements}
             </div>
-
-            <div class="cart-icon">
-                <Link to="/kosar"
-                    onclick="checkPagesHistory('Kosár','../kosar/kosar.html')"><i id="cart"
-                        class="fa-solid fa-cart-shopping"></i></Link>
-            </div>
-        </div>
-    </div>
         </div>
     );
 }
