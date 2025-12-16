@@ -37,6 +37,50 @@ const Profile = () => {
       color: 'lila'
     }
   ]);
+  const [serviceRequests, setServiceRequests] = useState([
+    {
+      name: "Kovács János",
+      useremail: "kovacs.janos@example.com",
+      phonenumber: "+36 30 123 4567",
+      zippostalcosde: "1117",
+      city: "Budapest",
+      street: "Fehérvári út",
+      housenumber: "45",
+      phonemanufacturer: "Samsung Galaxy S21",
+      whatswrong: "kijelző",
+      inspection: true,
+      status: "feldolgozás alatt",
+      description: "A kijelző megrepedt, az érintés csak részben működik."
+    },
+    {
+      name: "Nagy Eszter",
+      useremail: "nagy.eszter@example.com",
+      phonenumber: "+36 20 987 6543",
+      zippostalcosde: "4025",
+      city: "Debrecen",
+      street: "Piac utca",
+      housenumber: "12",
+      phonemanufacturer: "iPhone 12",
+      whatswrong: "akkumulátor",
+      inspection: false,
+      status: "átvételre kész",
+      description: "Az akkumulátor gyorsan merül, egy napot sem bír ki."
+    },
+    {
+      name: "Szabó Péter",
+      useremail: "szabo.peter@example.com",
+      phonenumber: "+36 70 555 1122",
+      zippostalcosde: "7621",
+      city: "Pécs",
+      street: "Király utca",
+      housenumber: "8",
+      phonemanufacturer: "Xiaomi Redmi Note 11",
+      whatswrong: "töltőcsatlakozó",
+      inspection: true,
+      status: "kész",
+      description: "A telefon csak bizonyos szögben tölt, a kábel lötyög."
+    }
+  ]);
 
   // Szállítási címek
   const [shippingAddresses, setShippingAddresses] = useState([
@@ -621,7 +665,6 @@ const Profile = () => {
           </section>
 
           {/* Megrendelések */}
-          {/* Megrendelések */}
           <section id="orders" className="profile-section">
             <div className="section-header">
               <h2>Megrendelések</h2>
@@ -648,6 +691,37 @@ const Profile = () => {
             </div>
           </section>
 
+
+
+          {/*Szerviz kérések */}
+          <section id="orders" className="profile-section">
+            <div className="section-header">
+              <h2>Szervizeltetések</h2>
+            </div>
+            <div>
+              {serviceRequests.map((request, index) => (
+                <div key={index} className="service-request-card">
+                  <div className="service-request-header">
+                    <h3>{request.phonemanufacturer}</h3>
+                    <span className={`service-request-status status-${request.status.replace(/\s/g, '-')}`}>
+                      {request.status}
+                    </span>
+                  </div>
+                  <div className="service-request-details">
+                    <p><strong>Felhasználó:</strong> {request.name}</p>
+                    <p><strong>Email:</strong> {request.useremail}</p>
+                    <p><strong>Telefon:</strong> {request.phonenumber}</p>
+                    <p><strong>Cím:</strong> {request.zippostalcosde}, {request.city}, {request.street} {request.housenumber}</p>
+                    <p><strong>Hiba:</strong> {request.whatswrong}</p>
+                    <p><strong>Vizsgálat:</strong> {request.inspection ? "igen" : "nem"}</p>
+                    <p><strong>Leírás:</strong> {request.description}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
+          
         </main>
       </div>
 
