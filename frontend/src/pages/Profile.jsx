@@ -2,6 +2,11 @@ import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import Navbar from '../components/Navbar';
 
+
+
+//fetch('http://localhost:5292/phonePage/2').then(response => response.json()).then(data => console.log(data)) //ID-T KISZEDNI A / MÖGÜL HA VAN
+
+
 const Profile = () => {
   // Felhasználó adatok
   const [userData, setUserData] = useState({
@@ -13,6 +18,25 @@ const Profile = () => {
     newPassword: '',
     confirmPassword: ''
   });
+
+  const [phones, setPhones] = useState([
+    {
+      phoneName: 'Samsung Galaxy S23',
+      amount: 1,
+      price: 349999,
+      status: 'feldolgozás alatt',
+      ramStorage: '8/256',
+      color: 'fekete'
+    },
+    {
+      phoneName: 'iPhone 14 Pro',
+      amount: 2,
+      price: 589999,
+      status: 'kiszállítva',
+      ramStorage: '6/256',
+      color: 'lila'
+    }
+  ]);
 
   // Szállítási címek
   const [shippingAddresses, setShippingAddresses] = useState([
@@ -229,7 +253,7 @@ const Profile = () => {
   };
 
   return (
-    
+
     <div className="profile-container">
       <Navbar />
       {/* Fejléc */}
@@ -595,6 +619,35 @@ const Profile = () => {
               ))}
             </div>
           </section>
+
+          {/* Megrendelések */}
+          {/* Megrendelések */}
+          <section id="orders" className="profile-section">
+            <div className="section-header">
+              <h2>Megrendelések</h2>
+            </div>
+
+            <div className="orders-grid">
+              {phones.map((phone, index) => (
+                <div key={index} className="order-card">
+                  <div className="order-header">
+                    <h3>{phone.phoneName}</h3>
+                    <span className={`order-status status-${phone.status.replace(/\s/g, '-')}`}>
+                      {phone.status}
+                    </span>
+                  </div>
+
+                  <div className="order-details">
+                    <p><strong>Darabszám:</strong> {phone.amount} db</p>
+                    <p><strong>Ár:</strong> {phone.price.toLocaleString()} Ft</p>
+                    <p><strong>Memória:</strong> {phone.ramStorage}</p>
+                    <p><strong>Szín:</strong> {phone.color}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+
         </main>
       </div>
 

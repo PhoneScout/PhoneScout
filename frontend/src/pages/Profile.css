@@ -465,4 +465,111 @@
   .modal-actions button {
     width: 100%;
   }
+}/* === Megrendelések === */
+
+.orders-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.order-card {
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.order-card:hover {
+  transform: translateY(-4px);
+  border-color: #68F145;
+}
+
+/* Fejléc */
+.order-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  gap: 1rem;
+}
+
+.order-header h3 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 500;
+  color: #000000;
+  font-family: 'Inter', sans-serif;
+}
+
+/* Státusz badge */
+.order-status {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  border: 2px solid transparent;
+  white-space: nowrap;
+}
+
+/* Státusz színek */
+.status-feldolgozás-alatt {
+  background-color: #fff4cc;
+  color: #9a6b00;
+  border-color: #ffd24d;
+}
+
+.status-kiszállítva {
+  background-color: #e0ffe0;
+  color: #1f7a1f;
+  border-color: #68F145;
+}
+
+.status-raktáron {
+  background-color: #e6f0ff;
+  color: #1a4fd8;
+  border-color: #2300B3;
+}
+
+.status-megrendelve {
+  background-color: #ffe6e6;
+  color: #a10000;
+  border-color: #FF4742;
+}
+
+/* Részletek */
+.order-details {
+  border-top: 1px solid #ccc;
+  padding-top: 1rem;
+}
+
+.order-details p {
+  margin: 0.4rem 0;
+  font-size: 1rem;
+  color: #000000;
+  font-family: 'Inter', sans-serif;
+}
+
+.order-details strong {
+  color: #2300B3;
+  font-weight: 600;
+}
+
+/* Mobil optimalizálás */
+@media (max-width: 768px) {
+  .orders-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .order-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .order-status {
+    align-self: flex-start;
+  }
 }
