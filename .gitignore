@@ -40,3 +40,6 @@ secrets.json
 
 .DS_Store
 Thumbs.db
+
+# Environment file for backend secrets
+.env
