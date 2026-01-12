@@ -8,7 +8,7 @@ import InputText from '../components/InputText';
 import { Link } from 'react-router';
 
 export default function Home() {
-  const allPhonesURL = "http://localhost:5292/mainPage";
+  const allPhonesURL = "http://localhost:5175/mainPage";
 
   const [currentPage, setCurrentPage] = useState(0);
   const [activeChangeButton, setActiveChangeButton] = useState("right");
