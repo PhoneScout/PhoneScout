@@ -8,6 +8,7 @@ import Cart from './pages/Cart';
 import Compare from './pages/Compare';
 import PhonePage from './pages/PhonePage';
 import Profile from './pages/Profile';
+import ServiceRequest from './pages/ServiceRequest';
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
         <Route path='/osszehasonlitas' element={<Compare />}></Route>
         <Route path="/telefon/:phoneId" element={<PhonePage />} />
         <Route path="/profil" element={<Profile />}></Route>
+        <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
       </Routes>
     </div>
 

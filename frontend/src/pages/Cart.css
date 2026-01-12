@@ -1,0 +1,311 @@
+.phoneRow {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    height: auto;
+    transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+
+
+.phoneImage {
+    flex: 1;
+    text-align: center;
+}
+
+.phoneImage img {
+    max-width: 80px;
+    max-height: 80px;
+}
+
+.phoneDetails {
+    flex: 3;
+    padding-left: 15px;
+}
+
+.phoneDetails h3 {
+    margin: 0;
+    font-size: 1.2em;
+}
+
+.phonePrice {
+    flex: 2;
+    text-align: center;
+}
+
+.phonePrice p {
+    margin: 0;
+    font-size: 1em;
+}
+
+.phoneQuantity {
+    flex: 3;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.phoneQuantity button {
+    margin: 0 10px;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.phoneQuantity .decreaseQuantity,
+.phoneQuantity .increaseQuantity {
+    background-color: #007bff;
+    color: white;
+    border-radius: 4px;
+}
+
+.phoneQuantity .removeFromCart {
+    background-color: red;
+    color: white;
+    border-radius: 4px;
+}
+
+.totalPrice {
+    margin-bottom: 20px;
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.kosaradText {
+    text-align: center;
+}
+
+.paymentButton {
+    display: inline-block;
+    margin: 20px auto 0 auto;
+    padding: 10px 24px;
+    font-size: 1em;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-weight: 600;
+    margin-bottom: 3% ;
+}
+.paymentButton:hover {
+    background: #0056b3;
+}
+
+#paymentFormContainer,
+#shippingFormContainer {
+    display: block;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    margin: 0 auto;
+    padding: 0 24px;
+    background: #f9f9f9;
+    border: 1px solid #007bff;
+    border-radius: 8px;
+    max-width: 350px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition:
+        max-height 0.5s cubic-bezier(.4,2,.6,1),
+        opacity 0.3s,
+        padding 0.3s,
+        transform 0.4s cubic-bezier(.4,2,.6,1);
+    transform: translateY(-20px) scaleY(0.97);
+}
+
+#paymentFormContainer.open,
+#shippingFormContainer.open {
+    max-height: 600px;
+    opacity: 1;
+    padding: 18px 24px;
+    margin-top: 16px;
+    overflow: visible;
+    transform: translateY(0) scaleY(1);
+}
+
+#paymentFormContainer label,
+#shippingFormContainer label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+#paymentFormContainer input,
+#shippingFormContainer input {
+    width: 100%;
+    padding: 7px 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+#paymentFormContainer .closePaymentForm {
+    background: #dc3545;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    cursor: pointer;
+    float: right;
+    margin-top: -8px;
+    margin-right: -8px;
+}
+.closePaymentForm:hover {
+    background: #a71d2a;
+}
+
+.payment-success-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+.payment-success-content {
+    background: #fff;
+    padding: 32px 36px;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+    font-size: 1.2em;
+    color: #198754;
+    text-align: center;
+    font-weight: 600;
+}
+
+.error-message {
+    color: #dc3545;
+    font-size: 0.95em;
+    margin-bottom: 8px;
+    min-height: 18px;
+}
+
+/* --- Modal fizetéshez --- */
+.paymentModal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+.modalContent {
+    background: white;
+    padding: 30px 40px;
+    border-radius: 16px;
+    min-width: 700px;
+    max-width: 90vw;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.closeModal {
+    position: absolute;
+    top: 18px;
+    right: 28px;
+    cursor: pointer;
+    font-size: 2em;
+    color: #888;
+    transition: color 0.2s;
+}
+.closeModal:hover {
+    color: #e74c3c;
+}
+.formsContainer {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.modalForm {
+    background: #f9f9f9;
+    border: 1px solid #cccccc;
+    border-radius: 10px;
+    padding: 20px 24px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+    min-width: 260px;
+    flex: 1;
+
+}
+.modalForm h4 {
+    margin-top: 0;
+    margin-bottom: 12px;
+    font-size: 1.1em;
+    color: #2d3436;
+}
+.modalForm label {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 500;
+    color: #636e72;
+}
+.modalForm input {
+    width: 100%;
+    padding: 7px 10px;
+    margin-bottom: 12px;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    font-size: 1em;
+    background: #fff;
+    transition: border 0.2s;
+}
+.modalForm input:focus {
+    border-color: #0984e3;
+    outline: none;
+}
+.submitPaymentBtn {
+    display: inline-block;
+    margin: 20px auto 0 auto;
+    padding: 10px 24px;
+    font-size: 1em;
+    background: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s; 
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    font-weight: 600;
+    margin-bottom: 3% ;
+}
+.submitPaymentBtn:hover {
+    
+    background: #0056b3;
+}
+
+#previousPagesPlace{
+    gap: 2%;
+    margin-top: 2%;
+}
+.pagesHistory{
+    color: #2300B3;
+    text-decoration: none;
+    font-style: italic;
+    cursor: pointer;
+}
+.pagesHistory:hover{
+    scale: 1.02;
+}
+.pagesHistory:last-child{
+    color: #5dd83f;
+}
+.pagesHistory:last-child:hover{
+    scale: 1.00;
+    cursor: not-allowed;
+}
+
+

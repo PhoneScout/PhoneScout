@@ -90,9 +90,9 @@ export default function Home() {
           <hr size="5" />
         </div>
 
-        <div class="container service-section">
-          <div class="row align-items-center">
-            <div class="col-lg-6 service-text">
+        <div className="container service-section">
+          <div className="row align-items-center">
+            <div className="col-lg-6 service-text">
               <h2>Gyors és Megbízható Szerviz</h2>
               <p>
                 Meghibásodott a telefonod? Ne aggódj! Nálunk gyors és szakszerű javítást kapsz,
@@ -108,12 +108,12 @@ export default function Home() {
                 <li>Garancia minden javításra</li>
               </ul>
 
-              <button className="btn btn-primary service-btn"
-                onClick="window.location.href='./szerviz/szerviz.html'">Irány a <strong>szervíz</strong>
-                oldal</button>
+              <Link className="btn btn-primary service-btn"
+                to="/szerviz">Irány a <strong>szervíz</strong>
+                oldal</Link>
             </div>
             <div className="col-lg-6 service-image">
-              <img loading="lazy" src="../Images/telefonservice.png" alt="Telefon Szervíz" class="rounded-image" />
+              <img loading="lazy" src="../Images/telefonservice.png" alt="Telefon Szervíz" className="rounded-image" />
             </div>
           </div>
         </div>
