@@ -75,44 +75,48 @@ namespace PhoneScout_GitHub.Controllers
         }
 
 
-        /*[HttpGet("GetOrder/{userID}")]
-
+        [HttpGet("GetOrder/{userID}")]
         public IActionResult GetOrders(int userID)
         {
             try
             {
-                var selectOrders = cx.Connuserorders.Where(r => r.UserId == userID);
-                var user = cx.Users.FirstOrDefault(u => u.Id == userID);
-                List<repaitGETDTO> repairs = new List<repaitGETDTO>();
-
-
-                foreach (var aRepair in selectOrders)
+                var userExists = cx.Users.Any(u => u.Id == userID);
+                if (!userExists)
                 {
-                    repaitGETDTO repair = new repaitGETDTO();
-                    repair.repairID = aRepair.RepairId;
-                    repair.name = user.Name;
-                    repair.postalCode = aRepair.PostalCode;
-                    repair.city = aRepair.City;
-                    repair.address = aRepair.Address;
-                    repair.phoneNumber = aRepair.PhoneNumber;
-                    repair.price = aRepair.Price;
-                    repair.status = aRepair.Status;
-                    repair.manufacturerName = aRepair.ManufacturerName;
-                    repair.phoneInspection = aRepair.PhoneInspection;
-                    repair.problemDescription = aRepair.ProblemDescription;
-                    repairs.Add(repair);
-
+                    return BadRequest("Nem található felhasználó!");
                 }
 
-                return Ok(repairs);
+                var orders = cx.Connuserorders
+                    .Where(o => o.UserId == userID)
+                    .Select(anOrder => new profileCartGetDTO
+                    {
+                        userID = anOrder.UserId,
+                        postalCode = anOrder.PostalCode,
+                        city = anOrder.City,
+                        address = anOrder.Address,
+                        phoneNumber = anOrder.PhoneNumber,
+                        phoneName = anOrder.PhoneName,
+                        phoneColorName = anOrder.PhoneColorName,
+                        phoneColorHex = anOrder.PhoneColorHex,
+                        phoneRam = anOrder.PhoneRam,
+                        phoneStorage = anOrder.PhoneStorage,
+                        price = anOrder.Price,
+                        amount = anOrder.Amount,
+                        status = anOrder.Status
+                    })
+                    .ToList();
 
+                return Ok(orders);
             }
             catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
         }
-        */
+
+
+
+
         [HttpPost("postOrder")]
 
         public IActionResult postOrder([FromBody] profileCartGetDTO dto)
@@ -120,13 +124,7 @@ namespace PhoneScout_GitHub.Controllers
 
             try
             {
-                if (cx.Phonedatas.FirstOrDefault(u => u.PhoneName == dto.phoneName) == null)
-                {
-                    return BadRequest("A telefon nem található");
-                }
-                else
-                {
-                    if (cx.Users.FirstOrDefault(u => u.Id == dto.userID) == null)
+                   if (cx.Users.FirstOrDefault(u => u.Id == dto.userID) == null)
                     {
                         return BadRequest("A felhasználó nem található");
                     }
@@ -146,12 +144,12 @@ namespace PhoneScout_GitHub.Controllers
                         order.Price = dto.price;
                         order.Amount = dto.amount;
                         order.Status = dto.status;
-                        
+
                         cx.Connuserorders.Add(order);
                         cx.SaveChanges();
                         return Ok("A rendelés befejezve.");
                     }
-                }
+                
             }
             catch (Exception ex)
             {
@@ -191,9 +189,9 @@ namespace PhoneScout_GitHub.Controllers
                     PhoneInspection = dto.phoneInspection,
                     ProblemDescription = dto.problemDescription
                 };
-                
+
                 cx.Connectionservices.Add(repair);
-               
+
 
                 foreach (var partName in dto.partNames)
                 {
@@ -204,14 +202,14 @@ namespace PhoneScout_GitHub.Controllers
 
                     var record = new Connectionpart
                     {
-                        PartId = part.Id,         
-                        RepairId = repair.RepairId 
+                        PartId = part.Id,
+                        RepairId = repair.RepairId
                     };
 
                     cx.Connectionparts.Add(record);
                 }
 
-         
+
                 cx.SaveChanges();
 
                 return Ok("A szerviz igénylés befejeződött.");
@@ -221,7 +219,7 @@ namespace PhoneScout_GitHub.Controllers
                 return BadRequest(ex.Message);
             }
 
-        }/*
+        }
 
         [HttpPut("updateOrderStatus {orderID}")]
 
@@ -247,7 +245,8 @@ namespace PhoneScout_GitHub.Controllers
                 return BadRequest(ex.Message);
             }
         }
-        */
+
+
         [HttpPut("updateRepairStatus {repairID}")]
 
         public IActionResult updateRepairStatus(string repairID, int status)
@@ -272,5 +271,85 @@ namespace PhoneScout_GitHub.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("updateRepairPrice {repairID}")]
+
+        public IActionResult updateRepairPrice(string repairID, int price)
+        {
+            try
+            {
+                var repair = cx.Connectionservices.FirstOrDefault(o => o.RepairId == repairID);
+                if (repair != null)
+                {
+                    repair.Price = price;
+                    cx.Connectionservices.Update(repair);
+                    cx.SaveChanges();
+                    return Ok("Javítás státusza frissítve.");
+                }
+                else
+                {
+                    return BadRequest("A javítás nem található.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
+
+        [HttpDelete("deleteRepair/{repairID}")]
+
+        public IActionResult deleteRepair(string repairID)
+        {
+            try
+            {
+                var repair = cx.Connectionservices.FirstOrDefault(o => o.RepairId == repairID);
+                if (repair != null)
+                {
+                    cx.Connectionservices.Remove(repair);
+                    cx.SaveChanges();
+                    return Ok("Javítás törölve.");
+                }
+                else
+                {
+                    return BadRequest("A javítás nem található, így nem törölhető.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpDelete("deleteOrder/{orderID}")]
+
+        public IActionResult deleteOrder(int orderID)
+        {
+            try
+            {
+                var order = cx.Connuserorders.FirstOrDefault(o => o.Id == orderID);
+                if (order != null)
+                {
+                    cx.Connuserorders.Remove(order);
+                    cx.SaveChanges();
+                    return Ok("Megrendelés törölve.");
+                }
+                else
+                {
+                    return BadRequest("A megrendelés nem található, így nem törölhető.");
+                }
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+
     }
 }
