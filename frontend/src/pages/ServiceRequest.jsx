@@ -76,7 +76,7 @@ export default function ServiceRequest() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     // Validate required fields
     if (!formData.name || !formData.email || !formData.phone || !formData.device || !formData.problem) {
       setFormMessage(
@@ -175,7 +175,7 @@ export default function ServiceRequest() {
   return (
     <div>
       <Navbar />
-      
+
       <div className="container mt-3 mb-2 text-end">
         <button id="chatbotBtn" className="btn btn-outline-info" onClick={openChatbot}>
           <i className="fas fa-robot"></i> Chatbot: Segítség a hibához
@@ -187,56 +187,57 @@ export default function ServiceRequest() {
         <form id="szervizForm" className="row g-3" onSubmit={handleSubmit}>
           <div className="col-md-6">
             <label htmlFor="name" className="form-label">Név</label>
-            <input 
-              type="text" 
-              className="form-control" 
-              id="name" 
+            <input
+              type="text"
+              className="form-control"
+              id="name"
               value={formData.name}
               onChange={handleInputChange}
-              required 
+              required
             />
           </div>
           <div className="col-md-6">
             <label htmlFor="email" className="form-label">Email cím</label>
-            <input 
-              type="email" 
-              className="form-control" 
-              id="email" 
+            <input
+              type="email"
+              className="form-control"
+              id="email"
               value={formData.email}
               onChange={handleInputChange}
-              required 
+              required
             />
           </div>
           <div className="col-md-6">
             <label htmlFor="phone" className="form-label">Telefonszám</label>
-            <input 
-              type="tel" 
-              className="form-control" 
-              id="phone" 
+            <input
+              type="tel"
+              className="form-control"
+              id="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              required 
+              required
+              maxLength="11"
             />
           </div>
           <div className="col-md-6">
             <label htmlFor="device" className="form-label">Készülék gyártója</label>
-            <input 
-              type="text" 
-              className="form-control" 
-              id="device" 
+            <input
+              type="text"
+              className="form-control"
+              id="device"
               value={formData.device}
               onChange={handleInputChange}
-              required 
+              required
             />
           </div>
           <div className="col-md-6">
             <label className="form-label">Mivel van baj?</label>
             <div className="dropdown">
-              <button 
-                className="btn btn-outline-secondary dropdown-toggle w-100 text-start" 
-                type="button" 
-                id="problemDropdown" 
-                data-bs-toggle="dropdown" 
+              <button
+                className="btn btn-outline-secondary dropdown-toggle w-100 text-start"
+                type="button"
+                id="problemDropdown"
+                data-bs-toggle="dropdown"
                 aria-expanded="false"
               >
                 {getSelectedProblemLabels().length > 0 ? getSelectedProblemLabels().join(', ') : 'Válassz problémákat...'}
@@ -244,9 +245,9 @@ export default function ServiceRequest() {
               <div className="dropdown-menu p-3" aria-labelledby="problemDropdown" style={{ minWidth: '250px' }}>
                 {problemOptions.map(problem => (
                   <div className="form-check" key={problem.id}>
-                    <input 
-                      className="form-check-input" 
-                      type="checkbox" 
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
                       id={problem.id}
                       checked={selectedProblems.includes(problem.value)}
                       onChange={() => handleProblemToggle(problem)}
@@ -261,10 +262,10 @@ export default function ServiceRequest() {
           </div>
           <div className="col-md-6 d-flex align-items-end">
             <div className="form-check">
-              <input 
-                className="form-check-input" 
-                type="checkbox" 
-                id="atvizsgalas" 
+              <input
+                className="form-check-input"
+                type="checkbox"
+                id="atvizsgalas"
                 checked={formData.atvizsgalas}
                 onChange={handleInputChange}
               />
@@ -283,27 +284,67 @@ export default function ServiceRequest() {
               </div>
             </div>
           )}
-          
+
           <div className="col-12">
             <label htmlFor="problem" className="form-label">Hiba leírása</label>
-            <textarea 
-              className="form-control" 
-              id="problem" 
-              rows="3" 
+            <textarea
+              className="form-control"
+              id="problem"
+              rows="3"
               value={formData.problem}
               onChange={handleInputChange}
               required
             ></textarea>
           </div>
-          <div className="col-12">
+          <hr />
+          <h3>Számlázási cím</h3>
+          <div className="col-md-1">
+            <label htmlFor="zipcode" className="form-label">Irányítószám</label>
+            <input
+              type="text"
+              className="form-control"
+              id="zipcode"
+              value={formData.zipcode}
+              onChange={handleInputChange}
+              onInput={(e) => {
+                e.target.value = e.target.value.replace(/\D/g, '').slice(0, 4);
+              }}
+              required
+            />
+          </div>
+          <div className="col-md-3">
+            <label htmlFor="city" className="form-label">Város</label>
+            <input
+              type="text"
+              className="form-control"
+              id="city"
+              value={formData.city}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="col-md-4">
+            <label htmlFor="address" className="form-label">Cím (utca, házszám)</label>
+            <input
+              type="text"
+              className="form-control"
+              id="address"
+              value={formData.address}
+              onChange={handleInputChange}
+              required
+            />
+          </div>
+          <div className="col-4"> </div>
+          <div className="col-4">
             <button type="submit" className="btn btn-primary">Igénylés elküldése</button>
           </div>
+
           <div id="formMessage" className="mt-3">
             {formMessage}
           </div>
         </form>
       </div>
-      
+
       <div className="hr">
         <hr size="5" />
       </div>
@@ -314,18 +355,18 @@ export default function ServiceRequest() {
           {faqItems.map((faq, index) => (
             <div className="accordion-item" key={faq.id}>
               <h2 className="accordion-header" id={`heading${index}`}>
-                <button 
-                  className="accordion-button collapsed" 
-                  type="button" 
-                  data-bs-toggle="collapse" 
+                <button
+                  className="accordion-button collapsed"
+                  type="button"
+                  data-bs-toggle="collapse"
                   data-bs-target={`#collapse${index}`}
                 >
                   {faq.question}
                 </button>
               </h2>
-              <div 
-                id={`collapse${index}`} 
-                className="accordion-collapse collapse" 
+              <div
+                id={`collapse${index}`}
+                className="accordion-collapse collapse"
                 data-bs-parent="#faqAccordion"
               >
                 <div className="accordion-body">
@@ -336,7 +377,7 @@ export default function ServiceRequest() {
           ))}
         </div>
       </div>
-      
+
       <Footer />
     </div>
   );
