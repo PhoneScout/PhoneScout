@@ -54,8 +54,6 @@ export default function Home() {
 
       <InputText label="Telefon neve" id="phoneName" type="text" width='60%' />
 
-<Link to="/profil"><button>Profil oldal</button></Link>
-
       <br />
       <div className="row">
         <div className="col-1">
@@ -90,7 +88,7 @@ export default function Home() {
           <hr size="5" />
         </div>
 
-        <div className="container service-section">
+        <div className="container service-section ">
           <div className="row align-items-center">
             <div className="col-lg-6 service-text">
               <h2>Gyors és Megbízható Szerviz</h2>
@@ -109,7 +107,7 @@ export default function Home() {
               </ul>
 
               <Link className="btn btn-primary service-btn"
-                to="/szerviz">Irány a <strong>szervíz</strong>
+                to="/szervizigenyles">Irány a <strong>szervíz</strong>
                 oldal</Link>
             </div>
             <div className="col-lg-6 service-image">

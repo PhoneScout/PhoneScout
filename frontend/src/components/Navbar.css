@@ -34,13 +34,12 @@
 }
 
 .logo-img {
-    width: 50px;
-    height: 50px;
-    object-fit: contain;
+    width: 10%;
+    height: auto;
 }
 
 .logo-text {
-    font-size: 1.5rem;
+    font-size: 150%;
     font-weight: bold;
     letter-spacing: 2px;
     font-style: italic;
@@ -84,7 +83,6 @@
 .nav-links a {
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s ease;
 }
 
 .menuPoints:hover {
@@ -197,6 +195,7 @@
 .mobile-search-container {
     margin-bottom: 30px;
     padding: 0 20px;
+    position: relative;
 }
 
 .mobile-search-container .search-input {
@@ -332,6 +331,7 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    width: 100%;
     transition: all 0.3s ease;
 }
 
@@ -339,10 +339,23 @@
     font-size: 120%;
     margin-right: 8px;
     color: #2300B3;
+    opacity: 0;
+    transform: translateX(10px);
+    transition: all 0.3s ease;
+}
+
+.search-container:focus-within .search-icon {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.search-input {
+    position: relative;
+    width: 100%;
 }
 
 .search-input input {
-    padding: 8px 12px;
+    padding: 6px 10px;
     font-size: 90%;
     border: 1px solid #ccc;
     border-radius: 4px;
@@ -353,7 +366,95 @@
 .search-input input:focus {
     outline: none;
     border-color: #68F145;
-    box-shadow: 0 0 0 2px rgba(104, 241, 69, 0.2);
+}
+
+/* Search Dropdown Styles */
+.search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 4px;
+    background-color: white;
+    border: 1px solid #68F145;
+    border-radius: 5px;
+    z-index: 10;
+    max-height: 180px;
+    overflow-y: auto;
+    width: 150%;
+    font-size: 80%;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    align-items: center;
+    text-align: center;
+}
+
+/* Show dropdown */
+.search-dropdown.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.dropdown-item {
+    padding: 8px 10px;
+    cursor: pointer;
+    min-height: 40px; /* min-height helyett height, hogy a tartalom szabályozza */
+    box-sizing: border-box;
+    transition: background-color 0.2s ease;
+    display: flex;
+    align-items: center; /* Vertikálisan középre */
+    justify-content: center; /* Horizontálisan középre */
+    text-align: center;
+    width: 100%; /* Teljes szélesség */
+}
+
+.dropdown-item:hover {
+    background-color: #f9f9f9;
+}
+
+.search-dropdown::-webkit-scrollbar {
+    width: 8px;
+}
+
+.search-dropdown::-webkit-scrollbar-track {
+    background: #eff1ff;
+    border-radius: 5px;
+}
+
+.search-dropdown::-webkit-scrollbar-thumb {
+    background-color: #68F145;
+    border-radius: 5px;
+    border: 2px solid #f0f0f0;
+}
+
+/* Mobile search dropdown */
+.mobile-search-container .search-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin-top: 8px;
+    background-color: white;
+    border: 1px solid #68F145;
+    border-radius: 5px;
+    z-index: 10;
+    max-height: 180px;
+    overflow-y: auto;
+    width: 100%;
+    font-size: 80%;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.mobile-search-container .search-dropdown.active {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
 }
 
 /* User & Cart Container (Desktop) */
@@ -361,7 +462,6 @@
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    gap: 20px;
 }
 
 #userChange {
@@ -369,27 +469,24 @@
     align-items: center;
     cursor: pointer;
     font-style: italic;
+    margin-right: 5%;
 }
 
 .user-img-wrapper {
-    width: 40px;
-    height: 40px;
-    margin-left: 10px;
-    border-radius: 50%;
-    overflow: hidden;
-    border: 2px solid #68F145;
+    width: 50px;
+    margin-left: 5%;
 }
 
 .user-img-wrapper img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
+    height: auto;
 }
 
 /* Cart Icon */
 .cart-icon {
+    margin-left: 8%;
+    font-size: 150%;
     position: relative;
-    font-size: 1.5rem;
 }
 
 .cart-icon a {
@@ -419,52 +516,101 @@
 
 /* Dropdown Menu (Desktop) */
 .dropdown-menu {
-    min-width: 200px;
+    min-width: 160px;
+    display: flex;
+    justify-content: center;
     padding: 10px;
     border: 1px solid #68F145;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+.dropdown-menu li {
+    list-style: none;
+    text-align: center;
+}
+
+#loginDropdown::after {
+    display: none;
+}
+
 .logout_button,
 .profile_button {
-    width: 100%;
     border-radius: 6px;
     box-shadow: rgba(0, 0, 0, 0.1) 1px 2px 4px;
     box-sizing: border-box;
     cursor: pointer;
+    display: inline-block;
     font-family: nunito, roboto, proxima-nova, "proxima nova", sans-serif;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 16px;
+    font-weight: 800;
     line-height: 16px;
-    min-height: 36px;
+    min-height: 40px;
     padding: 8px 10px;
     text-align: center;
-    transition: all 0.3s ease;
-    border: none;
+    text-transform: none;
+    user-select: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    margin-top: 5%;
+    width: 100%;
 }
 
+/* Logout Button */
 .logout_button {
     background: #FF4742;
+    border: 1px solid #FF4742;
     color: #FFFFFF;
 }
 
-.logout_button:hover {
-    background: #ff6b66;
+.logout_button:hover,
+.logout_button:active {
+    background-color: #FFFFFF;
+    color: #FF4742;
 }
 
+.logout_button:active {
+    opacity: 0.7;
+}
+
+/* Profile Button */
 .profile_button {
     background: #2300B3;
+    border: 1px solid #2300B3;
     color: #FFFFFF;
-    margin-bottom: 8px;
+    margin-top: 0;
 }
 
-.profile_button:hover {
-    background: #3a1ac9;
+.profile_button:hover,
+.profile_button:active {
+    background-color: #FFFFFF;
+    color: #2300B3;
+}
+
+.profile_button:active {
+    opacity: 0.7;
+}
+
+.userIcon {
+    color: #68F145;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 115%;
+    transition: color 0.3s ease;
+}
+
+.userIcon:hover {
+    color: #4db832;
+}
+
+#loginText {
+    display: block;
 }
 
 /* Pages History */
 #previousPagesPlace {
     padding: 10px 20px;
+    gap: 2%;
+    margin-top: 2%;
+    display: flex;
 }
 
 .pagesHistory {
@@ -472,7 +618,6 @@
     text-decoration: none;
     font-style: italic;
     cursor: pointer;
-    transition: all 0.3s ease;
 }
 
 .pagesHistory:hover {

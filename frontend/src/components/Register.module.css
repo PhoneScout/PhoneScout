@@ -1,4 +1,4 @@
-body {
+.registerContainer {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     display: flex;
@@ -12,7 +12,7 @@ body {
     background-size: contain;
 }
 
-.form-container {
+.formContainer {
     background-color: #fff;
     padding: 40px 5vw;
     border-radius: 12px;
@@ -24,38 +24,38 @@ body {
     transition: max-width 0.4s ease-in-out;
 }
 
-.form-container.expanded {
+.formContainer.expanded {
     max-width: 1000px;
     max-height: 95vh;
 }
 
-.back-link-container {
+.backLinkContainer {
     position: absolute;
     top: 20px;
     left: 20px;
     font-size: 0.9rem;
 }
 
-h2 {
+.formContainer h2 {
     text-align: center;
     color: #333;
     font-size: 3rem;
     margin-bottom: 5.5rem;
 }
 
-h3 {
+.formContainer h3 {
     color: #333;
     font-size: 1.5rem;
     margin-bottom: 2.5rem;
 }
 
-.input-container {
+.inputContainer {
     position: relative;
     margin-bottom: 25px;
     font-size: 1.2rem;
 }
 
-button {
+.submitButton {
     background-color: #28a745;
     color: white;
     padding: 18px;
@@ -67,67 +67,67 @@ button {
     margin-top: 1rem;
 }
 
-button:hover {
+.submitButton:hover {
     background-color: #218838;
 }
 
-a:link, a:visited {
+.switchLink:link, .switchLink:visited {
     color: green;
     text-decoration: none;
 }
 
-i {
+.formContainer i {
     height: 20px;
     margin-right: 5px;
 }
 
-.fa-solid {
+.formContainer .fa-solid {
     font-size: 12px;
 }
 
-.form-layout {
+.formLayout {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0;
     transition: grid-template-columns 0.4s ease-in-out;
 }
 
-.form-layout.expanded {
+.formLayout.expanded {
     grid-template-columns: 1fr 1fr;
     gap: 40px;
 }
 
-.form-row {
+.formRow {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
 }
 
-.header-row h2.main-title {
+.formRow .mainTitle {
     margin-bottom: 0;
 }
 
-.form-row .input-container {
+.formRow .inputContainer {
     flex: 1;
     margin-right: 20px;
 }
 
-.form-row .input-container:last-child {
+.formRow .inputContainer:last-child {
     margin-right: 0;
 }
 
-.billing-placeholders label {
+.billingPlaceholders label {
     display: block;
     color: #999;
     font-size: 1.1rem;
     margin-top: 0.8rem;
 }
 
-.billing-placeholders label:first-child {
+.billingPlaceholders label:first-child {
     width: 50%;
 }
 
-.checkbox-container {
+.checkboxContainer {
     margin-top: 25px;
     margin-bottom: 15px;
     display: flex;
@@ -135,7 +135,7 @@ i {
     font-size: 1rem;
 }
 
-.checkbox-container input[type="checkbox"] {
+.checkboxContainer input[type="checkbox"] {
     margin-right: 10px;
     width: 16px;
     height: 16px;

@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Navbar.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'; // useNavigate importálása
 
 export default function Navbar() {
     const [previousPages, setPreviousPages] = useState(() => {
         const stored = localStorage.getItem("pagesHistory");
-        return stored ? JSON.parse(stored) : [{ pageName: "Főoldal", pageURL: "../fooldal/index.html" }];
+        return stored ? JSON.parse(stored) : [{ pageName: "Főoldal", pageURL: "/" }];
     });
 
     // Mobile menu state
@@ -15,6 +15,20 @@ export default function Navbar() {
 
     // Ref for mobile menu to detect clicks outside
     const mobileMenuRef = useRef(null);
+
+    // Ref for search dropdown
+    const searchBoxRef = useRef(null);
+    const searchDropdownRef = useRef(null);
+    const mobileSearchBoxRef = useRef(null);
+    const mobileSearchDropdownRef = useRef(null);
+
+    // State for search
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchResults, setSearchResults] = useState([]);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [allPhoneNames, setAllPhoneNames] = useState([]);
+
+    const navigate = useNavigate(); // useNavigate hook
 
     // Save to localStorage
     useEffect(() => {
@@ -62,6 +76,75 @@ export default function Navbar() {
         };
     }, [isMenuOpen]);
 
+    // Load phone names for search
+    useEffect(() => {
+        fetchPhoneNames();
+    }, []);
+
+    // Handle click outside search dropdown
+    useEffect(() => {
+        function handleClickOutsideSearch(event) {
+            if (searchBoxRef.current && 
+                searchDropdownRef.current && 
+                !searchBoxRef.current.contains(event.target) && 
+                !searchDropdownRef.current.contains(event.target)) {
+                setShowDropdown(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutsideSearch);
+        return () => document.removeEventListener('mousedown', handleClickOutsideSearch);
+    }, []);
+
+    const fetchPhoneNames = async () => {
+        try {
+            const response = await fetch("http://localhost:5175/allPhonesName");
+            const data = await response.json();
+            setAllPhoneNames(data);
+        } catch (error) {
+            console.error("Hiba a telefonnevek betöltésekor:", error);
+        }
+    };
+
+    // Handle search
+    const handleSearch = (e) => {
+        const query = e.target.value;
+        setSearchQuery(query);
+        
+        if (query.length > 0) {
+            const filteredResults = allPhoneNames.filter(phone => 
+                phone.phoneName.toLowerCase().includes(query.toLowerCase())
+            ).slice(0, 5); // Limit to 5 results
+            setSearchResults(filteredResults);
+            setShowDropdown(true);
+        } else {
+            setSearchResults([]);
+            setShowDropdown(false);
+        }
+    };
+
+    // Open phone page from search result
+    const openPhonePage = (phoneID, phoneName) => {
+        localStorage.setItem("selectedPhone", phoneID);
+        
+        // Add to page history
+        checkPagesHistory(phoneName, `/telefon/${phoneID}`);
+        
+        // Navigate to phone page
+        navigate(`/telefon/${phoneID}`);
+        
+        // Clear search
+        setSearchQuery('');
+        setShowDropdown(false);
+    };
+
+    // Handle search box focus
+    const handleSearchFocus = () => {
+        if (searchQuery.length > 0) {
+            setShowDropdown(true);
+        }
+    };
+
     // Check if mobile view
     const isMobileView = windowWidth <= 992;
 
@@ -94,17 +177,16 @@ export default function Navbar() {
     // Render pages history
     const pagesHistoryElements = previousPages.map((page, index) => (
         <React.Fragment key={page.pageName}>
-            <a
-                href={page.pageURL}
+            <Link
+                to={page.pageURL}
                 className="pagesHistory"
-                onClick={(e) => {
-                    e.preventDefault();
+                onClick={() => {
                     checkPagesHistory(page.pageName, page.pageURL);
                     closeMobileMenu();
                 }}
             >
                 <div>{page.pageName}</div>
-            </a>
+            </Link>
             {index < previousPages.length - 1 && " / "}
         </React.Fragment>
     ));
@@ -141,11 +223,18 @@ export default function Navbar() {
         localStorage.removeItem("firstname");
         localStorage.removeItem("jogosultsag");
         alert("Sikeres kijelentkezés!");
-        setTimeout(() => {
-            window.location.href = "./index.html";
-        }, 1000);
+        
+        // Reset page history
+        setPreviousPages([{ pageName: "Főoldal", pageURL: "/" }]);
+        localStorage.removeItem("pagesHistory");
+        
+        // Navigate to home page
+        navigate("/");
         closeMobileMenu();
     }
+
+    // Check if user is logged in
+    const isLoggedIn = !!firstname;
 
     return (
         <div className="navbar-wrapper">
@@ -174,13 +263,22 @@ export default function Navbar() {
 
                 {/* Desktop Navigation - hidden on mobile */}
                 <div className="col-lg-4 nav-links d-none d-lg-flex">
-                    <Link to="/szures" className="menuPoints" onClick={closeMobileMenu}>Minden telefon</Link>
+                    <Link 
+                        to="/szures" 
+                        className="menuPoints" 
+                        onClick={() => {
+                            closeMobileMenu();
+                            checkPagesHistory('Minden telefon', '/szures');
+                        }}
+                    >
+                        Minden telefon
+                    </Link>
                     <Link 
                         to="/szerviz" 
                         className="menuPoints" 
                         onClick={() => {
-                            checkPagesHistory('Szerviz','../szerviz/szerviz.html');
                             closeMobileMenu();
+                            checkPagesHistory('Szerviz', '/szerviz');
                         }}
                     >
                         Szerviz
@@ -190,8 +288,8 @@ export default function Navbar() {
                         className="menuPoints" 
                         id="osszehasonlitas"
                         onClick={() => {
-                            checkPagesHistory('Összehasonlítás','../osszehasonlitas/osszehasonlitas.html');
                             closeMobileMenu();
+                            checkPagesHistory('Összehasonlítás', '/osszehasonlitas');
                         }}
                     >
                         Összehasonlítás <span id="compareCount">(0)</span>
@@ -203,35 +301,73 @@ export default function Navbar() {
                     <div className="search-icon">
                         <i className="fa-solid fa-magnifying-glass"></i>
                     </div>
-                    <div className="search-input">
-                        <input onClick="searchPhonesGET()" placeholder="Keresés..." type="text" id="searchBox" autoComplete="off"/>
-                        <div className="search-dropdown" id="searchDropdown"></div>
+                    <div className="search-input" ref={searchBoxRef}>
+                        <input 
+                            value={searchQuery}
+                            onChange={handleSearch}
+                            onFocus={handleSearchFocus}
+                            placeholder="Keresés..." 
+                            type="text" 
+                            id="searchBox" 
+                            autoComplete="off"
+                        />
+                        {showDropdown && searchResults.length > 0 && (
+                            <div className={`search-dropdown ${showDropdown ? 'active' : ''}`} ref={searchDropdownRef}>
+                                {searchResults.map(phone => (
+                                    <div 
+                                        key={phone.phoneID}
+                                        className="dropdown-item" 
+                                        onClick={() => openPhonePage(phone.phoneID, phone.phoneName)}
+                                    >
+                                        {phone.phoneName}
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
 
                 {/* Desktop User/Cart - hidden on mobile */}
                 <div className="col-lg-3 user-cart-container d-none d-lg-flex justify-content-end">
-                    <div className="dropdown" id="dropdownMenu">
-                        <a href="#" className="dropdown-toggle userIcon" id="loginDropdown" data-bs-toggle="dropdown"
-                            aria-expanded="false">
+                    {isLoggedIn ? (
+                        // Logged in user - show dropdown with profile and logout
+                        <div className="dropdown" id="dropdownMenu">
+                            <a href="#" className="dropdown-toggle userIcon" id="loginDropdown" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <div id="userChange">
+                                    <div id="firstName">{firstname}</div>
+                                    <div className="user-img-wrapper">
+                                        <img src="../Images/doneUserIcon1.png" alt="User"/>
+                                    </div>
+                                </div>
+                            </a>
+                            <ul className="dropdown-menu" aria-labelledby="loginDropdown">
+                                <li><Link to="/profil"><button className="profile_button">Profil</button></Link></li>
+                                <li><button className="logout_button" onClick={logout}>Kijelentkezés</button></li>
+                            </ul>
+                        </div>
+                    ) : (
+                        // Not logged in - show login link
+                        <Link 
+                            to="/bejelentkezes" 
+                            className="userIcon"
+                            id="loginLink"
+                            style={{ textDecoration: 'none', color: 'inherit' }}
+                        >
                             <div id="userChange">
-                                <div id="firstName">{firstname || "Bejelentkezés"}</div>
+                                <div id="firstName">Bejelentkezés</div>
                                 <div className="user-img-wrapper">
                                     <img src="../Images/doneUserIcon1.png" alt="User"/>
                                 </div>
                             </div>
-                        </a>
-                        <ul className="dropdown-menu" aria-labelledby="loginDropdown">
-                            <li><button className="profile_button">Profil</button></li>
-                            <li><button className="logout_button" onClick={logout}>Kijelentkezés</button></li>
-                        </ul>
-                    </div>
+                        </Link>
+                    )}
 
                     <div className="cart-icon">
                         <Link 
                             to="/kosar"
                             onClick={() => {
-                                checkPagesHistory('Kosár','../kosar/kosar.html');
+                                checkPagesHistory('Kosár', '/kosar');
                                 closeMobileMenu();
                             }}
                         >
@@ -249,7 +385,7 @@ export default function Navbar() {
                         <Link 
                             to="/kosar"
                             onClick={() => {
-                                checkPagesHistory('Kosár','../kosar/kosar.html');
+                                checkPagesHistory('Kosár', '/kosar');
                                 closeMobileMenu();
                             }}
                         >
@@ -280,7 +416,10 @@ export default function Navbar() {
                             <Link 
                                 to="/szures" 
                                 className="mobile-menu-point" 
-                                onClick={closeMobileMenu}
+                                onClick={() => {
+                                    closeMobileMenu();
+                                    checkPagesHistory('Minden telefon', '/szures');
+                                }}
                             >
                                 <i className="fa-solid fa-mobile-screen-button"></i>
                                 Minden telefon
@@ -289,8 +428,8 @@ export default function Navbar() {
                                 to="/szerviz" 
                                 className="mobile-menu-point"
                                 onClick={() => {
-                                    checkPagesHistory('Szerviz','../szerviz/szerviz.html');
                                     closeMobileMenu();
+                                    checkPagesHistory('Szerviz', '/szerviz');
                                 }}
                             >
                                 <i className="fa-solid fa-screwdriver-wrench"></i>
@@ -300,8 +439,8 @@ export default function Navbar() {
                                 to="/osszehasonlitas" 
                                 className="mobile-menu-point"
                                 onClick={() => {
-                                    checkPagesHistory('Összehasonlítás','../osszehasonlitas/osszehasonlitas.html');
                                     closeMobileMenu();
+                                    checkPagesHistory('Összehasonlítás', '/osszehasonlitas');
                                 }}
                             >
                                 <i className="fa-solid fa-code-compare"></i>
@@ -313,6 +452,9 @@ export default function Navbar() {
                         <div className="mobile-search-container">
                             <div className="search-input">
                                 <input 
+                                    value={searchQuery}
+                                    onChange={handleSearch}
+                                    onFocus={handleSearchFocus}
                                     placeholder="Keresés..." 
                                     type="text" 
                                     id="mobileSearchBox" 
@@ -322,6 +464,22 @@ export default function Navbar() {
                                     <i className="fa-solid fa-magnifying-glass"></i>
                                 </div>
                             </div>
+                            {showDropdown && searchResults.length > 0 && (
+                                <div className={`search-dropdown ${showDropdown ? 'active' : ''}`} style={{marginTop: '10px'}}>
+                                    {searchResults.map(phone => (
+                                        <div 
+                                            key={phone.phoneID}
+                                            className="dropdown-item" 
+                                            onClick={() => {
+                                                openPhonePage(phone.phoneID, phone.phoneName);
+                                                closeMobileMenu();
+                                            }}
+                                        >
+                                            {phone.phoneName}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Mobile User Section */}
@@ -357,7 +515,7 @@ export default function Navbar() {
                                     </>
                                 ) : (
                                     <Link 
-                                        to="/login_register/login.html" 
+                                        to="/bejelentkezes" 
                                         className="mobile-user-action-btn login-btn"
                                         onClick={closeMobileMenu}
                                     >

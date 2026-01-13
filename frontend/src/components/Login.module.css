@@ -1,4 +1,4 @@
-body {
+.loginContainer {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
     display: flex;
@@ -12,7 +12,7 @@ body {
     background-size: contain; 
 }
 
-.form-container {
+.formContainer {
     background-color: #fff;
     padding: 8vh 5vw; 
     border-radius: 12px; 
@@ -23,27 +23,27 @@ body {
     position: relative; 
 }
 
-.back-link-container {
+.backLinkContainer {
     position: absolute;
     top: 20px;   
     left: 20px;  
     font-size: 0.9rem; 
 }
 
-h2 {
+.formContainer h2 {
     text-align: center;
     color: #333;
     font-size: 3rem; 
     margin-bottom: 5.5rem; 
 }
 
-.input-container {
+.inputContainer {
     position: relative;
     margin-bottom: 25px; 
     font-size: 1.2rem;
 }
 
-button {
+.submitButton {
     background-color: #28a745;
     color: white;
     padding: 18px; 
@@ -55,20 +55,20 @@ button {
     margin-top: 1rem;
 }
 
-button:hover {
+.submitButton:hover {
     background-color: #218838;
 }
 
-a:link, a:visited {
+.switchLink:link, .switchLink:visited {
     color: green;
     text-decoration: none; 
 }
 
-i{
+.formContainer i{
     height: 20px;
     margin-right: 5px; 
 }
 
-.fa-solid{
+.formContainer .fa-solid{
     font-size: 12px;
 }
