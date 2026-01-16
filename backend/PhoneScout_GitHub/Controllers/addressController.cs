@@ -123,31 +123,6 @@ namespace PhoneScout_GitHub.Controllers
         }
 
 
-        /*[HttpDelete("deleteOrder/{orderID}")]
-
-        public IActionResult deleteOrder(int orderID)
-        {
-            try
-            {
-                var order = cx.Connuserorders.FirstOrDefault(o => o.Id == orderID);
-                if (order != null)
-                {
-                    cx.Connuserorders.Remove(order);
-                    cx.SaveChanges();
-                    return Ok("Megrendelés törölve.");
-                }
-                else
-                {
-                    return BadRequest("A megrendelés nem található, így nem törölhető.");
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-        }
-*/
-
 
     }
 }

@@ -11,8 +11,7 @@ namespace PhoneScout_GitHub
     {
         /*
      Adatbázis frissítés esetén:
-    Scaffold-DbContext "server=localhost;database=phonescout;user=root;password=" Pomelo.EntityFrameworkCore.MySql -OutputDir Models -Context PhoneContext -f
-     */
+    dotnet ef dbcontext scaffold "server=localhost;database=phonescout;user=PSAdmin;password=PASSWORD" Pomelo.EntityFrameworkCore.MySql --output-dir Models --context PhoneContext --force  */
 
         const int SaltLength = 64;
         public static Dictionary<string, User> LoggedInUsers = new Dictionary<string, User>();
@@ -92,6 +91,11 @@ namespace PhoneScout_GitHub
                             .AllowAnyMethod()
                             .AllowAnyHeader();
                     });
+            });
+
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.EnableAnnotations();
             });
 
 

@@ -7,6 +7,10 @@ namespace PhoneScout_GitHub.Models;
 
 public partial class PhoneContext : DbContext
 {
+    public PhoneContext()
+    {
+    }
+
     public PhoneContext(DbContextOptions<PhoneContext> options)
         : base(options)
     {
@@ -46,6 +50,8 @@ public partial class PhoneContext : DbContext
 
     public virtual DbSet<Phonedata> Phonedatas { get; set; }
 
+    public virtual DbSet<Phonepicture> Phonepictures { get; set; }
+
     public virtual DbSet<Postalcode> Postalcodes { get; set; }
 
     public virtual DbSet<Privilege> Privileges { get; set; }
@@ -68,7 +74,10 @@ public partial class PhoneContext : DbContext
 
     public virtual DbSet<Waterprooftype> Waterprooftypes { get; set; }
 
-   
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseMySql("server=localhost;database=phonescout;user=PSAdmin;password=ciscoSecret123", Microsoft.EntityFrameworkCore.ServerVersion.Parse("10.4.32-mariadb"));
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder
@@ -708,6 +717,39 @@ public partial class PhoneContext : DbContext
             entity.HasOne(d => d.WaterproofType).WithMany(p => p.Phonedata)
                 .HasForeignKey(d => d.WaterproofTypeId)
                 .HasConstraintName("waterproofType");
+        });
+
+        modelBuilder.Entity<Phonepicture>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("PRIMARY");
+
+            entity.ToTable("phonepictures");
+
+            entity.HasIndex(e => e.PhoneId, "phoneID");
+
+            entity.Property(e => e.Id)
+                .HasColumnType("int(11)")
+                .HasColumnName("ID");
+            entity.Property(e => e.PhoneId)
+                .HasColumnType("int(11)")
+                .HasColumnName("phoneID");
+            entity.Property(e => e.PictureBack)
+                .HasColumnType("mediumblob")
+                .HasColumnName("pictureBack");
+            entity.Property(e => e.PictureBottom)
+                .HasColumnType("mediumblob")
+                .HasColumnName("pictureBottom");
+            entity.Property(e => e.PictureFront)
+                .HasColumnType("mediumblob")
+                .HasColumnName("pictureFront");
+            entity.Property(e => e.PictureTop)
+                .HasColumnType("mediumblob")
+                .HasColumnName("pictureTop");
+
+            entity.HasOne(d => d.Phone).WithMany(p => p.Phonepictures)
+                .HasForeignKey(d => d.PhoneId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("phonepictures_ibfk_1");
         });
 
         modelBuilder.Entity<Postalcode>(entity =>

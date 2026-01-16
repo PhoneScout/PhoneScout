@@ -107,6 +107,8 @@ public partial class Phonedata
 
     public virtual Manufacturer? Manufacturer { get; set; }
 
+    public virtual ICollection<Phonepicture> Phonepictures { get; set; } = new List<Phonepicture>();
+
     public virtual Ramspeed? RamSpeed { get; set; }
 
     public virtual Screentype? ScreenType { get; set; }

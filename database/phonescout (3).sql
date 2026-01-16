@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2025. Dec 16. 11:25
+-- Létrehozás ideje: 2026. Jan 16. 10:39
 -- Kiszolgáló verziója: 10.4.32-MariaDB
--- PHP verzió: 8.2.12
+-- PHP verzió: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -861,6 +861,21 @@ INSERT INTO `phonedatas` (`phoneID`, `manufacturerID`, `phoneName`, `cpuID`, `ph
 (22, 1, 'Xiaomi 15 Ultra', 18, 2746580, 2, 3200, 1400, 6.73, 120, 3200, 522, 7, 6.00, 5, 'van', 'van', 'van', 3, 'nincs', 1, 5, 2, 'van', 2, 8, 3, 5410, 90, 80, 161.30, 75.30, 9.35, 1, 2, 1, 229.00, '2025-02-27', 374790, 'nincs', 0, NULL, 0),
 (23, 7, 'teszt3', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 'nincs', 'nincs', 'nincs', 0, 'nincs', 1, 2, 3, 'nincs', 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 'nincs', 0, NULL, 0),
 (24, 7, 'teszt4', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 'nincs', 'nincs', 'nincs', 0, 'nincs', 1, 2, 3, 'nincs', 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 'nincs', 0, NULL, 0);
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `phonepictures`
+--
+
+CREATE TABLE `phonepictures` (
+  `ID` int(11) NOT NULL,
+  `phoneID` int(11) NOT NULL,
+  `pictureFront` mediumblob DEFAULT NULL,
+  `pictureBack` mediumblob DEFAULT NULL,
+  `pictureTop` mediumblob DEFAULT NULL,
+  `pictureBottom` mediumblob DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 -- --------------------------------------------------------
 
@@ -4454,7 +4469,7 @@ INSERT INTO `postalcode` (`Iranyitoszam`, `Telepules`, `Megye`) VALUES
 (6792, 'Zsombó', 'Csongrád'),
 (3897, 'Zsujta', 'Borsod-Abaúj-Zemplén'),
 (4627, 'Zsurk', 'Szabolcs-Szatmár-Bereg'),
-(3723, 'Zubogy', 'Borsod-Abaúj-Zemplén');
+(3723, 'Zubogy', 'Borsod-Abaúj-Zemplén'),
 
 -- --------------------------------------------------------
 
@@ -4832,6 +4847,13 @@ ALTER TABLE `phonedatas`
   ADD KEY `batteryTypeID` (`batteryTypeID`);
 
 --
+-- A tábla indexei `phonepictures`
+--
+ALTER TABLE `phonepictures`
+  ADD PRIMARY KEY (`ID`),
+  ADD KEY `phoneID` (`phoneID`);
+
+--
 -- A tábla indexei `privilege`
 --
 ALTER TABLE `privilege`
@@ -4995,6 +5017,12 @@ ALTER TABLE `phonedatas`
   MODIFY `phoneID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
+-- AUTO_INCREMENT a táblához `phonepictures`
+--
+ALTER TABLE `phonepictures`
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT a táblához `privilege`
 --
 ALTER TABLE `privilege`
@@ -5068,7 +5096,7 @@ ALTER TABLE `addresses`
 -- Megkötések a táblához `connectionparts`
 --
 ALTER TABLE `connectionparts`
-  ADD CONSTRAINT `connectionparts_ibfk_1` FOREIGN KEY (`partID`) REFERENCES `parts` (`Id`),
+  ADD CONSTRAINT `connectionparts_ibfk_1` FOREIGN KEY (`partID`) REFERENCES `parts` (`ID`),
   ADD CONSTRAINT `connectionparts_ibfk_2` FOREIGN KEY (`repairID`) REFERENCES `connectionservice` (`repairID`);
 
 --
@@ -5121,6 +5149,12 @@ ALTER TABLE `phonedatas`
   ADD CONSTRAINT `speakerType` FOREIGN KEY (`speakerTypeID`) REFERENCES `speakertype` (`ID`),
   ADD CONSTRAINT `storageSpeed` FOREIGN KEY (`storageSpeedID`) REFERENCES `storagespeed` (`ID`),
   ADD CONSTRAINT `waterproofType` FOREIGN KEY (`waterproofTypeID`) REFERENCES `waterprooftype` (`ID`);
+
+--
+-- Megkötések a táblához `phonepictures`
+--
+ALTER TABLE `phonepictures`
+  ADD CONSTRAINT `phonepictures_ibfk_1` FOREIGN KEY (`phoneID`) REFERENCES `phonedatas` (`phoneID`);
 
 --
 -- Megkötések a táblához `users`

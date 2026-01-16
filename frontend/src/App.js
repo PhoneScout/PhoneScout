@@ -13,10 +13,14 @@ import LoginRegister from './pages/LoginRegister';
 
 
 
+
 function App() {
   return (
 
     <div className="App">
+
+
+
 
       <Routes>
         <Route path='/' element={<Home />}></Route>
@@ -31,6 +35,7 @@ function App() {
         <Route path="/bejelentkezes" element={<LoginRegister />}></Route>
 
       </Routes>
+      
     </div>
 
 
