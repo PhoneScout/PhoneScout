@@ -2486,8 +2486,7 @@ INSERT INTO `postalcode` (`Iranyitoszam`, `Telepules`, `Megye`) VALUES
 (8888, 'Kiscsehi', 'Zala'),
 (8494, 'Kiscsősz', 'Veszprém'),
 (7814, 'Kisdér', 'Baranya'),
-(7985, 'Kisdobsza', 'Baranya');
-INSERT INTO `postalcode` (`Iranyitoszam`, `Telepules`, `Megye`) VALUES
+(7985, 'Kisdobsza', 'Baranya'),
 (5837, 'Kisdombegyház', 'Békés'),
 (7159, 'Kisdorog', 'Tolna'),
 (2655, 'Kisecset', 'Nógrád'),
@@ -4469,7 +4468,7 @@ INSERT INTO `postalcode` (`Iranyitoszam`, `Telepules`, `Megye`) VALUES
 (6792, 'Zsombó', 'Csongrád'),
 (3897, 'Zsujta', 'Borsod-Abaúj-Zemplén'),
 (4627, 'Zsurk', 'Szabolcs-Szatmár-Bereg'),
-(3723, 'Zubogy', 'Borsod-Abaúj-Zemplén'),
+(3723, 'Zubogy', 'Borsod-Abaúj-Zemplén');
 
 -- --------------------------------------------------------
 
