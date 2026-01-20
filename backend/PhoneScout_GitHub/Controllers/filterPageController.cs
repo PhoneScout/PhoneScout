@@ -24,23 +24,23 @@ namespace PhoneScout_GitHub.Controllers
             try
             {
                 var phones = _context.Phonedatas
-                    .Where(p => 
-                    p.PhoneDeleted == 0
-                    && (string.IsNullOrEmpty(filters.manufacturerName) || filters.manufacturerName == p.Manufacturer.ManufacturerName)
-                    && (string.IsNullOrEmpty(filters.cpuName) || filters.cpuName == p.Cpu.CpuName)
-                    && (filters.phoneAntutu == 0 || filters.phoneAntutu > p.PhoneAntutu)
+                    .Where(p => p.PhoneDeleted == 0
+                    //&& (filters.manufacturerNames == null || !filters.manufacturerNames.Any() || filters.manufacturerNames.Contains(p.Manufacturer.ManufacturerName))
+                    //&& (filters.cpuNames == null || !filters.cpuNames.Any() || filters.cpuNames.Contains(p.Cpu.CpuName))
+                    && (filters.phoneAntutu == 0 || filters.phoneAntutu < p.PhoneAntutu)
                     && (filters.cpuMaxClockSpeed == 0 || filters.cpuMaxClockSpeed < p.Cpu.CpuMaxClockSpeed)
                     && (filters.cpuCoreNumber == 0 || filters.cpuCoreNumber < p.Cpu.CpuCoreNumber)
                     && (filters.screenSizeMin == 0 || filters.screenSizeMin < p.ScreenSize)
                     && (filters.screenSizeMax == 0 || filters.screenSizeMax > p.ScreenSize)
                     && (filters.screenRefreshRateMin == 0 || filters.screenRefreshRateMin < p.ScreenRefreshRate)
                     && (filters.screenRefreshRateMax == 0 || filters.screenRefreshRateMax > p.ScreenRefreshRate)
+                    && (filters.phoneWeightMin == 0 || filters.phoneWeightMin < p.PhoneWeight)
+                    && (filters.phoneWeightMax == 0 || filters.phoneWeightMax > p.PhoneWeight)
                     && (filters.screenMaxBrightness == 0 || filters.screenMaxBrightness < p.ScreenMaxBrightness)
                     && (filters.ramAmount == 0 || filters.ramAmount < p.Connphoneramstorages.Max(r => r.Ramstorage.RamAmount))
                     && (filters.storageAmount == 0 || filters.storageAmount < p.Connphoneramstorages.Max(r => r.Ramstorage.StorageAmount))
                     && (filters.batteryCapacity == 0 || filters.batteryCapacity < p.BatteryCapacity)
-                    
-
+                    //&& (filters.phoneReleaseDate == 0 || p.PhoneReleaseDate.HasValue && p.PhoneReleaseDate.Value.Year <= filters.phoneReleaseDate)
                     )
                     .Select(p => new mainPageDTO
                     {
@@ -90,7 +90,7 @@ namespace PhoneScout_GitHub.Controllers
             }
         }
 
-         [HttpGet("GetAllPhones")]
+        [HttpGet("GetAllPhones")]
 
         public IActionResult GetAllPhones()
         {
