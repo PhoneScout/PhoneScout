@@ -90,6 +90,32 @@ namespace PhoneScout_GitHub.Controllers
             }
         }
 
+         [HttpGet("GetAllPhones")]
+
+        public IActionResult GetAllPhones()
+        {
+            try
+            {
+                var phoneDatas = _context.Phonedatas
+                .OrderByDescending(p => p.PhonePopularity)
+                .Select(p => new mainPageDTO
+                {
+                    phoneID = p.PhoneId,
+                    phoneName = p.PhoneName,
+                    phonePrice = p.PhonePrice,
+                    phoneInStore = p.PhoneInStore,
+                })
+                .ToList();
+
+
+
+                return Ok(phoneDatas);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
 
     }
 }
