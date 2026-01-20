@@ -1,38 +1,63 @@
-import React from 'react'
-import styles from './Login.module.css'; // Module import
-import 'bootstrap/dist/css/bootstrap.css'
+import React from 'react';
+import styles from './Login.module.css';
+import 'bootstrap/dist/css/bootstrap.css';
 import InputText from './InputText';
-import { Link } from 'react-router';
+import { Link } from 'react-router-dom'; // Feltételezve, hogy react-router-dom-ot használsz
 
-export default function Login({onSwitchToRegister}) {
+export default function Login({ onSwitchToRegister }) {
 
-    function login(){
-        console.log("Majd jó lesz")
-    }
+    const login = async (e) => {
+        if (e) e.preventDefault();
+        
+        const alertBox = document.getElementById('alertLog');
+        alertBox.innerText = "";
+        alertBox.style.color = "red";
+
+        const email = document.getElementById('loginEmail')?.value.trim();
+        const password = document.getElementById('loginPassword')?.value;
+
+        if (!email || !password) {
+            alertBox.innerText = "Hiba: Minden mezőt töltsön ki!";
+            return;
+        }
+
+        console.log("Bejelentkezés folyamatban...", { email, password });
+    };
 
     return (
-        <div className={styles.loginContainer}> {/* Használd a styles osztályt */}
+        <div className={styles.loginContainer}>
             <div className={styles.formContainer}>
                 
                 <div className={styles.backLinkContainer}>
                     <Link to="/"><i className="fa-solid fa-arrow-left"></i> Vissza az oldalra</Link>
                 </div>
 
-                <div id="responseMessage" className={styles.alert}></div>
+                <h2 className={styles.mainTitle}>Bejelentkezés</h2>
 
-                <h2>Bejelentkezés</h2>
+                <form id='loginForm' onSubmit={login}>
+                    <div className={styles.formLayout}>
+                        <div className={styles.inputContainer}>
+                            <InputText type='email' id='loginEmail' label='Email' required />
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <InputText type='password' id='loginPassword' label='Jelszó' required />
+                        </div>
+                    </div>
 
-                <form id='loginForm' onSubmit={login()}>
-                    <div className={styles.inputContainer}>
-                        <InputText type='email' id='loginEmail' label='Email' />
-                    </div>
-                    <div className={styles.inputContainer}>
-                        <InputText type='password' id='loginPassword' label='Jelszó' />
-                    </div>
                     <button type='submit' className={styles.submitButton}>Bejelentkezés</button>
-                    <p id="alertLog"></p>
+
+                    <p id="alertLog" className={styles.alertMessage}></p>
+
+                    <button 
+                        type="button" 
+                        onClick={onSwitchToRegister} 
+                        className={styles.switchLink}
+                    >
+                        Nincs fiókod? Regisztrálj itt!
+                    </button>
+
+                    
                 </form>
-                <a href="#" onClick={onSwitchToRegister} className={styles.switchLink}>Nincs fiókod? Regisztálj itt!</a>
             </div>
         </div>
     )
