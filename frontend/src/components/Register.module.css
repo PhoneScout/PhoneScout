@@ -1,32 +1,23 @@
 .registerContainer {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100vh;
+    min-height: 100vh;
     margin: 0;
-    background-image: url('../../public/images/PhoneScoutLogo.png');
-    background-repeat: no-repeat;
-    background-position: 50%;
-    background-size: contain;
+    background: linear-gradient(135deg, #2300B3 0%, #68F145 100%);
+    padding: 20px;
 }
 
 .formContainer {
     background-color: #fff;
-    padding: 40px 5vw;
+    padding: 40px 2.5vw;
     border-radius: 12px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
-    width: 80vw;
-    max-width: 500px;
-    height: auto;
+    width: 90vw;
+    max-width: 750px;
     position: relative;
-    transition: max-width 0.4s ease-in-out;
-}
-
-.formContainer.expanded {
-    max-width: 1000px;
-    max-height: 95vh;
+    transition: all 0.4s ease-in-out;
 }
 
 .backLinkContainer {
@@ -36,23 +27,55 @@
     font-size: 0.9rem;
 }
 
-.formContainer h2 {
+.mainTitle {
     text-align: center;
     color: #333;
     font-size: 3rem;
-    margin-bottom: 5.5rem;
+    margin-bottom: 2rem;
 }
 
-.formContainer h3 {
+.billingTitle {
     color: #333;
     font-size: 1.5rem;
-    margin-bottom: 2.5rem;
+    margin-top: 10px;
+    margin-bottom: 1.5rem;
 }
 
-.inputContainer {
-    position: relative;
-    margin-bottom: 25px;
-    font-size: 1.2rem;
+.formLayout {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.formRow {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+.formRow > div {
+    flex: 1;
+}
+
+.billingWrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.5s ease-in-out, opacity 0.3s ease;
+    opacity: 0;
+    overflow: hidden;
+}
+
+.billingWrapper.show {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    margin-top: 10px;
+}
+
+.billingInner {
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 .submitButton {
@@ -65,15 +88,55 @@
     width: 100%;
     font-size: 1.4rem;
     margin-top: 1rem;
+    transition: background 0.3s;
 }
 
 .submitButton:hover {
     background-color: #218838;
 }
 
-.switchLink:link, .switchLink:visited {
+.checkboxContainer {
+    margin-top: 25px;
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    color: #333;
+}
+
+.checkboxContainer input[type="checkbox"] {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.alertMessage {
+    font-weight: bold;
+    margin-top: 10px;
+    min-height: 24px;
+    text-align: left;
+}
+
+.switchLink {
     color: green;
     text-decoration: none;
+    background: none;
+    border: none;
+    padding: 0;
+    font-size: 1rem;
+    cursor: pointer;
+    display: block;
+    text-align: left;
+    margin-top: 10px;
+    margin-left: 2px;
+    font-family: inherit;
+    transition: color 0.2s;
+}
+
+.switchLink:hover {
+    color: #218838;
+    text-decoration: underline;
 }
 
 .formContainer i {
@@ -85,59 +148,6 @@
     font-size: 12px;
 }
 
-.formLayout {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0;
-    transition: grid-template-columns 0.4s ease-in-out;
-}
-
-.formLayout.expanded {
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-}
-
-.formRow {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-}
-
-.formRow .mainTitle {
-    margin-bottom: 0;
-}
-
-.formRow .inputContainer {
-    flex: 1;
-    margin-right: 20px;
-}
-
-.formRow .inputContainer:last-child {
-    margin-right: 0;
-}
-
-.billingPlaceholders label {
-    display: block;
-    color: #999;
-    font-size: 1.1rem;
-    margin-top: 0.8rem;
-}
-
-.billingPlaceholders label:first-child {
-    width: 50%;
-}
-
-.checkboxContainer {
-    margin-top: 25px;
-    margin-bottom: 15px;
-    display: flex;
-    align-items: center;
-    font-size: 1rem;
-}
-
-.checkboxContainer input[type="checkbox"] {
-    margin-right: 10px;
-    width: 16px;
-    height: 16px;
-    cursor: pointer;
+h2{
+    text-align: center;
 }

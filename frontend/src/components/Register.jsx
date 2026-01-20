@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import InputText from './InputText';
-import styles from './Register.module.css'; // Module import
+import styles from './Register.module.css';
 import { Link } from 'react-router';
 
 export default function Register({ onSwitchToLogin }) {
@@ -11,117 +11,156 @@ export default function Register({ onSwitchToLogin }) {
         setShowBilling(event.target.checked);
     };
 
-    const handleRegisterClick = () => {
-        console.log("Regisztráció folyamatban...");
-    };
-
     const handleLinkClick = (event, callback) => {
         event.preventDefault();
         callback();
     };
 
+    const handleRegisterClick = async (e) => {
+        if (e) e.preventDefault();
+
+        const alertBox = document.getElementById('alertReg');
+        // Alaphelyzetbe állítás minden gombnyomáskor
+        alertBox.innerText = "";
+        alertBox.style.color = "red";
+
+        const name = document.getElementById('registerName')?.value.trim() || "";
+        const email = document.getElementById('registerEmail')?.value.trim() || "";
+        const password = document.getElementById('registerPassword')?.value || "";
+        const passwordAgain = document.getElementById('registerPasswordAgain')?.value || "";
+
+        if (!name || !email || !password) {
+            alertBox.innerText = "Hiba: A név, email és jelszó mezők kitöltése kötelező!";
+            return;
+        }
+
+        if (password !== passwordAgain) {
+            alertBox.innerText = "Hiba: A két jelszó nem egyezik!";
+            return;
+        }
+
+        try {
+            const msgBuffer = new TextEncoder().encode(password);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+            let userData = {
+                name: name,
+                email: email,
+                salt: "",
+                hash: hashedPassword,
+                privilegeID: 5,
+                active: 0
+            };
+
+            // if (showBilling) {
+            //     userData.postalCode = document.getElementById('registerPostalCode')?.value || "";
+            //     userData.city = document.getElementById('registerCity')?.value || "";
+            //     userData.street = document.getElementById('registerStreet')?.value || "";
+            //     userData.houseNumber = document.getElementById('registerHouseNumber')?.value || "";
+            //     userData.phone = document.getElementById('registerPhoneNU')?.value || "";
+            // }
+
+            const response = await fetch('http://localhost:5175/api/Registration', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(userData),
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                alertBox.style.color = "red";
+                alertBox.innerText = `Szerver hiba: ${errorText}`;
+                return;
+            }
+
+            alertBox.style.color = "green";
+            alertBox.innerText = "Sikeres regisztráció! Átirányítás a bejelentkezéshez (3 mp)...";
+
+            const resMsg = document.getElementById('responseMessage');
+            if (resMsg) resMsg.innerText = "";
+
+            setTimeout(() => {
+                if (onSwitchToLogin) onSwitchToLogin();
+            }, 3000); // 3 másodperc várakozás
+
+        } catch (error) {
+            alertBox.style.color = "red";
+            alertBox.innerText = "Hálózati hiba történt a szerverrel való kapcsolódáskor.";
+        }
+    };
+
+
     return (
         <div className={styles.registerContainer}>
-            <div className={`${styles.formContainer} ${showBilling ? styles.expanded : ''}`}>
-                <div id="responseMessage" className={styles.alert}></div>
-                
-                {/* Vissza link konténer */}
+            <form className={styles.formContainer} onSubmit={handleRegisterClick}>
+
                 <div className={styles.backLinkContainer}>
-                    <a href="../fooldal/index.html">
                     <Link to="/"><i className="fa-solid fa-arrow-left"></i> Vissza az oldalra</Link>
-                    </a>
                 </div>
 
-                {/* Fő elrendezés, ami soronként kezeli a bal/jobb oldali tartalmat */}
-                <div className={`${styles.formLayout} ${showBilling ? styles.expanded : ''}`}>
-                    
-                    {/* 1. Sor: Címsorok */}
+                <h2 className={styles.mainTitle}>Regisztráció</h2>
+
+                <div className={styles.formLayout}>
+                    {/* Alap adatok */}
                     <div className={styles.formRow}>
-                        <h2 className={styles.mainTitle}>Regisztráció</h2>
-                        {showBilling && <h2 className={styles.billingTitle}>Számlázási adatok</h2>}
+                        <InputText type='text' id='registerName' label='Név' required />
                     </div>
 
-                    {/* 2. Sor: Vezetéknév / Irányítószám+Város placeholder */}
                     <div className={styles.formRow}>
-                        <div className={styles.inputContainer}>
-                            <InputText type='text' id='registerLastName' label='Vezetéknév' />
-                        </div>
-                        {showBilling && (
-                            <div className={styles.inputContainer}>
-                                <InputText type='text' id="registerPostalCode" label="Irányítószám"/>
+                        <InputText type='email' id='registerEmail' label='Email' required />
+                    </div>
+
+                    <div className={styles.formRow}>
+                        <InputText type='password' id='registerPassword' label='Jelszó' required />
+                        <InputText type='password' id='registerPasswordAgain' label='Jelszó újra' required />
+                    </div>
+
+                    {/* Animált Számlázási Rész */}
+                    <div className={`${styles.billingWrapper} ${showBilling ? styles.show : ''}`}>
+                        <div className={styles.billingInner}>
+                            <h2 className={styles.billingTitle}>Számlázási adatok</h2>
+                            <div className={styles.formRow}>
+                                <InputText type='text' id="registerCity" label="Város" />
+                                <InputText type='text' id="registerPostalCode" label="Irányítószám" />
                             </div>
-                        )}
-                    </div>
-
-                    {/* 3. Sor: Keresztnév / Utca+Házszám placeholder */}
-                    <div className={styles.formRow}>
-                        <div className={styles.inputContainer}>
-                            <InputText type='text' id='registerFirstName' label='Keresztnév' />
-                        </div>
-                        {showBilling && (
-                            <div className={styles.inputContainer}>
-                                <InputText type='text' id="registerCity" label="Város"/>
+                            <div className={styles.formRow}>
+                                <InputText type='text' id="registerStreet" label="Utca" />
                             </div>
-                        )}
-                    </div>
-
-                    {/* 4. Sor: Email / Telefonszám placeholder */}
-                    <div className={styles.formRow}>
-                        <div className={styles.inputContainer}>
-                            <InputText type='email' id='registerEmail' label='Email' />
-                        </div>
-                        {showBilling && (
-                            <div className={styles.inputContainer}>
-                                <InputText type='text' id="registerStreet" label="Utca"/>
+                            <div className={styles.formRow}>
+                                <InputText type='tel' id="registerPhoneNU" label="Telefonszám" />
                             </div>
-                        )}
-                    </div>
-
-                    {/* 5. Sor: Jelszó / Üres hely */}
-                    <div className={styles.formRow}>
-                        <div className={styles.inputContainer}>
-                            <InputText type='password' id='registerPassword' label='Jelszó' />
                         </div>
-                        {showBilling && (
-                            <div className={styles.inputContainer}>
-                                <InputText type='text' id="registerHouseNumber" label="Házszám"/>
-                            </div>
-                        )}
                     </div>
+                </div>
 
-                    {/* 6. Sor: Jelszó újra / Üres hely */}
-                    <div className={styles.formRow}>
-                        <div className={styles.inputContainer}>
-                            <InputText type='password' id='registerPasswordAgain' label='Jelszó újra' />
-                        </div>
-                        {showBilling && (
-                            <div className={styles.inputContainer}>
-                                <InputText type='tel' id="registerPhoneNU" label="Telefonszám"/>
-                            </div>
-                        )}
-                    </div>
-                    
-                </div> {/* form-layout vége */}
-
-                {/* A checkbox és a gombok a layout alatt helyezkednek el */}
                 <div className={styles.checkboxContainer}>
-                    <input 
-                        type="checkbox" 
-                        id="addBillingDetails" 
-                        checked={showBilling} 
-                        onChange={handleCheckboxChange} 
+                    <input
+                        type="checkbox"
+                        id="addBillingDetails"
+                        checked={showBilling}
+                        onChange={handleCheckboxChange}
                     />
                     <label htmlFor="addBillingDetails">Számlázási adatok megadása</label>
                 </div>
 
-                <button className={styles.submitButton} onClick={handleRegisterClick}>Regisztráció</button>
-                <p id="alertReg"></p>
+                <button type="submit" className={styles.submitButton}>Regisztráció</button>
 
-                <a href="#" className={styles.switchLink} onClick={(e) => handleLinkClick(e, onSwitchToLogin)}>
+                <p id="alertReg" className={styles.alertMessage}></p>
+
+                <button
+                    type="button"
+                    className={styles.switchLink}
+                    onClick={onSwitchToLogin}
+                >
                     Már van fiókod? Jelentkezz be itt!
-                </a>
-
-            </div>
+                </button>
+            </form>
         </div>
+
     );
 }

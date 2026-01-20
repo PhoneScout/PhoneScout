@@ -34,7 +34,7 @@ namespace PhoneScout_GitHub.Controllers
                 }
 
                 // Jogosultság lekérése
-                var privilege = await _cx.Privileges.FirstOrDefaultAsync(f => f.Level == 1);
+                var privilege = await _cx.Privileges.FirstOrDefaultAsync(f => f.Level == 5);
                 if (privilege == null)
                 {
                     return BadRequest("Nincs ilyen jogosultság az adatbázisban!");
