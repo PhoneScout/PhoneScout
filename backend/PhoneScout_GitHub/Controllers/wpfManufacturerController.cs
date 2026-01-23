@@ -26,7 +26,7 @@ namespace PhoneScout_GitHub.Controllers
             {
                 var manufacturers = cx.Manufacturers
                 .OrderByDescending(m => m.ManufacturerName)
-                .Select(m => new wcfManufacturerDTO
+                .Select(m => new wpfManufacturerDTO
                 {
                     manufacturerName = m.ManufacturerName,
                     manufacturerURL = m.ManufacturerUrl,
@@ -45,31 +45,31 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPut("{name}")]
-public IActionResult UpdateManufacturer([FromBody] wcfManufacturerDTO dto,string name)
-{
-    try
-    {
-        var manufacturer = cx.Manufacturers
-            .FirstOrDefault(m => m.ManufacturerName == name);
-
-        if (manufacturer == null)
+        public IActionResult UpdateManufacturer([FromBody] wpfManufacturerDTO dto, string name)
         {
-            return NotFound("A cég nem található");
+            try
+            {
+                var manufacturer = cx.Manufacturers
+                    .FirstOrDefault(m => m.ManufacturerName == name);
+
+                if (manufacturer == null)
+                {
+                    return NotFound("A cég nem található");
+                }
+
+                manufacturer.ManufacturerName = dto.manufacturerName;
+                manufacturer.ManufacturerEmail = dto.manufacturerEmail;
+                manufacturer.ManufacturerUrl = dto.manufacturerURL;
+
+                cx.SaveChanges();
+
+                return Ok("A cég adatai frissítve");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
-
-        manufacturer.ManufacturerName = dto.manufacturerName;
-        manufacturer.ManufacturerEmail = dto.manufacturerEmail;
-        manufacturer.ManufacturerUrl = dto.manufacturerURL;
-
-        cx.SaveChanges();
-
-        return Ok("A cég adatai frissítve");
-    }
-    catch (Exception ex)
-    {
-        return BadRequest(ex.Message);
-    }
-}
 
 
 
