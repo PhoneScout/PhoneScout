@@ -487,12 +487,21 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("ID");
+            entity.Property(e => e.Hash)
+                .HasMaxLength(64)
+                .HasColumnName("HASH");
+            entity.Property(e => e.ManufacturerEmail)
+                .HasMaxLength(64)
+                .HasColumnName("manufacturerEmail");
             entity.Property(e => e.ManufacturerName)
                 .HasMaxLength(32)
                 .HasColumnName("manufacturerName");
             entity.Property(e => e.ManufacturerUrl)
                 .HasMaxLength(256)
                 .HasColumnName("manufacturerURL");
+            entity.Property(e => e.Salt)
+                .HasMaxLength(64)
+                .HasColumnName("SALT");
         });
 
         modelBuilder.Entity<Part>(entity =>

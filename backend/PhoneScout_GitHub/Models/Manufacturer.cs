@@ -11,5 +11,11 @@ public partial class Manufacturer
 
     public string? ManufacturerUrl { get; set; }
 
+    public string ManufacturerEmail { get; set; } = null!;
+
+    public string Salt { get; set; } = null!;
+
+    public string Hash { get; set; } = null!;
+
     public virtual ICollection<Phonedata> Phonedata { get; set; } = new List<Phonedata>();
 }
