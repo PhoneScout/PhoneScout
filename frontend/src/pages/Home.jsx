@@ -51,9 +51,6 @@ export default function Home() {
     <div>
       <Navbar />
       <br />
-
-      <InputText label="Telefon neve" id="phoneName" type="text" width='60%' />
-
       <br />
       <div className="row">
         <div className="col-1">

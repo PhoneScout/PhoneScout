@@ -1,6 +1,6 @@
 const apiUrl = "http://localhost:5287/api/auth";
-const allPhonesURL = "http://localhost:5165/api/GETphonePage"; //ÚJ BACKEND
-const allPhoneNameURL = "http://localhost:5165/api/GETphoneNames"; //ÚJ BACKEND
+const allPhonesURL = "http://localhost:5175/phonePage/"; //ÚJ BACKEND
+//const allPhoneNameURL = "http://localhost:5165/api/GETphoneNames"; //ÚJ BACKEND
 
 //const allPhonesURL = "http://localhost:5287/api/Phone"; // RÉGI BACKEND
 
@@ -182,7 +182,7 @@ window.onload = function () {
     // Betöltéskor hívja meg a telefon adatait
     let selectedPhoneID = localStorage.getItem("selectedPhone")
     console.log(selectedPhoneID)
-    fetch(allPhonesURL + "/" + selectedPhoneID)//telefon ID, át kell írni az éppen aktívra
+    fetch(allPhonesURL +  1)//telefon ID, át kell írni az éppen aktívra
         .then(response => response.json())
         .then(data => {
             console.log(data)
@@ -204,7 +204,7 @@ function telDataShowMain(allPhonesData) {
     }
 
 
-    let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID);//telefon ID, át kell írni az éppen aktívra
+    let selectedPhone = allPhonesData//telefon ID, át kell írni az éppen aktívra
 
     document.getElementById("title").innerText = selectedPhone.phoneName
 
@@ -388,10 +388,10 @@ function telDataShow(allPhonesData) {
     if (!selectedPhoneID) {
         console.error("No selected phone found in localStorage.");
         return;
-    }
+    };
 
 
-    let selectedPhone = allPhonesData.find(item => item.phoneID == selectedPhoneID); //ID!!!!!!!!!!!!!!!!!!!!!
+    let selectedPhone = allPhonesData //ID!!!!!!!!!!!!!!!!!!!!!
     if (selectedPhone) {
         dataPlace.innerHTML = `
                 <div class="row">
