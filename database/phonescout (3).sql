@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Jan 16. 10:39
+-- Létrehozás ideje: 2026. Jan 26. 19:41
 -- Kiszolgáló verziója: 10.4.32-MariaDB
--- PHP verzió: 8.0.30
+-- PHP verzió: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -743,24 +743,27 @@ INSERT INTO `cpu` (`ID`, `cpuName`, `cpuMaxClockSpeed`, `cpuCoreNumber`, `cpuMan
 CREATE TABLE `manufacturer` (
   `ID` int(11) NOT NULL,
   `manufacturerName` varchar(32) DEFAULT NULL,
-  `manufacturerURL` varchar(256) DEFAULT NULL
+  `manufacturerURL` varchar(256) DEFAULT NULL,
+  `manufacturerEmail` varchar(64) NOT NULL,
+  `SALT` varchar(64) NOT NULL,
+  `HASH` varchar(64) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
 -- A tábla adatainak kiíratása `manufacturer`
 --
 
-INSERT INTO `manufacturer` (`ID`, `manufacturerName`, `manufacturerURL`) VALUES
-(1, 'Xiaomi', ''),
-(2, 'ZTE nubia', ''),
-(3, 'Samsung', ''),
-(4, 'Apple', ''),
-(5, 'Honor', ''),
-(6, 'Google', ''),
-(7, '', ''),
-(8, 'string', 'string'),
-(9, 'Motorola', ''),
-(10, 'Xiaomi ', '');
+INSERT INTO `manufacturer` (`ID`, `manufacturerName`, `manufacturerURL`, `manufacturerEmail`, `SALT`, `HASH`) VALUES
+(1, 'Xiaomi', '', '', '', ''),
+(2, 'ZTE nubia', '', '', '', ''),
+(3, 'Samsung', '', '', '', ''),
+(4, 'Apple', '', '', '', ''),
+(5, 'Honor', '', '', '', ''),
+(6, 'Google', '', '', '', ''),
+(7, '', '', '', '', ''),
+(8, 'string', 'string', '', '', ''),
+(9, 'Motorola', '', '', '', ''),
+(10, 'Xiaomi ', '', '', '', '');
 
 -- --------------------------------------------------------
 
@@ -858,7 +861,7 @@ INSERT INTO `phonedatas` (`phoneID`, `manufacturerID`, `phoneName`, `cpuID`, `ph
 (19, 9, 'Motorola Edge 50', 13, 722062, 8, 2712, 1220, 6.70, 120, 1600, 446, 0, 5.20, 0, 'nincs', 'nincs', 'van', 2, 'nincs', 1, 3, 1, 'nincs', 3, 4, 2, 5000, 68, 15, 160.80, 72.40, 7.80, 1, 3, 1, 180.00, '2024-08-08', 108000, 'nincs', 0, NULL, 0),
 (20, 6, 'Google Pixel 9 Pro', 6, 1148512, 8, 2856, 1280, 6.30, 120, 2400, 497, 7, 5.30, 5, 'van', 'nincs', 'van', 3, 'nincs', 1, 3, 2, 'nincs', 3, 1, 5, 4700, 27, 21, 152.80, 72.90, 8.50, 1, 3, 1, 199.00, '2024-09-09', 335000, 'nincs', 0, NULL, 0),
 (21, 1, 'Xiaomi 15', 18, 2746580, 2, 2670, 1200, 6.36, 120, 3200, 460, 7, 6.00, 5, 'van', 'nincs', 'van', 3, 'nincs', 1, 5, 2, 'van', 2, 7, 3, 5240, 90, 50, 152.30, 71.20, 8.08, 1, 2, 1, 190.50, '2024-10-29', 255590, 'nincs', 0, NULL, 0),
-(22, 1, 'Xiaomi 15 Ultra', 18, 2746580, 2, 3200, 1400, 6.73, 120, 3200, 522, 7, 6.00, 5, 'van', 'van', 'van', 3, 'nincs', 1, 5, 2, 'van', 2, 8, 3, 5410, 90, 80, 161.30, 75.30, 9.35, 1, 2, 1, 229.00, '2025-02-27', 374790, 'nincs', 0, NULL, 0),
+(22, 1, 'Xiaomi 15 Ultra', 18, 2746580, 2, 3200, 1400, 6.73, 120, 3200, 522, 7, 6.00, 5, 'van', 'van', 'van', 3, 'nincs', 1, 5, 2, 'van', 2, 8, 3, 5410, 90, 80, 161.30, 75.30, 9.35, 1, 2, 1, 229.00, '2025-02-27', 374790, 'van', 0, NULL, 0),
 (23, 7, 'teszt3', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 'nincs', 'nincs', 'nincs', 0, 'nincs', 1, 2, 3, 'nincs', 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 'nincs', 0, NULL, 0),
 (24, 7, 'teszt4', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 'nincs', 'nincs', 'nincs', 0, 'nincs', 1, 2, 3, 'nincs', 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 'nincs', 0, NULL, 0);
 
