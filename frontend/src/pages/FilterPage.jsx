@@ -7,8 +7,8 @@ import './FilterPage.css';
 
 export default function FilterPage() {
   const [filters, setFilters] = useState({
-    manufacturerName: '',
-    cpuName: '',
+    manufacturerNames: [],
+    cpuNames: [],
     phoneAntutu: '',
     cpuMaxClockSpeed: '',
     cpuCoreNumber: '',
@@ -26,13 +26,19 @@ export default function FilterPage() {
 
   const [phones, setPhones] = useState([]);
   const [filteredPhones, setFilteredPhones] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [filterData, setFilterData] = useState(null);
+  const [showManufacturerDropdown, setShowManufacturerDropdown] = useState(false);
+  const [showCpuDropdown, setShowCpuDropdown] = useState(false);
+  
   const navigate = useNavigate();
   const allPhonesURL = "http://localhost:5175/api/filterPage/GetAllPhones";
   const filterApiUrl = "http://localhost:5175/api/filterPage/GetFilteredPhones";
+  const filterDatasURL = "http://localhost:5175/api/filterPage/GetDatasForFilters";
 
   useEffect(() => {
     getPhoneDatas();
+    getFilterDatas();
   }, []);
 
   const getPhoneDatas = async () => {
@@ -49,6 +55,17 @@ export default function FilterPage() {
     }
   };
 
+  const getFilterDatas = async () => {
+    try {
+      const response = await fetch(filterDatasURL);
+      const data = await response.json();
+      setFilterData(data);
+      console.log("Szűrő adatok:", data);
+    } catch (error) {
+      console.error("Hiba a szűrő adatok betöltésekor:", error);
+    }
+  };
+
   const handleFilterChange = (e) => {
     const { id, value } = e.target;
     setFilters(prev => ({
@@ -57,98 +74,190 @@ export default function FilterPage() {
     }));
   };
 
+  const handleManufacturerChange = (manufacturer) => {
+    setFilters(prev => {
+      const current = [...prev.manufacturerNames];
+      const index = current.indexOf(manufacturer);
+      
+      if (index > -1) {
+        current.splice(index, 1);
+      } else {
+        current.push(manufacturer);
+      }
+      
+      return {
+        ...prev,
+        manufacturerNames: current
+      };
+    });
+  };
+
+  const handleCpuChange = (cpu) => {
+    setFilters(prev => {
+      const current = [...prev.cpuNames];
+      const index = current.indexOf(cpu);
+      
+      if (index > -1) {
+        current.splice(index, 1);
+      } else {
+        current.push(cpu);
+      }
+      
+      return {
+        ...prev,
+        cpuNames: current
+      };
+    });
+  };
+
+  const handleSliderChange = (field, value, isMin = true) => {
+    setFilters(prev => ({
+      ...prev,
+      [isMin ? `${field}Min` : `${field}Max`]: value
+    }));
+  };
+
+  const handleSingleSliderChange = (field, value) => {
+    setFilters(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const parseNumber = (value) => {
+    if (value === '' || value === null || value === undefined) return 0;
+    const num = parseFloat(value);
+    return isNaN(num) ? 0 : num;
+  };
+
   const applyFilters = async () => {
-    const filterData = {
+    setIsLoading(true);
+    
+    const filterRequestData = {
       phoneID: 0,
-      manufacturerName: filters.manufacturerName || "",
-      phoneName: "",
-      phoneReleaseDate: null,
-      cpuName: filters.cpuName || "",
-      phoneAntutu: parseInt(filters.phoneAntutu) || 0,
-      cpuMaxClockSpeed: parseFloat(filters.cpuMaxClockSpeed) || 0,
-      cpuCoreNumber: parseInt(filters.cpuCoreNumber) || 0,
-      screenSizeMin: parseFloat(filters.screenSizeMin) || 0,
-      screenSizeMax: parseFloat(filters.screenSizeMax) || 0,
-      screenRefreshRateMin: parseInt(filters.screenRefreshRateMin) || 0,
-      screenRefreshRateMax: parseInt(filters.screenRefreshRateMax) || 0,
-      screenMaxBrightness: parseInt(filters.screenMaxBrightness) || 0,
-      connectionMaxWifi: 0,
-      connectionMaxBluetooth: 0,
-      connectionMaxMobileNetwork: 0,
-      connectionDualSim: "",
-      connectionESim: "",
-      connectionNfc: "",
-      ramAmount: parseInt(filters.ramAmount) || 0,
-      storageAmount: parseInt(filters.storageAmount) || 0,
-      batteryCapacity: parseInt(filters.batteryCapacity) || 0,
-      batteryMaxChargingWired: 0,
-      batteryMaxChargingWireless: 0,
-      phoneWeightMin: parseInt(filters.phoneWeightMin) || 0,
-      phoneWeightMax: parseInt(filters.phoneWeightMax) || 0,
-      waterproofType: ""
+      manufacturerNames: filters.manufacturerNames,
+      phoneReleaseDate: 0,
+      cpuNames: filters.cpuNames,
+      phoneAntutu: parseNumber(filters.phoneAntutu),
+      cpuMaxClockSpeed: parseNumber(filters.cpuMaxClockSpeed),
+      cpuCoreNumber: parseNumber(filters.cpuCoreNumber),
+      screenSizeMin: parseNumber(filters.screenSizeMin) || (filterData?.minScreenSize || 0),
+      screenSizeMax: parseNumber(filters.screenSizeMax) || (filterData?.maxScreenSize || 10),
+      screenRefreshRateMin: parseNumber(filters.screenRefreshRateMin) || (filterData?.minScreenRefreshRate || 0),
+      screenRefreshRateMax: parseNumber(filters.screenRefreshRateMax) || (filterData?.maxScreenRefreshRate || 240),
+      screenMaxBrightness: parseNumber(filters.screenMaxBrightness),
+      ramAmount: parseNumber(filters.ramAmount),
+      storageAmount: parseNumber(filters.storageAmount),
+      batteryCapacity: parseNumber(filters.batteryCapacity),
+      phoneWeightMin: parseNumber(filters.phoneWeightMin) || (filterData?.minPhoneWeight || 0),
+      phoneWeightMax: parseNumber(filters.phoneWeightMax) || (filterData?.maxPhoneWeight || 300)
     };
+
+    console.log("Küldött adatok:", JSON.stringify(filterRequestData, null, 2));
 
     try {
       const resp = await fetch(filterApiUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(filterData)
+        headers: { 
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify(filterRequestData)
       });
 
-      if (!resp.ok) throw new Error(`HTTP error! status: ${resp.status}`);
-
-      const text = await resp.text();
-      let data = null;
-
-      try {
-        data = JSON.parse(text);
-      } catch (e) {
-        const arrStart = text.indexOf("[");
-        const objStart = text.indexOf("{");
-        let start = -1, end = -1;
-
-        if (arrStart !== -1) {
-          start = arrStart;
-          end = text.lastIndexOf("]");
-        } else if (objStart !== -1) {
-          start = objStart;
-          end = text.lastIndexOf("}");
-        }
-
-        if (start !== -1 && end !== -1 && end > start) {
-          const jsonPart = text.substring(start, end + 1);
-          try {
-            data = JSON.parse(jsonPart);
-          } catch (e2) {
-            console.error("Nem sikerült parse-olni a kinyert JSON részt:", e2);
-            data = [];
-          }
-        } else {
-          data = [];
-        }
+      if (!resp.ok) {
+        const errorText = await resp.text();
+        console.error("Backend hiba:", errorText);
+        throw new Error(`HTTP error! status: ${resp.status}`);
       }
 
-      let result = [];
+      const data = await resp.json();
+      console.log("Sikeres válasz:", data);
+      
       if (Array.isArray(data)) {
-        result = data;
-      } else if (data && Array.isArray(data.result)) {
-        result = data.result;
-      } else if (data && Array.isArray(data.phones)) {
-        result = data.phones;
+        setFilteredPhones(data);
       } else {
-        result = data ? [data] : [];
+        setFilteredPhones([]);
+      }
+      
+    } catch (error) {
+      console.error("Hiba a szűrés során:", error);
+      localFilter();
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const localFilter = () => {
+    const filtered = phones.filter(phone => {
+      // Gyártó szűrés
+      if (filters.manufacturerNames.length > 0 && phone.manufacturerName) {
+        if (!filters.manufacturerNames.includes(phone.manufacturerName)) {
+          return false;
+        }
       }
 
-      setFilteredPhones(result);
-    } catch (error) {
-      console.error("Hiba a backend szűrés során:", error);
-    }
+      // CPU szűrés
+      if (filters.cpuNames.length > 0 && phone.cpuName) {
+        if (!filters.cpuNames.includes(phone.cpuName)) {
+          return false;
+        }
+      }
+
+      // Egyéb szűrők
+      if (filters.phoneAntutu && phone.phoneAntutu) {
+        if (phone.phoneAntutu < parseNumber(filters.phoneAntutu)) return false;
+      }
+
+      if (filters.cpuMaxClockSpeed && phone.cpuMaxClockSpeed) {
+        if (phone.cpuMaxClockSpeed < parseNumber(filters.cpuMaxClockSpeed)) return false;
+      }
+
+      if (filters.cpuCoreNumber && phone.cpuCoreNumber) {
+        if (phone.cpuCoreNumber < parseNumber(filters.cpuCoreNumber)) return false;
+      }
+
+      if (phone.screenSize) {
+        if (filters.screenSizeMin && phone.screenSize < parseNumber(filters.screenSizeMin)) return false;
+        if (filters.screenSizeMax && phone.screenSize > parseNumber(filters.screenSizeMax)) return false;
+      }
+
+      if (phone.screenRefreshRate) {
+        if (filters.screenRefreshRateMin && phone.screenRefreshRate < parseNumber(filters.screenRefreshRateMin)) return false;
+        if (filters.screenRefreshRateMax && phone.screenRefreshRate > parseNumber(filters.screenRefreshRateMax)) return false;
+      }
+
+      if (filters.screenMaxBrightness && phone.screenMaxBrightness) {
+        if (phone.screenMaxBrightness < parseNumber(filters.screenMaxBrightness)) return false;
+      }
+
+      if (filters.ramAmount && phone.ramAmount) {
+        if (phone.ramAmount < parseNumber(filters.ramAmount)) return false;
+      }
+
+      if (filters.storageAmount && phone.storageAmount) {
+        if (phone.storageAmount < parseNumber(filters.storageAmount)) return false;
+      }
+
+      if (filters.batteryCapacity && phone.batteryCapacity) {
+        if (phone.batteryCapacity < parseNumber(filters.batteryCapacity)) return false;
+      }
+
+      if (phone.phoneWeight) {
+        if (filters.phoneWeightMin && phone.phoneWeight < parseNumber(filters.phoneWeightMin)) return false;
+        if (filters.phoneWeightMax && phone.phoneWeight > parseNumber(filters.phoneWeightMax)) return false;
+      }
+
+      return true;
+    });
+
+    setFilteredPhones(filtered);
   };
 
   const resetFilters = () => {
     setFilters({
-      manufacturerName: '',
-      cpuName: '',
+      manufacturerNames: [],
+      cpuNames: [],
       phoneAntutu: '',
       cpuMaxClockSpeed: '',
       cpuCoreNumber: '',
@@ -167,28 +276,186 @@ export default function FilterPage() {
   };
 
   const handlePhoneClick = (phone) => {
-    localStorage.setItem("selectedPhone", phone.phoneID);
-    navigate(`/telefonoldal/${phone.phoneID}`);
+    if (phone && phone.phoneID) {
+      localStorage.setItem("selectedPhone", phone.phoneID);
+      navigate(`/telefonoldal/${phone.phoneID}`);
+    }
   };
 
   const handleAddToCart = (phone, e) => {
     e.stopPropagation();
+    if (!phone || !phone.phoneID) return;
 
     let cart = JSON.parse(localStorage.getItem("cart")) || {};
     cart[phone.phoneID] = (cart[phone.phoneID] || 0) + 1;
     localStorage.setItem("cart", JSON.stringify(cart));
-
-    // Animation would be handled by a separate animation component
+    alert(`${phone.phoneName} hozzáadva a kosárhoz!`);
   };
 
   const handleAddToCompare = (phone, e) => {
     e.stopPropagation();
+    if (!phone || !phone.phoneID) return;
 
     let comparePhones = JSON.parse(localStorage.getItem("comparePhones") || "[]");
     if (!comparePhones.includes(phone.phoneID)) {
+      if (comparePhones.length >= 4) {
+        alert("Maximum 4 telefont lehet összehasonlítani!");
+        return;
+      }
       comparePhones.push(phone.phoneID);
       localStorage.setItem("comparePhones", JSON.stringify(comparePhones));
+      alert(`${phone.phoneName} hozzáadva az összehasonlításhoz!`);
     }
+  };
+
+  const renderCheckboxDropdown = (title, items, selectedItems, onChange, show, setShow) => {
+    return (
+      <div className="filter-section mt-3">
+        <h5>{title}</h5>
+        <div className="dropdown">
+          <button
+            className="form-control text-start dropdown-toggle"
+            type="button"
+            onClick={() => setShow(!show)}
+            disabled={isLoading}
+          >
+            {selectedItems.length > 0 
+              ? `${selectedItems.length} kiválasztva` 
+              : `Válassz ${title.toLowerCase()}...`}
+          </button>
+          {show && (
+            <div 
+              className="dropdown-menu show p-3" 
+              style={{width: '100%', maxHeight: '300px', overflowY: 'auto'}}
+            >
+              {items && items.length > 0 ? (
+                items.map((item, index) => (
+                  <div className="form-check" key={index}>
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      id={`${title}-${index}`}
+                      checked={selectedItems.includes(item)}
+                      onChange={() => onChange(item)}
+                    />
+                    <label className="form-check-label" htmlFor={`${title}-${index}`}>
+                      {item}
+                    </label>
+                  </div>
+                ))
+              ) : (
+                <div className="text-muted">Nincsenek adatok</div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  };
+
+  const renderRangeSlider = (title, field, min, max, step = 1) => {
+    if (!filterData || min === undefined || max === undefined) return null;
+    
+    return (
+      <div className="filter-section mt-3">
+        <h5>{title}</h5>
+        <div className="row g-2 mb-2">
+          <div className="col-6">
+            <input
+              type="number"
+              id={`${field}Min`}
+              className="form-control"
+              placeholder="Min"
+              value={filters[`${field}Min`] || min}
+              onChange={handleFilterChange}
+              disabled={isLoading}
+              min={min}
+              max={max}
+              step={step}
+            />
+          </div>
+          <div className="col-6">
+            <input
+              type="number"
+              id={`${field}Max`}
+              className="form-control"
+              placeholder="Max"
+              value={filters[`${field}Max`] || max}
+              onChange={handleFilterChange}
+              disabled={isLoading}
+              min={min}
+              max={max}
+              step={step}
+            />
+          </div>
+        </div>
+        <div className="row g-3">
+          <div className="col-12">
+            <label className="form-label">Min: {filters[`${field}Min`] || min}</label>
+            <input
+              type="range"
+              className="form-range"
+              min={min}
+              max={max}
+              step={step}
+              value={filters[`${field}Min`] || min}
+              onChange={(e) => handleSliderChange(field, e.target.value, true)}
+              disabled={isLoading}
+            />
+          </div>
+          <div className="col-12">
+            <label className="form-label">Max: {filters[`${field}Max`] || max}</label>
+            <input
+              type="range"
+              className="form-range"
+              min={min}
+              max={max}
+              step={step}
+              value={filters[`${field}Max`] || max}
+              onChange={(e) => handleSliderChange(field, e.target.value, false)}
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderSingleSlider = (title, field, min, max, step = 1) => {
+    if (!filterData || min === undefined || max === undefined) return null;
+    
+    return (
+      <div className="filter-section mt-3">
+        <h5>{title}</h5>
+        <div className="mb-2">
+          <input
+            type="number"
+            id={field}
+            className="form-control"
+            placeholder={`Minimum ${title.toLowerCase()}`}
+            value={filters[field] || min}
+            onChange={handleFilterChange}
+            disabled={isLoading}
+            min={min}
+            max={max}
+            step={step}
+          />
+        </div>
+        <div>
+          <label className="form-label">Érték: {filters[field] || min}</label>
+          <input
+            type="range"
+            className="form-range"
+            min={min}
+            max={max}
+            step={step}
+            value={filters[field] || min}
+            onChange={(e) => handleSingleSliderChange(field, e.target.value)}
+            disabled={isLoading}
+          />
+        </div>
+      </div>
+    );
   };
 
   const displayPhoneCards = () => {
@@ -198,7 +465,7 @@ export default function FilterPage() {
           <div className="spinner-border" role="status">
             <span className="visually-hidden">Betöltés...</span>
           </div>
-          <p>Telefonok betöltése...</p>
+          <p>Szűrés folyamatban...</p>
         </div>
       );
     }
@@ -208,6 +475,9 @@ export default function FilterPage() {
         <div className="col-12 text-center">
           <h3>Nincs találat a megadott szűrési feltételek alapján</h3>
           <p>Próbálj meg más szűrőket használni</p>
+          <button className="btn btn-primary mt-3" onClick={resetFilters}>
+            Szűrők visszaállítása
+          </button>
         </div>
       );
     }
@@ -222,16 +492,30 @@ export default function FilterPage() {
         <div className="phoneImage">
           <img
             src={phone.imageUrl || '/Images/image 3.png'}
-            alt={phone.phoneName}
+            alt={phone.phoneName || 'Telefon'}
             loading="lazy"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = '/Images/image 3.png';
+            }}
           />
           <div className={`stock-bubble ${phone.phoneInStore === "van" ? "phonestockTrue" : "phonestockFalse"}`}>
             {phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
           </div>
-          <div className="price-bubble">{phone.phonePrice} Ft</div>
+          <div className="price-bubble">
+            {phone.phonePrice ? `${phone.phonePrice.toLocaleString()} Ft` : 'Ár nem elérhető'}
+          </div>
         </div>
         <div className="phoneDetails">
-          <h3 style={{ margin: 0, fontSize: "1.2em" }}>{phone.phoneName}</h3>
+          <h3 style={{ margin: 0, fontSize: "1.2em" }}>
+            {phone.phoneName || 'Ismeretlen telefon'}
+          </h3>
+          <div style={{ marginTop: '5px', fontSize: '0.9em', color: '#666' }}>
+            {phone.manufacturerName && <div>Gyártó: {phone.manufacturerName}</div>}
+            {phone.cpuName && <div>Processzor: {phone.cpuName}</div>}
+            {phone.ramAmount && <div>RAM: {phone.ramAmount} GB</div>}
+            {phone.storageAmount && <div>Tárhely: {phone.storageAmount} GB</div>}
+          </div>
         </div>
         <div className="cardButtons">
           <div
@@ -269,219 +553,171 @@ export default function FilterPage() {
         <div className="row">
           <div className="col-3">
             <div id="filterPanel">
-
-              <h3 className="mb-3">Szűrők</h3>
-              <hr />
-              <button className="filter-button " onClick={applyFilters}>
-                <i className="bi-check-lg"></i>
-              </button>
-              <button className="filter-button filter-reset" onClick={resetFilters}>
-                <i className="bi-trash"></i>
-              </button>
-              <hr />
-              <div className="filter-section">
-                <h4>Gyártó</h4>
-                <input
-                  type="text"
-                  id="manufacturerName"
-                  className="filter-input"
-                  placeholder="Gyártó neve"
-                  value={filters.manufacturerName}
-                  onChange={handleFilterChange}
-                />
-              </div>
-
-              <div className="filter-section">
-                <h4>Processzor</h4>
-                <input
-                  type="text"
-                  id="cpuName"
-                  className="filter-input"
-                  placeholder="Processzor neve"
-                  value={filters.cpuName}
-                  onChange={handleFilterChange}
-                />
-              </div>
-
-              <div className="filter-section">
-                <h4>Antutu pontszám</h4>
-                <input
-                  type="number"
-                  id="phoneAntutu"
-                  className="filter-input"
-                  placeholder="Minimum pontszám"
-                  value={filters.phoneAntutu}
-                  onChange={handleFilterChange}
-                />
-              </div>
-
-              <div className="filter-section">
-                <h4>Processzor órajel (GHz)</h4>
-                <input
-                  type="number"
-                  step="0.1"
-                  id="cpuMaxClockSpeed"
-                  className="filter-input"
-                  placeholder="Minimum órajel"
-                  value={filters.cpuMaxClockSpeed}
-                  onChange={handleFilterChange}
-                />
-              </div>
-
-              <div className="filter-section">
-                <h4>Processzor magok száma</h4>
-                <input
-                  type="number"
-                  id="cpuCoreNumber"
-                  className="filter-input"
-                  placeholder="Minimum magok száma"
-                  value={filters.cpuCoreNumber}
-                  onChange={handleFilterChange}
-                />
-              </div>
-
-              <div className="filter-section">
-                <h4>Képernyő méret (hüvelyk)</h4>
-                <div className="row">
-                  <div className="col-6">
-                    <input
-                      type="number"
-                      step="0.1"
-                      id="screenSizeMin"
-                      className="filter-input"
-                      placeholder="Min"
-                      value={filters.screenSizeMin}
-                      onChange={handleFilterChange}
-                    />
-                  </div>
-                  <div className="col-6">
-                    <input
-                      type="number"
-                      step="0.1"
-                      id="screenSizeMax"
-                      className="filter-input"
-                      placeholder="Max"
-                      value={filters.screenSizeMax}
-                      onChange={handleFilterChange}
-                    />
-                  </div>
+              <div className="d-flex justify-content-between align-items-center mb-3">
+                <h3 className="mb-0">Szűrők</h3>
+                <div>
+                  <button 
+                    className="btn btn-success btn-sm me-2" 
+                    onClick={applyFilters}
+                    disabled={isLoading}
+                  >
+                    {isLoading ? (
+                      <span className="spinner-border spinner-border-sm me-1"></span>
+                    ) : (
+                      <i className="bi-check-lg"></i>
+                    )}
+                  </button>
+                  <button 
+                    className="btn btn-danger btn-sm" 
+                    onClick={resetFilters}
+                    disabled={isLoading}
+                  >
+                    <i className="bi-trash"></i>
+                  </button>
                 </div>
               </div>
+              
+              <hr />
+              
+              {renderCheckboxDropdown(
+                "Gyártó",
+                filterData?.manufacturerNames || [],
+                filters.manufacturerNames,
+                handleManufacturerChange,
+                showManufacturerDropdown,
+                setShowManufacturerDropdown
+              )}
 
-              <div className="filter-section">
-                <h4>Képernyő frissítési gyakoriság (Hz)</h4>
-                <div className="row">
-                  <div className="col-6">
-                    <input
-                      type="number"
-                      id="screenRefreshRateMin"
-                      className="filter-input"
-                      placeholder="Min"
-                      value={filters.screenRefreshRateMin}
-                      onChange={handleFilterChange}
-                    />
-                  </div>
-                  <div className="col-6">
-                    <input
-                      type="number"
-                      id="screenRefreshRateMax"
-                      className="filter-input"
-                      placeholder="Max"
-                      value={filters.screenRefreshRateMax}
-                      onChange={handleFilterChange}
-                    />
-                  </div>
-                </div>
-              </div>
+              {renderCheckboxDropdown(
+                "Processzor",
+                filterData?.cpuNames || [],
+                filters.cpuNames,
+                handleCpuChange,
+                showCpuDropdown,
+                setShowCpuDropdown
+              )}
 
-              <div className="filter-section">
-                <h4>Képernyő fényerő (nits)</h4>
-                <input
-                  type="number"
-                  id="screenMaxBrightness"
-                  className="filter-input"
-                  placeholder="Minimum fényerő"
-                  value={filters.screenMaxBrightness}
-                  onChange={handleFilterChange}
-                />
-              </div>
+              {renderSingleSlider(
+                "Antutu pontszám",
+                "phoneAntutu",
+                filterData?.minAntutu || 0,
+                filterData?.maxAntutu || 1000000,
+                1000
+              )}
 
-              <div className="filter-section">
-                <h4>RAM (GB)</h4>
-                <input
-                  type="number"
-                  id="ramAmount"
-                  className="filter-input"
-                  placeholder="Minimum RAM"
-                  value={filters.ramAmount}
-                  onChange={handleFilterChange}
-                />
-              </div>
+              {renderSingleSlider(
+                "Processzor órajel (GHz)",
+                "cpuMaxClockSpeed",
+                filterData?.minCpuMaxClockSpeed || 0,
+                filterData?.maxCpuMaxClockSpeed || 5,
+                0.1
+              )}
 
-              <div className="filter-section">
-                <h4>Tárhely (GB)</h4>
-                <input
-                  type="number"
-                  id="storageAmount"
-                  className="filter-input"
-                  placeholder="Minimum tárhely"
-                  value={filters.storageAmount}
-                  onChange={handleFilterChange}
-                />
-              </div>
+              {renderSingleSlider(
+                "Processzor magok száma",
+                "cpuCoreNumber",
+                filterData?.minCpuCoreNumber || 0,
+                filterData?.maxCpuCoreNumber || 16,
+                1
+              )}
 
-              <div className="filter-section">
-                <h4>Akkumulátor kapacitás (mAh)</h4>
-                <input
-                  type="number"
-                  id="batteryCapacity"
-                  className="filter-input"
-                  placeholder="Minimum kapacitás"
-                  value={filters.batteryCapacity}
-                  onChange={handleFilterChange}
-                />
-              </div>
+              {renderRangeSlider(
+                "Képernyő méret (hüvelyk)",
+                "screenSize",
+                filterData?.minScreenSize || 4,
+                filterData?.maxScreenSize || 10,
+                0.1
+              )}
 
-              <div className="filter-section">
-                <h4>Súly (g)</h4>
-                <div className="row">
-                  <div className="col-6">
-                    <input
-                      type="number"
-                      id="phoneWeightMin"
-                      className="filter-input"
-                      placeholder="Min"
-                      value={filters.phoneWeightMin}
-                      onChange={handleFilterChange}
-                    />
-                  </div>
-                  <div className="col-6">
-                    <input
-                      type="number"
-                      id="phoneWeightMax"
-                      className="filter-input"
-                      placeholder="Max"
-                      value={filters.phoneWeightMax}
-                      onChange={handleFilterChange}
-                    />
-                  </div>
-                </div>
-              </div>
+              {renderRangeSlider(
+                "Képernyő frissítési gyakoriság (Hz)",
+                "screenRefreshRate",
+                filterData?.minScreenRefreshRate || 30,
+                filterData?.maxScreenRefreshRate || 240,
+                10
+              )}
+
+              {renderSingleSlider(
+                "Képernyő fényerő (nits)",
+                "screenMaxBrightness",
+                filterData?.minScreenMaxBrightness || 0,
+                filterData?.maxScreenMaxBrightness || 2500,
+                50
+              )}
+
+              {renderSingleSlider(
+                "RAM (GB)",
+                "ramAmount",
+                filterData?.minRamAmount || 0,
+                filterData?.maxRamAmount || 32,
+                1
+              )}
+
+              {renderSingleSlider(
+                "Tárhely (GB)",
+                "storageAmount",
+                filterData?.minStorageAmount || 0,
+                filterData?.maxStorageAmount || 1024,
+                16
+              )}
+
+              {renderSingleSlider(
+                "Akkumulátor kapacitás (mAh)",
+                "batteryCapacity",
+                filterData?.minBatteryCapacity || 0,
+                filterData?.maxBatteryCapacity || 10000,
+                100
+              )}
+
+              {renderRangeSlider(
+                "Súly (g)",
+                "phoneWeight",
+                filterData?.minPhoneWeight || 0,
+                filterData?.maxPhoneWeight || 300,
+                10
+              )}
 
               <hr />
-              <button className="filter-button " onClick={applyFilters}>
-                <i className="bi-check-lg"></i>
-              </button>
-              <button className="filter-button filter-reset" onClick={resetFilters}>
-                <i className="bi-trash"></i>
-              </button>
-              <hr />
-
+              
+              <div className="d-grid gap-2">
+                <button 
+                  className="btn btn-primary" 
+                  onClick={applyFilters}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm me-2"></span>
+                      Szűrés...
+                    </>
+                  ) : (
+                    <>
+                      <i className="bi-check-lg me-2"></i>
+                      Szűrés alkalmazása
+                    </>
+                  )}
+                </button>
+                <button 
+                  className="btn btn-outline-secondary" 
+                  onClick={resetFilters}
+                  disabled={isLoading}
+                >
+                  <i className="bi-trash me-2"></i>
+                  Szűrők törlése
+                </button>
+              </div>
             </div>
           </div>
 
           <div className="col-9">
-            <div id="contentRow">
+            <div className="d-flex justify-content-between align-items-center mb-3">
+              <h4>Találatok: {filteredPhones.length} termék</h4>
+              <div className="text-muted">
+                {isLoading && <span className="spinner-border spinner-border-sm me-2"></span>}
+              </div>
+            </div>
+            
+            <div id="contentRow" className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
               {displayPhoneCards()}
             </div>
           </div>
