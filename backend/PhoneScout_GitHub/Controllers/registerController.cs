@@ -45,9 +45,8 @@ namespace PhoneScout_GitHub.Controllers
                 user.active = 0;
                 
                 // Jelszó hashelés és sózás
-                string plainPasswordHash = Program.CreateSHA256(user.HASH);
-                string userSalt = Program.GenerateSalt();
-                string veglegesHash = Program.CreateSHA256(plainPasswordHash + userSalt);
+                string veglegesHash = Program.CreateSHA256(user.HASH);
+                string userSalt = user.SALT;
 
                 var newUser = new User
                 {

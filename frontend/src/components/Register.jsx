@@ -16,6 +16,18 @@ export default function Register({ onSwitchToLogin }) {
         callback();
     };
 
+    function GenerateSalt(SaltLength) {
+        const karakterek = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let salt = "";
+
+        for (let i = 0; i < SaltLength; i++) {
+            const randomIndex = Math.floor(Math.random() * karakterek.length);
+            salt += karakterek[randomIndex];
+        }
+
+        return salt;
+    }
+
     const handleRegisterClick = async (e) => {
         if (e) e.preventDefault();
 
@@ -40,7 +52,10 @@ export default function Register({ onSwitchToLogin }) {
         }
 
         try {
-            const msgBuffer = new TextEncoder().encode(password);
+            const salt = GenerateSalt(64);
+
+            const combinedPassword = password + salt;
+            const msgBuffer = new TextEncoder().encode(combinedPassword);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
@@ -48,7 +63,7 @@ export default function Register({ onSwitchToLogin }) {
             let userData = {
                 name: name,
                 email: email,
-                salt: "",
+                salt: salt,
                 hash: hashedPassword,
                 privilegeID: 5,
                 active: 0

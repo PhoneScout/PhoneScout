@@ -43,54 +43,53 @@ namespace PhoneScout_GitHub.Controllers
         [HttpPost]
         public IActionResult Login(LoginDTO loginDTO)
         {
-            // NINCS using (var cx = new PhoneContext())
             try
             {
+                var user = _cx.Users.FirstOrDefault(u => u.Email == loginDTO.Email);
 
-                // Felhasználó keresése az email, hash és aktív állapot alapján
-                User? loggedUser = _cx.Users.FirstOrDefault(f =>
-                    f.Email == loginDTO.Email &&
-                    f.Hash == loginDTO.TmpHash &&
-                    f.Active == 1);
-
-                if (loggedUser == null)
+                if (user == null)
                 {
-                    // Érdemes megnézni, hogy létezik-e az email, de inaktív-e, vagy a jelszó rossz
-                    var checkUser = _cx.Users.FirstOrDefault(u => u.Email == loginDTO.Email);
-                    if (checkUser != null && checkUser.Active == 0)
-                    {
-                        return BadRequest("A fiók még nincs aktiválva! Kérjük, ellenőrizze az email fiókját.");
-                    }
-
                     return BadRequest("Hibás jelszó vagy email!");
                 }
-                else
+
+                // Inaktív fiók ellenőrzése
+                if (user.Active == 0)
                 {
-                    // Token generálás és bejelentkezett felhasználók listájához adás
-                    string token = Guid.NewGuid().ToString();
-
-                    lock (Program.LoggedInUsers)
-                    {
-                        // Ha ugyanaz a felhasználó többször jelentkezne be, elkerüljük a kulcs-ütközést
-                        if (Program.LoggedInUsers.ContainsKey(token))
-                        {
-                            token = Guid.NewGuid().ToString();
-                        }
-                        Program.LoggedInUsers.Add(token, loggedUser);
-                    }
-
-                    return Ok(new LoggedUser
-                    {
-                        FirstName = loggedUser.Name,
-                        Email = loggedUser.Email,
-                        Privilege = (int)loggedUser.PrivilegeId,
-                        Token = token
-                    });
+                    return BadRequest("A fiók még nincs aktiválva! Kérjük, ellenőrizze az email fiókját.");
                 }
+
+                //  A kliensről érkező TmpHash (hash+salt) újra-hashelése a szerver oldalon
+                string finalHash = Program.CreateSHA256(loginDTO.TmpHash);
+
+                // 4. Az újra-hashelt érték összehasonlítása az adatbázisban tárolttal
+                if (user.Hash != finalHash)
+                {
+                    return BadRequest("Hibás jelszó vagy email!");
+                }
+
+                // 5. Sikeres bejelentkezés: Token generálás
+                string token = Guid.NewGuid().ToString();
+
+                lock (Program.LoggedInUsers)
+                {
+                    // Biztonsági generálás, ha véletlen ütközne a GUID
+                    while (Program.LoggedInUsers.ContainsKey(token))
+                    {
+                        token = Guid.NewGuid().ToString();
+                    }
+                    Program.LoggedInUsers.Add(token, user);
+                }
+
+                return Ok(new LoggedUser
+                {
+                    FirstName = user.Name,
+                    Email = user.Email,
+                    Privilege = (int)user.PrivilegeId,
+                    Token = token
+                });
             }
             catch (Exception ex)
             {
-                // Ha van InnerException, azt adjuk vissza, egyébként a sima üzenetet
                 return BadRequest(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
             }
         }
