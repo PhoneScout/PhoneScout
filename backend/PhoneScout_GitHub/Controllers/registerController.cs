@@ -43,7 +43,7 @@ namespace PhoneScout_GitHub.Controllers
                 // Felhasználói adatok előkészítése
                 user.privilegeID = privilege.Id;
                 user.active = 0;
-                
+
                 // Jelszó hashelés és sózás
                 string veglegesHash = Program.CreateSHA256(user.HASH);
                 string userSalt = user.SALT;
@@ -65,24 +65,50 @@ namespace PhoneScout_GitHub.Controllers
                 // Email tartalom összeállítása
                 string emailTargy = "Regisztráció a PhoneScout rendszerbe.";
                 string emailTorzs = $@"
-                <div style=""font-family:Arial,sans-serif;background-color:#f5f5f5;color:#004c4c"">
-                    <div style=""max-width:600px;margin:auto;padding:20px;border:1px solid #166b6b;border-radius:10px"">
-                        <h2 style=""color:#166b6b"">Regisztráció a PhoneScout oldalra</h2>
-                        <h3>Kedves {user.name}!</h3>
-                        <p>
-                            A regisztráció befejezéséhez kattints az alábbi linkre:
-                            <br><br>
-                            <a style=""display:inline-block;padding:10px 20px;background-color:#166b6b;color:white;text-decoration:none;border-radius:5px;font-weight:bold"" 
-                               href=""https://localhost:7179/api/registration?name={user.name}&email={user.email}"" 
-                               target=""_blank"">Fiók aktiválása</a>
-                        </p>
-                        <p>Üdvözlettel,<br>PhoneScout Team</p>
-                        <p style=""font-size:12px;color:#004c4c"">Ez egy automatikusan generált üzenet, kérjük ne válaszoljon rá.</p>
-                    </div>
-                </div>";
+                    <div style=""background: linear-gradient(135deg, #2300B3 0%, #68F145 100%); margin: 0; padding: 0; min-height: 100vh;"">
+                        <!-- Külső táblázat a teljes magasság és a vertikális középre igazítás miatt -->
+                        <table width=""100%"" height=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"" style=""min-height: 100vh; width: 100%;"">
+                            <tr>
+                                <td align=""center"" valign=""middle"" style=""padding: 20px;"">
+                                    
+                                    <!-- Fehér kártya (formContainer stílus) -->
+                                    <div style=""max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.25); overflow: hidden; display: inline-block; text-align: left;"">
+                                        <div style=""padding: 40px 30px; text-align: center;"">
+                                            
+                                            <h2 style=""color: #333333; font-size: 28px; margin-bottom: 30px; margin-top: 0; font-family: Arial, sans-serif;"">Regisztráció a PhoneScout oldalra</h2>
+                                            
+                                            <h3 style=""color: #333333; font-size: 18px; margin-bottom: 20px; font-family: Arial, sans-serif;"">Kedves {user.name}!</h3>
+                                            
+                                            <p style=""color: #555555; font-size: 16px; line-height: 1.5; margin-bottom: 35px; font-family: Arial, sans-serif;"">
+                                                A regisztráció befejezéséhez kattints az alábbi linkre:
+                                            </p>
+
+                                            <!-- Gomb -->
+                                            <div style=""margin-bottom: 10px;"">
+                                                <a href=""http://localhost:3000/fiokaktivalas?name={user.name}&email={user.email}"" 
+                                                target=""_blank"" 
+                                                style=""display: inline-block; width: 80%; max-width: 280px; background-color: #28a745; color: #ffffff; padding: 18px 25px; text-decoration: none; border-radius: 4px; font-size: 18px; font-weight: bold; font-family: Arial, sans-serif;"">
+                                                Fiók aktiválása
+                                                </a>
+                                            </div>
+
+                                            <!-- Lábjegyzet -->
+                                            <div style=""margin-top: 45px; border-top: 1px solid #eeeeee; padding-top: 20px; text-align: left;"">
+                                                <p style=""color: #333333; font-size: 14px; margin: 0; font-family: Arial, sans-serif;"">Üdvözlettel,<br><strong>PhoneScout Team</strong></p>
+                                                <p style=""font-size: 12px; color: #777777; margin-top: 15px; line-height: 1.4; font-family: Arial, sans-serif;"">Ez egy automatikusan generált üzenet, kérjük ne válaszoljon rá.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>";
+
+
 
                 // Email küldése (Program.cs-ben lévő metódussal)
-                // await Program.SendEmail(user.email, emailTargy, emailTorzs);
+                await Program.SendEmail(user.email, emailTargy, emailTorzs);
 
                 return Ok("Sikeres regisztráció. A regisztrációt fejezze be az email címére küldött link segítségével.");
             }
@@ -99,7 +125,7 @@ namespace PhoneScout_GitHub.Controllers
             {
                 // Felhasználó megkeresése
                 User? user = await _cx.Users.FirstOrDefaultAsync(f => f.Name == name && f.Email == email);
-                
+
                 if (user == null)
                 {
                     return Ok("Sikertelen aktiválás. Nincs ilyen felhasználó!");

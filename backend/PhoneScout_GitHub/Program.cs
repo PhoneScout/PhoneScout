@@ -4,6 +4,7 @@ using DotNetEnv;
 using System.Text;
 using System.Net.Mail;
 using System.Security.Cryptography;
+using System.ComponentModel.DataAnnotations;
 
 namespace PhoneScout_GitHub
 {
@@ -40,29 +41,34 @@ namespace PhoneScout_GitHub
                 return sBuilder.ToString();
             }
         }
-        // public static async Task SendEmail(string mailAddressTo, string subject, string body)
-        // {
-        //     MailMessage mail = new MailMessage();
-        //     SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
-        //     mail.From = new MailAddress("");
-        //     mail.To.Add(mailAddressTo);
-        //     mail.Subject = subject;
-        //     mail.IsBodyHtml = true;
-        //     mail.Body = body;
+        public static async Task SendEmail(string mailAddressTo, string subject, string body)
+        {
+            Env.Load();
 
-        //     /*System.Net.Mail.Attachment attachment;
-        //     attachment = new System.Net.Mail.Attachment("");
-        //     mail.Attachments.Add(attachment);*/
+            string EmailAddress = Environment.GetEnvironmentVariable("EMAIL");
+            string EmailPassword = Environment.GetEnvironmentVariable("EMAIL_PASSWORD");
 
-        //     SmtpServer.Port = 587;
-        //     SmtpServer.Credentials = new System.Net.NetworkCredential("");
+            MailMessage mail = new MailMessage();
+            SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+            mail.From = new MailAddress(EmailAddress);
+            mail.To.Add(mailAddressTo);
+            mail.Subject = subject;
+            mail.IsBodyHtml = true;
+            mail.Body = body;
+
+            /*System.Net.Mail.Attachment attachment;
+            attachment = new System.Net.Mail.Attachment("");
+            mail.Attachments.Add(attachment);*/
+
+            SmtpServer.Port = 587;
+            SmtpServer.Credentials = new System.Net.NetworkCredential(EmailAddress, EmailPassword);
 
 
-        //     SmtpServer.EnableSsl = true;
+            SmtpServer.EnableSsl = true;
 
-        //     await SmtpServer.SendMailAsync(mail);
+            await SmtpServer.SendMailAsync(mail);
 
-        // }
+        }
         public static void Main(string[] args)
         {
 

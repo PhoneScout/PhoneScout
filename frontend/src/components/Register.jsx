@@ -11,11 +11,6 @@ export default function Register({ onSwitchToLogin }) {
         setShowBilling(event.target.checked);
     };
 
-    const handleLinkClick = (event, callback) => {
-        event.preventDefault();
-        callback();
-    };
-
     function GenerateSalt(SaltLength) {
         const karakterek = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         let salt = "";
@@ -94,14 +89,14 @@ export default function Register({ onSwitchToLogin }) {
             }
 
             alertBox.style.color = "green";
-            alertBox.innerText = "Sikeres regisztráció! Átirányítás a bejelentkezéshez (3 mp)...";
+            alertBox.innerText = "Sikeres regisztráció! Aktiválja fiókját megadott email címén!"
 
             const resMsg = document.getElementById('responseMessage');
             if (resMsg) resMsg.innerText = "";
 
             setTimeout(() => {
                 if (onSwitchToLogin) onSwitchToLogin();
-            }, 3000); // 3 másodperc várakozás
+            }, 2000);
 
         } catch (error) {
             alertBox.style.color = "red";

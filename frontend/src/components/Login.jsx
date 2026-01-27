@@ -2,13 +2,15 @@ import React from 'react';
 import styles from './Login.module.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import InputText from './InputText';
-import { Link } from 'react-router-dom'; // Feltételezve, hogy react-router-dom-ot használsz
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function Login({ onSwitchToRegister }) {
 
-     const login = async (e) => {
+    const navigate = useNavigate();
+
+    const login = async (e) => {
         if (e) e.preventDefault();
-        
+
         const alertBox = document.getElementById('alertLog');
         alertBox.innerText = "";
         alertBox.style.color = "red";
@@ -22,29 +24,40 @@ export default function Login({ onSwitchToRegister }) {
         }
 
         try {
-            // Salt lekérése az "x" végpontról
+            // Salt lekérése
             const saltResponse = await fetch(`http://localhost:5175/api/Login/GetSalt/${encodeURIComponent(email)}`, {
                 method: 'GET',
                 headers: { 'Accept': 'application/json' }
             });
 
             if (!saltResponse.ok) {
-                throw new Error("A felhasználóhoz nem található salt (lehet, hogy nem létezik a fiók).");
+                throw new Error("A felhasználó nem található.");
             }
 
-            const salt = await saltResponse.text(); 
+            let salt = await saltResponse.text();
 
-            // Hash generálása a regisztrációval megegyező módon
+            if (salt.startsWith('"') && salt.endsWith('"')) {
+                try {
+                    salt = JSON.parse(salt);
+                } catch (e) {
+                    salt = salt.slice(1, -1);
+                }
+            }
+
+            console.log("Tisztított salt:", salt);
+
             const combinedPassword = password + salt;
             const msgBuffer = new TextEncoder().encode(combinedPassword);
             const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-            // Login adatok postolása az "y" végpontra
+            console.log(hashedPassword)
+
+            // Login adatok postolása végpontra
             const loginData = {
                 email: email,
-                tmphash: hashedPassword
+                tmpHash: hashedPassword
             };
 
             const response = await fetch('http://localhost:5175/api/Login', {
@@ -65,10 +78,17 @@ export default function Login({ onSwitchToRegister }) {
             // SIKER
             alertBox.style.color = "green";
             alertBox.innerText = "Sikeres bejelentkezés! Átirányítás...";
-            
-            // Itt jöhet a token mentése vagy az oldalváltás
+
             const result = await response.json();
             console.log("Szerver válasza:", result);
+
+            if (result.token) {
+                localStorage.setItem('userToken', result.token);
+            }
+
+            setTimeout(() => {
+                navigate('/')
+            }, 2000);
 
         } catch (error) {
             alertBox.style.color = "red";
@@ -79,7 +99,7 @@ export default function Login({ onSwitchToRegister }) {
     return (
         <div className={styles.loginContainer}>
             <div className={styles.formContainer}>
-                
+
                 <div className={styles.backLinkContainer}>
                     <Link to="/"><i className="fa-solid fa-arrow-left"></i> Vissza az oldalra</Link>
                 </div>
@@ -100,15 +120,15 @@ export default function Login({ onSwitchToRegister }) {
 
                     <p id="alertLog" className={styles.alertMessage}></p>
 
-                    <button 
-                        type="button" 
-                        onClick={onSwitchToRegister} 
+                    <button
+                        type="button"
+                        onClick={onSwitchToRegister}
                         className={styles.switchLink}
                     >
                         Nincs fiókod? Regisztrálj itt!
                     </button>
 
-                    
+
                 </form>
             </div>
         </div>

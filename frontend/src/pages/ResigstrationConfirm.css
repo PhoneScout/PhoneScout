@@ -1,0 +1,86 @@
+.container_RegistrationConfirm {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0; 
+    background: linear-gradient(135deg, #2300B3 0%, #68F145 100%);
+    padding: 20px;
+}
+
+.card_RegistrationConfirm {
+    background-color: #fff;
+    padding: 40px 2.5vw; 
+    border-radius: 12px; 
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25); 
+    width: 90vw; 
+    max-width: 750px;
+    position: relative;
+    text-align: center;
+}
+
+.backLink_RegistrationConfirm {
+    position: absolute;
+    top: 20px;   
+    left: 20px;  
+    font-size: 0.9rem;
+    text-decoration: none;
+    color: #333;
+}
+
+.title_RegistrationConfirm {
+    color: #333;
+    font-size: 2.5rem; 
+    margin-bottom: 2rem;
+    margin-top: 1rem;
+}
+
+.infoText_RegistrationConfirm {
+    font-size: 1.2rem;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.emailDisplay_RegistrationConfirm {
+    color: #666;
+    font-size: 1rem;
+    margin-bottom: 30px;
+}
+
+.submitButton_RegistrationConfirm {
+    background-color: #28a745;
+    color: white;
+    padding: 18px; 
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.4rem; 
+    transition: background 0.3s;
+}
+
+.submitButton_RegistrationConfirm:hover {
+    background-color: #218838;
+}
+
+.alert_RegistrationConfirm {
+    font-weight: bold;
+    margin-top: 20px;
+    min-height: 24px;
+}
+
+.switchLink_RegistrationConfirm {
+    color: green;
+    text-decoration: none;
+    font-size: 1rem;
+    display: inline-block;
+    margin-top: 20px;
+    transition: color 0.2s;
+}
+
+.switchLink_RegistrationConfirm:hover {
+    color: #218838;
+    text-decoration: underline;
+}

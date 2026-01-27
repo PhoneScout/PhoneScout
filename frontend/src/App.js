@@ -10,6 +10,7 @@ import PhonePage from './pages/PhonePage';
 import Profile from './pages/Profile';
 import ServiceRequest from './pages/ServiceRequest';
 import LoginRegister from './pages/LoginRegister';
+import RegistrationConfirm from './pages/RegistrationConfirm';
 
 
 
@@ -33,6 +34,7 @@ function App() {
         <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
         <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
         <Route path="/bejelentkezes" element={<LoginRegister />}></Route>
+        <Route path='/fiokaktivalas' element={<RegistrationConfirm />} /> 
 
       </Routes>
       
