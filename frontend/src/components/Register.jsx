@@ -55,7 +55,7 @@ export default function Register({ onSwitchToLogin }) {
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-            let userData = {
+            const userData = {
                 name: name,
                 email: email,
                 salt: salt,
@@ -64,14 +64,7 @@ export default function Register({ onSwitchToLogin }) {
                 active: 0
             };
 
-            // if (showBilling) {
-            //     userData.postalCode = document.getElementById('registerPostalCode')?.value || "";
-            //     userData.city = document.getElementById('registerCity')?.value || "";
-            //     userData.street = document.getElementById('registerStreet')?.value || "";
-            //     userData.houseNumber = document.getElementById('registerHouseNumber')?.value || "";
-            //     userData.phone = document.getElementById('registerPhoneNU')?.value || "";
-            // }
-
+            //Felhasználó regisztrálása
             const response = await fetch('http://localhost:5175/api/Registration', {
                 method: 'POST',
                 headers: {
@@ -88,11 +81,37 @@ export default function Register({ onSwitchToLogin }) {
                 return;
             }
 
+            // Regisztráció számlázási címmel
+            if (showBilling) {
+                //ID megszerzése
+                const getResponse = await fetch(`http://localhost:5175/api/Registration/GetId/${email}`, {
+                    method: 'GET',
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (getResponse.ok) {
+                    const userId = await getResponse.json();
+
+                    const billingData = {
+                        postalCode: document.getElementById('registerPostalCode')?.value || "",
+                        city: document.getElementById('registerCity')?.value || "",
+                        address: document.getElementById('registerAddress')?.value || "",
+                        phoneNumber: document.getElementById('registerPhoneNU')?.value || "",
+                        addressType: 0,
+                        userId: userId,
+                    };
+
+                    // Számlázási adatok feltöltése
+                    await fetch('http://localhost:5175/api/address/PostAddress', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(billingData),
+                    });
+                }
+            }
+
             alertBox.style.color = "green";
             alertBox.innerText = "Sikeres regisztráció! Aktiválja fiókját megadott email címén!"
-
-            const resMsg = document.getElementById('responseMessage');
-            if (resMsg) resMsg.innerText = "";
 
             setTimeout(() => {
                 if (onSwitchToLogin) onSwitchToLogin();
@@ -101,6 +120,7 @@ export default function Register({ onSwitchToLogin }) {
         } catch (error) {
             alertBox.style.color = "red";
             alertBox.innerText = "Hálózati hiba történt a szerverrel való kapcsolódáskor.";
+            console.error(error);
         }
     };
 
@@ -139,7 +159,7 @@ export default function Register({ onSwitchToLogin }) {
                                 <InputText type='text' id="registerPostalCode" label="Irányítószám" />
                             </div>
                             <div className={styles.formRow}>
-                                <InputText type='text' id="registerStreet" label="Utca" />
+                                <InputText type='text' id="registerAddress" label="Utca" />
                             </div>
                             <div className={styles.formRow}>
                                 <InputText type='tel' id="registerPhoneNU" label="Telefonszám" />
