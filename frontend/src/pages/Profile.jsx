@@ -308,16 +308,15 @@ const Profile = () => {
 
       <div className="profile-content">
         {/* Bal oldali navigáció */}
-        <nav className="profile-sidebar">
+        <div className="profile-sidebar">
           <ul>
-            <li><a href="#profile" className="active">Profil adatok</a></li>
+            <li><a href="#profile">Profil adatok</a></li>
             <li><a href="#shipping">Szállítási címek</a></li>
             <li><a href="#billing">Számlázási címek</a></li>
             <li><a href="#orders">Rendeléseim</a></li>
-            <li><a href="#favorites">Kedvenceim</a></li>
-            <li><a href="#settings">Beállítások</a></li>
+            <li><a href="#service-requests">Szerviz kérések</a></li>
           </ul>
-        </nav>
+        </div>
 
         {/* Fő tartalom */}
         <main className="profile-main">
@@ -694,8 +693,8 @@ const Profile = () => {
 
 
           {/*Szerviz kérések */}
-          <section id="orders" className="profile-section">
-            <div className="section-header">
+          <section id="service-requests" className="profile-section">
+            <div className="section-header ">
               <h2>Szervizeltetések</h2>
             </div>
             <div>

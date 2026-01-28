@@ -702,3 +702,12 @@
   white-space: nowrap;
   display: inline-block;
 }
+
+.profile-sidebar {
+    user-select: none;
+    position: sticky;
+    top: 180px;
+    width: 30%;
+    z-index: 10;
+    right: 0;
+}

@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import './FilterPage.css';
+import PhoneCard from '../components/PhoneCard';
 
 export default function FilterPage() {
   const [filters, setFilters] = useState({
@@ -483,65 +484,13 @@ export default function FilterPage() {
     }
 
     return filteredPhones.map((phone) => (
-      <div
-        key={phone.phoneID}
-        className="phoneRow"
-        onClick={() => handlePhoneClick(phone)}
-        style={{ cursor: 'pointer' }}
-      >
-        <div className="phoneImage">
-          <img
-            src={phone.imageUrl || '/Images/image 3.png'}
-            alt={phone.phoneName || 'Telefon'}
-            loading="lazy"
-            onError={(e) => {
-              e.target.onerror = null;
-              e.target.src = '/Images/image 3.png';
-            }}
-          />
-          <div className={`stock-bubble ${phone.phoneInStore === "van" ? "phonestockTrue" : "phonestockFalse"}`}>
-            {phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
-          </div>
-          <div className="price-bubble">
-            {phone.phonePrice ? `${phone.phonePrice.toLocaleString()} Ft` : 'Ár nem elérhető'}
-          </div>
-        </div>
-        <div className="phoneDetails">
-          <h3 style={{ margin: 0, fontSize: "1.2em" }}>
-            {phone.phoneName || 'Ismeretlen telefon'}
-          </h3>
-          <div style={{ marginTop: '5px', fontSize: '0.9em', color: '#666' }}>
-            {phone.manufacturerName && <div>Gyártó: {phone.manufacturerName}</div>}
-            {phone.cpuName && <div>Processzor: {phone.cpuName}</div>}
-            {phone.ramAmount && <div>RAM: {phone.ramAmount} GB</div>}
-            {phone.storageAmount && <div>Tárhely: {phone.storageAmount} GB</div>}
-          </div>
-        </div>
-        <div className="cardButtons">
-          <div
-            className="button"
-            onClick={(e) => handleAddToCompare(phone, e)}
-            title="Összehasonlításba"
-          >
-            <img
-              src="/Images/compare-removebg-preview 1.png"
-              alt="Összehasonlítás"
-              loading="lazy"
-            />
-          </div>
-          <div
-            className="button"
-            onClick={(e) => handleAddToCart(phone, e)}
-            title="Kosárba"
-          >
-            <img
-              src="/Images/cart-removebg-preview 1.png"
-              alt="Kosár"
-              loading="lazy"
-            />
-          </div>
-        </div>
-      </div>
+      
+        <PhoneCard
+          phoneId={phone.phoneID}
+          phoneName={phone.phoneName}
+          phoneInStore={phone.phoneInStore}
+          phonePrice={phone.phonePrice}
+        />
     ));
   };
 
@@ -717,7 +666,7 @@ export default function FilterPage() {
               </div>
             </div>
             
-            <div id="contentRow" className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            <div id="contentRowFilter" className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
               {displayPhoneCards()}
             </div>
           </div>

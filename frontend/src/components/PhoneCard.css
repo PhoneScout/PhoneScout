@@ -4,6 +4,7 @@
     align-items: center;
     justify-content: flex-start;
     width: 23%;
+    aspect-ratio: 2 / 3;
     min-width: 220px;
     max-width: 350px;
     box-sizing: border-box;
@@ -16,6 +17,37 @@
     position: relative;
     cursor: pointer;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+.phoneImage {
+    width: 100%;
+    aspect-ratio: 1 / 1; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.phoneImage img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
 
 .phoneRow:hover {
     transform: scale(1.01);                
@@ -140,24 +172,6 @@
     width: 80%;
     /* Ikonméret növelése */
     height: auto;
-}
-
-.phoneImage {
-    width: 110%;
-    aspect-ratio: 1 / 1;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 10px;
-    position: relative;
-}
-
-
-.phoneImage img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    display: block;
 }
 
 

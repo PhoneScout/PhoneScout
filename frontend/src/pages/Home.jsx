@@ -51,6 +51,7 @@ export default function Home() {
     <div>
       <Navbar />
       <br />
+      <Link to="/profil">Profil</Link>
       <br />
       <div className="row">
         <div className="col-1">

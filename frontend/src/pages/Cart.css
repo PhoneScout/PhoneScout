@@ -12,12 +12,12 @@
 
 
 
-.phoneImage {
+.phoneImageCartSpecial {
     flex: 1;
     text-align: center;
 }
 
-.phoneImage img {
+.phoneImageCartSpecial img {
     max-width: 80px;
     max-height: 80px;
 }

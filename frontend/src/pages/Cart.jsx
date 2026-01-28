@@ -363,7 +363,7 @@ export default function Cart() {
                         }
                       }}
                     >
-                      <div className="phoneImage" style={{ flex: 1, textAlign: "center" }}>
+                      <div className="phoneImageCartSpecial" style={{ flex: 1, textAlign: "center" }}>
                         <img
                           src={phone.imageUrl || '/Images/image 3.png'}
                           alt={phone.phoneName}

@@ -11,7 +11,7 @@ import Profile from './pages/Profile';
 import ServiceRequest from './pages/ServiceRequest';
 import LoginRegister from './pages/LoginRegister';
 import RegistrationConfirm from './pages/RegistrationConfirm';
-
+import KepTeszt from './pages/KepTeszt';
 
 
 
@@ -34,10 +34,11 @@ function App() {
         <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
         <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
         <Route path="/bejelentkezes" element={<LoginRegister />}></Route>
-        <Route path='/fiokaktivalas' element={<RegistrationConfirm />} /> 
+        <Route path='/fiokaktivalas' element={<RegistrationConfirm />} />
+        <Route path='/teszt' element={<KepTeszt />} />
 
       </Routes>
-      
+
     </div>
 
 

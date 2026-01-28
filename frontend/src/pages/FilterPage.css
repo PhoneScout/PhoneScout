@@ -1,4 +1,4 @@
-#contentRow {
+#contentRowFilter {
     margin-top: 2%;
     display: flex;
     flex-direction: row;
@@ -91,22 +91,7 @@
 }
 .button img {
     width: 80%;
-    height: auto;
-}
-.phoneImage {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 10px;
-    position: relative;
-}
-.phoneImage img {
-    width: 200px;
-    height: auto;
-    object-fit: contain;
-    display: block;
-}
+    height: auto;}
 .price-bubble {
     position: absolute;
     top: 10px;
