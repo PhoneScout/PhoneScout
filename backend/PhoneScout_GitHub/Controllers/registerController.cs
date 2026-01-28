@@ -148,5 +148,24 @@ namespace PhoneScout_GitHub.Controllers
                 return BadRequest($"Hiba az aktiválás során: {ex.Message}");
             }
         }
+
+        [HttpGet("GetId/{Email}")]
+        public IActionResult GetId(string Email)
+        {
+            // NINCS using (var cx = new PhoneContext())
+            try
+            {
+                var user = _cx.Users.FirstOrDefault(f => f.Email == Email);
+                if (user == null)
+                {
+                    return BadRequest("Nincs ilyen email című felhasználó!");
+                }
+                return Ok(user.Id);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
