@@ -24,8 +24,8 @@ namespace PhoneScout_GitHub.Controllers
             try
             {
                 var phones = cx.Phonedatas
-                .OrderByDescending(m => m.PhoneId)
-                .Select(m => new wpfPhonesrDTO
+                .OrderBy(m => m.PhoneId)
+                .Select(m => new wpfPhonesDTO
                 {
                     phoneID = m.PhoneId,
                     phoneName = m.PhoneName,
@@ -46,7 +46,7 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPut("{id}")]
-        public IActionResult UpdatePhoenWPF([FromBody] wpfPhonesrDTO dto, int id)
+        public IActionResult UpdatePhoneWPF([FromBody] wpfPhonesDTO dto, int id)
         {
             try
             {

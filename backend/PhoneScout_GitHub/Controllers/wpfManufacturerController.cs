@@ -24,7 +24,7 @@ namespace PhoneScout_GitHub.Controllers
             try
             {
                 var manufacturers = cx.Manufacturers
-                .OrderByDescending(m => m.Id)
+                .OrderBy(m => m.Id)
                 .Select(m => new wpfManufacturerDTO
                 {
                     manufacturerID = m.Id,

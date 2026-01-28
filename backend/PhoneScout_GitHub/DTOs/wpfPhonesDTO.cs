@@ -1,6 +1,6 @@
 namespace PhoneScout_GitHub.DTOs
 {
-    public class wpfPhonesrDTO
+    public class wpfPhonesDTO
     {
         public int phoneID { get; set; }
         public string phoneName { get; set; }
