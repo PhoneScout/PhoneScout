@@ -3,6 +3,7 @@ namespace PhoneScout_API_v2.DTOs
     public class profileCartGetDTO
     {
         public int userID { get; set; }
+        public string userEmail { get; set; }
         public int postalCode { get; set; }
         public string city { get; set; }
         public string address { get; set; }

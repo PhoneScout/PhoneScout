@@ -19,6 +19,98 @@ namespace PhoneScout_GitHub.Controllers
             cx = context;
         }
 
+         [HttpGet("GetAllRepair")]
+        public IActionResult GetAllRepair()
+        {
+            try
+            {
+
+                var selectRepairs = cx.Connectionservices                                     
+                                      .ToList(); // <- important
+
+
+                List<profilerepairGetDTO> repairs = new List<profilerepairGetDTO>();
+
+                foreach (var aRepair in selectRepairs)
+                {
+                    var user = cx.Users.FirstOrDefault(u => u.Id == aRepair.UserId);
+
+                    // Materialize parts list to avoid connection reuse issues
+                    var parts = cx.Connectionparts
+                                  .Where(p => p.RepairId == aRepair.RepairId)
+                                  .ToList(); // <- important
+
+                    profilerepairGetDTO repair = new profilerepairGetDTO
+                    {
+                        repairID = aRepair.RepairId,
+                        name = user.Email,
+                        postalCode = aRepair.PostalCode,
+                        city = aRepair.City,
+                        address = aRepair.Address,
+                        phoneNumber = aRepair.PhoneNumber,
+                        phoneName = aRepair.PhoneName,
+                        price = aRepair.Price,
+                        status = aRepair.Status,
+                        manufacturerName = aRepair.ManufacturerName,
+                        phoneInspection = aRepair.PhoneInspection,
+                        problemDescription = aRepair.ProblemDescription,
+                        parts = new List<string>()
+                    };
+
+                    foreach (var part in parts)
+                    {
+                        var partName = cx.Parts.FirstOrDefault(pn => pn.Id == part.PartId);
+                        if (partName != null)
+                            repair.parts.Add(partName.PartName);
+                    }
+
+                    repairs.Add(repair);
+                }
+
+                return Ok(repairs);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
+        [HttpGet("GetAllOrder")]
+        public IActionResult GetAllOrders()
+        {
+            try
+            {
+                
+
+                var orders = cx.Connuserorders
+                    
+                    .Select(anOrder => new profileCartGetDTO
+                    {                        
+                        userEmail = cx.Users.FirstOrDefault(u=>u.Id == anOrder.UserId).Email,
+                        postalCode = anOrder.PostalCode,
+                        city = anOrder.City,
+                        address = anOrder.Address,
+                        phoneNumber = anOrder.PhoneNumber,
+                        phoneName = anOrder.PhoneName,
+                        phoneColorName = anOrder.PhoneColorName,
+                        phoneColorHex = anOrder.PhoneColorHex,
+                        phoneRam = anOrder.PhoneRam,
+                        phoneStorage = anOrder.PhoneStorage,
+                        price = anOrder.Price,
+                        amount = anOrder.Amount,
+                        status = anOrder.Status
+                    })
+                    .ToList();
+
+                return Ok(orders);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [HttpGet("GetRepair/{userID}")]
         public IActionResult GetRepairs(int userID)
         {
@@ -48,6 +140,7 @@ namespace PhoneScout_GitHub.Controllers
                         city = aRepair.City,
                         address = aRepair.Address,
                         phoneNumber = aRepair.PhoneNumber,
+                        phoneName = aRepair.PhoneName,
                         price = aRepair.Price,
                         status = aRepair.Status,
                         manufacturerName = aRepair.ManufacturerName,
