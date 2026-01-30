@@ -27,6 +27,7 @@ namespace PhoneScout_GitHub.Controllers
                 .OrderBy(p => p.Id)
                 .Select(p => new wpfStorageDTO
                 {
+                    partID = p.Id,
                     partName = p.PartName,
                     partAmount = p.PartStock,
                 })
