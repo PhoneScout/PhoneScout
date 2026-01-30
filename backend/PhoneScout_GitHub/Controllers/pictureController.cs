@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PhoneScout_API_v2.DTOs;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
 using Swashbuckle.AspNetCore.Annotations;

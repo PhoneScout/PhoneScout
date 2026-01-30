@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using PhoneScout_API_v2.DTOs;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
 
@@ -87,6 +86,8 @@ namespace PhoneScout_GitHub.Controllers
                     
                     .Select(anOrder => new profileCartGetDTO
                     {                        
+                        orderID = anOrder.Id,
+                        userID = cx.Users.FirstOrDefault(u=>u.Id == anOrder.UserId).Id,
                         userEmail = cx.Users.FirstOrDefault(u=>u.Id == anOrder.UserId).Email,
                         postalCode = anOrder.PostalCode,
                         city = anOrder.City,
@@ -382,7 +383,7 @@ public IActionResult updateRepair([FromBody] profileRepairPostDTO dto, string re
 
      
 
-        [HttpPut("updateOrderStatus {orderID}")]
+        [HttpPut("updateOrderStatus/{orderID}")]
         public IActionResult updateOrderStatus([FromBody] profileCartGetDTO dto, int orderID)
         {
             try
