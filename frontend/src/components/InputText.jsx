@@ -1,6 +1,6 @@
 import "./InputText.css";
 
-export default function InputText({ type, id, label }) {
+export default function InputText({ type, id, label, onChange, inputStyle }) {
   const isCheckbox = type === "checkbox";
 
   if (isCheckbox) {
@@ -26,6 +26,8 @@ export default function InputText({ type, id, label }) {
         id={id}
         className="textBoxInput"
         placeholder=" "
+        onChange={onChange}
+        style={inputStyle}
       />
       <label htmlFor={id} className="textBoxLabel">
         {label}
