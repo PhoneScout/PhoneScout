@@ -2,9 +2,10 @@ using PhoneScout_GitHub.Models;
 
 namespace PhoneScout_GitHub.DTOs
 {
-    public class profilerepairGetDTO
+    public class profileRepairGetDTO
     {
         public string repairID { get; set; }
+        public int userID { get; set; }
         public string name { get; set; }
         public int postalCode { get; set; }
         public string city { get; set; }

@@ -28,7 +28,7 @@ namespace PhoneScout_GitHub.Controllers
                                       .ToList(); // <- important
 
 
-                List<profilerepairGetDTO> repairs = new List<profilerepairGetDTO>();
+                List<profileRepairGetDTO> repairs = new List<profileRepairGetDTO>();
 
                 foreach (var aRepair in selectRepairs)
                 {
@@ -39,9 +39,10 @@ namespace PhoneScout_GitHub.Controllers
                                   .Where(p => p.RepairId == aRepair.RepairId)
                                   .ToList(); // <- important
 
-                    profilerepairGetDTO repair = new profilerepairGetDTO
+                    profileRepairGetDTO repair = new profileRepairGetDTO
                     {
                         repairID = aRepair.RepairId,
+                        userID = aRepair.UserId,
                         name = user.Email,
                         postalCode = aRepair.PostalCode,
                         city = aRepair.City,
@@ -124,7 +125,7 @@ namespace PhoneScout_GitHub.Controllers
 
                 var user = cx.Users.FirstOrDefault(u => u.Id == userID);
 
-                List<profilerepairGetDTO> repairs = new List<profilerepairGetDTO>();
+                List<profileRepairGetDTO> repairs = new List<profileRepairGetDTO>();
 
                 foreach (var aRepair in selectRepairs)
                 {
@@ -133,7 +134,7 @@ namespace PhoneScout_GitHub.Controllers
                                   .Where(p => p.RepairId == aRepair.RepairId)
                                   .ToList(); // <- important
 
-                    profilerepairGetDTO repair = new profilerepairGetDTO
+                    profileRepairGetDTO repair = new profileRepairGetDTO
                     {
                         repairID = aRepair.RepairId,
                         name = user.Name,
@@ -263,7 +264,7 @@ namespace PhoneScout_GitHub.Controllers
                 if (user == null)
                     return BadRequest("A felhasználó nem található.");
 
-                if (dto.partNames == null || !dto.partNames.Any())
+                if (dto.parts == null || !dto.parts.Any())
                     return BadRequest("Nincsenek megadva alkatrészek.");
 
 
@@ -287,7 +288,7 @@ namespace PhoneScout_GitHub.Controllers
                 cx.Connectionservices.Add(repair);
 
 
-                foreach (var partName in dto.partNames)
+                foreach (var partName in dto.parts)
                 {
                     var part = cx.Parts.FirstOrDefault(p => p.PartName == partName);
 
@@ -331,7 +332,7 @@ public IActionResult updateRepair([FromBody] profileRepairPostDTO dto, string re
             return BadRequest("A felhasználó nem található.");
 
         // 3. Validate parts list
-        if (dto.partNames == null || !dto.partNames.Any())
+        if (dto.parts == null || !dto.parts.Any())
             return BadRequest("Nincsenek megadva alkatrészek.");
 
         // 4. Update repair properties
@@ -348,7 +349,7 @@ public IActionResult updateRepair([FromBody] profileRepairPostDTO dto, string re
         selectedRepair.ProblemDescription = dto.problemDescription;
 
         // 5. Update parts (add only if not already linked)
-        foreach (var partName in dto.partNames)
+        foreach (var partName in dto.parts)
         {
             var part = cx.Parts.FirstOrDefault(p => p.PartName == partName);
             if (part == null)

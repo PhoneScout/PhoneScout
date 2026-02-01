@@ -24,6 +24,6 @@ namespace PhoneScout_GitHub.DTOs
     
         public string problemDescription { get; set; } = null!;
 
-        public List<string>? partNames { get; set; }
+        public List<string>? parts { get; set; }
     }
 }
