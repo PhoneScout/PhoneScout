@@ -2,8 +2,12 @@ import React, { useState, useEffect, useRef } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Navbar.css';
 import { Link, useNavigate } from 'react-router-dom'; // useNavigate importálása
+import { useAuth } from './AuthContext';
 
 export default function Navbar() {
+
+    const { token, logout: authLogout } = useAuth();
+
     const [previousPages, setPreviousPages] = useState(() => {
         const stored = localStorage.getItem("pagesHistory");
         return stored ? JSON.parse(stored) : [{ pageName: "Főoldal", pageURL: "/" }];
@@ -210,17 +214,18 @@ export default function Navbar() {
     }, []);
 
     // User state
-    const [firstname, setFirstname] = useState(null);
+    const [fullname, setFullname] = useState(null);
     const [jogosultsag, setJogosultsag] = useState(null);
 
     useEffect(() => {
-        setFirstname(localStorage.getItem("firstname"));
+        setFullname(localStorage.getItem("fullname"));
         setJogosultsag(localStorage.getItem("jogosultsag"));
-    }, []);
+    }, [token]);
 
     function logout() {
+        authLogout();
         localStorage.removeItem("jwtToken");
-        localStorage.removeItem("firstname");
+        localStorage.removeItem("fullname");
         localStorage.removeItem("jogosultsag");
         alert("Sikeres kijelentkezés!");
         
@@ -234,7 +239,7 @@ export default function Navbar() {
     }
 
     // Check if user is logged in
-    const isLoggedIn = !!firstname;
+    const isLoggedIn = !!token;
 
     return (
         <div className="navbar-wrapper">
@@ -335,7 +340,7 @@ export default function Navbar() {
                             <a href="#" className="dropdown-toggle userIcon" id="loginDropdown" data-bs-toggle="dropdown"
                                 aria-expanded="false">
                                 <div id="userChange">
-                                    <div id="firstName">{firstname}</div>
+                                    <div id="fullName">{fullname}</div>
                                     <div className="user-img-wrapper">
                                         <img src="../Images/doneUserIcon1.png" alt="User"/>
                                     </div>
@@ -355,7 +360,7 @@ export default function Navbar() {
                             style={{ textDecoration: 'none', color: 'inherit' }}
                         >
                             <div id="userChange">
-                                <div id="firstName">Bejelentkezés</div>
+                                <div id="fullName">Bejelentkezés</div>
                                 <div className="user-img-wrapper">
                                     <img src="../Images/doneUserIcon1.png" alt="User"/>
                                 </div>
@@ -487,15 +492,15 @@ export default function Navbar() {
                             <div className="mobile-user-info">
                                 <img src="../Images/doneUserIcon1.png" alt="User" className="mobile-user-img"/>
                                 <div className="mobile-user-text">
-                                    <div className="mobile-user-name">{firstname || "Vendég"}</div>
+                                    <div className="mobile-user-name">{fullname || "Vendég"}</div>
                                     <div className="mobile-user-status">
-                                        {firstname ? "Bejelentkezve" : "Nincs bejelentkezve"}
+                                        {fullname ? "Bejelentkezve" : "Nincs bejelentkezve"}
                                     </div>
                                 </div>
                             </div>
                             
                             <div className="mobile-user-actions">
-                                {firstname ? (
+                                {fullname ? (
                                     <>
                                         <Link 
                                             to="/profil" 

@@ -3,12 +3,14 @@ import styles from './Login.module.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import InputText from './InputText';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthContext';
 
 export default function Login({ onSwitchToRegister }) {
 
     const navigate = useNavigate();
+    const { login: authLogin } = useAuth(); 
 
-    const login = async (e) => {
+    const handleLogin = async (e) => {    
         if (e) e.preventDefault();
 
         const alertBox = document.getElementById('alertLog');
@@ -83,7 +85,9 @@ export default function Login({ onSwitchToRegister }) {
             console.log("Szerver válasza:", result);
 
             if (result.token) {
-                localStorage.setItem('userToken', result.token);
+                //authLogin használata
+                authLogin(result.token);
+                localStorage.setItem("fullname", result.fullName || "Felhasználó"); 
             }
 
             setTimeout(() => {
@@ -106,7 +110,7 @@ export default function Login({ onSwitchToRegister }) {
 
                 <h2 className={styles.mainTitle}>Bejelentkezés</h2>
 
-                <form id='loginForm' onSubmit={login}>
+                <form id='loginForm' onSubmit={handleLogin}>
                     <div className={styles.formLayout}>
                         <div className={styles.inputContainer}>
                             <InputText type='email' id='loginEmail' label='Email' required />

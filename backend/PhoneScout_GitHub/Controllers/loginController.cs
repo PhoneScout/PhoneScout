@@ -82,7 +82,7 @@ namespace PhoneScout_GitHub.Controllers
 
                 return Ok(new LoggedUser
                 {
-                    FirstName = user.Name,
+                    FullName = user.Name,
                     Email = user.Email,
                     Privilege = (int)user.PrivilegeId,
                     Token = token
