@@ -51,7 +51,6 @@ export default function PhoneCard({
         <img
           src={phoneImg || "/images/placeholder.png"}
           alt={phoneName}
-          style={{ width: 150, border: "1px solid #ccc" }}
         />
         <div className="price-bubble">{phonePrice} Ft</div>
         <div className="stock-bubble phonestockFalse">{phoneInStore}</div>
