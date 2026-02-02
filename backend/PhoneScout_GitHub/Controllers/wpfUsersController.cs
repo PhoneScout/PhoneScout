@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration.UserSecrets;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
 
@@ -27,6 +28,7 @@ namespace PhoneScout_GitHub.Controllers
                 .OrderBy(u => u.Id)
                 .Select(u => new wpfUsersDTO
                 {
+                    userID = u.Id,
                     userFullName = u.Name,
                     userEmail = u.Email,
                     userPrivilegeLevel = u.Privilege.Level,
