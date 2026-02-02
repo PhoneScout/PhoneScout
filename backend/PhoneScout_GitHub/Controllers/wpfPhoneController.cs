@@ -29,6 +29,7 @@ namespace PhoneScout_GitHub.Controllers
                 {
                     phoneID = m.PhoneId,
                     phoneName = m.PhoneName,
+                    manufacturerName = m.Manufacturer.ManufacturerName,
                     phoneInstore = m.PhoneInStore,
                     phonePrice = m.PhonePrice,
                     phoneAvailable = m.PhoneDeleted,

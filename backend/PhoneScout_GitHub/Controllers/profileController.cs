@@ -80,8 +80,7 @@ namespace PhoneScout_GitHub.Controllers
         public IActionResult GetAllOrders()
         {
             try
-            {
-                
+            {              
 
                 var orders = cx.Connuserorders
                     
