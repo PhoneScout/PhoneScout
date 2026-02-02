@@ -43,6 +43,42 @@ namespace PhoneScout_GitHub.Controllers
             }
         }
 
+        [HttpPost]
+        public IActionResult UpdateStorageWPF([FromBody] wpfStorageDTO dto)
+        {
+            try
+            {
+                var part = cx.Parts
+                    .FirstOrDefault(p => p.PartName == dto.partName);
+
+                if (part != null)
+                {
+                    return BadRequest("Az alkatrész már létezik.");
+                }
+                else
+                {
+                    var newPart = new Part
+                    {
+                        PartName = dto.partName,
+                        PartStock = dto.partAmount
+                    };
+
+                    cx.Parts.Add(newPart);
+                    cx.SaveChanges();
+                    return Ok("Az alkatrész sikeresen feltöltve.");
+
+                }                
+
+                
+
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+
         [HttpPut("{id}")]
         public IActionResult UpdateStorageWPF([FromBody] wpfStorageDTO dto, int id)
         {
