@@ -25,8 +25,8 @@ namespace PhoneScout_GitHub.Controllers
             {
                 var phones = _context.Phonedatas
                     .Where(p => p.PhoneDeleted == 0
-                    //&& (filters.manufacturerNames == null || !filters.manufacturerNames.Any() || filters.manufacturerNames.Contains(p.Manufacturer.ManufacturerName))
-                    //&& (filters.cpuNames == null || !filters.cpuNames.Any() || filters.cpuNames.Contains(p.Cpu.CpuName))
+                    && (!filters.manufacturerNames.Any() || filters.manufacturerNames.Contains(p.Manufacturer.ManufacturerName))
+                    && (!filters.cpuNames.Any() || filters.cpuNames.Contains(p.Cpu.CpuName))
                     && (filters.phoneAntutu == 0 || filters.phoneAntutu < p.PhoneAntutu)
                     && (filters.cpuMaxClockSpeed == 0 || filters.cpuMaxClockSpeed < p.Cpu.CpuMaxClockSpeed)
                     && (filters.cpuCoreNumber == 0 || filters.cpuCoreNumber < p.Cpu.CpuCoreNumber)
@@ -40,7 +40,7 @@ namespace PhoneScout_GitHub.Controllers
                     && (filters.ramAmount == 0 || filters.ramAmount < p.Connphoneramstorages.Max(r => r.Ramstorage.RamAmount))
                     && (filters.storageAmount == 0 || filters.storageAmount < p.Connphoneramstorages.Max(r => r.Ramstorage.StorageAmount))
                     && (filters.batteryCapacity == 0 || filters.batteryCapacity < p.BatteryCapacity)
-                    //&& (filters.phoneReleaseDate == 0 || p.PhoneReleaseDate.HasValue && p.PhoneReleaseDate.Value.Year <= filters.phoneReleaseDate)
+                    && (filters.phoneReleaseDate == 0 || p.PhoneReleaseDate.HasValue && p.PhoneReleaseDate.Value.Year >= filters.phoneReleaseDate)
                     )
                     .Select(p => new mainPageDTO
                     {
@@ -82,7 +82,13 @@ namespace PhoneScout_GitHub.Controllers
                     .Distinct()
                     .ToList();
 
-                return Ok(new { manufacturerNames, cpuNames });
+                var maxAntutu = _context.Phonedatas
+                    .Max(c => c.PhoneAntutu);
+
+                var minAntutu = _context.Phonedatas
+                    .Min(c => c.PhoneAntutu);
+
+                return Ok(new { manufacturerNames, cpuNames, maxAntutu, minAntutu });
             }
             catch (Exception ex)
             {

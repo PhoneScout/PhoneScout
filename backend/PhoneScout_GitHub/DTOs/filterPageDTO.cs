@@ -1,6 +1,6 @@
 namespace PhoneScout_GitHub.DTOs
 {
-    public class filterPageDTO
+    public class filterPageDTO 
     {
         public int phoneID { get; set; }
         public List<string> manufacturerNames { get; set; }
