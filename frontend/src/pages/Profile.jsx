@@ -9,15 +9,17 @@ import Navbar from '../components/Navbar';
 
 const Profile = () => {
   // Felhasználó adatok
-  const [userData, setUserData] = useState({
-    firstName: 'János',
-    lastName: 'Kovács',
-    email: 'janos.kovacs@example.com',
-    phone: '+36 30 123 4567',
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  });
+
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [userData, setUserData] = useState({ userFullName: '', userEmail: '' });
+
+  useEffect(() => {
+    const savedName = localStorage.getItem('fullname');
+    const savedEmail = localStorage.getItem('email');
+    setUserData({ userFullName: savedName, userEmail: savedEmail });
+  }, []);
+
+
 
   const [phones, setPhones] = useState([
     {
@@ -154,13 +156,36 @@ const Profile = () => {
   const [editingBillingId, setEditingBillingId] = useState(null);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
 
+  // function GetProfile(){
+  //   fetch("")
+  // }
+
   // Profil adatok mentése
   const handleProfileSubmit = (e) => {
     e.preventDefault();
-    // Itt lenne az API hívás
-    console.log('Profil adatok mentve:', userData);
-    setEditingProfile(false);
-    alert('Profil adatok frissítve!');
+    setShowConfirmModal(true);
+  };
+
+  const confirmSave = async () => {
+    try {
+      const response = await fetch(`http://localhost:5175/api/Profile/UpdateUser/${userData.userEmail.replace('@', '%40')}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(userData),
+      });
+
+      if (response.ok) {
+        // Mentés Local Storage-ba is
+        localStorage.setItem('fullName', userData.userFullName);
+        localStorage.setItem('email', userData.userEmail);
+
+        setEditingProfile(false);
+        setShowConfirmModal(false);
+        alert('Sikeres mentés!');
+      }
+    } catch (error) {
+      console.error('Hiba a mentés során:', error);
+    }
   };
 
   // Jelszó változtatás
@@ -325,41 +350,25 @@ const Profile = () => {
             <div className="section-header">
               <h2>Profil adatok</h2>
               {!editingProfile ? (
-                <button
-                  className="btn-edit"
-                  onClick={() => setEditingProfile(true)}
-                >
+                <button className="btn-edit" onClick={() => setEditingProfile(true)}>
                   Szerkesztés
                 </button>
               ) : (
-                <button
-                  className="btn-cancel"
-                  onClick={() => setEditingProfile(false)}
-                >
+                <button className="btn-cancel" onClick={() => setEditingProfile(false)}>
                   Mégse
                 </button>
               )}
             </div>
 
+            {/* Profil szekció - az általad kért összevont mezőkkel */}
             <form onSubmit={handleProfileSubmit}>
-              <div className="form-grid">
+              <div className="form-stack">
                 <div className="form-group">
-                  <label>Vezetéknév</label>
+                  <label>Név</label>
                   <input
                     type="text"
-                    name="lastName"
-                    value={userData.lastName}
-                    onChange={handleInputChange}
-                    disabled={!editingProfile}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Keresztnév</label>
-                  <input
-                    type="text"
-                    name="firstName"
-                    value={userData.firstName}
-                    onChange={handleInputChange}
+                    value={userData.userFullName}
+                    onChange={(e) => setUserData({ ...userData, userFullName: e.target.value })}
                     disabled={!editingProfile}
                   />
                 </div>
@@ -367,32 +376,36 @@ const Profile = () => {
                   <label>Email cím</label>
                   <input
                     type="email"
-                    name="email"
-                    value={userData.email}
-                    onChange={handleInputChange}
-                    disabled={!editingProfile}
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Telefonszám</label>
-                  <input
-                    type="tel"
-                    name="phone"
-                    value={userData.phone}
-                    onChange={handleInputChange}
+                    value={userData.userEmail}
+                    onChange={(e) => setUserData({ ...userData, userEmail: e.target.value })}
                     disabled={!editingProfile}
                   />
                 </div>
               </div>
-
-              {editingProfile && (
-                <div className="form-actions">
-                  <button type="submit" className="btn-save">
-                    Mentés
-                  </button>
-                </div>
-              )}
+              {editingProfile && <button type="submit" className="btn-save">Mentés</button>}
             </form>
+
+            {showConfirmModal && (
+              <div className="profile-modal-overlay">
+                <div className="profile-modal-content">
+                  <div className="profile-modal-header">
+                    <h3 className="profile-modal-title">Megerősítés</h3>
+                  </div>
+                  <div className="profile-modal-body">
+                    <p className="profile-modal-text">Biztosan menteni szeretnéd a módosításokat?</p>
+                  </div>
+                  <div className="profile-modal-actions">
+                    <button onClick={() => setShowConfirmModal(false)} className="profile-modal-btn-cancel">
+                      Mégse
+                    </button>
+                    <button onClick={confirmSave} className="profile-modal-btn-confirm">
+                      Igen, mentés
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
 
             {/* Jelszó változtatás */}
             <div className="password-section">
@@ -439,7 +452,7 @@ const Profile = () => {
           {/* 2. Szállítási címek szakasz */}
           <section id="shipping" className="profile-section">
             <div className="section-header">
-              <h2>Szlállítási címek</h2>
+              <h2>Szállítási címek</h2>
               {shippingAddresses.length < 3 && (
                 <button
                   className="btn-add"
@@ -720,7 +733,7 @@ const Profile = () => {
             </div>
           </section>
 
-          
+
         </main>
       </div>
 

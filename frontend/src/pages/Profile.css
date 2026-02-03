@@ -711,3 +711,96 @@
     z-index: 10;
     right: 0;
 }
+
+/* Háttér elhomályosítása és sötétítése */
+.profile-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px); /* Modern üveghatás */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: modalFadeIn 0.3s ease-out;
+}
+
+/* Modal ablak */
+.profile-modal-content {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  transform: translateY(0);
+  animation: modalSlideUp 0.3s ease-out;
+}
+
+/* Cím stílusa */
+.profile-modal-title {
+  margin-top: 0;
+  color: #333;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Szöveg stílusa */
+.profile-modal-text {
+  color: #666;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+/* Gombok elrendezése */
+.profile-modal-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+/* Közös gomb stílusok */
+.profile-modal-btn-confirm, 
+.profile-modal-btn-cancel {
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+}
+
+/* Mentés gomb (zöld/kék) */
+.profile-modal-btn-confirm {
+  background-color: #68f145;
+  color: white;
+}
+
+.profile-modal-btn-confirm:hover {
+  transform: translateY(-2px);
+}
+
+/* Mégse gomb (szürke) */
+.profile-modal-btn-cancel {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.profile-modal-btn-cancel:hover {
+  background-color: #d0d0d0;
+}
+
+/* Animációk */
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}

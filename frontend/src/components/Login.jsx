@@ -88,6 +88,7 @@ export default function Login({ onSwitchToRegister }) {
                 //authLogin használata
                 authLogin(result.token);
                 localStorage.setItem("fullname", result.fullName || "Felhasználó"); 
+                localStorage.setItem("email", result.email || "Email"); 
             }
 
             setTimeout(() => {

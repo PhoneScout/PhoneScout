@@ -226,6 +226,7 @@ export default function Navbar() {
         authLogout();
         localStorage.removeItem("jwtToken");
         localStorage.removeItem("fullname");
+        localStorage.removeItem("email")
         localStorage.removeItem("jogosultsag");
         alert("Sikeres kijelentkezés!");
         
