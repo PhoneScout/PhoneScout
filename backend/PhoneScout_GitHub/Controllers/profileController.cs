@@ -18,6 +18,11 @@ namespace PhoneScout_GitHub.Controllers
             cx = context;
         }
 
+        
+
+
+
+
          [HttpGet("GetAllRepair")]
         public IActionResult GetAllRepair()
         {
@@ -314,6 +319,27 @@ namespace PhoneScout_GitHub.Controllers
             }
 
         }
+
+        [HttpPut("UpdateUser/{email}")]
+        public IActionResult UpdateUser([FromBody] profileUserUpdateDTO dto, string email)
+        {
+            try
+            {
+                var selectedUser = cx.Users.FirstOrDefault(u=>u.Email == email);
+
+                selectedUser.Email = dto.userEmail;
+                selectedUser.Name = dto.userFullName;
+
+                cx.SaveChanges();
+
+                return Ok("Sikeres frissítés");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
 
         [HttpPut("updateRepair/{repairID}")]
 public IActionResult updateRepair([FromBody] profileRepairPostDTO dto, string repairID)
