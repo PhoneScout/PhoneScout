@@ -132,10 +132,7 @@
     text-align: center;
     margin-bottom: 10px;
 }
-.carouselButton {
-    background-color: #E7C49D;
-    border-radius: 100%;
-}
+
 .col-1 {
     display: flex;
     justify-content: center;
