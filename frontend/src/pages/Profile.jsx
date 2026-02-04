@@ -19,6 +19,9 @@ const Profile = () => {
     setUserData({ userFullName: savedName, userEmail: savedEmail });
   }, []);
 
+  const [passwordStrength, setPasswordStrength] = useState({ score: 0, label: "", color: "#ccc" });
+  const [statusMessage, setStatusMessage] = useState({ text: "", isError: false });
+
 
 
   const [phones, setPhones] = useState([
@@ -188,17 +191,104 @@ const Profile = () => {
     }
   };
 
+  //Salt generator
+  function GenerateSalt(SaltLength) {
+    const karakterek = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+    let salt = "";
+
+    for (let i = 0; i < SaltLength; i++) {
+      const randomIndex = Math.floor(Math.random() * karakterek.length);
+      salt += karakterek[randomIndex];
+    }
+
+    return salt;
+  }
+
+  const checkPasswordStrength = (value) => {
+    let score = 0;
+    if (value.length >= 8) score++;
+    if (/[A-Z]/.test(value)) score++;
+    if (/[a-z]/.test(value)) score++;
+    if (/[0-9]/.test(value)) score++;
+    if (/[^A-Za-z0-9]/.test(value)) score++;
+
+    if (!value) {
+      setPasswordStrength({ score: 0, label: "", color: "#ccc" });
+    } else if (score <= 2) {
+      setPasswordStrength({ score, label: "Gyenge", color: "red" });
+    } else if (score <= 4) {
+      setPasswordStrength({ score, label: "Közepes", color: "orange" });
+    } else {
+      setPasswordStrength({ score, label: "Erős", color: "green" });
+    }
+  };
+
   // Jelszó változtatás
-  const handlePasswordChange = (e) => {
+  const handlePasswordChange = async (e) => {
     e.preventDefault();
+    setStatusMessage({ text: "", isError: false }); // Előző üzenet törlése
+
     if (userData.newPassword !== userData.confirmPassword) {
-      alert('A két jelszó nem egyezik!');
+      // alert helyett:
+      setStatusMessage({ text: "Az új jelszó és a megerősítés nem egyezik!", isError: true });
       return;
     }
-    console.log('Jelszó változtatás:', userData.newPassword);
-    setUserData({ ...userData, currentPassword: '', newPassword: '', confirmPassword: '' });
-    alert('Jelszó sikeresen megváltoztatva!');
+
+    if (passwordStrength.score < 5) {
+      // alert helyett:
+      setStatusMessage({ text: "A jelszó nem elég erős! Használjon kisbetűt, nagybetűt, számot és speciális karaktert!", isError: true });
+      return;
+    }
+
+    try {
+      const saltResponse = await fetch(`http://localhost:5175/api/Login/GetSalt/${encodeURIComponent(userData.userEmail)}`);
+      if (!saltResponse.ok) throw new Error("Nem sikerült lekérni a saltot.");
+      const currentDbSalt = await saltResponse.text();
+
+      const oldHashed = await hashPassword(userData.currentPassword, currentDbSalt);
+
+      const newSalt = GenerateSalt(64);
+      const newHashed = await hashPassword(userData.newPassword, newSalt);
+
+      const response = await fetch("http://localhost:5175/api/Registration/ChangePassword", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: userData.userEmail,
+          oldPassword: oldHashed,
+          newPassword: newHashed,
+          salt: newSalt
+        })
+      });
+
+      if (response.ok) {
+        setStatusMessage({ text: "Sikeres jelszó módosítás!", isError: false });
+
+        setUserData(prev => ({
+          ...prev,
+          currentPassword: "",
+          newPassword: "",
+          confirmPassword: ""
+        }));
+        setPasswordStrength({ score: 0, label: "", color: "#ccc" });
+      } else {
+        const errorMsg = await response.text();
+        setStatusMessage({ text: "Hiba: " + errorMsg, isError: true });
+      }
+    } catch (error) {
+      console.error("Hiba történt:", error);
+      setStatusMessage({ text: "Hálózati hiba történt!", isError: true });
+    }
   };
+
+  const hashPassword = async (password, salt) => {
+    const combinedPassword = password + salt;
+    const msgBuffer = new TextEncoder().encode(combinedPassword);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+  };
+
 
   // Szállítási cím mentése
   const handleShippingSubmit = (e, id) => {
@@ -298,6 +388,10 @@ const Profile = () => {
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
+
+    if (name === "newPassword") {
+      checkPasswordStrength(value);
+    }
   };
 
   const handleAddressInputChange = (e, type, id, field) => {
@@ -429,6 +523,24 @@ const Profile = () => {
                       value={userData.newPassword}
                       onChange={handleInputChange}
                     />
+
+                    {/* Itt jelenik meg az erősségjelző, ha már elkezdtek gépelni */}
+                    {userData.newPassword && (
+                      <div className="password-strength-container">
+                        <div style={{ background: "#eee", height: "6px", borderRadius: "4px", marginTop: "6px", width: "100%" }}>
+                          <div style={{
+                            width: `${passwordStrength.score * 20}%`,
+                            height: "100%",
+                            background: passwordStrength.color,
+                            borderRadius: "4px",
+                            transition: "0.3s"
+                          }} />
+                        </div>
+                        <small style={{ color: passwordStrength.color, display: "block", marginTop: "4px" }}>
+                          {passwordStrength.label}
+                        </small>
+                      </div>
+                    )}
                   </div>
                   <div className="form-group">
                     <label>Új jelszó megerősítése</label>
@@ -440,6 +552,20 @@ const Profile = () => {
                     />
                   </div>
                 </div>
+                {statusMessage.text && (
+                  <div style={{
+                    color: statusMessage.isError ? "#ff4d4d" : "#2ecc71",
+                    textAlign: "center",
+                    padding: "10px",
+                    marginTop: "10px",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    backgroundColor: statusMessage.isError ? "#ffe6e6" : "#e6fffa", // Halvány háttér a jobb olvashatóságért
+                    borderRadius: "4px"
+                  }}>
+                    {statusMessage.text}
+                  </div>
+                )}
                 <div className="form-actions">
                   <button type="submit" className="btn-save">
                     Jelszó változtatása

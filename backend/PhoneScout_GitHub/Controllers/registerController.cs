@@ -167,5 +167,38 @@ namespace PhoneScout_GitHub.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpPut("ChangePassword")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO request)
+        {
+            try
+            {
+                var user = await _cx.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+
+                if (user == null)
+                {
+                    return NotFound("A felhasználó nem található.");
+                }
+
+                string oldHashCheck = Program.CreateSHA256(request.OldPassword);
+
+                if (user.Hash != oldHashCheck)
+                {
+                    return BadRequest("A régi jelszó nem megfelelő.");
+                }
+
+                user.Hash = Program.CreateSHA256(request.NewPassword);
+                user.Salt = request.SALT;
+
+                _cx.Users.Update(user);
+                await _cx.SaveChangesAsync();
+
+                return Ok("A jelszó sikeresen módosítva.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Hiba történt a módosítás során: {ex.Message}");
+            }
+        }
     }
 }
