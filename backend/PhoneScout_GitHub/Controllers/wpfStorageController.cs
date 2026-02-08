@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -19,6 +21,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(
+            Summary = "Raktár lekérése.",
+            Description = "Admin felülethez az összes raktár lekérése."
+        )]
         public IActionResult GetStorageWPF()
         {
             try
@@ -44,6 +50,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(
+            Summary = "Alkatrész feltöltése.",
+            Description = "Admin felülethez egy alkatrész feltöltése, a szükséges adatok megadása után."
+        )]
         public IActionResult UpdateStorageWPF([FromBody] wpfStorageDTO dto)
         {
             try
@@ -80,6 +90,10 @@ namespace PhoneScout_GitHub.Controllers
 
 
         [HttpPut("{id}")]
+        [SwaggerOperation(
+            Summary = "Alkatrész módosítása.",
+            Description = "Admin felülethez egy alkatrész azonosítójának és a szükséges adatok megadása után az alkatrész módosítása."
+        )]
         public IActionResult UpdateStorageWPF([FromBody] wpfStorageDTO dto, int id)
         {
             try
@@ -112,6 +126,10 @@ namespace PhoneScout_GitHub.Controllers
 
 
         [HttpDelete("{id}")]
+        [SwaggerOperation(
+            Summary = "Alkatrész törlése.",
+            Description = "Admin felülethez a alkatrész azonosítójának megadása után a alkatrész törlése."
+        )]
         public IActionResult DeleteStorageWPF(int id)
         {
             try

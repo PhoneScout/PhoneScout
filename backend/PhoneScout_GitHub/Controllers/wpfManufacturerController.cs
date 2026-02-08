@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -19,6 +21,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(
+            Summary = "Cégek lekérése.",
+            Description = "Admin felülethez az összes cég lekérése."
+        )]
         public IActionResult GetManufacturers()
         {
             try
@@ -45,6 +51,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPut("{id}")]
+        [SwaggerOperation(
+            Summary = "Cég módosítása.",
+            Description = "Admin felülethez a cég azonosítójának és a szükséges adatok megadása után a cég módosítása."
+        )]
         public IActionResult UpdateManufacturer([FromBody] wpfManufacturerDTO dto, int id)
         {
             try
@@ -74,6 +84,10 @@ namespace PhoneScout_GitHub.Controllers
 
 
         [HttpDelete("{id}")]
+        [SwaggerOperation(
+            Summary = "Cég törlése.",
+            Description = "Admin felülethez a cég azonosítójának megadása után a cég törlése."
+        )]
         public IActionResult DeleteManufacturer(int id)
         {
             try

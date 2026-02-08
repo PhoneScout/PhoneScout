@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -14,6 +16,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet("phonePage/{id}")]
+        [SwaggerOperation(
+            Summary = "Telefon oldalhoz szükséges információk lekérése.",
+            Description = "A telefon ID megadása utás, az adott telefonról található összes adat lekérése az adatbázisból."
+        )]
         public ActionResult<phoneDTO> GetPhonePage(int id)
         {
             var phone = _context.Phonedatas

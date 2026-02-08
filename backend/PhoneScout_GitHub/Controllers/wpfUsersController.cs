@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration.UserSecrets;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -20,6 +22,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(
+            Summary = "Felhasználók lekérése.",
+            Description = "Admin felülethez az összes felhasználók lekérése."
+        )]
         public IActionResult GetUsersWPF()
         {
             try
@@ -48,6 +54,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPut("{id}")]
+        [SwaggerOperation(
+            Summary = "Felhasználó módosítása.",
+            Description = "Admin felülethez a felhasználó azonosítójának és a szükséges adatok megadása után a felhasználó módosítása."
+        )]
         public IActionResult UpdateUserWPF([FromBody] wpfUsersDTO dto, int id)
         {
             try
@@ -86,6 +96,10 @@ namespace PhoneScout_GitHub.Controllers
 
 
         [HttpDelete("{id}")]
+        [SwaggerOperation(
+            Summary = "Felhasználó törlése.",
+            Description = "Admin felülethez a felhasználó azonosítójának megadása után a felhasználó törlése."
+        )]
         public IActionResult DeleteUserWPF(int id)
         {
             try

@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -8,6 +10,10 @@ namespace PhoneScout_GitHub.Controllers
     public class LogoutController : ControllerBase
     {
         [HttpPost("{token}")]
+        [SwaggerOperation(
+            Summary = "",
+            Description = ""
+        )]
 
         public IActionResult Logout(string token)
         {

@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -17,6 +19,10 @@ namespace PhoneScout_GitHub.Controllers
 
 
         [HttpGet("mainPage")]
+        [SwaggerOperation(
+            Summary = "Legnépszerűbb telefonok lekérése.",
+            Description = "Főoldalhoz szükséges, nyolc legnépszerűbb telefon lekérése."
+        )]
         public IActionResult mainPage()
         {
             var phoneDatas = _context.Phonedatas
@@ -35,6 +41,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet("allPhonesName")]
+        [SwaggerOperation(
+            Summary = "Minden telefonnév lekérése.",
+            Description = "A keresősávhoz szükséges, összes telefonnév lekérése."
+        )]
         public IActionResult allPhonesName()
         {
             var phoneDatas = _context.Phonedatas

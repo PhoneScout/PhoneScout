@@ -6,6 +6,8 @@ using PhoneScout_GitHub.Models;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -23,6 +25,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(
+            Summary = "",
+            Description = ""
+        )]
         public async Task<IActionResult> Registration(registerDTO user)
         {
             try
@@ -119,6 +125,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(
+            Summary = "",
+            Description = ""
+        )]
         public async Task<IActionResult> ActivateAccount(string name, string email)
         {
             try
@@ -150,6 +160,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet("GetId/{Email}")]
+        [SwaggerOperation(
+            Summary = "",
+            Description = ""
+        )]
         public IActionResult GetId(string Email)
         {
             // NINCS using (var cx = new PhoneContext())
@@ -169,6 +183,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPut("ChangePassword")]
+        [SwaggerOperation(
+            Summary = "",
+            Description = ""
+        )]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO request)
         {
             try

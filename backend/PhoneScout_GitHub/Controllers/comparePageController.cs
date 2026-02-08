@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -14,7 +16,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet("comparePage/{id}")]
-
+        [SwaggerOperation(
+            Summary = "Az összehasonlítás oldalhoz szükséges adatok lekérése.",
+            Description = "A kiválasztott telefon, összehasonlítás oldalhoz szükséges adatainak lekérése."
+        )]
         public IActionResult comparePage(int id)
         {
             var phone = _context.Phonedatas

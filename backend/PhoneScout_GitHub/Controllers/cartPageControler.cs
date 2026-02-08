@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -14,7 +16,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet("getCart")]
-
+        [SwaggerOperation(
+            Summary = "A kosár oldalhoz szükséges adatok lekérése.",
+            Description = "Az összes telefon, kosár oldalhoz szükséges adatainak lekérése."
+        )]
         public IActionResult getCartPage()
         {
             var phones = _context.Phonedatas

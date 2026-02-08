@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -19,6 +21,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPost("autoFillPCC")]
+        [SwaggerOperation(
+            Summary = "Irányítószám / Város visszaadása.",
+            Description = "Irányítószám visszaadása város megadása esetén, illetve, város visszaadása irányítószám megadása esetén."
+        )]
 
         public IActionResult autoFillPCC([FromBody] PostalCodeDTO dto) {
 

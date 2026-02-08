@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -19,6 +21,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet]
+        [SwaggerOperation(
+            Summary = "Telefonok lekérése.",
+            Description = "Admin felülethez az összes telefon lekérése."
+        )]
         public IActionResult GetPhonesWPF()
         {
             try
@@ -47,6 +53,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPut("{id}")]
+        [SwaggerOperation(
+            Summary = "Telefon módosítása.",
+            Description = "Admin felülethez a telefon azonosítójának és a szükséges adatok megadása után a telefon módosítása."
+        )]
         public IActionResult UpdatePhoneWPF([FromBody] wpfPhonesDTO dto, int id)
         {
             try
@@ -77,6 +87,10 @@ namespace PhoneScout_GitHub.Controllers
 
 
         [HttpDelete("{id}")]
+        [SwaggerOperation(
+            Summary = "Telefon törlése.",
+            Description = "Admin felülethez a telefon azonosítójának megadása után a telefon törlése."
+        )]
         public IActionResult DeletePhoneWPF(int id)
         {
             try

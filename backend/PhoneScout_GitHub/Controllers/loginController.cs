@@ -5,6 +5,8 @@ using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
 using System;
 using System.Linq;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -22,6 +24,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet("GetSalt/{Email}")]
+        [SwaggerOperation(
+            Summary = "",
+            Description = ""
+        )]
         public IActionResult GetSalt(string Email)
         {
             // NINCS using (var cx = new PhoneContext())
@@ -41,6 +47,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPost]
+        [SwaggerOperation(
+            Summary = "",
+            Description = ""
+        )]
         public IActionResult Login(LoginDTO loginDTO)
         {
             try

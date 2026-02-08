@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
+using Swashbuckle.AspNetCore.Annotations;
+
 
 namespace PhoneScout_GitHub.Controllers
 {
@@ -18,6 +20,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPost("GetFilteredPhones")]
+        [SwaggerOperation(
+            Summary = "Telefonok szűrése.",
+            Description = "A szűrőfeltételek megadása után, visszaadja a feltételeknek megfelelő telefon(okat). Ha nincs találat, üres tömböt ad vissza."
+        )]
 
         public IActionResult GetFilteredPhones([FromBody] filterPageDTO filters)
         {
@@ -67,6 +73,10 @@ namespace PhoneScout_GitHub.Controllers
 
 
         [HttpGet("GetDatasForFilters")]
+        [SwaggerOperation(
+            Summary = "Dropdown-okhoz szükséges adatok lekérése.",
+            Description = "A processzor és cég nevek, illetve a legkisebb és legnagyobb Antutu pontszám lekérése."
+        )]
 
         public IActionResult GetDatasForFilters()
         {
@@ -97,7 +107,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpGet("GetAllPhones")]
-
+        [SwaggerOperation(
+            Summary = "Minden telefon lékérése.",
+            Description = "Az összes telefon lekérése az adatbázisból."
+        )]
         public IActionResult GetAllPhones()
         {
             try
