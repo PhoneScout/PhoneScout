@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import JSZip from 'jszip';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import "./Cart.css";
@@ -10,6 +11,7 @@ export default function Cart() {
   const [cart, setCart] = useState({});
   const [phones, setPhones] = useState([]);
   const [cartPhones, setCartPhones] = useState([]);
+  const [phoneImages, setPhoneImages] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
@@ -49,9 +51,42 @@ export default function Cart() {
           return sum + phone.phonePrice * quantity;
         }, 0);
         setTotalPrice(total);
+
+        // Load images for each phone in cart
+        filtered.forEach(phone => {
+          loadPhoneImage(phone.phoneID);
+        });
       })
       .catch(error => console.error("Error fetching phone data:", error));
   }, [cart]);
+
+  // Load phone image from backend ZIP
+  const loadPhoneImage = async (phoneID) => {
+    try {
+      const response = await fetch(
+        `http://localhost:5175/api/blob/GetPicturesZip/${phoneID}`
+      );
+
+      if (!response.ok) {
+        console.error("Képek nem találhatók!");
+        return;
+      }
+
+      const zipBlob = await response.blob();
+      const zip = await JSZip.loadAsync(zipBlob);
+
+      // Első fájl kiválasztása
+      const firstFileName = Object.keys(zip.files)[0];
+      const firstFile = zip.files[firstFileName];
+
+      const blob = await firstFile.async("blob");
+      const url = URL.createObjectURL(blob);
+
+      setPhoneImages(prev => ({ ...prev, [phoneID]: url }));
+    } catch (err) {
+      console.error("Hiba a kép betöltésekor:", err);
+    }
+  };
 
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
@@ -317,7 +352,7 @@ export default function Cart() {
           onClick={() => {
             setShowSuccessModal(false);
             navigate('/');
-          }}>        
+          }}>
           Bezárás
         </button>
       </div>
@@ -327,9 +362,9 @@ export default function Cart() {
   return (
     <div>
       <Navbar />
-      
-      <div class="kosaradText">
-          <h1>A kosarad</h1>
+
+      <div className="kosaradText">
+        <h1>A kosarad</h1>
       </div>
 
       <div className="kosar">
@@ -340,7 +375,7 @@ export default function Cart() {
               <p>A kosarad üres.</p>
             ) : (
               <div>
-                <div className="totalPrice" style={{ marginBottom: "20px", fontSize: "1.5em", fontWeight: "bold" }}>
+                <div className="totalPriceCart">
                   Végösszeg: {formatPrice(totalPrice)} Ft
                 </div>
 
@@ -353,8 +388,7 @@ export default function Cart() {
                   return (
                     <div
                       key={phone.phoneID}
-                      className="phoneRow"
-                      style={{ cursor: "pointer" }}
+                      className="phoneRowCart"
                       onClick={(e) => {
                         if (!e.target.classList.contains("decreaseQuantity") &&
                           !e.target.classList.contains("increaseQuantity") &&
@@ -363,48 +397,51 @@ export default function Cart() {
                         }
                       }}
                     >
-                      <div className="phoneImageCartSpecial" style={{ flex: 1, textAlign: "center" }}>
+                      <div className="phoneImageCartSpecial">
                         <img
-                          src={phone.imageUrl || '/Images/image 3.png'}
+                          src={phoneImages[phone.phoneID] || "/images/placeholder.png"}
                           alt={phone.phoneName}
-                          loading="lazy"
-                          style={{ maxWidth: "80px", maxHeight: "80px" }}
                         />
                       </div>
-                      <div className="phoneDetails" style={{ flex: 3, paddingLeft: "15px" }}>
-                        <h3 style={{ margin: 0, fontSize: "1.2em" }}>{phone.phoneName}</h3>
-                        <p style={{ margin: "0.2em 0" }}>RAM: {phone.ram || '-'}</p>
-                        <p style={{ margin: "0.2em 0" }}>Tárhely: {phone.storage || '-'}</p>
-                        <p style={{ margin: "0.2em 0" }}>Szín: {phone.color || '-'}</p>
-                        <p style={{ margin: "0.2em 0", color: phone.inStock ? 'green' : 'red' }}>
-                          {phone.inStock ? 'Raktáron' : 'Nincs raktáron'}
-                        </p>
+
+                      <div className="phoneDetailsCart">
+                        <h3>{phone.phoneName}</h3>
                       </div>
-                      <div className="phonePrice" style={{ flex: 2, textAlign: "center" }}>
-                        <p style={{ margin: 0, fontSize: "1em" }}>{formatPrice(phone.phonePrice)} Ft</p>
+
+                      <div className="phonePriceCart">
+                        <p>{formatPrice(phone.phonePrice)} Ft</p>
                       </div>
-                      <div className="phoneQuantity" style={{ flex: 3, textAlign: "center", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                      <div className={`stock-bubbleCart ${phone.phoneInStore === "van" ? "phonestockTrue" : "phonestockFalse"}`}>
+                        {phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
+                      </div>
+                      <div className="phoneQuantityCart">
                         <button
                           className="decreaseQuantity"
-                          style={{ marginRight: "10px" }}
-                          onClick={() => handleQuantityChange(phone.phoneID, -1)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleQuantityChange(phone.phoneID, -1);
+                          }}
                         >
                           -
                         </button>
-                        <p style={{ margin: 0, fontSize: "1em" }}>{quantity}</p>
+                        <span>{quantity}</span>
                         <button
                           className="increaseQuantity"
-                          style={{ marginLeft: "10px", marginRight: "10px" }}
-                          onClick={() => handleQuantityChange(phone.phoneID, 1)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleQuantityChange(phone.phoneID, 1);
+                          }}
                         >
                           +
                         </button>
                         <button
                           className="removeFromCart"
-                          style={{ backgroundColor: "red", color: "white", border: "none", padding: "5px 10px", cursor: "pointer" }}
-                          onClick={() => removeFromCart(phone.phoneID)}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            removeFromCart(phone.phoneID);
+                          }}
                         >
-                          Eltávolítás a kosárból
+                          Törlés
                         </button>
                       </div>
                     </div>
@@ -416,7 +453,7 @@ export default function Cart() {
           <div className="col-2"></div>
         </div>
       </div>
-      
+
       <Footer />
       <PaymentModal />
       <SuccessModal />

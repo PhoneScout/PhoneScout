@@ -1,4 +1,4 @@
-.phoneRow {
+.phoneRowCart {
     display: flex;
     align-items: center;
     margin-bottom: 15px;
@@ -22,27 +22,27 @@
     max-height: 80px;
 }
 
-.phoneDetails {
+.phoneDetailsCart {
     flex: 3;
     padding-left: 15px;
 }
 
-.phoneDetails h3 {
+.phoneDetailsCart h3 {
     margin: 0;
     font-size: 1.2em;
 }
 
-.phonePrice {
+.phonePriceCart {
     flex: 2;
     text-align: center;
 }
 
-.phonePrice p {
+.phonePriceCart p {
     margin: 0;
     font-size: 1em;
 }
 
-.phoneQuantity {
+.phoneQuantityCart {
     flex: 3;
     text-align: center;
     display: flex;
@@ -50,36 +50,35 @@
     justify-content: center;
 }
 
-.phoneQuantity button {
+.phoneQuantityCart button {
     margin: 0 10px;
     padding: 5px 10px;
     border: none;
     cursor: pointer;
 }
 
-.phoneQuantity .decreaseQuantity,
-.phoneQuantity .increaseQuantity {
+.phoneQuantityCart .decreaseQuantity,
+.phoneQuantityCart .increaseQuantity {
     background-color: #007bff;
     color: white;
     border-radius: 4px;
 }
 
-.phoneQuantity .removeFromCart {
+.phoneQuantityCart .removeFromCart {
     background-color: red;
     color: white;
     border-radius: 4px;
 }
 
-.totalPrice {
+.totalPriceCart {
     margin-bottom: 20px;
     font-size: 1.5em;
     font-weight: bold;
     text-align: center;
 }
 
-.kosaradText {
-    text-align: center;
-}
+
+
 
 .paymentButton {
     display: inline-block;

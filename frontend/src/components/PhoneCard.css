@@ -161,6 +161,10 @@
     height: auto;
 }
 
+.button--compare-added {
+  opacity: 0.35;
+}
+
 
 .price-bubble {
     position: absolute;

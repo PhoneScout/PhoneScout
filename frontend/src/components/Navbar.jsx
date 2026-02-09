@@ -242,6 +242,23 @@ export default function Navbar() {
     // Check if user is logged in
     const isLoggedIn = !!token;
 
+    // Compare count state
+    const [compareCount, setCompareCount] = useState(0);
+
+    useEffect(() => {
+        function updateCompareCount() {
+            const comparePhones = JSON.parse(localStorage.getItem("comparePhones")) || [];
+            setCompareCount(comparePhones.length);
+        }
+        updateCompareCount();
+        
+        // Listen for compare updates
+        const handleCompareUpdate = () => updateCompareCount();
+        window.addEventListener('compareUpdated', handleCompareUpdate);
+        
+        return () => window.removeEventListener('compareUpdated', handleCompareUpdate);
+    }, []);
+
     return (
         <div className="navbar-wrapper">
             {/* Main Navbar */}
@@ -298,7 +315,7 @@ export default function Navbar() {
                             checkPagesHistory('Összehasonlítás', '/osszehasonlitas');
                         }}
                     >
-                        Összehasonlítás <span id="compareCount">(0)</span>
+                        Összehasonlítás <span id="compareCount">({compareCount})</span>
                     </Link>
                 </div>
 
@@ -378,9 +395,7 @@ export default function Navbar() {
                             }}
                         >
                             <i id="cart" className="fa-solid fa-cart-shopping"></i>
-                            {cartCount > 0 && (
-                                <span className="cart-badge">{cartCount}</span>
-                            )}
+                            <span className="cart-badge">{cartCount > 0 ? cartCount : ''}</span>
                         </Link>
                     </div>
                 </div>
@@ -396,9 +411,7 @@ export default function Navbar() {
                             }}
                         >
                             <i id="cart" className="fa-solid fa-cart-shopping"></i>
-                            {cartCount > 0 && (
-                                <span className="cart-badge">{cartCount}</span>
-                            )}
+                            <span className="cart-badge">{cartCount > 0 ? cartCount : ''}</span>
                         </Link>
                     </div>
                 </div>

@@ -10,13 +10,13 @@ export default function PhoneCard({
   phonePrice
 }) {
   const [phoneImg, setPhoneImg] = useState(null);
+  const [compareIds, setCompareIds] = useState([]);
 
   useEffect(() => {
     if (!phoneId) return;
 
     const loadFirstImage = async () => {
       try {
-        // ZIP lekérése a backendről
         const response = await fetch(
           `http://localhost:5175/api/blob/GetPicturesZip/${phoneId}`
         );
@@ -29,7 +29,6 @@ export default function PhoneCard({
         const zipBlob = await response.blob();
         const zip = await JSZip.loadAsync(zipBlob);
 
-        // Első fájl kiválasztása
         const firstFileName = Object.keys(zip.files)[0];
         const firstFile = zip.files[firstFileName];
 
@@ -45,6 +44,24 @@ export default function PhoneCard({
     loadFirstImage();
   }, [phoneId]);
 
+  useEffect(() => {
+    const syncCompare = () => {
+      const saved = JSON.parse(localStorage.getItem("comparePhones") || "[]");
+      setCompareIds(saved);
+    };
+
+    syncCompare();
+    window.addEventListener("compareUpdated", syncCompare);
+    window.addEventListener("storage", syncCompare);
+
+    return () => {
+      window.removeEventListener("compareUpdated", syncCompare);
+      window.removeEventListener("storage", syncCompare);
+    };
+  }, []);
+
+  const isInCompare = compareIds.includes(phoneId);
+
   const handleCompareClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -54,14 +71,13 @@ export default function PhoneCard({
     if (!comparePhones.includes(phoneId)) {
       comparePhones.push(phoneId);
       localStorage.setItem("comparePhones", JSON.stringify(comparePhones));
-      
-      // Frissítés az összehasonlítás számlálóban (ha van ilyen elem)
+      window.dispatchEvent(new Event("compareUpdated"));
+
       const compareElement = document.getElementById("compareCount");
       if (compareElement) {
         compareElement.textContent = `(${comparePhones.length})`;
       }
 
-      // Animáció az összehasonlítás ikonhoz
       const compareIcon = document.getElementById("osszehasonlitas");
       if (compareIcon) {
         const buttonRect = e.currentTarget.getBoundingClientRect();
@@ -111,14 +127,12 @@ export default function PhoneCard({
     cart[phoneId] = (cart[phoneId] || 0) + 1;
     localStorage.setItem("cart", JSON.stringify(cart));
 
-    // Frissítés a kosár számlálóban (ha van ilyen elem)
     const cartElement = document.getElementById("cart");
     if (cartElement) {
       const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
       cartElement.textContent = `${itemCount}`;
     }
 
-    // Animáció a kosár ikonhoz
     const cartIcon = document.getElementById("cart");
     if (cartIcon) {
       const buttonRect = e.currentTarget.getBoundingClientRect();
@@ -175,7 +189,10 @@ export default function PhoneCard({
       </div>
 
       <div className="cardButtons">
-        <div className="button" onClick={handleCompareClick}>
+        <div
+          className={`button ${isInCompare ? "button--compare-added" : ""}`}
+          onClick={handleCompareClick}
+        >
           <img src="/images/compare-removebg-preview 1.png" alt="Összehasonlítás" />
         </div>
         <div className="button" onClick={handleCartClick}>
