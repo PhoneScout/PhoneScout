@@ -36,7 +36,7 @@ export default function Cart() {
 
   // Fetch phones and update cart items
   useEffect(() => {
-    fetch("http://localhost:5165/api/GETmainPage")
+    fetch("http://localhost:5175/mainPage")
       .then(response => response.json())
       .then(allPhones => {
         setPhones(allPhones);
