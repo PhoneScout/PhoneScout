@@ -1,0 +1,98 @@
+/* === SERVICE SECTION === */
+.service-section {
+    margin-top: 50px;
+    padding: 40px 0;
+    text-align: justify;
+}
+
+.service-text {
+    display: flex;
+    flex-direction: column;
+    text-align: justify;
+}
+
+.service-text h2 {
+    color: #2300B3;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.service-text p {
+    font-size: 1.1em;
+    color: #333;
+    line-height: 1.6;
+}
+
+.service-text ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.left-side {
+    border-right: 2px solid rgb(198, 198, 198);
+}
+
+/* === SERVICE LIST === */
+#serviceList li {
+    cursor: pointer;
+}
+
+#serviceList li.active {
+    color: black;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+/* === CAROUSEL === */
+#serviceCarousel {
+    background: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 20px;
+    min-height: 220px;
+    box-shadow: 0 2px 8px rgba(104, 241, 69, 0.08);
+}
+
+.service-details-title {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 10px;
+}
+
+.service-details-text {
+    color: #333;
+    font-size: 1em;
+}
+
+.carousel-img {
+    max-width: 100%;
+    border-radius: 12px;
+    user-select: none;
+}
+
+/* === BUTTONS === */
+.service-btn {
+    margin-top: 20px;
+    background-color: #68F145;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    color: white;
+}
+
+/* === HR SEPARATOR === */
+.hr {
+    width: 85%;
+    margin: 0 auto;
+}
+
+hr {
+    margin: 20px auto;
+    border: 0;
+    border-top: 2px solid black;
+    border-radius: 10px;
+}
