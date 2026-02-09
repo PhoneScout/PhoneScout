@@ -19,12 +19,7 @@ export default function Cart() {
     cardNumber: '',
     expiry: '',
     cvc: '',
-    cardName: '',
-    fullName: '',
-    city: '',
-    zip: '',
-    address: '',
-    phone: ''
+    cardName: ''
   });
   const [formErrors, setFormErrors] = useState({});
 
@@ -145,20 +140,6 @@ export default function Cart() {
       case "cardName":
         processedValue = value.replace(/[^A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű\s]/g, "");
         break;
-      case "fullName":
-        processedValue = value.replace(/[^A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű\s]/g, "");
-        break;
-      case "city":
-        processedValue = value.replace(/[^A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű\s]/g, "");
-        break;
-      case "zip":
-        processedValue = value.replace(/\D/g, "");
-        processedValue = processedValue.slice(0, 4);
-        break;
-      case "phone":
-        processedValue = value.replace(/\D/g, "");
-        processedValue = processedValue.slice(0, 20);
-        break;
       default:
         break;
     }
@@ -181,31 +162,37 @@ export default function Cart() {
     if (!validateForm()) return;
 
     try {
-      // Send orders
-      const userID = localStorage.getItem("userID");
+      const userID = parseInt(localStorage.getItem("userID") || "0", 10);
+      const userEmail = localStorage.getItem("userEmail") || "";
+
       for (const phone of cartPhones) {
         const quantity = cart[phone.phoneID] || 0;
+
         const orderData = {
+          orderID: 0,
           userID: userID,
-          phoneID: phone.phoneID,
-          amount: quantity,
-          price: parseInt(phone.phonePrice) * parseInt(quantity),
-          status: 0,
-          fullName: formData.fullName,
-          city: formData.city,
-          postalCode: formData.zip,
-          address: formData.address,
-          phoneNumber: formData.phone
+          userEmail: userEmail,
+          postalCode: 0,
+          city: "",
+          address: "",
+          phoneNumber: 0,
+          phoneName: phone.phoneName || "",
+          phoneColorName: phone.phoneColorName || "",
+          phoneColorHex: phone.phoneColorHex || "",
+          phoneRam: parseInt(phone.phoneRam || 0, 10),
+          phoneStorage: parseInt(phone.phoneStorage || 0, 10),
+          price: parseInt(phone.phonePrice || 0, 10) * parseInt(quantity || 0, 10),
+          amount: parseInt(quantity || 0, 10),
+          status: 0
         };
 
-        await fetch('http://localhost:5165/api/POSTorder/orderPost', {
+        await fetch("http://localhost:5175/api/Profile/postOrder", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(orderData)
         });
       }
 
-      // Clear cart
       setCart({});
       localStorage.setItem("cart", JSON.stringify({}));
 
@@ -215,149 +202,6 @@ export default function Cart() {
       console.error("Error processing payment:", error);
     }
   };
-
-  // Payment Modal Component
-  const PaymentModal = () => (
-    <div className="paymentModal" style={{ display: showPaymentModal ? 'flex' : 'none' }}>
-      <div className="modalContent">
-        <span className="closeModal" onClick={() => setShowPaymentModal(false)}>&times;</span>
-        <h2 className="modalTitle">Fizetés</h2>
-        <div className="formsContainer">
-          <form id="paymentForm" className="modalForm">
-            <h4>Bankkártya adatok</h4>
-            <label>Kártyaszám:</label>
-            <input
-              type="text"
-              id="cardNumber"
-              maxLength="19"
-              required
-              placeholder="1234 5678 9012 3456"
-              value={formData.cardNumber}
-              onChange={handleInputChange}
-            />
-            {formErrors.cardNumber && <div className="invalid-feedback">{formErrors.cardNumber}</div>}
-
-            <label>Lejárat:</label>
-            <input
-              type="text"
-              id="expiry"
-              maxLength="5"
-              required
-              placeholder="MM/YY"
-              value={formData.expiry}
-              onChange={handleInputChange}
-            />
-            {formErrors.expiry && <div className="invalid-feedback">{formErrors.expiry}</div>}
-
-            <label>CVC:</label>
-            <input
-              type="text"
-              id="cvc"
-              maxLength="3"
-              required
-              placeholder="123"
-              value={formData.cvc}
-              onChange={handleInputChange}
-            />
-            {formErrors.cvc && <div className="invalid-feedback">{formErrors.cvc}</div>}
-
-            <label>Kártyán szereplő név:</label>
-            <input
-              type="text"
-              id="cardName"
-              required
-              placeholder="Név"
-              value={formData.cardName}
-              onChange={handleInputChange}
-            />
-            {formErrors.cardName && <div className="invalid-feedback">{formErrors.cardName}</div>}
-          </form>
-
-          <form id="shippingForm" className="modalForm">
-            <h4>Szállítási adatok</h4>
-            <label>Teljes név:</label>
-            <input
-              type="text"
-              id="fullName"
-              required
-              placeholder="Név"
-              value={formData.fullName}
-              onChange={handleInputChange}
-            />
-            {formErrors.fullName && <div className="invalid-feedback">{formErrors.fullName}</div>}
-
-            <label>Város:</label>
-            <input
-              type="text"
-              id="city"
-              required
-              placeholder="Város"
-              value={formData.city}
-              onChange={handleInputChange}
-            />
-            {formErrors.city && <div className="invalid-feedback">{formErrors.city}</div>}
-
-            <label>Irányítószám:</label>
-            <input
-              type="text"
-              id="zip"
-              maxLength="4"
-              required
-              placeholder="1234"
-              value={formData.zip}
-              onChange={handleInputChange}
-            />
-            {formErrors.zip && <div className="invalid-feedback">{formErrors.zip}</div>}
-
-            <label>Cím:</label>
-            <input
-              type="text"
-              id="address"
-              required
-              placeholder="Utca, házszám"
-              value={formData.address}
-              onChange={handleInputChange}
-            />
-            {formErrors.address && <div className="invalid-feedback">{formErrors.address}</div>}
-
-            <label>Telefonszám:</label>
-            <input
-              type="text"
-              id="phone"
-              maxLength="11"
-              required
-              placeholder="36301234567"
-              value={formData.phone}
-              onChange={handleInputChange}
-            />
-            {formErrors.phone && <div className="invalid-feedback">{formErrors.phone}</div>}
-          </form>
-        </div>
-        <button id="submitPayment" className="submitPaymentBtn paymentButton" onClick={handlePayment}>
-          Fizetés leadása
-        </button>
-      </div>
-    </div>
-  );
-
-  const SuccessModal = () => (
-    <div className="payment-success-modal" style={{ display: showSuccessModal ? 'flex' : 'none' }}>
-      <div className="payment-success-content">
-        <h2>Fizetés sikeres!</h2>
-        <p>Köszönjük a vásárlást!</p>
-        <button
-          id="closeSuccessModal"
-          className="submitPaymentBtn paymentButton"
-          style={{ marginTop: '20px' }}
-          onClick={() => {
-            setShowSuccessModal(false);
-            navigate('/');
-          }}>
-          Bezárás
-        </button>
-      </div>
-    </div>
-  );
 
   return (
     <div>
@@ -455,8 +299,95 @@ export default function Cart() {
       </div>
 
       <Footer />
-      <PaymentModal />
-      <SuccessModal />
+      {showPaymentModal && (
+        <div className="paymentModal" style={{ display: 'flex' }}>
+          <div className="modalContent">
+            <span className="closeModal" onClick={() => setShowPaymentModal(false)}>&times;</span>
+            <h2 className="modalTitle">Fizetés</h2>
+            <div className="formsContainer">
+              <form id="paymentForm" className="modalForm" onSubmit={(e) => e.preventDefault()}>
+                <h4>Bankkártya adatok</h4>
+                <label>Kártyaszám:</label>
+                <input
+                  type="text"
+                  id="cardNumber"
+                  maxLength="19"
+                  required
+                  placeholder="1234 5678 9012 3456"
+                  value={formData.cardNumber}
+                  onChange={handleInputChange}
+                  autoFocus
+                />
+                {formErrors.cardNumber && <div className="invalid-feedback">{formErrors.cardNumber}</div>}
+
+                <label>Lejárat:</label>
+                <input
+                  type="text"
+                  id="expiry"
+                  maxLength="5"
+                  required
+                  placeholder="MM/YY"
+                  value={formData.expiry}
+                  onChange={handleInputChange}
+                />
+                {formErrors.expiry && <div className="invalid-feedback">{formErrors.expiry}</div>}
+
+                <label>CVC:</label>
+                <input
+                  type="text"
+                  id="cvc"
+                  maxLength="3"
+                  required
+                  placeholder="123"
+                  value={formData.cvc}
+                  onChange={handleInputChange}
+                />
+                {formErrors.cvc && <div className="invalid-feedback">{formErrors.cvc}</div>}
+
+                <label>Kártyán szereplő név:</label>
+                <input
+                  type="text"
+                  id="cardName"
+                  required
+                  placeholder="Név"
+                  value={formData.cardName}
+                  onChange={handleInputChange}
+                />
+                {formErrors.cardName && <div className="invalid-feedback">{formErrors.cardName}</div>}
+              </form>
+            </div>
+            <button
+              id="submitPayment"
+              className="submitPaymentBtn paymentButton"
+              type="button"
+              onClick={handlePayment}
+            >
+              Fizetés leadása
+            </button>
+          </div>
+        </div>
+      )}
+
+      {showSuccessModal && (
+        <div className="payment-success-modal" style={{ display: 'flex' }}>
+          <div className="payment-success-content">
+            <h2>Fizetés sikeres!</h2>
+            <p>Köszönjük a vásárlást!</p>
+            <button
+              id="closeSuccessModal"
+              className="submitPaymentBtn paymentButton"
+              style={{ marginTop: '20px' }}
+              onClick={() => {
+                setShowSuccessModal(false);
+                navigate('/');
+              }}
+              type="button"
+            >
+              Bezárás
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
