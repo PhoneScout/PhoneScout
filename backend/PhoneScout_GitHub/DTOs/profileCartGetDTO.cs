@@ -2,7 +2,8 @@ namespace PhoneScout_GitHub.DTOs
 {
     public class profileCartGetDTO
     {
-        public int orderID { get; set; }
+        public int ID { get; set; }
+        public string orderID { get; set; }
         public int userID { get; set; }
         public string userEmail { get; set; }
         public int postalCode { get; set; }

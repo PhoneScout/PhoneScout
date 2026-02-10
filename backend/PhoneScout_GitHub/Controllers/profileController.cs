@@ -102,7 +102,8 @@ namespace PhoneScout_GitHub.Controllers
 
                     .Select(anOrder => new profileCartGetDTO
                     {
-                        orderID = anOrder.Id,
+                        ID = anOrder.Id,
+                        orderID = anOrder.OrderId,
                         userID = cx.Users.FirstOrDefault(u => u.Id == anOrder.UserId).Id,
                         userEmail = cx.Users.FirstOrDefault(u => u.Id == anOrder.UserId).Email,
                         postalCode = anOrder.PostalCode,
@@ -209,6 +210,7 @@ namespace PhoneScout_GitHub.Controllers
                     .Select(anOrder => new profileCartGetDTO
                     {
                         userID = anOrder.UserId,
+                        orderID = anOrder.OrderId,
                         postalCode = anOrder.PostalCode,
                         city = anOrder.City,
                         address = anOrder.Address,
@@ -254,6 +256,7 @@ namespace PhoneScout_GitHub.Controllers
                 {
                     var order = new Connuserorder();
                     order.UserId = dto.userID;
+                    order.OrderId = dto.orderID;
                     order.PostalCode = dto.postalCode;
                     order.City = dto.city;
                     order.Address = dto.address;
@@ -444,16 +447,16 @@ namespace PhoneScout_GitHub.Controllers
 
 
 
-        [HttpPut("updateOrder/{orderID}")]
+        [HttpPut("updateOrder/{ID}")]
         [SwaggerOperation(
             Summary = "Rendelés módosítása.",
             Description = "A rendelés azonosítójának és a szükséges adatok megadása után, a kiválasztott rendelés adatainak módosítása."
         )]
-        public IActionResult updateOrderStatus([FromBody] profileCartGetDTO dto, int orderID)
+        public IActionResult updateOrderStatus([FromBody] profileCartGetDTO dto, int ID)
         {
             try
             {
-                var order = cx.Connuserorders.FirstOrDefault(o => o.Id == orderID);
+                var order = cx.Connuserorders.FirstOrDefault(o => o.Id == ID);
                 if (order != null)
                 {
                     order.PostalCode = dto.postalCode;

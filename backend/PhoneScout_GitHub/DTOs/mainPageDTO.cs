@@ -7,5 +7,7 @@ namespace PhoneScout_GitHub.DTOs
         public string? phoneName { get; set; }
         public int? phonePrice { get; set; }
         public string? phoneInStore { get; set; }
+        public List<colorDTO> colors { get; set; }
+        public List<ramStorageDTO> ramStoragePairs { get; set; }
     }
 }

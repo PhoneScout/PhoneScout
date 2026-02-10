@@ -7,6 +7,8 @@ public partial class Connuserorder
 {
     public int Id { get; set; }
 
+    public string OrderId { get; set; } = null!;
+
     public int UserId { get; set; }
 
     public int PostalCode { get; set; }

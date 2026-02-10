@@ -34,6 +34,15 @@ namespace PhoneScout_GitHub.Controllers
                     phoneName = p.PhoneName,
                     phonePrice = p.PhonePrice,
                     phoneInStore = p.PhoneInStore,
+                    colors = p.Connphonecolors
+                        .Select(c => new colorDTO
+                        {
+                            colorName = c.Color.ColorName,
+                            colorHex = c.Color.ColorHex
+                        }).ToList(),
+                    ramStoragePairs = p.Connphoneramstorages
+                        .Select(r => new ramStorageDTO { ramAmount = r.Ramstorage.RamAmount, storageAmount = r.Ramstorage.StorageAmount })
+                        .ToList()
                 })
                 .ToList();
 

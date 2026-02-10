@@ -420,6 +420,9 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.City)
                 .HasMaxLength(64)
                 .HasColumnName("city");
+            entity.Property(e => e.OrderId)
+                .HasMaxLength(22)
+                .HasColumnName("orderID");
             entity.Property(e => e.PhoneColorHex).HasMaxLength(7);
             entity.Property(e => e.PhoneColorName)
                 .HasMaxLength(32)
