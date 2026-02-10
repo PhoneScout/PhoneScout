@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Jan 26. 19:41
+-- Létrehozás ideje: 2026. Feb 10. 11:58
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -673,6 +673,7 @@ INSERT INTO `connphoneramstorage` (`ID`, `phoneID`, `ramstorageID`) VALUES
 
 CREATE TABLE `connuserorder` (
   `ID` int(11) NOT NULL,
+  `orderID` varchar(22) NOT NULL,
   `userID` int(11) NOT NULL,
   `postalCode` int(4) NOT NULL,
   `city` varchar(64) NOT NULL,
@@ -692,8 +693,9 @@ CREATE TABLE `connuserorder` (
 -- A tábla adatainak kiíratása `connuserorder`
 --
 
-INSERT INTO `connuserorder` (`ID`, `userID`, `postalCode`, `city`, `address`, `phoneNumber`, `phoneName`, `phoneColorName`, `PhoneColorHex`, `phoneRam`, `phoneStorage`, `price`, `amount`, `status`) VALUES
-(12, 4, 0, 'string', 'string', 0, 'Xiaomi 15', 'string', 'string', 0, 0, 0, 0, 0);
+INSERT INTO `connuserorder` (`ID`, `orderID`, `userID`, `postalCode`, `city`, `address`, `phoneNumber`, `phoneName`, `phoneColorName`, `PhoneColorHex`, `phoneRam`, `phoneStorage`, `price`, `amount`, `status`) VALUES
+(12, 'a', 4, 0, 'string', 'string', 0, 'Xiaomi 15', 'string', 'string', 0, 0, 0, 0, 0),
+(13, 'a', 3, 0, 'string', 'string', 0, 'string', 'string', 'string', 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -782,7 +784,9 @@ CREATE TABLE `parts` (
 --
 
 INSERT INTO `parts` (`ID`, `partName`, `partStock`) VALUES
-(1, 'csavar', 100);
+(1, 'csavar', 100),
+(2, 'akkumulátor', 34),
+(3, 'asd', 5);
 
 -- --------------------------------------------------------
 
@@ -4691,7 +4695,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`ID`, `name`, `email`, `SALT`, `HASH`, `privilegeID`, `active`) VALUES
 (3, 'a', 'a', 'a', 'a', 3, 1),
-(4, 'b', 'b', 'b', 'b', 3, 0);
+(4, 'b', 'b', 'b', 'b', 3, 0),
+(5, 'string', 'string@h.h', '1lu2ng2OGGPtwJDjg8GvzDwoKN3EJTGbmZCwPNp1SkDOU5bXyqG4bLRHxKyQu7Xs', '42d59df93cb01f9a6c5a30d0b15b9f5d2a944bbf86d01c018ee48486bb00290c', 3, 1);
 
 -- --------------------------------------------------------
 
@@ -4992,7 +4997,7 @@ ALTER TABLE `connphoneramstorage`
 -- AUTO_INCREMENT a táblához `connuserorder`
 --
 ALTER TABLE `connuserorder`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT a táblához `cpu`
@@ -5010,7 +5015,7 @@ ALTER TABLE `manufacturer`
 -- AUTO_INCREMENT a táblához `parts`
 --
 ALTER TABLE `parts`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT a táblához `phonedatas`
@@ -5076,7 +5081,7 @@ ALTER TABLE `storagespeed`
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT a táblához `waterprooftype`
