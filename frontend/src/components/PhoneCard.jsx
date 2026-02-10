@@ -7,10 +7,17 @@ export default function PhoneCard({
   phoneId,
   phoneName,
   phoneInStore,
-  phonePrice
+  phonePrice,
+  colors = [],
+  ramStoragePairs = []
 }) {
   const [phoneImg, setPhoneImg] = useState(null);
   const [compareIds, setCompareIds] = useState([]);
+
+  const [showVariantModal, setShowVariantModal] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedPair, setSelectedPair] = useState(null);
+  const [selectedQty, setSelectedQty] = useState(1);
 
   useEffect(() => {
     if (!phoneId) return;
@@ -61,6 +68,28 @@ export default function PhoneCard({
   }, []);
 
   const isInCompare = compareIds.includes(phoneId);
+
+  const normalizeCart = () => {
+    const raw = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (Array.isArray(raw)) return raw;
+
+    // Legacy object -> array
+    const legacyItems = Object.entries(raw).map(([id, qty]) => ({
+      phoneID: Number(id),
+      quantity: Number(qty),
+      colorName: "",
+      colorHex: "",
+      ramAmount: null,
+      storageAmount: null,
+      phoneName: "",
+      phonePrice: 0
+    }));
+    localStorage.setItem("cart", JSON.stringify(legacyItems));
+    return legacyItems;
+  };
+
+  const getCartCount = (items) =>
+    items.reduce((sum, item) => sum + (item.quantity || 0), 0);
 
   const handleCompareClick = (e) => {
     e.preventDefault();
@@ -122,83 +151,156 @@ export default function PhoneCard({
   const handleCartClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    setSelectedColor(null);
+    setSelectedPair(null);
+    setSelectedQty(1);
+    setShowVariantModal(true);
+  };
 
-    let cart = JSON.parse(localStorage.getItem("cart")) || {};
-    cart[phoneId] = (cart[phoneId] || 0) + 1;
-    localStorage.setItem("cart", JSON.stringify(cart));
+  const addToCartWithVariants = () => {
+    if (!selectedColor || !selectedPair || selectedQty < 1) return;
+
+    const cartItems = normalizeCart();
+    const matchIndex = cartItems.findIndex(
+      (item) =>
+        item.phoneID === phoneId &&
+        item.colorHex === selectedColor.colorHex &&
+        item.ramAmount === selectedPair.ramAmount &&
+        item.storageAmount === selectedPair.storageAmount
+    );
+
+    if (matchIndex >= 0) {
+      cartItems[matchIndex].quantity += selectedQty;
+    } else {
+      cartItems.push({
+        phoneID: phoneId,
+        quantity: selectedQty,
+        colorName: selectedColor.colorName,
+        colorHex: selectedColor.colorHex,
+        ramAmount: selectedPair.ramAmount,
+        storageAmount: selectedPair.storageAmount,
+        phoneName,
+        phonePrice
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cartItems));
 
     const cartElement = document.getElementById("cart");
     if (cartElement) {
-      const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
+      const itemCount = getCartCount(cartItems);
       cartElement.textContent = `${itemCount}`;
     }
 
-    const cartIcon = document.getElementById("cart");
-    if (cartIcon) {
-      const buttonRect = e.currentTarget.getBoundingClientRect();
-      const cartRect = cartIcon.getBoundingClientRect();
-
-      const animDot = document.createElement("div");
-      animDot.style.position = "fixed";
-      animDot.style.left = buttonRect.left + buttonRect.width / 2 + "px";
-      animDot.style.top = buttonRect.top + buttonRect.height / 2 + "px";
-      animDot.style.width = "16px";
-      animDot.style.height = "16px";
-      animDot.style.background = "#68F145";
-      animDot.style.borderRadius = "50%";
-      animDot.style.zIndex = "9999";
-      animDot.style.pointerEvents = "none";
-      animDot.style.transition = "all 2s cubic-bezier(.4,2,.6,1)";
-      document.body.appendChild(animDot);
-
-      setTimeout(() => {
-        const cartCenterX = cartRect.left + cartRect.width / 2;
-        const cartCenterY = cartRect.top + cartRect.height / 2;
-
-        animDot.style.left = cartCenterX - animDot.offsetWidth / 2 + "px";
-        animDot.style.top = cartCenterY - animDot.offsetHeight / 2 + "px";
-        animDot.style.opacity = "0.2";
-        animDot.style.transform = "scale(0.5)";
-      }, 10);
-
-      setTimeout(() => {
-        animDot.style.transition = "all 0.5s cubic-bezier(.4,2,.6,1)";
-        animDot.style.transform = "scale(10)";
-        animDot.style.opacity = "0";
-      }, 450);
-
-      setTimeout(() => {
-        animDot.remove();
-      }, 1010);
-    }
+    setShowVariantModal(false);
   };
 
   return (
-    <Link to={`/telefon/${phoneId}`} className="phone-card-link phoneRow">
-      <div className="phoneImage">
-        <img
-          src={phoneImg || "/images/placeholder.png"}
-          alt={phoneName}
-        />
-        <div className="price-bubble">{phonePrice} Ft</div>
-        <div className="stock-bubble phonestockFalse">{phoneInStore}</div>
-      </div>
-
-      <div className="phoneDetails">
-        <h3>{phoneName}</h3>
-      </div>
-
-      <div className="cardButtons">
-        <div
-          className={`button ${isInCompare ? "button--compare-added" : ""}`}
-          onClick={handleCompareClick}
-        >
-          <img src="/images/compare-removebg-preview 1.png" alt="Összehasonlítás" />
+    <>
+      <Link to={`/telefon/${phoneId}`} className="phone-card-link phoneRow">
+        <div className="phoneImage">
+          <img
+            src={phoneImg || "/images/placeholder.png"}
+            alt={phoneName}
+          />
+          <div className="price-bubble">{phonePrice} Ft</div>
+          <div className="stock-bubble phonestockFalse">{phoneInStore}</div>
         </div>
-        <div className="button" onClick={handleCartClick}>
-          <img src="/images/cart-removebg-preview 1.png" alt="Kosár" />
+
+        <div className="phoneDetails">
+          <h3>{phoneName}</h3>
         </div>
-      </div>
-    </Link>
+
+        <div className="cardButtons">
+          <div
+            className={`button ${isInCompare ? "button--compare-added" : ""}`}
+            onClick={handleCompareClick}
+          >
+            <img src="/images/compare-removebg-preview 1.png" alt="Összehasonlítás" />
+          </div>
+          <div className="button" onClick={handleCartClick}>
+            <img src="/images/cart-removebg-preview 1.png" alt="Kosár" />
+          </div>
+        </div>
+      </Link>
+
+      {showVariantModal && (
+        <div className="variantModalOverlay" onClick={() => setShowVariantModal(false)}>
+          <div className="variantModal" onClick={(e) => e.stopPropagation()}>
+            <h3>Válassz színt és RAM/Storage verziót</h3>
+
+            <div className="variantSection">
+              <div className="variantTitle">Szín</div>
+              <div className="colorOptions">
+                {colors.map((c, idx) => (
+                  <button
+                    key={`${c.colorHex}-${idx}`}
+                    className={`colorCircle ${selectedColor?.colorHex === c.colorHex ? "colorCircle--selected" : ""}`}
+                    style={{ backgroundColor: c.colorHex }}
+                    title={c.colorName}
+                    onClick={() => setSelectedColor(c)}
+                    type="button"
+                  />
+                ))}
+              </div>
+              {selectedColor && (
+                <div className="variantLabel">{selectedColor.colorName}</div>
+              )}
+            </div>
+
+            <div className="variantSection">
+              <div className="variantTitle">RAM / Storage</div>
+              <div className="pairOptions">
+                {ramStoragePairs.map((p, idx) => (
+                  <button
+                    key={`${p.ramAmount}-${p.storageAmount}-${idx}`}
+                    className={`pairButton ${selectedPair?.ramAmount === p.ramAmount && selectedPair?.storageAmount === p.storageAmount ? "pairButton--selected" : ""}`}
+                    onClick={() => setSelectedPair(p)}
+                    type="button"
+                  >
+                    {p.ramAmount} GB / {p.storageAmount} GB
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="variantSection">
+              <div className="variantTitle">Mennyiség</div>
+              <div className="pairOptions">
+                <button
+                  className="pairButton"
+                  type="button"
+                  onClick={() => setSelectedQty((q) => Math.max(1, q - 1))}
+                >
+                  -
+                </button>
+                <span className="quantityNumber">{selectedQty}</span>
+                <button
+                  className="pairButton"
+                  type="button"
+                  onClick={() => setSelectedQty((q) => q + 1)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div className="variantActions">
+              <button className="variantCancel" onClick={() => setShowVariantModal(false)} type="button">
+                Mégse
+              </button>
+              <button
+                className="variantConfirm"
+                onClick={addToCartWithVariants}
+                type="button"
+                disabled={!selectedColor || !selectedPair || selectedQty < 1}
+              >
+                Kosárba
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

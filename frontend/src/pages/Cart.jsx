@@ -8,7 +8,7 @@ import Footer from '../components/Footer';
 import "./Cart.css";
 
 export default function Cart() {
-  const [cart, setCart] = useState({});
+  const [cartItems, setCartItems] = useState([]);
   const [phones, setPhones] = useState([]);
   const [cartPhones, setCartPhones] = useState([]);
   const [phoneImages, setPhoneImages] = useState({});
@@ -25,35 +25,58 @@ export default function Cart() {
 
   const navigate = useNavigate();
 
-  // Initialize cart from localStorage
+  const normalizeCart = () => {
+    const raw = JSON.parse(localStorage.getItem("cart") || "[]");
+    if (Array.isArray(raw)) return raw;
+
+    const legacyItems = Object.entries(raw).map(([id, qty]) => ({
+      phoneID: Number(id),
+      quantity: Number(qty),
+      colorName: "",
+      colorHex: "",
+      ramAmount: null,
+      storageAmount: null,
+      phoneName: "",
+      phonePrice: 0
+    }));
+    localStorage.setItem("cart", JSON.stringify(legacyItems));
+    return legacyItems;
+  };
+
   useEffect(() => {
-    const savedCart = JSON.parse(localStorage.getItem("cart")) || {};
-    setCart(savedCart);
+    const savedCart = normalizeCart();
+    setCartItems(savedCart);
   }, []);
 
-  // Fetch phones and update cart items
   useEffect(() => {
     fetch("http://localhost:5175/mainPage")
       .then(response => response.json())
       .then(allPhones => {
         setPhones(allPhones);
-        const filtered = allPhones.filter(phone => cart[phone.phoneID] > 0);
-        setCartPhones(filtered);
 
-        // Calculate total price
-        const total = filtered.reduce((sum, phone) => {
-          const quantity = cart[phone.phoneID] || 0;
-          return sum + phone.phonePrice * quantity;
+        const phoneMap = new Map(allPhones.map(p => [p.phoneID, p]));
+
+        const merged = cartItems.map(item => ({
+          ...item,
+          phone: phoneMap.get(item.phoneID)
+        }));
+
+        setCartPhones(merged);
+
+        const total = merged.reduce((sum, item) => {
+          const price = item.phone?.phonePrice ?? item.phonePrice ?? 0;
+          return sum + price * (item.quantity || 0);
         }, 0);
         setTotalPrice(total);
 
-        // Load images for each phone in cart
-        filtered.forEach(phone => {
-          loadPhoneImage(phone.phoneID);
+        merged.forEach(item => {
+          if (item.phoneID) {
+            loadPhoneImage(item.phoneID);
+          }
         });
       })
       .catch(error => console.error("Error fetching phone data:", error));
-  }, [cart]);
+  }, [cartItems]);
 
   // Load phone image from backend ZIP
   const loadPhoneImage = async (phoneID) => {
@@ -87,26 +110,31 @@ export default function Cart() {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
 
-  const handleQuantityChange = (phoneID, delta) => {
-    const newCart = { ...cart };
-    const currentQuantity = newCart[phoneID] || 0;
+  const handleQuantityChange = (itemKey, delta) => {
+    const newCart = [...cartItems];
+    const idx = newCart.findIndex(i => getItemKey(i) === itemKey);
+    if (idx === -1) return;
+
+    const currentQuantity = newCart[idx].quantity || 0;
 
     if (currentQuantity + delta <= 0) {
-      delete newCart[phoneID];
+      newCart.splice(idx, 1);
     } else {
-      newCart[phoneID] = currentQuantity + delta;
+      newCart[idx].quantity = currentQuantity + delta;
     }
 
-    setCart(newCart);
+    setCartItems(newCart);
     localStorage.setItem("cart", JSON.stringify(newCart));
   };
 
-  const removeFromCart = (phoneID) => {
-    const newCart = { ...cart };
-    delete newCart[phoneID];
-    setCart(newCart);
+  const removeFromCart = (itemKey) => {
+    const newCart = cartItems.filter(i => getItemKey(i) !== itemKey);
+    setCartItems(newCart);
     localStorage.setItem("cart", JSON.stringify(newCart));
   };
+
+  const getItemKey = (item) =>
+    `${item.phoneID}-${item.colorHex || ""}-${item.ramAmount || ""}-${item.storageAmount || ""}`;
 
   const handlePhoneClick = (phoneID) => {
     localStorage.setItem("selectedPhone", phoneID);
@@ -165,36 +193,53 @@ export default function Cart() {
       const userID = parseInt(localStorage.getItem("userID") || "0", 10);
       const userEmail = localStorage.getItem("userEmail") || "";
 
-      for (const phone of cartPhones) {
-        const quantity = cart[phone.phoneID] || 0;
+      for (const item of cartPhones) {
+        const phone = item.phone || {};
+        const quantity = item.quantity || 0;
 
         const orderData = {
-          orderID: 0,
-          userID: userID,
-          userEmail: userEmail,
-          postalCode: 0,
-          city: "",
-          address: "",
-          phoneNumber: 0,
-          phoneName: phone.phoneName || "",
-          phoneColorName: phone.phoneColorName || "",
-          phoneColorHex: phone.phoneColorHex || "",
-          phoneRam: parseInt(phone.phoneRam || 0, 10),
-          phoneStorage: parseInt(phone.phoneStorage || 0, 10),
-          price: parseInt(phone.phonePrice || 0, 10) * parseInt(quantity || 0, 10),
-          amount: parseInt(quantity || 0, 10),
+          id: 0,
+          orderID: `ORD-${Date.now()}`,
+          userID,
+          userEmail,
+          postalCode: "1234",
+          city: "Tesztváros",
+          address: "Teszt utca 1",
+          phoneNumber: "36301234567",
+          phoneName: phone.phoneName ?? item.phoneName ?? "",
+          phoneColorName: item.colorName ?? "",
+          phoneColorHex: item.colorHex ?? "",
+          phoneRam: parseInt(item.ramAmount, 10) || 0,
+          phoneStorage: parseInt(item.storageAmount, 10) || 0,
+          price: Number(phone.phonePrice ?? item.phonePrice ?? 0),
+          amount: Number(quantity),
           status: 0
         };
 
-        await fetch("http://localhost:5175/api/Profile/postOrder", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(orderData)
-        });
+        const response = await fetch(
+          "http://localhost:5175/api/Profile/postOrder",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              dto: orderData
+            })
+          }
+        );
+
+        const responseText = await response.text();
+
+        console.log("STATUS:", response.status);
+        console.log("RESPONSE BODY:", responseText);
+        console.log("SENT DATA:", { dto: orderData });
+
+        if (!response.ok) {
+          return;
+        }
       }
 
-      setCart({});
-      localStorage.setItem("cart", JSON.stringify({}));
+      setCartItems([]);
+      localStorage.setItem("cart", JSON.stringify([]));
 
       setShowPaymentModal(false);
       setShowSuccessModal(true);
@@ -227,33 +272,45 @@ export default function Cart() {
                   Fizetés
                 </button>
 
-                {cartPhones.map(phone => {
-                  const quantity = cart[phone.phoneID] || 0;
+                {cartPhones.map(item => {
+                  const phone = item.phone || {};
+                  const quantity = item.quantity || 0;
+                  const itemKey = getItemKey(item);
                   return (
                     <div
-                      key={phone.phoneID}
+                      key={itemKey}
                       className="phoneRowCart"
                       onClick={(e) => {
                         if (!e.target.classList.contains("decreaseQuantity") &&
                           !e.target.classList.contains("increaseQuantity") &&
                           !e.target.classList.contains("removeFromCart")) {
-                          handlePhoneClick(phone.phoneID);
+                          handlePhoneClick(item.phoneID);
                         }
                       }}
                     >
                       <div className="phoneImageCartSpecial">
                         <img
-                          src={phoneImages[phone.phoneID] || "/images/placeholder.png"}
+                          src={phoneImages[item.phoneID] || "/images/placeholder.png"}
                           alt={phone.phoneName}
                         />
                       </div>
 
                       <div className="phoneDetailsCart">
                         <h3>{phone.phoneName}</h3>
+                        <div className="variantInfo">
+                          <span
+                            className="colorSwatch"
+                            style={{ backgroundColor: item.colorHex || "#ccc" }}
+                            title={item.colorName || "N/A"}
+                          />
+                          <span>{item.colorName || "Ismeretlen szín"}</span>
+                          <span className="variantSeparator">|</span>
+                          <span>{item.ramAmount} GB / {item.storageAmount} GB</span>
+                        </div>
                       </div>
 
                       <div className="phonePriceCart">
-                        <p>{formatPrice(phone.phonePrice)} Ft</p>
+                        <p>{formatPrice(phone.phonePrice ?? item.phonePrice ?? 0)} Ft</p>
                       </div>
                       <div className={`stock-bubbleCart ${phone.phoneInStore === "van" ? "phonestockTrue" : "phonestockFalse"}`}>
                         {phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
@@ -263,7 +320,7 @@ export default function Cart() {
                           className="decreaseQuantity"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleQuantityChange(phone.phoneID, -1);
+                            handleQuantityChange(itemKey, -1);
                           }}
                         >
                           -
@@ -273,7 +330,7 @@ export default function Cart() {
                           className="increaseQuantity"
                           onClick={(e) => {
                             e.stopPropagation();
-                            handleQuantityChange(phone.phoneID, 1);
+                            handleQuantityChange(itemKey, 1);
                           }}
                         >
                           +
@@ -282,7 +339,7 @@ export default function Cart() {
                           className="removeFromCart"
                           onClick={(e) => {
                             e.stopPropagation();
-                            removeFromCart(phone.phoneID);
+                            removeFromCart(itemKey);
                           }}
                         >
                           Törlés

@@ -291,3 +291,106 @@
     align-items: center;
     cursor: pointer;
 }
+
+.variantModalOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+}
+
+.variantModal {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  width: 420px;
+  max-width: 90%;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.variantSection {
+  margin: 12px 0;
+}
+
+.variantTitle {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.colorOptions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.colorCircle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  cursor: pointer;
+}
+
+.colorCircle--selected {
+  border-color: #68F145;
+  box-shadow: 0 0 0 2px rgba(104, 241, 69, 0.4);
+}
+
+.pairOptions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pairButton {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  height: auto;
+  background: #f6f6f6;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.pairButton--selected {
+  border-color: #68F145;
+  background: #eaffea;
+}
+
+.variantLabel {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #444;
+}
+.quantityNumber{
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #000;
+    margin-top: auto;
+    margin-bottom: auto;
+}
+.variantActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.variantCancel,
+.variantConfirm {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.variantCancel {
+  background: #eee;
+}
+
+.variantConfirm {
+  background: #68F145;
+  color: #0b2b00;
+}
