@@ -12,6 +12,7 @@ import ServiceRequest from './pages/ServiceRequest';
 import LoginRegister from './pages/LoginRegister';
 import RegistrationConfirm from './pages/RegistrationConfirm';
 import KepTeszt from './pages/KepTeszt';
+import ChatbotWidget from './components/ChatbotWidget';
 
 
 
@@ -38,6 +39,8 @@ function App() {
         <Route path='/teszt' element={<KepTeszt />} />
 
       </Routes>
+
+      <ChatbotWidget />
 
     </div>
 
