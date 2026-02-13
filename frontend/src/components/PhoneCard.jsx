@@ -200,7 +200,7 @@ export default function PhoneCard({
       <Link to={`/telefon/${phoneId}`} className="phone-card-link phoneRow">
         <div className="phoneImage">
           <img
-            src={phoneImg || "/images/placeholder.png"}
+            src={phoneImg}
             alt={phoneName}
           />
           <div className="price-bubble">{phonePrice} Ft</div>
@@ -216,10 +216,10 @@ export default function PhoneCard({
             className={`button ${isInCompare ? "button--compare-added" : ""}`}
             onClick={handleCompareClick}
           >
-            <img src="/images/compare-removebg-preview 1.png" alt="Összehasonlítás" />
+            <img src="/images/compare-removebg-preview_1.png" alt="Összehasonlítás" />
           </div>
           <div className="button" onClick={handleCartClick}>
-            <img src="/images/cart-removebg-preview 1.png" alt="Kosár" />
+            <img src="/images/cart-removebg-preview_1.png" alt="Kosár" />
           </div>
         </div>
       </Link>
