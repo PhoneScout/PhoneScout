@@ -1,5 +1,6 @@
 public class pictureDTO
 {
-    public int ID { get; set; }
+    public int phoneID { get; set; }
     public byte[] data { get; set; } = null!;
+    public bool isIndex { get; set; }
 }
