@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
+
 
 export default function ServiceRequest() {
   const [formData, setFormData] = useState({
@@ -174,7 +173,6 @@ export default function ServiceRequest() {
 
   return (
     <div>
-      <Navbar />
 
       <div className="container mt-3 mb-2 text-end">
         <button id="chatbotBtn" className="btn btn-outline-info" onClick={openChatbot}>
@@ -378,7 +376,6 @@ export default function ServiceRequest() {
         </div>
       </div>
 
-      <Footer />
     </div>
   );
 }

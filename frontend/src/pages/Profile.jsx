@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
-import Navbar from '../components/Navbar';
 
 
 
@@ -418,7 +417,6 @@ const Profile = () => {
   return (
 
     <div className="profile-container">
-      <Navbar />
       {/* Fejléc */}
       <header className="profile-header">
         <h1>Profilom</h1>

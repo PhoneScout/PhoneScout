@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Home.css';
-import Navbar from '../components/Navbar';
+import Navbar from '../components/Navbar'; //we still need the import here
 import PhoneCard from '../components/PhoneCard';
-import Footer from '../components/Footer';
 import InputText from '../components/InputText';
 import { Link } from 'react-router';
 
@@ -57,7 +56,6 @@ export default function Home() {
 
   return (
     <div>
-      <Navbar />
       <br />
       <Link to="/profil">Profil</Link>
       <br />
@@ -124,7 +122,6 @@ export default function Home() {
 
 
       </div>
-      <Footer />
     </div>
 
   );

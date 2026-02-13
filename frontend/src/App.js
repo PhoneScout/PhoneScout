@@ -1,7 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css';
 import Home from './pages/Home';
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, useLocation } from 'react-router-dom';
 import FilterPage from './pages/FilterPage';
 import Service from './pages/Service';
 import Cart from './pages/Cart';
@@ -13,16 +13,23 @@ import LoginRegister from './pages/LoginRegister';
 import RegistrationConfirm from './pages/RegistrationConfirm';
 import KepTeszt from './pages/KepTeszt';
 import ChatbotWidget from './components/ChatbotWidget';
+import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 
 
 
 function App() {
+
+  const location = useLocation();
+  const excludeLayout = ['/bejelentkezes', '/fiokaktivalas'];
+  const shouldShowLayout = !excludeLayout.includes(location.pathname);
+
   return (
 
     <div className="App">
 
 
-
+      {shouldShowLayout && <Navbar />}
 
       <Routes>
         <Route path='/' element={<Home />}></Route>
@@ -39,6 +46,8 @@ function App() {
         <Route path='/teszt' element={<KepTeszt />} />
 
       </Routes>
+
+      {shouldShowLayout && <Footer />}
 
       <ChatbotWidget />
 

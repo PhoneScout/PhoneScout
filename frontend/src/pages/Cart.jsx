@@ -3,8 +3,6 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import JSZip from 'jszip';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import "./Cart.css";
 
 export default function Cart() {
@@ -250,7 +248,6 @@ export default function Cart() {
 
   return (
     <div>
-      <Navbar />
 
       <div className="kosaradText">
         <h1>A kosarad</h1>
@@ -355,7 +352,6 @@ export default function Cart() {
         </div>
       </div>
 
-      <Footer />
       {showPaymentModal && (
         <div className="paymentModal" style={{ display: 'flex' }}>
           <div className="modalContent">

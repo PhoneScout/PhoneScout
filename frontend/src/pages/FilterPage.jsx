@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import './FilterPage.css';
 import PhoneCard from '../components/PhoneCard';
 
@@ -496,7 +494,6 @@ export default function FilterPage() {
 
   return (
     <div>
-      <Navbar />
 
       <div className="container mt-4">
         <div className="row">
@@ -673,7 +670,6 @@ export default function FilterPage() {
         </div>
       </div>
 
-      <Footer />
     </div>
   );
 }

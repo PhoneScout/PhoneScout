@@ -1,13 +1,10 @@
 import React from 'react'
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import './Service.css';
 import { Link } from 'react-router';
 
 export default function Service() {
   return (
     <div>
-      <Navbar />
       <div className="container service-section">
         <div className="row align-items-center">
           {/* BAL OLDAL – SZÖVEG */}
@@ -179,7 +176,6 @@ export default function Service() {
 
 
       </div>
-      <Footer />
     </div>
   );
 };

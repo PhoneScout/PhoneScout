@@ -1,7 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import Navbar from '../components/Navbar';
-import Footer from '../components/Footer';
 import './PhonePage.css';
 
 export default function PhonePage() {
@@ -82,7 +80,6 @@ export default function PhonePage() {
 
   return (
     <div>
-      <Navbar />
       <div className="container-fluid px-3 px-md-5">
         
         {/* FELSŐ SZEKCIÓ: 3 OSZLOPOS ELRENDEZÉS */}
@@ -238,7 +235,6 @@ export default function PhonePage() {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 }
