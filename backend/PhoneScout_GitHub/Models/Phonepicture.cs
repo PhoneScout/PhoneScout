@@ -9,13 +9,11 @@ public partial class Phonepicture
 
     public int PhoneId { get; set; }
 
-    public byte[]? PictureFront { get; set; }
+    public byte[] PhonePicture1 { get; set; } = null!;
 
-    public byte[]? PictureBack { get; set; }
+    public string ContentType { get; set; } = null!;
 
-    public byte[]? PictureTop { get; set; }
-
-    public byte[]? PictureBottom { get; set; }
+    public int IsIndex { get; set; }
 
     public virtual Phonedata Phone { get; set; } = null!;
 }
