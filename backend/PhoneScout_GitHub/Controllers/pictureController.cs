@@ -19,8 +19,41 @@ namespace PhoneScout_GitHub.Controllers
             cx = context;
         }
 
+
+        [HttpGet("GetIndex/{phoneID}")]
+        public async Task<IActionResult> GetIndex(int phoneID)
+        {
+            var phonePictures = cx.Phonepictures.Where(p => p.IsIndex == 0)
+                                        .FirstOrDefault(p => p.PhoneId == phoneID);
+
+            if (phonePictures == null || phonePictures.PhonePicture1 == null)
+                return NotFound("A telefonhoz tartozó képek nem találhatók.");
+
+            return File(phonePictures.PhonePicture1, phonePictures.ContentType);
+        }
+
+        [HttpGet("GetAllPictures/{phoneID}")]
+        public IActionResult GetAllPictures(int phoneID)
+        {
+            var phonePictures = cx.Phonepictures
+                                  .Where(p => p.PhoneId == phoneID)
+                                  .ToList();
+
+            if (!phonePictures.Any())
+                return NotFound("A telefonhoz tartozó képek nem találhatók.");
+
+            var result = phonePictures.Select(p => new
+            {
+                Image = Convert.ToBase64String(p.PhonePicture1),
+                ContentType = p.ContentType
+            });
+
+            return Ok(result);
+        }
+
+
         // GET
-        [HttpGet("GetPicture/{phoneID}/{position}")]
+        /*[HttpGet("GetPicture/{phoneID}/{position}")]
         [SwaggerOperation(
             Summary = "Telefonhoz tartozó egy kép lekérése.",
             Description = "A phoneID megadása utás, a string mezőbe a kép típusát kell megadni. Ez lehet: 'front', 'back', 'top', 'bottom', '_'"
@@ -246,7 +279,7 @@ namespace PhoneScout_GitHub.Controllers
             await cx.SaveChangesAsync();
 
             return Ok("All pictures deleted successfully.");
-        }
+        }*/
 
     }
 

@@ -421,7 +421,7 @@ public partial class PhoneContext : DbContext
                 .HasMaxLength(64)
                 .HasColumnName("city");
             entity.Property(e => e.OrderId)
-                .HasMaxLength(22)
+                .HasColumnType("int(11)")
                 .HasColumnName("orderID");
             entity.Property(e => e.PhoneColorHex).HasMaxLength(7);
             entity.Property(e => e.PhoneColorName)
@@ -742,21 +742,18 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("ID");
+            entity.Property(e => e.ContentType)
+                .HasMaxLength(100)
+                .HasColumnName("contentType");
+            entity.Property(e => e.IsIndex)
+                .HasColumnType("int(1)")
+                .HasColumnName("isIndex");
             entity.Property(e => e.PhoneId)
                 .HasColumnType("int(11)")
                 .HasColumnName("phoneID");
-            entity.Property(e => e.PictureBack)
+            entity.Property(e => e.PhonePicture1)
                 .HasColumnType("mediumblob")
-                .HasColumnName("pictureBack");
-            entity.Property(e => e.PictureBottom)
-                .HasColumnType("mediumblob")
-                .HasColumnName("pictureBottom");
-            entity.Property(e => e.PictureFront)
-                .HasColumnType("mediumblob")
-                .HasColumnName("pictureFront");
-            entity.Property(e => e.PictureTop)
-                .HasColumnType("mediumblob")
-                .HasColumnName("pictureTop");
+                .HasColumnName("phonePicture");
 
             entity.HasOne(d => d.Phone).WithMany(p => p.Phonepictures)
                 .HasForeignKey(d => d.PhoneId)
