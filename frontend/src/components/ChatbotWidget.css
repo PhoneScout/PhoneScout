@@ -96,6 +96,35 @@
   border-top: 1px solid #ccc;
 }
 
+.ps-chatbot .quick-buttons {
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid #ddd;
+  text-align: center;
+}
+
+.ps-chatbot .quick-buttons .quick-btn {
+  padding: 8px 12px;
+  margin: 4px;
+  border: none;
+  background: #28a745;
+  color: #ffffff;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  transition: background 0.2s ease;
+  display: inline-block;
+}
+
+.ps-chatbot .quick-buttons .quick-btn:hover:not(:disabled) {
+  background: #218838;
+}
+
+.ps-chatbot .quick-buttons .quick-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
 .ps-chatbot .buttons button {
   padding: 6px 10px;
   margin: 4px 2px;
@@ -140,4 +169,52 @@
 .ps-chatbot .chat-bubble.visible {
   transform: scale(1);
   opacity: 1;
+}
+.ps-chatbot .input-area {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-top: 1px solid #ccc;
+}
+
+.ps-chatbot .chat-input {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: Arial, sans-serif;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.ps-chatbot .chat-input:focus {
+  border-color: #007bff;
+}
+
+.ps-chatbot .chat-input:disabled {
+  background: #e0e0e0;
+  cursor: not-allowed;
+}
+
+.ps-chatbot .send-btn {
+  padding: 10px 16px;
+  background: #007bff;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  transition: background 0.2s ease;
+}
+
+.ps-chatbot .send-btn:hover:not(:disabled) {
+  background: #0056b3;
+}
+
+.ps-chatbot .send-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
