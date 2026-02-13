@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./Compare.css";
 
 export default function Compare() {
@@ -9,7 +9,14 @@ export default function Compare() {
   const [openGroups, setOpenGroups] = useState({});
   const scrollContainerRef = useRef(null);
 
-  // 1. Csoportosított tulajdonságok definíciója (a régi JS-ed alapján)
+  // Modal állapotok
+  const [showModal, setShowModal] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [allPhones, setAllPhones] = useState([]);
+  const [loadingAllPhones, setLoadingAllPhones] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  // Csoportosított tulajdonságok
   const groupedProps = [
     {
       group: "Általános",
@@ -66,14 +73,6 @@ export default function Compare() {
       ]
     },
     {
-      group: "Kamerák",
-      props: [
-        { label: "Kamerák nevei", key: "cameraNames" },
-        { label: "Kamerák felbontása", key: "cameraResolutions" },
-        { label: "Kamera típusok", key: "cameraTypes" }
-      ]
-    },
-    {
       group: "Szenzorok",
       props: [
         { label: "Ujjlenyomat helye", key: "sensorsFingerprintPlace" },
@@ -84,37 +83,56 @@ export default function Compare() {
   ];
 
   const nonNumericProps = [
-    "cameraNames", "screenType", "cpuName", "cameraTypes", 
-    "sensorsFingerprintPlace", "sensorsFingerprintType", "waterproofType", "phoneResolution"
+    "screenType", "cpuName", "sensorsFingerprintPlace", "sensorsFingerprintType", "waterproofType", "phoneResolution"
   ];
 
-  // 2. Adatok betöltése
+  // Összes telefon betöltése (modálhoz)
   useEffect(() => {
-    const loadPhones = async () => {
-      const compareIds = JSON.parse(localStorage.getItem("comparePhones") || "[]");
-      if (!compareIds.length) {
-        setPhones([]);
-        setLoading(false);
-        return;
-      }
-
+    const fetchAllPhones = async () => {
+      setLoadingAllPhones(true);
       try {
-        const requests = compareIds.map(id =>
-          fetch(`http://localhost:5175/comparePage/${id}`).then(res => res.ok ? res.json() : null)
-        );
-        const raw = await Promise.all(requests);
-        const flattened = raw.flatMap(p => Array.isArray(p) ? p : (p ? [p] : []));
-        setPhones(flattened);
+        const res = await fetch("http://localhost:5175/allPhonesName");
+        if (res.ok) {
+          const data = await res.json();
+          setAllPhones(data);
+        }
       } catch (err) {
-        console.error("Hiba az adatok lekérésekor:", err);
+        console.error("Hiba az összes telefon lekérésekor:", err);
       } finally {
-        setLoading(false);
+        setLoadingAllPhones(false);
       }
     };
-    loadPhones();
+    fetchAllPhones();
   }, []);
 
-  // 3. Görgetés vezérlése
+  // Összehasonlító telefonok betöltése
+  const loadPhones = useCallback(async () => {
+    const compareIds = JSON.parse(localStorage.getItem("comparePhones") || "[]");
+    if (!compareIds.length) {
+      setPhones([]);
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const requests = compareIds.map(id =>
+        fetch(`http://localhost:5175/comparePage/${id}`).then(res => res.ok ? res.json() : null)
+      );
+      const raw = await Promise.all(requests);
+      const flattened = raw.flatMap(p => Array.isArray(p) ? p : (p ? [p] : []));
+      setPhones(flattened);
+    } catch (err) {
+      console.error("Hiba az adatok lekérésekor:", err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadPhones();
+  }, [loadPhones, refreshTrigger]);
+
+  // Görgetés
   const scroll = (direction) => {
     if (scrollContainerRef.current) {
       const scrollAmount = 400;
@@ -125,7 +143,7 @@ export default function Compare() {
     }
   };
 
-  // 4. Szűrők kezelése
+  // Szűrők kezelése
   const toggleFilter = (key) => {
     const newFilters = new Set(selectedFilters);
     if (newFilters.has(key)) newFilters.delete(key);
@@ -137,30 +155,72 @@ export default function Compare() {
     setOpenGroups(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
 
-  // 5. Kiemelés logika (Zöld/Narancs)
+  // Kiemelés
   const getHighlightClass = (key, value) => {
-    if (!selectedFilters.has(key) || phones.length < 2) return "";
-    
-    const numericValues = phones
-      .map(p => parseFloat(p[key]))
-      .filter(v => !isNaN(v));
-    
-    if (numericValues.length < 2) return "";
-    
-    const max = Math.max(...numericValues);
-    const min = Math.min(...numericValues);
-    const current = parseFloat(value);
+  if (!selectedFilters.has(key) || phones.length < 2) return "";
 
-    if (current === max && max !== min) return "highlight-green";
-    if (current === min && max !== min) return "highlight-orange";
+  // Speciális kezelés a "Készleten" mezőre
+  if (key === "phoneInStore") {
+    const values = phones.map(p => p[key]);
+    const hasVan = values.includes("van");
+    const hasNincs = values.includes("nincs");
+
+    // Ha minden telefon készleten van, vagy mindegyik nincs – ne jelöljön semmit
+    if (!hasVan || !hasNincs) return "";
+
+    // Különben: "van" = legjobb (zöld), "nincs" = legrosszabb (narancs)
+    if (value === "van") return "highlight-green";
+    if (value === "nincs") return "highlight-orange";
     return "";
-  };
+  }
 
-  // 6. Különbség vizsgálat (Félkövér kiemeléshez)
+  // Eredeti numerikus logika minden más mezőre
+  const numericValues = phones
+    .map(p => parseFloat(p[key]))
+    .filter(v => !isNaN(v));
+
+  if (numericValues.length < 2) return "";
+
+  const max = Math.max(...numericValues);
+  const min = Math.min(...numericValues);
+  const current = parseFloat(value);
+
+  if (current === max && max !== min) return "highlight-green";
+  if (current === min && max !== min) return "highlight-orange";
+  return "";
+};
+
+  // Különbség vizsgálat
   const isDifferentRow = (key) => {
     if (!highlightDifferences || phones.length < 2) return false;
     const firstValue = phones[0][key];
     return phones.some(p => p[key] !== firstValue);
+  };
+
+  // Hozzáadás / eltávolítás
+  const handleAddPhone = (phoneId) => {
+    const compareIds = JSON.parse(localStorage.getItem("comparePhones") || "[]");
+    if (!compareIds.includes(phoneId)) {
+      compareIds.push(phoneId);
+      localStorage.setItem("comparePhones", JSON.stringify(compareIds));
+      setRefreshTrigger(prev => prev + 1);
+    }
+  };
+
+  const handleRemovePhone = (phoneId) => {
+    let compareIds = JSON.parse(localStorage.getItem("comparePhones") || "[]");
+    compareIds = compareIds.filter(id => String(id) !== String(phoneId));
+    localStorage.setItem("comparePhones", JSON.stringify(compareIds));
+    setRefreshTrigger(prev => prev + 1);
+  };
+
+  const filteredAllPhones = allPhones.filter(phone =>
+    phone.phoneName?.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const closeModal = () => {
+    setShowModal(false);
+    setSearchTerm("");
   };
 
   if (loading) return <p className="text-center mt-5">Betöltés...</p>;
@@ -169,6 +229,81 @@ export default function Compare() {
     return (
       <div className="container mt-5 text-center">
         <h2 className="h4">Nincs kiválasztott telefon az összehasonlításhoz.</h2>
+        <button className="btn btn-primary mt-3" onClick={() => setShowModal(true)}>
+          Telefon hozzáadása
+        </button>
+
+        {/* Modál akkor is megnyitható, ha üres a lista */}
+        {showModal && (
+          <div className="modal-overlay" onClick={closeModal}>
+            <div className="modal-content" onClick={e => e.stopPropagation()}>
+              <div className="modal-header">
+                <h3>Telefon hozzáadása / eltávolítása</h3>
+                <button className="modal-close-btn" onClick={closeModal}>×</button>
+              </div>
+              <div className="modal-body">
+                <input
+                  type="text"
+                  className="form-control mb-3"
+                  placeholder="Keresés névre..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  autoFocus
+                />
+                {loadingAllPhones ? (
+                  <p>Telefonok betöltése...</p>
+                ) : filteredAllPhones.length === 0 ? (
+                  <p>Nincs találat.</p>
+                ) : (
+                  <table className="table table-sm">
+                    <thead>
+                      <tr>
+                        <th>Név</th>
+                        <th style={{ width: "180px" }}></th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {filteredAllPhones.map(phone => {
+                        const compareIds = JSON.parse(localStorage.getItem("comparePhones") || "[]");
+                        const isAdded = compareIds.some(id => String(id) === String(phone.phoneID));
+                        return (
+                          <tr key={phone.phoneID}>
+                            <td>{phone.phoneName}</td>
+                            <td>
+                              {isAdded ? (
+                                <>
+                                  <button
+                                    className="btn btn-sm btn-danger me-1"
+                                    onClick={() => handleRemovePhone(phone.phoneID)}
+                                  >
+                                    Eltávolítás
+                                  </button>
+                                  <span className="text-success">✓ Hozzáadva</span>
+                                </>
+                              ) : (
+                                <button
+                                  className="btn btn-sm btn-success"
+                                  onClick={() => handleAddPhone(phone.phoneID)}
+                                >
+                                  Hozzáadás
+                                </button>
+                              )}
+                            </td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                )}
+              </div>
+              <div className="modal-footer">
+                <button className="btn btn-secondary" onClick={closeModal}>
+                  Bezárás
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     );
   }
@@ -177,7 +312,6 @@ export default function Compare() {
     <div className="container-fluid py-4">
       <div className="container py-4 position-relative">
         <div className="row">
-          
           {/* BAL OLDALI SZŰRŐPANEL */}
           <div className="col-md-3">
             <div id="filterPanel">
@@ -236,16 +370,27 @@ export default function Compare() {
             </div>
           </div>
 
-          {/* JOBB OLDALI TARTALOM (Telefonok) */}
+          {/* JOBB OLDALI TARTALOM */}
           <div className="col-md-9 position-relative">
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h1 className="h3 mb-0">Telefonok összehasonlítása</h1>
-              <button 
-                className="btn btn-danger btn-sm"
-                onClick={() => { localStorage.removeItem("comparePhones"); window.location.reload(); }}
-              >
-                Összehasonlítás törlése
-              </button>
+              <div>
+                <button
+                  className="btn btn-success btn-sm me-2"
+                  onClick={() => setShowModal(true)}
+                >
+                  + Telefon hozzáadása
+                </button>
+                <button
+                  className="btn btn-danger btn-sm"
+                  onClick={() => {
+                    localStorage.removeItem("comparePhones");
+                    setRefreshTrigger(prev => prev + 1);
+                  }}
+                >
+                  Összehasonlítás törlése
+                </button>
+              </div>
             </div>
 
             {/* Nyilak */}
@@ -295,9 +440,80 @@ export default function Compare() {
               ))}
             </div>
           </div>
-
         </div>
       </div>
+
+      {/* MODÁLIS ABLAK (csak ha showModal true és már van telefon a listában) */}
+      {showModal && phones.length > 0 && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3>Telefon hozzáadása / eltávolítása</h3>
+              <button className="modal-close-btn" onClick={closeModal}>×</button>
+            </div>
+            <div className="modal-body">
+              <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Keresés névre..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                autoFocus
+              />
+              {loadingAllPhones ? (
+                <p>Telefonok betöltése...</p>
+              ) : filteredAllPhones.length === 0 ? (
+                <p>Nincs találat.</p>
+              ) : (
+                <table className="table table-sm">
+                  <thead>
+                    <tr>
+                      <th>Név</th>
+                      <th style={{ width: "180px" }}></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {filteredAllPhones.map(phone => {
+                      const compareIds = JSON.parse(localStorage.getItem("comparePhones") || "[]");
+                      const isAdded = compareIds.some(id => String(id) === String(phone.phoneID));
+                      return (
+                        <tr key={phone.phoneID}>
+                          <td>{phone.phoneName}</td>
+                          <td>
+                            {isAdded ? (
+                              <>
+                                <button
+                                  className="btn btn-sm btn-danger me-1"
+                                  onClick={() => handleRemovePhone(phone.phoneID)}
+                                >
+                                  Eltávolítás
+                                </button>
+                                <span className="text-success">✓ Hozzáadva</span>
+                              </>
+                            ) : (
+                              <button
+                                className="btn btn-sm btn-success"
+                                onClick={() => handleAddPhone(phone.phoneID)}
+                              >
+                                Hozzáadás
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              )}
+            </div>
+            <div className="modal-footer">
+              <button className="btn btn-secondary" onClick={closeModal}>
+                Bezárás
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
