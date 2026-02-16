@@ -1,247 +1,20 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "./ChatbotWidget.css";
 
 const TYPING_SPEED = 15;
 
-const SYSTEM_INSTRUCTION = `
+const PHONES_DATA = `List of phones we sell:
+      //IDE KELL MAJD BERAKNI A TELEFONOK ADATAIT, CSAK MÁSOLD BE A TXT TARTALMÁT AMIT TRELLÓRA AZ SQL KÁRTYÁHOZ RAKTAM
+`;
 
+const SYSTEM_INSTRUCTION = `
     You are a helpful assistant for PhoneScout, a mobile phone shop and service center.
     Use ONLY the information from the context below to answer the customer's question.
     If the question is unrelated to PhoneScout, politely say you cannot answer.
     
     Site name is PhoneScout. PhoneScout is a shop and service center for mobile phones.
     I am an assistant at PhoneScout, and I am here to help customers with any questions.
-
-    List of phones sold:
-    -{
-  "phoneId": 1,
-  "phoneName": "Xiaomi 13T",
-  "phoneAntutu": 905365,
-  "phoneResolutionHeight": 2712,
-  "phoneResolutionWidth": 1220,
-  "screenSize": 6.67,
-  "screenRefreshRate": 144,
-  "screenMaxBrightness": 2600,
-  "screenSharpness": 466,
-  "connectionMaxWifi": 7,
-  "connectionMaxBluetooth": 5.3,
-  "connectionMaxMobileNetwork": 5,
-  "connectionDualSim": "van",
-  "connectionEsim": "van",
-  "connectionNfc": "van",
-  "connectionConnectionSpeed": 2,
-  "connectionJack": "nincs",
-  "sensorsInfrared": "van",
-  "batteryCapacity": 5000,
-  "batteryMaxChargingWired": 67,
-  "batteryMaxChargingWireless": 0,
-  "caseHeight": 162.2,
-  "caseWidth": 75.5,
-  "caseThickness": 8.49,
-  "phoneWeight": 193,
-  "phoneReleaseDate": "2023-09-26",
-  "phonePrice": 135000,
-  "phoneInStore": "nincs",
-  "phoneInStoreAmount": 0,
-  "backMaterial": "Vegán műbőr",
-  "batteryType": "Li-Po",
-  "chargerType": "USB Type-C",
-  "cpuName": "Mediatek Dimensity 8200 Ultra",
-  "cpuClock": 3,
-  "cpuCores": 8,
-  "cpuTech": 4,
-  "manufacturerName": "Xiaomi",
-  "manufacturerURL": "",
-  "ramSpeed": "LPDDR5",
-  "screenType": "AMOLED",
-  "fingerprintType": "Optikai",
-  "fingerprintPlace": "Kijelző",
-  "storageSpeed": "UFS 3.1",
-  "waterproofType": "IP68",
-  "speakerType": "stereo",
-  "colors": [
-    {
-      "id": null,
-      "colorName": "Alpine Blue",
-      "colorHex": "#000000"
-    },
-    {
-      "id": null,
-      "colorName": "Black",
-      "colorHex": "#8ba39b"
-    },
-    {
-      "id": null,
-      "colorName": "Meadow Green",
-      "colorHex": "#8e9cb5"
-    }
-  ],
-  "cameras": [
-    {
-      "cameraName": "Sony IMX707",
-      "cameraResolution": 50,
-      "cameraAperture": "f/1.9",
-      "cameraFocalLength": 24,
-      "cameraOis": "van",
-      "cameraType": "Fő hátsó kamera"
-    },
-    {
-      "cameraName": "Omnivision OV50D40 Light Hunter 400",
-      "cameraResolution": 50,
-      "cameraAperture": "f/2.0",
-      "cameraFocalLength": 12,
-      "cameraOis": "nincs",
-      "cameraType": "Telefotó"
-    },
-    {
-      "cameraName": "Omnivision OV13B10",
-      "cameraResolution": 12,
-      "cameraAperture": "f/2.2",
-      "cameraFocalLength": 15,
-      "cameraOis": "nincs",
-      "cameraType": "Széles látószögű"
-    },
-    {
-      "cameraName": "Sony IMX596",
-      "cameraResolution": 20,
-      "cameraAperture": "f/2.2",
-      "cameraFocalLength": 0,
-      "cameraOis": "nincs",
-      "cameraType": "Szelfikamera"
-    }
-  ],
-  "ramStoragePairs": [
-    {
-      "id": 0,
-      "ramAmount": 12,
-      "storageAmount": 256
-    },
-    {
-      "id": 0,
-      "ramAmount": 2,
-      "storageAmount": 256
-    }
-  ]
-}
-  -{
-  "phoneId": 2,
-  "phoneName": "ZTE nubia Red Magic 9S Pro",
-  "phoneAntutu": 2369542,
-  "phoneResolutionHeight": 2480,
-  "phoneResolutionWidth": 1116,
-  "screenSize": 2.8,
-  "screenRefreshRate": 120,
-  "screenMaxBrightness": 1600,
-  "screenSharpness": 400,
-  "connectionMaxWifi": 7,
-  "connectionMaxBluetooth": 5.2,
-  "connectionMaxMobileNetwork": 5,
-  "connectionDualSim": "van",
-  "connectionEsim": "nincs",
-  "connectionNfc": "van",
-  "connectionConnectionSpeed": 3,
-  "connectionJack": "van",
-  "sensorsInfrared": "van",
-  "batteryCapacity": 6500,
-  "batteryMaxChargingWired": 80,
-  "batteryMaxChargingWireless": 0,
-  "caseHeight": 164,
-  "caseWidth": 86.4,
-  "caseThickness": 9.8,
-  "phoneWeight": 229,
-  "phoneReleaseDate": "2024-07-09",
-  "phonePrice": 341270,
-  "phoneInStore": "nincs",
-  "phoneInStoreAmount": 0,
-  "backMaterial": "Üveg",
-  "batteryType": "Li-Polymer",
-  "chargerType": "USB Type-C",
-  "cpuName": "Qualcomm Snapdragon 8 Gen 3 Leading Edition",
-  "cpuClock": 3,
-  "cpuCores": 8,
-  "cpuTech": 4,
-  "manufacturerName": "ZTE nubia",
-  "manufacturerURL": "",
-  "ramSpeed": "LPDDR5X",
-  "screenType": "AMOLED",
-  "fingerprintType": "Optikai",
-  "fingerprintPlace": "Kijelző",
-  "storageSpeed": "UFS 4.0",
-  "waterproofType": "nincs",
-  "speakerType": "stereo",
-  "colors": [
-    {
-      "id": null,
-      "colorName": "Cyclone",
-      "colorHex": "#000000"
-    },
-    {
-      "id": null,
-      "colorName": "Design Sleet",
-      "colorHex": "#3f4247"
-    },
-    {
-      "id": null,
-      "colorName": "Frost",
-      "colorHex": "#ffffff"
-    }
-  ],
-  "cameras": [
-    {
-      "cameraName": "GalaxyCore GC02M1",
-      "cameraResolution": 2,
-      "cameraAperture": "f/2.4",
-      "cameraFocalLength": 0,
-      "cameraOis": "nincs",
-      "cameraType": "Főkamera"
-    },
-    {
-      "cameraName": "Omnivision OV16A1Q",
-      "cameraResolution": 16,
-      "cameraAperture": "f/2.0",
-      "cameraFocalLength": 0,
-      "cameraOis": "nincs",
-      "cameraType": "Makrókamera"
-    },
-    {
-      "cameraName": "Samsung GN5",
-      "cameraResolution": 50,
-      "cameraAperture": "f/1.9",
-      "cameraFocalLength": 0,
-      "cameraOis": "van",
-      "cameraType": "Széles látószögű kamera"
-    },
-    {
-      "cameraName": "Samsung S5KJN1",
-      "cameraResolution": 50,
-      "cameraAperture": "f/2.2",
-      "cameraFocalLength": 0,
-      "cameraOis": "nincs",
-      "cameraType": "Szelfi kamera"
-    }
-  ],
-  "ramStoragePairs": [
-    {
-      "id": 0,
-      "ramAmount": 12,
-      "storageAmount": 256
-    },
-    {
-      "id": 0,
-      "ramAmount": 12,
-      "storageAmount": 258
-    },
-    {
-      "id": 0,
-      "ramAmount": 16,
-      "storageAmount": 542
-    }
-  ]
-}
-    - Phone A: A high-end smartphone with 6.5-inch display, 128GB storage, 8GB RAM, dual cameras, and fast charging.
-    - Phone B: A mid-range smartphone with 6.1-inch display, 64GB storage, 4GB RAM, single camera, and standard charging.
-    - Phone C: A budget smartphone with 5.8-inch display, 32GB storage, 3GB RAM, basic camera, and standard charging.
-    - Phone D: A gaming phone with 6.7-inch AMOLED display, 256GB storage, 12GB RAM, triple camera setup, high refresh rate screen, and fast charging.
 
     PhoneScout services:
     - Selling new and used phones.
@@ -275,7 +48,7 @@ const SYSTEM_INSTRUCTION = `
     - If the question is unrelated to PhoneScout, politely say it is not about the site's topic, and never answer.
     - Dont answer any questions that doesn't go with the phone shop or service context. Tell the user that you cant help with the question and ask if they have any questions in connection with our website.
     - Don't recommend any other service, if the user asks about it, tell that you dont know any other repair shop.
-    - Don't use any stylings during a response such as **, etc.
+    - Don't use any stylings during a response such as **, *, etc.
     - Give short understandable and easily digestible answers, avoid long and complex sentences if possible.
     - If the user asks something because he doesnt know, you can explan it to them, for example if they ask you to explain more about a part you can explan what does each thing mean and do. 
     - We dont sell any accessories. If the user asks about accessories, tell them that we dont sell any accessories but we can help with any questions about phones or repairs.
@@ -283,18 +56,27 @@ const SYSTEM_INSTRUCTION = `
     - We only repair phones, no other devices.
     - If the user asks about something that is not related to phones or phone repairs, tell them that you cant help with that question and ask if they have any questions in connection with our website.
     - If they ask about any phone related you can answer, for exaqmple about general information or such.
+    - Dont recommend us in every single message, it is too much if you mention our service inm every message.
+    - If the user wants service, they can fill a form too to request a repair.
+    - If the user comes in person, they should fill the form for easier and faster service, but if they dont want to fill the form, it will take longer in person to 
+    - After the user filled the form there is a description of what they have to do.
     `;
 
 const QUICK_BUTTONS = [
   "Betört a kijelzőm",
   "Nem tölt a telefonom",
-  "Problémák a hangszóróval",
+  "Nem kapcsol be a telefonom",
   "Az akkumulátor gyorsan lemerül",
-  "A telefon túlmelegszik",
-  "Vízbe esett a telefonom"
+  "Vízbe esett a telefonom",
+  "Zöld csík van a kijelzőn",
+  "Nem működik a kamera",
+  "Nem hallanak telefonálás közben",
+  "Fel van púposodva az akkumulátor",
+  "Rezeg a kamera"
 ];
 
 function ChatbotWidget() {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [showBubble, setShowBubble] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -361,6 +143,18 @@ function ChatbotWidget() {
     }
   };
 
+  const isServiceRelated = (text) => {
+    const serviceKeywords = ["szerviz", "javít", "javítás", "szervizelni", "repair", "service", "hiba", "nem működik"];
+    const lowerText = text.toLowerCase();
+    return serviceKeywords.some(keyword => lowerText.includes(keyword));
+  };
+
+  const isBuyingRelated = (text) => {
+    const buyingKeywords = ["vásárol", "venni", "akarok", "szeretnék", "telefont", "telefon", "buy", "purchase", "ár", "ára", "árak", "price", "cost", "érdekel", "melyik", "mely", "legjobb", "ajánl"];
+    const lowerText = text.toLowerCase();
+    return buyingKeywords.some(keyword => lowerText.includes(keyword));
+  };
+
   const ask = async (question, options = {}) => {
     const { skipUser = false } = options;
 
@@ -405,6 +199,12 @@ function ChatbotWidget() {
         parts: [{ text: msg.text }]
       }));
 
+      // Dinamikusan adjuk hozzá a telefonok adatait az aktuális kérdéshez, ha vásárlásról van szó
+      let userQuestion = question;
+      if (isBuyingRelated(question)) {
+        userQuestion = `${PHONES_DATA}\n\nFelhasználó kérdése: ${question}`;
+      }
+
       const requestBody = {
         systemInstruction: {
           parts: [{ text: SYSTEM_INSTRUCTION }]
@@ -413,7 +213,7 @@ function ChatbotWidget() {
           ...conversationHistory,
           {
             role: "user",
-            parts: [{ text: question }]
+            parts: [{ text: userQuestion }]
           }
         ]
       };
@@ -440,6 +240,16 @@ function ChatbotWidget() {
       historyRef.current.push({ role: "assistant", text: answer });
 
       await typeMessage(loadingId, answer, TYPING_SPEED);
+
+      // Ha a válasz szervízhez kapcsolódik, adjunk hozzá egy gombat
+      if (isServiceRelated(answer)) {
+        addMessage({
+          id: `service-btn-${Date.now()}`,
+          role: "service-button",
+          text: "szerviz"
+        });
+      }
+
       setFollowUps([]);
     } catch (err) {
       console.error("Chat hiba:", err);
@@ -486,7 +296,10 @@ function ChatbotWidget() {
     <div className="ps-chatbot">
       <div ref={widgetRef} className={`chat-widget ${isOpen ? "open" : ""}`}>
         <div className="chat-header" onMouseDown={handleHeaderMouseDown}>
-          <span>Segéd</span>
+          <div className="header-content">
+            <img src="/images/ChatBotLogo.png" alt="Chatbot Logo" className="header-logo" />
+            <span>Segéd</span>
+          </div>
           <span className="chat-close" onClick={closeChat}>
             −
           </span>
@@ -502,6 +315,13 @@ function ChatbotWidget() {
                   <div className="loader" />
                   <span>{message.text}</span>
                 </>
+              ) : message.role === "service-button" ? (
+                <button
+                  className="service-button-link"
+                  onClick={() => navigate("/szerviz")}
+                >
+                  Szervíz igénylése
+                </button>
               ) : (
                 message.text
               )}
@@ -571,7 +391,7 @@ function ChatbotWidget() {
         className={`chat-bubble ${showBubble ? "visible" : ""}`}
         onClick={openChat}
       >
-        💬
+        <img src="/images/ChatBotLogo.png" alt="Chatbot" className="chatbot-logo-img" />
       </div>
     </div>
   );

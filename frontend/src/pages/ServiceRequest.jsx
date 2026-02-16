@@ -96,7 +96,7 @@ export default function ServiceRequest() {
           Kérését megkaptuk, és rögzítettük.<br />
           <b>Ön <strong>Telefon átvizsgálást</strong> kért.</b><br />
           {selectedLabels && <><b>Kiválasztott problémák:</b> {selectedLabels}<br /></>}
-          <strong>Kérjük, küldje el telefonját postán a következő címre:</strong><br />
+          <strong>Kérjük, küldje el telefonját postán a következő címre, vagy hozza be üzletünkbe:</strong><br />
           <b>Cím:</b> Miskolc, Palóczy László utca 3, 3525<br />
           <b>Név:</b> PhoneScout Szerviz<br />
           <b>Telefonszám:</b> +36 30 123 4567<br />
@@ -118,7 +118,7 @@ export default function ServiceRequest() {
         <div className="alert alert-info">
           Kérését megkaptuk, és rögzítettük.<br />
           {selectedLabels && <><b>Kiválasztott problémák:</b> {selectedLabels}<br /></>}
-          <strong>Kérjük, küldje el postán a következő címre:</strong><br />
+          <strong>Kérjük, küldje el telefonját postán a következő címre, vagy hozza be üzletünkbe:</strong><br />
           <b>Cím:</b> Miskolc, Palóczy László utca 3, 3525<br />
           <b>Név:</b> PhoneScout Szerviz<br />
           <b>Telefonszám:</b> +36 30 123 4567<br />
@@ -131,6 +131,15 @@ export default function ServiceRequest() {
             <li>A telefonszámot amit itt megadott,</li>
             <li>A készüléket a csomagolási feltételeknek megfelelően becsomagolva <Link to="/csomagolasfeltetelek" target="_blank" style={{ color: '#17a2b8', textDecoration: 'underline' }}>ITT</Link>,</li>
             <li>A bevizsgálási kódját. Az ön kódja: <strong>{code}</strong></li>
+          </ul>
+          <b>Ha személyesen jön be:</b><br />
+          <ul>
+            <li>Hozza magával az E-mailt amit tőlünk kapott</li>
+            <br />
+            <p><strong>VAGY</strong></p>
+            <li>Bevizsgálási kódját: <strong>{code}</strong></li>
+            <li>Valamilyen elérhetőségét amit megadott az űrlapon (pl. email, telefonszám)  </li>
+
           </ul>
           <br />
         </div>
