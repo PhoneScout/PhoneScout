@@ -26,8 +26,8 @@ namespace PhoneScout_GitHub.Controllers
 
         [HttpPost]
         [SwaggerOperation(
-            Summary = "",
-            Description = ""
+            Summary = "Felhasználó regisztrálása",
+            Description = "Felhasználói adatok rögzítése az adatbázisban, ha még nincs regisztrálva."
         )]
         public async Task<IActionResult> Registration(registerDTO user)
         {
@@ -126,8 +126,8 @@ namespace PhoneScout_GitHub.Controllers
 
         [HttpGet]
         [SwaggerOperation(
-            Summary = "",
-            Description = ""
+            Summary = "Fiók aktiválás",
+            Description = "A regisztrációnál kapott emailen keresztül elérhető, fiók aktiválás után jogosult az oldalra történő bejelentkezésre."
         )]
         public async Task<IActionResult> ActivateAccount(string name, string email)
         {
@@ -161,8 +161,8 @@ namespace PhoneScout_GitHub.Controllers
 
         [HttpGet("GetId/{Email}")]
         [SwaggerOperation(
-            Summary = "",
-            Description = ""
+            Summary = "Email lekérése ID alapján",
+            Description = "A profil adatok megváltoztatásához szükséges, email cím alapján visszaadja a felhasználó ID-ét"
         )]
         public IActionResult GetId(string Email)
         {
@@ -184,8 +184,8 @@ namespace PhoneScout_GitHub.Controllers
 
         [HttpPut("ChangePassword")]
         [SwaggerOperation(
-            Summary = "",
-            Description = ""
+            Summary = "Jelszóváltoztatás",
+            Description = "Amennyiben a régi jelszót helyesen adta meg a felhasználó, tudja módosítani a bejelentkezéshez használt jelszavát"
         )]
         public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordDTO request)
         {

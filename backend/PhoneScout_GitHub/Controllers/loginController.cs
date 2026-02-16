@@ -25,8 +25,8 @@ namespace PhoneScout_GitHub.Controllers
 
         [HttpGet("GetSalt/{Email}")]
         [SwaggerOperation(
-            Summary = "",
-            Description = ""
+            Summary = "SALT lekérése",
+            Description = "Lekérdezi a felhasználó SALT-ját email alapján"
         )]
         public IActionResult GetSalt(string Email)
         {
@@ -48,8 +48,8 @@ namespace PhoneScout_GitHub.Controllers
 
         [HttpPost]
         [SwaggerOperation(
-            Summary = "",
-            Description = ""
+            Summary = "Felhasználó bejelentkeztetése",
+            Description = "Aktivált felhasználó esetén ellenőrzi a megadott jelszót az adatbázisban tárolt jelszóval, helyes jelszó esetén tokent küldd."
         )]
         public IActionResult Login(LoginDTO loginDTO)
         {
