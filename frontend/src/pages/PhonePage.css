@@ -99,19 +99,16 @@ br {
     user-select: none;
 }
 
-
-.col-4 svg {
-    width: 100%;
-    height: auto;
-    max-height: 100%;
-    display: block;
-    object-fit: contain;
+.col-lg-4 {
+    align-self: stretch;
 }
 
 #mySvg {
-    margin-top: 5%;
     display: block;
-    margin-left: 20%;
+    width: 100%;
+    height: auto;
+    min-height: 200px;
+    object-fit: contain;
 }
 
 #mySvg:not([data]) {
@@ -121,10 +118,11 @@ br {
 .svg-container {
     user-select: none;
     position: sticky;
-    top: 180px;
-    width: 30%;
+    top: 20px;
     z-index: 10;
-    right: 0;
+    width: 70%;
+    align-self: flex-start;
+    margin: 0 auto;
 }
 
 .table-container {
@@ -381,4 +379,43 @@ footer .address {
     border-radius: 5px;
     border: 2px solid #f0f0f0;
     /* Optional: creates padding around thumb */
+}
+
+/* Címsorok feletti border eltüntetése */
+#phoneTable .first_row td,
+#phoneTable .first_row th {
+  border-top: none;
+}
+
+/* Üres elválasztó sorok borderének eltüntetése */
+#phoneTable .more_rows td {
+  border-top: none;
+  border-bottom: none;
+  padding: 0;
+  height: 1rem;
+}
+
+.hovered-row {
+  background-color: #38ec38bd !important;
+  transition: background-color 0.3s ease;
+}
+
+/* PhonePage.css */
+.flash-highlight {
+  background-color: #38ec38bd !important;
+  transition: background-color 0.3s ease;
+}
+
+.row.align-items-start {
+    overflow: visible !important; 
+}
+
+@keyframes titlePulse {
+  0% { background-color: transparent; }
+  50% { background-color: #68f14580; }
+  100% { background-color: transparent; }
+}
+
+.title-highlight {
+  animation: titlePulse 1s ease;
 }
