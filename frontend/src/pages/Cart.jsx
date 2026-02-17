@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import JSZip from 'jszip';
 import "./Cart.css";
+import axios from 'axios';
 
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
@@ -47,12 +48,11 @@ export default function Cart() {
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:5175/mainPage")
-      .then(response => response.json())
+    axios.get("http://localhost:5175/mainPage")
       .then(allPhones => {
-        setPhones(allPhones);
+        setPhones(allPhones.data);
 
-        const phoneMap = new Map(allPhones.map(p => [p.phoneID, p]));
+        const phoneMap = new Map(allPhones.data.map(p => [p.phoneID, p]));
 
         const merged = cartItems.map(item => ({
           ...item,
@@ -79,11 +79,11 @@ export default function Cart() {
   // Load phone image from backend ZIP
   const loadPhoneImage = async (phoneID) => {
     try {
-      const response = await fetch(
+      const response = await axios.get(
         `http://localhost:5175/api/blob/GetPicturesZip/${phoneID}`
       );
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         console.error("Képek nem találhatók!");
         return;
       }
@@ -136,7 +136,7 @@ export default function Cart() {
 
   const handlePhoneClick = (phoneID) => {
     localStorage.setItem("selectedPhone", phoneID);
-    navigate("/telefonoldal");
+    navigate(`/telefon/${phoneID}`);
   };
 
   const handleInputChange = (e) => {
@@ -214,24 +214,15 @@ export default function Cart() {
           status: 0
         };
 
-        const response = await fetch(
-          "http://localhost:5175/api/Profile/postOrder",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              dto: orderData
-            })
-          }
-        );
+        const response = await axios.post("http://localhost:5175/api/Profile/postOrder", orderData);
 
-        const responseText = await response.text();
+        const responseText = await response.data;
 
         console.log("STATUS:", response.status);
         console.log("RESPONSE BODY:", responseText);
         console.log("SENT DATA:", { dto: orderData });
 
-        if (!response.ok) {
+        if (response.status !== 200) {
           return;
         }
       }
@@ -274,6 +265,7 @@ export default function Cart() {
                   const quantity = item.quantity || 0;
                   const itemKey = getItemKey(item);
                   return (
+
                     <div
                       key={itemKey}
                       className="phoneRowCart"

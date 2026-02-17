@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./PhoneCard.css";
 import { Link } from "react-router-dom";
 import JSZip from "jszip";
+import axios from "axios";
 
 export default function PhoneCard({
   phoneId,
@@ -18,17 +19,19 @@ export default function PhoneCard({
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedPair, setSelectedPair] = useState(null);
   const [selectedQty, setSelectedQty] = useState(1);
+  const [colorError, setColorError] = useState(false);
+  const [pairError, setPairError] = useState(false);
 
   useEffect(() => {
     if (!phoneId) return;
 
     const loadFirstImage = async () => {
       try {
-        const response = await fetch(
+        const response = await axios.get(
           `http://localhost:5175/api/blob/GetPicturesZip/${phoneId}`
         );
 
-        if (!response.ok) {
+        if (response.status !== 200) {
           console.error("Képek nem találhatók!");
           return;
         }
@@ -151,14 +154,38 @@ export default function PhoneCard({
   const handleCartClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
+    
+    // Only show modal if colors and ramStoragePairs are provided
+    if (colors.length === 0 || ramStoragePairs.length === 0) {
+      return;
+    }
+    
     setSelectedColor(null);
     setSelectedPair(null);
     setSelectedQty(1);
+    setColorError(false);
+    setPairError(false);
     setShowVariantModal(true);
   };
 
   const addToCartWithVariants = () => {
-    if (!selectedColor || !selectedPair || selectedQty < 1) return;
+    let hasErrors = false;
+
+    if (!selectedColor) {
+      setColorError(true);
+      hasErrors = true;
+    } else {
+      setColorError(false);
+    }
+
+    if (!selectedPair) {
+      setPairError(true);
+      hasErrors = true;
+    } else {
+      setPairError(false);
+    }
+
+    if (hasErrors || selectedQty < 1) return;
 
     const cartItems = normalizeCart();
     const matchIndex = cartItems.findIndex(
@@ -186,11 +213,8 @@ export default function PhoneCard({
 
     localStorage.setItem("cart", JSON.stringify(cartItems));
 
-    const cartElement = document.getElementById("cart");
-    if (cartElement) {
-      const itemCount = getCartCount(cartItems);
-      cartElement.textContent = `${itemCount}`;
-    }
+    // Trigger cart update event to notify Navbar
+    window.dispatchEvent(new Event("cartUpdated"));
 
     setShowVariantModal(false);
   };
@@ -224,59 +248,71 @@ export default function PhoneCard({
         </div>
       </Link>
 
-      {showVariantModal && (
-        <div className="variantModalOverlay" onClick={() => setShowVariantModal(false)}>
-          <div className="variantModal" onClick={(e) => e.stopPropagation()}>
+      {showVariantModal && colors.length > 0 && ramStoragePairs.length > 0 && (
+        <div className="phoneCardVariantModalOverlay" onClick={() => setShowVariantModal(false)}>
+          <div className="phoneCardVariantModal" onClick={(e) => e.stopPropagation()}>
             <h3>Válassz színt és RAM/Storage verziót</h3>
 
-            <div className="variantSection">
-              <div className="variantTitle">Szín</div>
-              <div className="colorOptions">
+            <div className="phoneCardVariantSection">
+              <div className="phoneCardVariantTitle">Szín</div>
+              <div className="phoneCardColorOptions">
                 {colors.map((c, idx) => (
                   <button
                     key={`${c.colorHex}-${idx}`}
-                    className={`colorCircle ${selectedColor?.colorHex === c.colorHex ? "colorCircle--selected" : ""}`}
+                    className={`phoneCardColorCircle ${selectedColor?.colorHex === c.colorHex ? "phoneCardColorCircle--selected" : ""}`}
                     style={{ backgroundColor: c.colorHex }}
                     title={c.colorName}
-                    onClick={() => setSelectedColor(c)}
+                    onClick={() => {
+                      setSelectedColor(c);
+                      setColorError(false);
+                    }}
                     type="button"
                   />
                 ))}
               </div>
               {selectedColor && (
-                <div className="variantLabel">{selectedColor.colorName}</div>
+                <div className="phoneCardVariantLabel">{selectedColor.colorName}</div>
+              )}
+              {colorError && (
+                <div className="phoneCardVariantError">Kérjük, válasszon ki egy színt!</div>
               )}
             </div>
 
-            <div className="variantSection">
-              <div className="variantTitle">RAM / Storage</div>
-              <div className="pairOptions">
+            <div className="phoneCardVariantSection">
+              <div className="phoneCardVariantTitle">RAM / Storage</div>
+              <div className="phoneCardPairOptions">
                 {ramStoragePairs.map((p, idx) => (
                   <button
                     key={`${p.ramAmount}-${p.storageAmount}-${idx}`}
-                    className={`pairButton ${selectedPair?.ramAmount === p.ramAmount && selectedPair?.storageAmount === p.storageAmount ? "pairButton--selected" : ""}`}
-                    onClick={() => setSelectedPair(p)}
+                    className={`phoneCardPairButton ${selectedPair?.ramAmount === p.ramAmount && selectedPair?.storageAmount === p.storageAmount ? "phoneCardPairButton--selected" : ""}`}
+                    onClick={() => {
+                      setSelectedPair(p);
+                      setPairError(false);
+                    }}
                     type="button"
                   >
                     {p.ramAmount} GB / {p.storageAmount} GB
                   </button>
                 ))}
               </div>
+              {pairError && (
+                <div className="phoneCardVariantError">Kérjük, válasszon ki egy RAM/Storage verziót!</div>
+              )}
             </div>
 
-            <div className="variantSection">
-              <div className="variantTitle">Mennyiség</div>
-              <div className="pairOptions">
+            <div className="phoneCardVariantSection">
+              <div className="phoneCardVariantTitle">Mennyiség</div>
+              <div className="phoneCardPairOptions">
                 <button
-                  className="pairButton"
+                  className="phoneCardPairButton"
                   type="button"
                   onClick={() => setSelectedQty((q) => Math.max(1, q - 1))}
                 >
                   -
                 </button>
-                <span className="quantityNumber">{selectedQty}</span>
+                <span className="phoneCardQuantityNumber">{selectedQty}</span>
                 <button
-                  className="pairButton"
+                  className="phoneCardPairButton"
                   type="button"
                   onClick={() => setSelectedQty((q) => q + 1)}
                 >
@@ -285,15 +321,14 @@ export default function PhoneCard({
               </div>
             </div>
 
-            <div className="variantActions">
-              <button className="variantCancel" onClick={() => setShowVariantModal(false)} type="button">
+            <div className="phoneCardVariantActions">
+              <button className="phoneCardVariantCancel" onClick={() => setShowVariantModal(false)} type="button">
                 Mégse
               </button>
               <button
-                className="variantConfirm"
+                className="phoneCardVariantConfirm"
                 onClick={addToCartWithVariants}
                 type="button"
-                disabled={!selectedColor || !selectedPair || selectedQty < 1}
               >
                 Kosárba
               </button>

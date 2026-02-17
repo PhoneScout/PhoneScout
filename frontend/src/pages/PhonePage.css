@@ -99,7 +99,7 @@ br {
     user-select: none;
 }
 
-.col-lg-4 {
+.phone-svg-col {
     align-self: stretch;
 }
 
@@ -418,4 +418,127 @@ footer .address {
 
 .title-highlight {
   animation: titlePulse 1s ease;
+}
+
+/* Variant Modal Styles */
+.phonePageVariantModalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+}
+
+.phonePageVariantModal {
+  background: #fff;
+  padding: 24px;
+  border-radius: 12px;
+  width: 420px;
+  max-width: 90vw;
+  max-height: 90vh;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+  overflow-y: auto;
+  position: relative;
+}
+
+.phonePageVariantSection {
+  margin: 12px 0;
+}
+
+.phonePageVariantTitle {
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.phonePageColorOptions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.phonePageColorCircle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  cursor: pointer;
+}
+
+.phonePageColorCircle--selected {
+  border-color: #68F145;
+  box-shadow: 0 0 0 2px rgba(104, 241, 69, 0.4);
+}
+
+.phonePagePairOptions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.phonePagePairButton {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  height: auto;
+  background: #f6f6f6;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.phonePagePairButton--selected {
+  border-color: #68F145;
+  background: #eaffea;
+}
+
+.phonePageVariantLabel {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+.phonePageQuantityNumber {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #000;
+  margin-top: auto;
+  margin-bottom: auto;
+}
+
+.phonePageVariantActions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.phonePageVariantCancel,
+.phonePageVariantConfirm {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.phonePageVariantCancel {
+  background: #eee;
+}
+
+.phonePageVariantConfirm {
+  background: #68F145;
+  color: #0b2b00;
+}
+
+.phonePageVariantError {
+  color: #d32f2f;
+  font-size: 0.85rem;
+  font-weight: 500;
+  margin-top: 6px;
+  padding: 6px 8px;
+  background-color: #ffebee;
+  border-left: 3px solid #d32f2f;
+  border-radius: 3px;
 }

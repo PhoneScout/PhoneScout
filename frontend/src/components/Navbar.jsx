@@ -3,6 +3,7 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Navbar.css';
 import { Link, useNavigate } from 'react-router-dom'; // useNavigate importálása
 import { useAuth } from './AuthContext';
+import axios from 'axios';
 
 export default function Navbar() {
 
@@ -102,8 +103,8 @@ export default function Navbar() {
 
     const fetchPhoneNames = async () => {
         try {
-            const response = await fetch("http://localhost:5175/allPhonesName");
-            const data = await response.json();
+            const response = await axios.get("http://localhost:5175/allPhonesName");
+            const data = response.data;
             setAllPhoneNames(data);
         } catch (error) {
             console.error("Hiba a telefonnevek betöltésekor:", error);
@@ -200,8 +201,13 @@ export default function Navbar() {
 
     useEffect(() => {
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem("cart")) || {};
-            const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let itemCount = 0;
+            if (Array.isArray(cart)) {
+                itemCount = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            } else {
+                itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
+            }
             setCartCount(itemCount);
         }
         updateCartCount();
@@ -262,7 +268,7 @@ export default function Navbar() {
     return (
         <div className="navbar-wrapper">
             {/* Main Navbar */}
-            <div className="row custom-header">
+            <div className="custom-header">
                 {/* Logo and Hamburger */}
                 <div className="col-8 col-md-4 col-lg-3 logo-container">
                     <div className="d-flex align-items-center">
@@ -285,7 +291,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Desktop Navigation - hidden on mobile */}
-                <div className="col-lg-4 nav-links d-none d-lg-flex">
+                <div className="col-lg-4 NavBarCol nav-links d-none d-lg-flex">
                     <Link 
                         to="/szures" 
                         className="menuPoints" 

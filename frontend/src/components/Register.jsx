@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import InputText from './InputText';
 import styles from './Register.module.css';
 import { Link } from 'react-router';
+import axios from 'axios';
 
 export default function Register({ onSwitchToLogin }) {
     // Állapot a checkbox pipálásának követésére.
@@ -98,17 +99,10 @@ export default function Register({ onSwitchToLogin }) {
             };
 
             //Felhasználó regisztrálása
-            const response = await fetch('http://localhost:5175/api/Registration', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(userData),
-            });
+            const response = await axios.post('http://localhost:5175/api/Registration', userData);
 
-            if (!response.ok) {
-                const errorText = await response.text();
+            if (response.status !== 200) {
+                const errorText = await response.data;
                 alertBox.style.color = "red";
                 alertBox.innerText = `Szerver hiba: ${errorText}`;
                 return;
@@ -117,13 +111,10 @@ export default function Register({ onSwitchToLogin }) {
             // Regisztráció számlázási címmel
             if (showBilling) {
                 //ID megszerzése
-                const getResponse = await fetch(`http://localhost:5175/api/Registration/GetId/${email}`, {
-                    method: 'GET',
-                    headers: { 'Accept': 'application/json' }
-                });
+                const getResponse = await axios.get(`http://localhost:5175/api/Registration/GetId/${email}`);
 
-                if (getResponse.ok) {
-                    const userId = await getResponse.json();
+                if (getResponse.status === 200) {
+                    const userId = await getResponse.data;
 
                     const billingData = {
                         postalCode: document.getElementById('registerPostalCode')?.value || "",
@@ -135,11 +126,7 @@ export default function Register({ onSwitchToLogin }) {
                     };
 
                     // Számlázási adatok feltöltése
-                    await fetch('http://localhost:5175/api/address/PostAddress', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(billingData),
-                    });
+                    await axios.post('http://localhost:5175/api/address/PostAddress', billingData);
                 }
             }
 
