@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import JSZip from 'jszip';
@@ -136,7 +136,7 @@ export default function Cart() {
 
   const handlePhoneClick = (phoneID) => {
     localStorage.setItem("selectedPhone", phoneID);
-    navigate("/telefonoldal");
+    navigate(`/telefon/${phoneID}`);
   };
 
   const handleInputChange = (e) => {
@@ -265,6 +265,7 @@ export default function Cart() {
                   const quantity = item.quantity || 0;
                   const itemKey = getItemKey(item);
                   return (
+
                     <div
                       key={itemKey}
                       className="phoneRowCart"

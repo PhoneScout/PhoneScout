@@ -1287,7 +1287,7 @@ function ChatbotWidget() {
       addMessage({
         id: `bot-${Date.now()}`,
         role: "answer",
-        text: "Üdvözöllek a PhoneScout ügyfélszolgálatban! 👋\n\nMiben segíthetek?"
+        text: "Üdvözöllek a PhoneScout ügyfélszolgálatban! Én Sam vagyok. 👋\n\nMiben segíthetek?"
       });
       setShowQuickButtons(true);
       setIsLoading(false);
@@ -1416,7 +1416,7 @@ function ChatbotWidget() {
         <div className="chat-header" onMouseDown={handleHeaderMouseDown}>
           <div className="header-content">
             <img src="/images/ChatBotLogo.png" alt="Chatbot Logo" className="header-logo" />
-            <span>Segéd</span>
+            <span> <i>Scout</i> <strong>Sam</strong></span>
           </div>
           <span className="chat-close" onClick={closeChat}>
             −

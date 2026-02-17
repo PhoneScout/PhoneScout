@@ -10,6 +10,8 @@ export default function PhonePage() {
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedRamIdx, setSelectedRamIdx] = useState(0);
   const [selectedCameraIdx, setSelectedCameraIdx] = useState(0);
+  const [showVariantModal, setShowVariantModal] = useState(false);
+  const [selectedQty, setSelectedQty] = useState(1);
   const timeoutsRef = useRef([]);
 
   const svgRef = useRef(null);
@@ -101,6 +103,46 @@ export default function PhonePage() {
       svgObj.removeEventListener("load", setupSvg);
     };
   }, [phone]);
+
+  const handleCartClick = () => {
+    setSelectedQty(1);
+    setShowVariantModal(true);
+  };
+
+  const addToCartWithVariants = () => {
+    if (!selectedColor || selectedRamIdx === null || selectedQty < 1) return;
+
+    const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
+    
+    const selectedPair = phone.ramStoragePairs[selectedRamIdx];
+    
+    const matchIndex = cartItems.findIndex(
+      (item) =>
+        item.phoneID === parseInt(phoneId) &&
+        item.colorHex === selectedColor.colorHex &&
+        item.ramAmount === selectedPair.ramAmount &&
+        item.storageAmount === selectedPair.storageAmount
+    );
+
+    if (matchIndex >= 0) {
+      cartItems[matchIndex].quantity += selectedQty;
+    } else {
+      cartItems.push({
+        phoneID: parseInt(phoneId),
+        quantity: selectedQty,
+        colorName: selectedColor.colorName,
+        colorHex: selectedColor.colorHex,
+        ramAmount: selectedPair.ramAmount,
+        storageAmount: selectedPair.storageAmount,
+        phoneName: phone.phoneName,
+        phonePrice: phone.phonePrice
+      });
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+    window.dispatchEvent(new Event("cartUpdated"));
+    setShowVariantModal(false);
+  };
 
   if (loading) return <div className="text-center mt-5"><h3>Betöltés...</h3></div>;
   if (!phone) return <div className="text-center mt-5"><h3>Készülék nem található.</h3></div>;
@@ -194,7 +236,7 @@ export default function PhonePage() {
                 {phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
               </div>
               <div className="price">{phone.phonePrice?.toLocaleString()} Ft</div>
-              <button className="phoneSiteButton phoneSiteCartButton mt-3">Kosárba rakom</button>
+              <button className="phoneSiteButton phoneSiteCartButton mt-3" onClick={handleCartClick}>Kosárba rakom</button>
               <button className="phoneSiteButton phoneSiteCompareButton mt-2">Összehasonlítás</button>
             </div>
           </div>
@@ -257,7 +299,7 @@ export default function PhonePage() {
                   <tr className="csatlakozo_table first_row"><td colSpan="2"><strong>Csatlakoztathatóság</strong></td></tr>
                   <tr className="csatlakozo_table"><td>Wi-Fi / Bluetooth</td><td>Wifi {phone.connectionMaxWifi} / BT {phone.connectionMaxBluetooth}</td></tr>
                   <tr className="csatlakozo_table"><td>Mobilhálózat</td><td>{phone.connectionMaxMobileNetwork}. generáció</td></tr>
-                  <tr className="csatlakozo_table"><td>SIM / eSIM / NFC</td><td>{phone.connectionDualSim} / {phone.connectionEsim} / {phone.connectionNfc}</td></tr>
+                  <tr className="csatlakozo_table"><td>dualSIM / eSIM / NFC</td><td>{phone.connectionDualSim} / {phone.connectionEsim} / {phone.connectionNfc}</td></tr>
                   <tr className="csatlakozo_table"><td>Jack csatlakozó</td><td>{phone.connectionJack}</td></tr>
                   <tr className="csatlakozo_table"><td>Infraport</td><td>{phone.sensorsInfrared}</td></tr>
                   <tr className="csatlakozo_table"><td>Ujjlenyomat</td><td>{phone.fingerprintType} ({phone.fingerprintPlace})</td></tr>
@@ -301,13 +343,90 @@ export default function PhonePage() {
           </div>
 
           {/* SVG OLDALSÁV */}
-          <div className="col-12 col-lg-4 d-none d-lg-block">
+          <div className="col-12 col-lg-4 d-none d-lg-block phone-svg-col">
             <div className="svg-container sticky-top">
               <object id="mySvg" ref={svgRef} data="/images/telefon-svg.svg" type="image/svg+xml" style={{ width: '100%', minWidth: '300px' }}></object>
             </div>
           </div>
         </div>
       </div>
+
+      {showVariantModal && (
+        <div className="phonePageVariantModalOverlay" onClick={() => setShowVariantModal(false)}>
+          <div className="phonePageVariantModal" onClick={(e) => e.stopPropagation()}>
+            <h3>Válassz színt és RAM/Storage verziót</h3>
+
+            <div className="phonePageVariantSection">
+              <div className="phonePageVariantTitle">Szín</div>
+              <div className="phonePageColorOptions">
+                {phone.colors.map((c, idx) => (
+                  <button
+                    key={`${c.colorHex}-${idx}`}
+                    className={`phonePageColorCircle ${selectedColor?.colorHex === c.colorHex ? "phonePageColorCircle--selected" : ""}`}
+                    style={{ backgroundColor: c.colorHex }}
+                    title={c.colorName}
+                    onClick={() => setSelectedColor(c)}
+                    type="button"
+                  />
+                ))}
+              </div>
+              {selectedColor && (
+                <div className="phonePageVariantLabel">{selectedColor.colorName}</div>
+              )}
+            </div>
+
+            <div className="phonePageVariantSection">
+              <div className="phonePageVariantTitle">RAM / Storage</div>
+              <div className="phonePagePairOptions">
+                {phone.ramStoragePairs.map((p, idx) => (
+                  <button
+                    key={`${p.ramAmount}-${p.storageAmount}-${idx}`}
+                    className={`phonePagePairButton ${selectedRamIdx === idx ? "phonePagePairButton--selected" : ""}`}
+                    onClick={() => setSelectedRamIdx(idx)}
+                    type="button"
+                  >
+                    {p.ramAmount} GB / {p.storageAmount} GB
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="phonePageVariantSection">
+              <div className="phonePageVariantTitle">Mennyiség</div>
+              <div className="phonePagePairOptions">
+                <button
+                  className="phonePagePairButton"
+                  type="button"
+                  onClick={() => setSelectedQty((q) => Math.max(1, q - 1))}
+                >
+                  -
+                </button>
+                <span className="phonePageQuantityNumber">{selectedQty}</span>
+                <button
+                  className="phonePagePairButton"
+                  type="button"
+                  onClick={() => setSelectedQty((q) => q + 1)}
+                >
+                  +
+                </button>
+              </div>
+            </div>
+
+            <div className="phonePageVariantActions">
+              <button className="phonePageVariantCancel" onClick={() => setShowVariantModal(false)} type="button">
+                Mégse
+              </button>
+              <button
+                className="phonePageVariantConfirm"
+                onClick={addToCartWithVariants}
+                type="button"
+              >
+                Kosárba
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

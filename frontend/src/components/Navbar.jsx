@@ -201,8 +201,13 @@ export default function Navbar() {
 
     useEffect(() => {
         function updateCartCount() {
-            const cart = JSON.parse(localStorage.getItem("cart")) || {};
-            const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
+            const cart = JSON.parse(localStorage.getItem("cart")) || [];
+            let itemCount = 0;
+            if (Array.isArray(cart)) {
+                itemCount = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+            } else {
+                itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
+            }
             setCartCount(itemCount);
         }
         updateCartCount();
@@ -263,7 +268,7 @@ export default function Navbar() {
     return (
         <div className="navbar-wrapper">
             {/* Main Navbar */}
-            <div className="row custom-header">
+            <div className="custom-header">
                 {/* Logo and Hamburger */}
                 <div className="col-8 col-md-4 col-lg-3 logo-container">
                     <div className="d-flex align-items-center">
@@ -286,7 +291,7 @@ export default function Navbar() {
                 </div>
 
                 {/* Desktop Navigation - hidden on mobile */}
-                <div className="col-lg-4 nav-links d-none d-lg-flex">
+                <div className="col-lg-4 NavBarCol nav-links d-none d-lg-flex">
                     <Link 
                         to="/szures" 
                         className="menuPoints" 

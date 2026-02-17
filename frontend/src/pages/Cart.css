@@ -1,3 +1,10 @@
+.kosaradText{
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+    color: #333;
+}
+
 .phoneRowCart {
     display: flex;
     align-items: center;

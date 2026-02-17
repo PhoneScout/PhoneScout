@@ -92,35 +92,33 @@ export default function Home() {
           <hr size="5" />
         </div>
 
-        <div className="container service-section ">
-          <div className="row align-items-center">
-            <div className="col-lg-6 service-text">
-              <h2>Gyors és Megbízható Szerviz</h2>
-              <p>
-                Meghibásodott a telefonod? Ne aggódj! Nálunk gyors és szakszerű javítást kapsz,
-                hogy minél hamarabb újra használhasd a készüléked. Tapasztalt szakembereink és
-                prémium minőségű alkatrészeink garantálják a hosszú távú megbízhatóságot.
-              </p>
-              <p>
-                Miért válassz minket?</p>
-              <ul>
-                <li>Gyors javítás, akár néhány órán belül</li>
-                <li>Kedvező árak és átlátható költségek</li>
-                <li>Eredeti vagy prémium minőségű alkatrészek</li>
-                <li>Garancia minden javításra</li>
-              </ul>
+      </div>
+      <div className="container service-section ">
+        <div className="row align-items-center">
+          <div className="col-lg-6 service-text">
+            <h2>Gyors és Megbízható Szerviz</h2>
+            <p>
+              Meghibásodott a telefonod? Ne aggódj! Nálunk gyors és szakszerű javítást kapsz,
+              hogy minél hamarabb újra használhasd a készüléked. Tapasztalt szakembereink és
+              prémium minőségű alkatrészeink garantálják a hosszú távú megbízhatóságot.
+            </p>
+            <p>
+              Miért válassz minket?</p>
+            <ul>
+              <li>Gyors javítás, akár néhány órán belül</li>
+              <li>Kedvező árak és átlátható költségek</li>
+              <li>Eredeti vagy prémium minőségű alkatrészek</li>
+              <li>Garancia minden javításra</li>
+            </ul>
 
-              <Link className="btn btn-primary service-btn"
-                to="/szervizigenyles">Irány a <strong>szervíz</strong>
-                oldal</Link>
-            </div>
-            <div className="col-lg-6 service-image">
-              <img loading="lazy" src="../Images/telefonservice.png" alt="Telefon Szervíz" className="rounded-image" />
-            </div>
+            <Link className="btn btn-primary service-btn"
+              to="/szervizigenyles">Irány a <strong>szervíz</strong>
+              oldal</Link>
+          </div>
+          <div className="col-lg-6 service-image">
+            <img loading="lazy" src="../Images/telefonservice.png" alt="Telefon Szervíz" className="rounded-image" />
           </div>
         </div>
-
-
       </div>
     </div>
 
