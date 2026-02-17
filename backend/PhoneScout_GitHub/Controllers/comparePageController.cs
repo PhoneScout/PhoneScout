@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
+/*using Microsoft.AspNetCore.Mvc;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
 using Swashbuckle.AspNetCore.Annotations;
@@ -69,3 +69,4 @@ namespace PhoneScout_GitHub.Controllers
         }
     }
 }
+*/

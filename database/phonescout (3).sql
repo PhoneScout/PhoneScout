@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Feb 13. 09:50
+-- Létrehozás ideje: 2026. Feb 17. 11:43
 -- Kiszolgáló verziója: 10.4.32-MariaDB
--- PHP verzió: 8.0.30
+-- PHP verzió: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -59,7 +59,8 @@ INSERT INTO `backmaterial` (`ID`, `backMaterial`) VALUES
 (2, 'Üveg'),
 (3, 'Fa'),
 (5, 'Műanyag'),
-(6, '');
+(6, ''),
+(7, 'string');
 
 -- --------------------------------------------------------
 
@@ -82,7 +83,8 @@ INSERT INTO `batterytype` (`ID`, `batteryType`) VALUES
 (3, 'Li-Ion'),
 (5, 'Li-ion'),
 (6, 'Li-Pol'),
-(7, 'n/a');
+(7, 'n/a'),
+(8, 'string');
 
 -- --------------------------------------------------------
 
@@ -96,7 +98,7 @@ CREATE TABLE `camera` (
   `cameraResolution` int(11) DEFAULT NULL,
   `cameraAperture` varchar(8) DEFAULT NULL,
   `cameraFocalLength` int(11) DEFAULT NULL,
-  `cameraOIS` varchar(8) DEFAULT NULL
+  `cameraOIS` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
@@ -104,56 +106,56 @@ CREATE TABLE `camera` (
 --
 
 INSERT INTO `camera` (`ID`, `cameraName`, `cameraResolution`, `cameraAperture`, `cameraFocalLength`, `cameraOIS`) VALUES
-(1, '', 50, '', 24, ''),
-(2, '', 12, '', 50, ''),
-(3, '', 50, '', 24, ''),
-(4, '', 20, '', 0, ''),
-(5, 'Samsung GN5', 50, 'f/1.9', 0, 'van'),
-(6, 'Samsung S5KJN1', 50, 'f/2.2', 0, 'nincs'),
-(7, 'GalaxyCore GC02M1', 2, 'f/2.4', 0, 'nincs'),
-(8, 'Omnivision OV16A1Q', 16, 'f/2.0', 0, 'nincs'),
-(9, 'Samsung ISOCELL HP2', 200, 'f/1.7', 24, 'van'),
-(10, 'Sony IMX854', 50, 'f/3.4', 111, 'van'),
-(11, 'Sony IMX564', 12, 'f/2.2', 13, 'nincs'),
-(12, 'Samsung S5K3LU', 12, 'f/2.2', 26, 'nincs'),
-(13, 'Sony IMX903', 48, 'f/1.8', 24, 'van'),
-(14, 'Sony IMX913', 12, 'f/2.8', 120, 'van'),
-(15, 'Sony IMX972', 48, 'f/2.2', 13, 'nincs'),
-(16, 'Sony IMX714', 12, 'f/1.9', 23, 'nincs'),
-(17, 'Samsung ISOCELL HP2', 200, 'f/1.7', 24, 'van'),
-(18, 'Samsung JN3', 50, 'f/1.9', 13, 'nincs'),
-(19, 'Omnivision OV50H', 50, 'f/1.4', 24, 'van'),
-(20, 'Samsung S5KHP3SP', 200, 'f/2.6', 72, 'van'),
-(21, 'Omnivision OV50D40 Light Hunter 400', 50, 'f/2.0', 12, 'nincs'),
-(22, 'Sony IMX816', 50, 'f/2.0', 21, 'nincs'),
-(23, 'Samsung GN1', 50, 'f/1.7', 25, 'van'),
-(24, 'Samsung S5KGM5', 48, 'f/2.8', 113, 'van'),
-(25, 'Samsung S5KGM5', 48, 'f/1.7', 0, 'nincs'),
-(26, 'string', 0, 'string', 0, 'string'),
-(27, 'Sony LYT-700C', 50, 'f/1.8', 0, 'van'),
-(28, 'Hynix Hi-1336', 13, 'f/2.1', 0, ''),
-(29, 'Hynix Hi-1336', 13, 'f/2.2', 0, ''),
-(30, 'Samsung S5KJD1', 32, 'f/2.45', 0, ''),
-(31, 'Omnivision OV64B', 64, 'f/2.4', 12, 'nem'),
-(32, 'Samsung GNK', 50, 'f/1.69', 23, 'van'),
-(33, 'n/a', 108, 'f/1.7', 0, 'nincs'),
-(34, 'n/a', 20, 'f/2.2', 0, 'nincs'),
-(35, 'n/a', 2, '', 0, ''),
-(36, 'n/a', 2, '', 0, ''),
-(37, 'sadsa', 31, 'sad', 0, 'van'),
-(38, 'fs', 50, 'f/1.88', 0, 'van'),
-(39, 'Omnivision OVX9000', 50, 'f/1.62', 23, 'van'),
-(40, 'Samsung S5KJN5', 50, 'f/2.0', 60, 'van'),
-(41, 'Omnivision OV32B', 32, 'f/2.0', 21, 'nincs'),
-(42, 'Sony LYT-900', 50, 'f/1.63', 23, 'van'),
-(43, 'Samsung ISOCELL HP9', 200, 'f/2.6', 100, 'van'),
-(44, 'Sony IMX858', 48, 'f/2.8', 113, 'van'),
-(45, 'Sony IMX858', 48, 'f/1.7', 0, ''),
-(46, 'Sony IMX858', 42, 'f/2.2', 17, 'nincs'),
-(47, 'Sony IMX707', 50, 'f/1.9', 24, 'van'),
-(48, 'Omnivision OV13B10', 12, 'f/2.2', 15, 'nincs'),
-(49, 'Sony IMX596', 20, 'f/2.2', 0, 'nincs'),
-(50, 'Samsung HM6', 108, 'f/1.7', 64, 'nincs');
+(1, '', 50, '', 24, 0),
+(2, '', 12, '', 50, 0),
+(3, '', 50, '', 24, 0),
+(4, '', 20, '', 0, 0),
+(5, 'Samsung GN5', 50, 'f/1.9', 0, 1),
+(6, 'Samsung S5KJN1', 50, 'f/2.2', 0, 0),
+(7, 'GalaxyCore GC02M1', 2, 'f/2.4', 0, 0),
+(8, 'Omnivision OV16A1Q', 16, 'f/2.0', 0, 0),
+(9, 'Samsung ISOCELL HP2', 200, 'f/1.7', 24, 1),
+(10, 'Sony IMX854', 50, 'f/3.4', 111, 1),
+(11, 'Sony IMX564', 12, 'f/2.2', 13, 0),
+(12, 'Samsung S5K3LU', 12, 'f/2.2', 26, 0),
+(13, 'Sony IMX903', 48, 'f/1.8', 24, 1),
+(14, 'Sony IMX913', 12, 'f/2.8', 120, 1),
+(15, 'Sony IMX972', 48, 'f/2.2', 13, 0),
+(16, 'Sony IMX714', 12, 'f/1.9', 23, 0),
+(17, 'Samsung ISOCELL HP2', 200, 'f/1.7', 24, 1),
+(18, 'Samsung JN3', 50, 'f/1.9', 13, 0),
+(19, 'Omnivision OV50H', 50, 'f/1.4', 24, 1),
+(20, 'Samsung S5KHP3SP', 200, 'f/2.6', 72, 1),
+(21, 'Omnivision OV50D40 Light Hunter 400', 50, 'f/2.0', 12, 0),
+(22, 'Sony IMX816', 50, 'f/2.0', 21, 0),
+(23, 'Samsung GN1', 50, 'f/1.7', 25, 1),
+(24, 'Samsung S5KGM5', 48, 'f/2.8', 113, 1),
+(25, 'Samsung S5KGM5', 48, 'f/1.7', 0, 0),
+(26, 'string', 0, 'string', 0, 0),
+(27, 'Sony LYT-700C', 50, 'f/1.8', 0, 1),
+(28, 'Hynix Hi-1336', 13, 'f/2.1', 0, 0),
+(29, 'Hynix Hi-1336', 13, 'f/2.2', 0, 0),
+(30, 'Samsung S5KJD1', 32, 'f/2.45', 0, 0),
+(31, 'Omnivision OV64B', 64, 'f/2.4', 12, 0),
+(32, 'Samsung GNK', 50, 'f/1.69', 23, 1),
+(33, 'n/a', 108, 'f/1.7', 0, 0),
+(34, 'n/a', 20, 'f/2.2', 0, 0),
+(35, 'n/a', 2, '', 0, 0),
+(36, 'n/a', 2, '', 0, 0),
+(37, 'sadsa', 31, 'sad', 0, 1),
+(38, 'fs', 50, 'f/1.88', 0, 1),
+(39, 'Omnivision OVX9000', 50, 'f/1.62', 23, 1),
+(40, 'Samsung S5KJN5', 50, 'f/2.0', 60, 1),
+(41, 'Omnivision OV32B', 32, 'f/2.0', 21, 0),
+(42, 'Sony LYT-900', 50, 'f/1.63', 23, 1),
+(43, 'Samsung ISOCELL HP9', 200, 'f/2.6', 100, 1),
+(44, 'Sony IMX858', 48, 'f/2.8', 113, 1),
+(45, 'Sony IMX858', 48, 'f/1.7', 0, 0),
+(46, 'Sony IMX858', 42, 'f/2.2', 17, 0),
+(47, 'Sony IMX707', 50, 'f/1.9', 24, 1),
+(48, 'Omnivision OV13B10', 12, 'f/2.2', 15, 0),
+(49, 'Sony IMX596', 20, 'f/2.2', 0, 0),
+(50, 'Samsung HM6', 108, 'f/1.7', 64, 0);
 
 -- --------------------------------------------------------
 
@@ -219,7 +221,9 @@ CREATE TABLE `chargertype` (
 --
 
 INSERT INTO `chargertype` (`ID`, `chargerType`) VALUES
-(1, 'USB Type-C');
+(1, 'USB Type-C'),
+(4, 'string'),
+(5, NULL);
 
 -- --------------------------------------------------------
 
@@ -493,7 +497,24 @@ INSERT INTO `connphonecamera` (`ID`, `phoneID`, `cameraID`, `cameraTypeID`) VALU
 (224, 21, 41, 5),
 (225, 21, 39, 27),
 (226, 21, 6, 8),
-(227, 21, 40, 28);
+(227, 21, 40, 28),
+(228, 25, 26, 13),
+(229, 26, 47, 31),
+(230, 26, 21, 18),
+(231, 26, 48, 17),
+(232, 26, 49, 25),
+(233, 27, 47, 31),
+(234, 27, 21, 18),
+(235, 27, 48, 17),
+(236, 27, 49, 25),
+(237, 28, 47, 31),
+(238, 28, 21, 18),
+(239, 28, 48, 17),
+(240, 28, 49, 25),
+(241, 29, 47, 31),
+(242, 29, 21, 18),
+(243, 29, 48, 17),
+(244, 29, 49, 25);
 
 -- --------------------------------------------------------
 
@@ -584,7 +605,20 @@ INSERT INTO `connphonecolor` (`ID`, `phoneID`, `colorID`) VALUES
 (121, 21, 56),
 (122, 21, 89),
 (123, 21, 90),
-(124, 21, 55);
+(124, 21, 55),
+(125, 25, 26),
+(126, 26, 61),
+(127, 26, 62),
+(128, 26, 63),
+(129, 27, 61),
+(130, 27, 62),
+(131, 27, 63),
+(132, 28, 61),
+(133, 28, 62),
+(134, 28, 63),
+(135, 29, 61),
+(136, 29, 62),
+(137, 29, 63);
 
 -- --------------------------------------------------------
 
@@ -663,7 +697,16 @@ INSERT INTO `connphoneramstorage` (`ID`, `phoneID`, `ramstorageID`) VALUES
 (154, 20, 13),
 (155, 20, 12),
 (156, 21, 1),
-(157, 21, 5);
+(157, 21, 5),
+(158, 25, 15),
+(159, 26, 1),
+(160, 26, 2),
+(161, 27, 1),
+(162, 27, 2),
+(163, 28, 1),
+(164, 28, 2),
+(165, 29, 1),
+(166, 29, 2);
 
 -- --------------------------------------------------------
 
@@ -807,15 +850,15 @@ CREATE TABLE `phonedatas` (
   `connectionMaxWifi` int(11) DEFAULT NULL,
   `connectionMaxBluetooth` decimal(10,2) DEFAULT NULL,
   `connectionMaxMobileNetwork` int(11) DEFAULT NULL,
-  `connectionDualSim` varchar(8) DEFAULT NULL,
-  `connectionESim` varchar(8) DEFAULT NULL,
-  `connectionNfc` varchar(8) DEFAULT NULL,
+  `connectionDualSim` int(1) DEFAULT NULL,
+  `connectionESim` int(1) DEFAULT NULL,
+  `connectionNfc` int(1) DEFAULT NULL,
   `connectionConnectionSpeed` int(11) DEFAULT NULL,
-  `connectionJack` varchar(8) DEFAULT NULL,
+  `connectionJack` int(1) DEFAULT NULL,
   `chargerTypeID` int(11) DEFAULT NULL,
   `sensorsFingerprintPlaceID` int(11) DEFAULT NULL,
   `sensorsFingerprintTypeID` int(11) DEFAULT NULL,
-  `sensorsInfrared` varchar(8) DEFAULT NULL,
+  `sensorsInfrared` int(1) DEFAULT NULL,
   `ramSpeedID` int(11) DEFAULT NULL,
   `storageSpeedID` int(11) DEFAULT NULL,
   `batteryTypeID` int(11) DEFAULT NULL,
@@ -831,7 +874,7 @@ CREATE TABLE `phonedatas` (
   `phoneWeight` decimal(10,2) DEFAULT NULL,
   `phoneReleaseDate` date DEFAULT NULL,
   `phonePrice` int(11) DEFAULT NULL,
-  `phoneInStore` varchar(8) DEFAULT NULL,
+  `phoneInStore` int(1) DEFAULT NULL,
   `phoneInStoreAmount` int(11) DEFAULT NULL,
   `phonePopularity` int(11) DEFAULT NULL,
   `phoneDeleted` int(11) NOT NULL
@@ -842,29 +885,34 @@ CREATE TABLE `phonedatas` (
 --
 
 INSERT INTO `phonedatas` (`phoneID`, `manufacturerID`, `phoneName`, `cpuID`, `phoneAntutu`, `screenTypeID`, `phoneResolutionHeight`, `phoneResolutionWidth`, `screenSize`, `screenRefreshRate`, `screenMaxBrightness`, `screenSharpness`, `connectionMaxWifi`, `connectionMaxBluetooth`, `connectionMaxMobileNetwork`, `connectionDualSim`, `connectionESim`, `connectionNfc`, `connectionConnectionSpeed`, `connectionJack`, `chargerTypeID`, `sensorsFingerprintPlaceID`, `sensorsFingerprintTypeID`, `sensorsInfrared`, `ramSpeedID`, `storageSpeedID`, `batteryTypeID`, `batteryCapacity`, `batteryMaxChargingWired`, `batteryMaxChargingWireless`, `caseHeight`, `caseWidth`, `caseThickness`, `waterproofTypeID`, `backMaterialID`, `speakerTypeID`, `phoneWeight`, `phoneReleaseDate`, `phonePrice`, `phoneInStore`, `phoneInStoreAmount`, `phonePopularity`, `phoneDeleted`) VALUES
-(1, 1, 'Xiaomi 13T', 1, 905365, 1, 2712, 1220, 6.67, 144, 2600, 466, 7, 5.30, 5, 'van', 'van', 'van', 2, 'nincs', 1, 1, 1, 'van', 1, 1, 1, 5000, 67, 0, 162.20, 75.50, 8.49, 1, 1, 1, 193.00, '2023-09-26', 135000, 'nincs', 0, 90, 0),
-(2, 2, 'ZTE nubia Red Magic 9S Pro', 2, 2369542, 1, 2480, 1116, 2.80, 120, 1600, 400, 7, 5.20, 5, 'van', 'nincs', 'van', 3, 'van', 1, 1, 1, 'van', 2, 2, 2, 6500, 80, 0, 164.00, 86.40, 9.80, 2, 2, 1, 229.00, '2024-07-09', 341270, 'nincs', 0, 80, 0),
-(3, 3, 'Samsung Galaxy S24 Ultra', 3, 1814869, 2, 2480, 1116, 6.80, 120, 2600, 505, 7, 5.30, 5, 'van', 'van', 'van', 3, 'nincs', 1, 1, 2, 'nincs', 2, 2, 3, 5000, 45, 15, 162.30, 79.00, 8.60, 1, 2, 1, 233.00, '2025-02-03', 338640, 'nincs', 0, 70, 0),
-(4, 4, 'Apple iPhone 16 Pro Max', 4, 1753018, 3, 2868, 1320, 6.90, 120, 2000, 460, 7, 5.30, 5, 'van', 'van', 'van', 3, 'nincs', 1, 2, 3, 'nincs', 3, 3, 1, 4685, 25, 25, 163.00, 77.60, 8.25, 1, 2, 1, 227.00, '2024-09-20', 546940, 'nincs', 0, 60, 0),
-(5, 3, 'Samsung Galaxy S25 Ultra', 5, 2265528, 4, 3120, 1440, 6.86, 120, 2600, 505, 7, 5.40, 5, 'van', 'van', 'van', 3, 'nincs', 1, 1, 2, 'nincs', 2, 2, 3, 5000, 45, 15, 162.80, 77.60, 8.20, 1, 2, 1, 218.00, '2025-02-03', 359020, 'van', 0, 100, 0),
-(6, 5, 'Honor Magic 7 Pro', 5, 3040000, 5, 2800, 1280, 6.80, 120, 5000, 453, 7, 5.40, 5, 'van', 'van', 'van', 3, 'nincs', 1, 1, 2, 'van', 2, 2, 3, 5270, 100, 80, 162.70, 77.10, 8.80, 3, 2, 1, 223.00, '2024-11-08', 320640, 'van', 0, 50, 1),
-(7, 6, 'Google Pixel 9 Pro XL', 6, 1148512, 5, 1344, 2992, 6.80, 120, 3000, 482, 7, 5.30, 5, 'van', 'van', 'van', 3, 'nincs', 1, 1, 2, 'nincs', 3, 1, 3, 5060, 37, 23, 162.75, 76.59, 8.54, 1, 2, 1, 210.00, '2024-08-22', 372990, 'van', 0, 40, 0),
-(8, 1, 'Xiaomi Redmi Note 14 Pro 5G', 7, 704404, 1, 2712, 1220, 6.67, 120, 3000, 446, 6, 5.40, 5, 'van', 'van', 'van', 2, 'nincs', 1, 3, 1, 'van', 5, 4, 2, 5110, 45, 0, 162.30, 74.40, 8.20, 1, 2, 1, 190.00, '2025-01-15', 84160, 'nincs', 0, 30, 0),
-(10, 1, 'Xiaomi Redmi Note 14 4G', 14, 116000, 9, 2400, 1080, 6.67, 120, 1200, 395, 5, 5.30, 4, 'van', 'nincs', 'van', 2, 'van', 1, 3, 1, 'van', 5, 6, 6, 5500, 33, 0, 163.30, 76.60, 8.20, 7, 5, 1, 196.50, '2024-02-25', 57800, 'nincs', 0, NULL, 0),
-(11, 10, 'Xiaomi Redmi Note 14 5G', 15, 463129, 9, 2400, 1080, 6.67, 120, 1200, 395, 5, 5.30, 5, 'van', 'nincs', 'van', 2, 'van', 1, 3, 1, 'van', 5, 6, 7, 5110, 45, 0, 162.40, 75.70, 7.99, 8, 5, 1, 190.00, '2025-01-16', 75600, 'nincs', 0, NULL, 0),
-(12, 10, 'Xiaomi Redmi Note 14S', 14, 450000, 9, 2400, 1080, 6.67, 120, 1300, 395, 5, 5.30, 4, 'van', 'nincs', 'van', 2, 'nincs', 1, 3, 1, 'van', 5, 6, 7, 5000, 67, 0, 161.10, 75.00, 8.00, 8, 5, 1, 179.00, '2025-03-14', 64800, 'nincs', 0, NULL, 0),
-(13, 10, 'Xiaomi Redmi Note 14 Pro 4G', 16, 423868, 9, 2400, 1080, 6.67, 120, 1800, 395, 5, 5.30, 4, 'van', 'nincs', 'van', 2, 'van', 1, 3, 1, 'van', 5, 6, 7, 5500, 45, 0, 162.20, 74.90, 8.20, 8, 5, 1, 180.00, '2025-01-16', 73990, 'nincs', 0, NULL, 0),
-(14, 10, 'Xiaomi Redmi Note 14 Pro+ 5G', 17, 750292, 9, 2712, 1220, 6.67, 120, 3000, 446, 5, 5.40, 5, 'van', 'van', 'van', 2, 'van', 1, 3, 1, 'van', 5, 6, 7, 5110, 120, 0, 162.50, 74.70, 8.80, 6, 2, 1, 205.00, '2025-01-15', 102490, 'nincs', 0, NULL, 0),
-(15, 1, 'Xiaomi 14', 19, 2089308, 1, 2670, 1200, 6.36, 120, 3000, 460, 7, 5.40, 5, 'van', 'van', 'van', 3, 'nincs', 1, 5, 1, 'van', 2, 7, 1, 4610, 90, 50, 152.80, 71.50, 8.20, 1, 2, 1, 193.00, '2023-10-01', 299990, 'nincs', 0, NULL, 0),
-(16, 9, 'Motorola Edge 50 Fusion', 10, 603451, 8, 2400, 1080, 6.67, 144, 1600, 393, 5, 5.30, 5, 'van', 'nincs', 'van', 2, 'nincs', 1, 3, 1, 'nincs', 5, 4, 2, 5000, 68, 0, 161.91, 73.05, 7.76, 1, 3, 1, 175.00, '2024-05-15', 91820, 'nincs', 0, NULL, 0),
-(17, 9, 'Motorola Edge 50 Ultra', 11, 1523879, 8, 2712, 1220, 6.70, 144, 2500, 444, 7, 5.40, 5, 'van', 'nincs', 'van', 3, 'nincs', 1, 3, 1, 'nincs', 2, 2, 2, 4500, 125, 50, 161.08, 72.37, 8.59, 1, 3, 1, 197.00, '2024-05-15', 217160, 'nincs', 0, NULL, 0),
-(18, 9, 'Motorola Edge 50 Neo', 12, 696931, 8, 2670, 1200, 6.40, 120, 3000, 460, 0, 5.30, 0, 'nincs', 'nincs', 'van', 2, 'nincs', 1, 3, 1, 'nincs', 3, 2, 2, 4310, 68, 15, 154.10, 71.20, 8.10, 1, 3, 1, 171.00, '2024-08-29', 117000, 'nincs', 0, NULL, 0),
-(19, 9, 'Motorola Edge 50', 13, 722062, 8, 2712, 1220, 6.70, 120, 1600, 446, 0, 5.20, 0, 'nincs', 'nincs', 'van', 2, 'nincs', 1, 3, 1, 'nincs', 3, 4, 2, 5000, 68, 15, 160.80, 72.40, 7.80, 1, 3, 1, 180.00, '2024-08-08', 108000, 'nincs', 0, NULL, 0),
-(20, 6, 'Google Pixel 9 Pro', 6, 1148512, 8, 2856, 1280, 6.30, 120, 2400, 497, 7, 5.30, 5, 'van', 'nincs', 'van', 3, 'nincs', 1, 3, 2, 'nincs', 3, 1, 5, 4700, 27, 21, 152.80, 72.90, 8.50, 1, 3, 1, 199.00, '2024-09-09', 335000, 'nincs', 0, NULL, 0),
-(21, 1, 'Xiaomi 15', 18, 2746580, 2, 2670, 1200, 6.36, 120, 3200, 460, 7, 6.00, 5, 'van', 'nincs', 'van', 3, 'nincs', 1, 5, 2, 'van', 2, 7, 3, 5240, 90, 50, 152.30, 71.20, 8.08, 1, 2, 1, 190.50, '2024-10-29', 255590, 'nincs', 0, NULL, 0),
-(22, 1, 'Xiaomi 15 Ultra', 18, 2746580, 2, 3200, 1400, 6.73, 120, 3200, 522, 7, 6.00, 5, 'van', 'van', 'van', 3, 'nincs', 1, 5, 2, 'van', 2, 8, 3, 5410, 90, 80, 161.30, 75.30, 9.35, 1, 2, 1, 229.00, '2025-02-27', 374790, 'van', 0, NULL, 0),
-(23, 7, 'teszt3', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 'nincs', 'nincs', 'nincs', 0, 'nincs', 1, 2, 3, 'nincs', 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 'nincs', 0, NULL, 0),
-(24, 7, 'teszt4', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 'nincs', 'nincs', 'nincs', 0, 'nincs', 1, 2, 3, 'nincs', 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 'nincs', 0, NULL, 0);
+(1, 1, 'Xiaomi 13T', 1, 905365, 1, 2712, 1220, 6.67, 144, 2600, 466, 7, 5.30, 5, 1, 1, 1, 2, 0, 1, 1, 1, 1, 1, 1, 1, 5000, 67, 0, 162.20, 75.50, 8.49, 1, 1, 1, 193.00, '2023-09-26', 135000, 0, 0, 90, 0),
+(2, 2, 'ZTE nubia Red Magic 9S Pro', 2, 2369542, 1, 2480, 1116, 2.80, 120, 1600, 400, 7, 5.20, 5, 1, 0, 1, 3, 1, 1, 1, 1, 1, 2, 2, 2, 6500, 80, 0, 164.00, 86.40, 9.80, 2, 2, 1, 229.00, '2024-07-09', 341270, 0, 0, 80, 0),
+(3, 3, 'Samsung Galaxy S24 Ultra', 3, 1814869, 2, 2480, 1116, 6.80, 120, 2600, 505, 7, 5.30, 5, 1, 1, 1, 3, 0, 1, 1, 2, 0, 2, 2, 3, 5000, 45, 15, 162.30, 79.00, 8.60, 1, 2, 1, 233.00, '2025-02-03', 338640, 0, 0, 70, 0),
+(4, 4, 'Apple iPhone 16 Pro Max', 4, 1753018, 3, 2868, 1320, 6.90, 120, 2000, 460, 7, 5.30, 5, 1, 1, 1, 3, 0, 1, 2, 3, 0, 3, 3, 1, 4685, 25, 25, 163.00, 77.60, 8.25, 1, 2, 1, 227.00, '2024-09-20', 546940, 0, 0, 60, 0),
+(5, 3, 'Samsung Galaxy S25 Ultra', 5, 2265528, 4, 3120, 1440, 6.86, 120, 2600, 505, 7, 5.40, 5, 1, 1, 1, 3, 0, 1, 1, 2, 0, 2, 2, 3, 5000, 45, 15, 162.80, 77.60, 8.20, 1, 2, 1, 218.00, '2025-02-03', 359020, 0, 0, 100, 0),
+(6, 5, 'Honor Magic 7 Pro', 5, 3040000, 5, 2800, 1280, 6.80, 120, 5000, 453, 7, 5.40, 5, 1, 1, 1, 3, 0, 1, 1, 2, 1, 2, 2, 3, 5270, 100, 80, 162.70, 77.10, 8.80, 3, 2, 1, 223.00, '2024-11-08', 320640, 0, 0, 50, 1),
+(7, 6, 'Google Pixel 9 Pro XL', 6, 1148512, 5, 1344, 2992, 6.80, 120, 3000, 482, 7, 5.30, 5, 1, 1, 1, 3, 0, 1, 1, 2, 0, 3, 1, 3, 5060, 37, 23, 162.75, 76.59, 8.54, 1, 2, 1, 210.00, '2024-08-22', 372990, 0, 0, 40, 0),
+(8, 1, 'Xiaomi Redmi Note 14 Pro 5G', 7, 704404, 1, 2712, 1220, 6.67, 120, 3000, 446, 6, 5.40, 5, 1, 1, 1, 2, 0, 1, 3, 1, 1, 5, 4, 2, 5110, 45, 0, 162.30, 74.40, 8.20, 1, 2, 1, 190.00, '2025-01-15', 84160, 0, 0, 30, 0),
+(10, 1, 'Xiaomi Redmi Note 14 4G', 14, 116000, 9, 2400, 1080, 6.67, 120, 1200, 395, 5, 5.30, 4, 1, 0, 1, 2, 1, 1, 3, 1, 1, 5, 6, 6, 5500, 33, 0, 163.30, 76.60, 8.20, 7, 5, 1, 196.50, '2024-02-25', 57800, 0, 0, NULL, 0),
+(11, 10, 'Xiaomi Redmi Note 14 5G', 15, 463129, 9, 2400, 1080, 6.67, 120, 1200, 395, 5, 5.30, 5, 1, 0, 1, 2, 1, 1, 3, 1, 1, 5, 6, 7, 5110, 45, 0, 162.40, 75.70, 7.99, 8, 5, 1, 190.00, '2025-01-16', 75600, 0, 0, NULL, 0),
+(12, 10, 'Xiaomi Redmi Note 14S', 14, 450000, 9, 2400, 1080, 6.67, 120, 1300, 395, 5, 5.30, 4, 1, 0, 1, 2, 0, 1, 3, 1, 1, 5, 6, 7, 5000, 67, 0, 161.10, 75.00, 8.00, 8, 5, 1, 179.00, '2025-03-14', 64800, 0, 0, NULL, 0),
+(13, 10, 'Xiaomi Redmi Note 14 Pro 4G', 16, 423868, 9, 2400, 1080, 6.67, 120, 1800, 395, 5, 5.30, 4, 1, 0, 1, 2, 1, 1, 3, 1, 1, 5, 6, 7, 5500, 45, 0, 162.20, 74.90, 8.20, 8, 5, 1, 180.00, '2025-01-16', 73990, 0, 0, NULL, 0),
+(14, 10, 'Xiaomi Redmi Note 14 Pro+ 5G', 17, 750292, 9, 2712, 1220, 6.67, 120, 3000, 446, 5, 5.40, 5, 1, 1, 1, 2, 1, 1, 3, 1, 1, 5, 6, 7, 5110, 120, 0, 162.50, 74.70, 8.80, 6, 2, 1, 205.00, '2025-01-15', 102490, 0, 0, NULL, 0),
+(15, 1, 'Xiaomi 14', 19, 2089308, 1, 2670, 1200, 6.36, 120, 3000, 460, 7, 5.40, 5, 1, 1, 1, 3, 0, 1, 5, 1, 1, 2, 7, 1, 4610, 90, 50, 152.80, 71.50, 8.20, 1, 2, 1, 193.00, '2023-10-01', 299990, 0, 0, NULL, 0),
+(16, 9, 'Motorola Edge 50 Fusion', 10, 603451, 8, 2400, 1080, 6.67, 144, 1600, 393, 5, 5.30, 5, 1, 0, 1, 2, 0, 1, 3, 1, 0, 5, 4, 2, 5000, 68, 0, 161.91, 73.05, 7.76, 1, 3, 1, 175.00, '2024-05-15', 91820, 0, 0, NULL, 0),
+(17, 9, 'Motorola Edge 50 Ultra', 11, 1523879, 8, 2712, 1220, 6.70, 144, 2500, 444, 7, 5.40, 5, 1, 0, 1, 3, 0, 1, 3, 1, 0, 2, 2, 2, 4500, 125, 50, 161.08, 72.37, 8.59, 1, 3, 1, 197.00, '2024-05-15', 217160, 0, 0, NULL, 0),
+(18, 9, 'Motorola Edge 50 Neo', 12, 696931, 8, 2670, 1200, 6.40, 120, 3000, 460, 0, 5.30, 0, 0, 0, 1, 2, 0, 1, 3, 1, 0, 3, 2, 2, 4310, 68, 15, 154.10, 71.20, 8.10, 1, 3, 1, 171.00, '2024-08-29', 117000, 0, 0, NULL, 0),
+(19, 9, 'Motorola Edge 50', 13, 722062, 8, 2712, 1220, 6.70, 120, 1600, 446, 0, 5.20, 0, 0, 0, 1, 2, 0, 1, 3, 1, 0, 3, 4, 2, 5000, 68, 15, 160.80, 72.40, 7.80, 1, 3, 1, 180.00, '2024-08-08', 108000, 0, 0, NULL, 0),
+(20, 6, 'Google Pixel 9 Pro', 6, 1148512, 8, 2856, 1280, 6.30, 120, 2400, 497, 7, 5.30, 5, 1, 0, 1, 3, 0, 1, 3, 2, 0, 3, 1, 5, 4700, 27, 21, 152.80, 72.90, 8.50, 1, 3, 1, 199.00, '2024-09-09', 335000, 0, 0, NULL, 0),
+(21, 1, 'Xiaomi 15', 18, 2746580, 2, 2670, 1200, 6.36, 120, 3200, 460, 7, 6.00, 5, 1, 0, 1, 3, 0, 1, 5, 2, 1, 2, 7, 3, 5240, 90, 50, 152.30, 71.20, 8.08, 1, 2, 1, 190.50, '2024-10-29', 255590, 0, 0, NULL, 0),
+(22, 1, 'Xiaomi 15 Ultra', 18, 2746580, 2, 3200, 1400, 6.73, 120, 3200, 522, 7, 6.00, 5, 1, 1, 1, 3, 0, 1, 5, 2, 1, 2, 8, 3, 5410, 90, 80, 161.30, 75.30, 9.35, 1, 2, 1, 229.00, '2025-02-27', 374790, 0, 0, NULL, 0),
+(23, 7, 'teszt3', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0, 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 0, 0, NULL, 0),
+(24, 7, 'teszt4', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0, 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 0, 0, NULL, 0),
+(25, 8, 'string', 9, 0, 10, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, 4, 4, 6, 0, 4, 5, 8, 0, 0, 0, 0.00, 0.00, 0.00, 5, 7, 3, 0.00, '2026-02-17', 0, 0, 0, NULL, 0),
+(26, 1, 'Xiaomi 13T', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, NULL, 0),
+(27, 1, 'alma', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, NULL, 0),
+(28, 1, 'alm', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, NULL, 0),
+(29, 1, 'Xiaomi 13T', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -4593,7 +4641,8 @@ INSERT INTO `screentype` (`ID`, `screenType`) VALUES
 (4, 'Dynamic LTPO AMOLED 2X'),
 (5, 'LTPO OLED'),
 (8, 'P-OLED'),
-(9, 'Amoled');
+(9, 'Amoled'),
+(10, 'string');
 
 -- --------------------------------------------------------
 
@@ -4635,7 +4684,8 @@ CREATE TABLE `sensorsfingerprinttype` (
 INSERT INTO `sensorsfingerprinttype` (`ID`, `sensorsFingerprintType`) VALUES
 (1, 'Optikai'),
 (2, 'Ultraszonikus'),
-(3, 'Nincs');
+(3, 'Nincs'),
+(6, 'string');
 
 -- --------------------------------------------------------
 
@@ -4945,13 +4995,13 @@ ALTER TABLE `addresses`
 -- AUTO_INCREMENT a táblához `backmaterial`
 --
 ALTER TABLE `backmaterial`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT a táblához `batterytype`
 --
 ALTER TABLE `batterytype`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT a táblához `camera`
@@ -4969,7 +5019,7 @@ ALTER TABLE `cameratype`
 -- AUTO_INCREMENT a táblához `chargertype`
 --
 ALTER TABLE `chargertype`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT a táblához `color`
@@ -4987,19 +5037,19 @@ ALTER TABLE `connectionparts`
 -- AUTO_INCREMENT a táblához `connphonecamera`
 --
 ALTER TABLE `connphonecamera`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=228;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=245;
 
 --
 -- AUTO_INCREMENT a táblához `connphonecolor`
 --
 ALTER TABLE `connphonecolor`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
 
 --
 -- AUTO_INCREMENT a táblához `connphoneramstorage`
 --
 ALTER TABLE `connphoneramstorage`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=158;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=167;
 
 --
 -- AUTO_INCREMENT a táblához `connuserorder`
@@ -5029,7 +5079,7 @@ ALTER TABLE `parts`
 -- AUTO_INCREMENT a táblához `phonedatas`
 --
 ALTER TABLE `phonedatas`
-  MODIFY `phoneID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `phoneID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT a táblához `phonepictures`
@@ -5059,7 +5109,7 @@ ALTER TABLE `ramstorage`
 -- AUTO_INCREMENT a táblához `screentype`
 --
 ALTER TABLE `screentype`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT a táblához `sensorsfingerprintplace`
@@ -5071,7 +5121,7 @@ ALTER TABLE `sensorsfingerprintplace`
 -- AUTO_INCREMENT a táblához `sensorsfingerprinttype`
 --
 ALTER TABLE `sensorsfingerprinttype`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT a táblához `speakertype`

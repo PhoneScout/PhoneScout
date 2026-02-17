@@ -15,7 +15,7 @@ public partial class Camera
 
     public int? CameraFocalLength { get; set; }
 
-    public string? CameraOis { get; set; }
+    public int? CameraOis { get; set; }
 
     public virtual ICollection<Connphonecamera> Connphonecameras { get; set; } = new List<Connphonecamera>();
 }

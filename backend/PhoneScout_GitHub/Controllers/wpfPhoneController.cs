@@ -546,5 +546,3 @@ public IActionResult UpdatePhone(int id, [FromBody] phoneDTO dto)
     return Ok("Telefon sikeresen frissítve!");
 }
     }}
-
-

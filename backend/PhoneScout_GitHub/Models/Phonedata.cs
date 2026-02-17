@@ -35,15 +35,15 @@ public partial class Phonedata
 
     public int? ConnectionMaxMobileNetwork { get; set; }
 
-    public string? ConnectionDualSim { get; set; }
+    public int? ConnectionDualSim { get; set; }
 
-    public string? ConnectionEsim { get; set; }
+    public int? ConnectionEsim { get; set; }
 
-    public string? ConnectionNfc { get; set; }
+    public int? ConnectionNfc { get; set; }
 
     public int? ConnectionConnectionSpeed { get; set; }
 
-    public string? ConnectionJack { get; set; }
+    public int? ConnectionJack { get; set; }
 
     public int? ChargerTypeId { get; set; }
 
@@ -51,7 +51,7 @@ public partial class Phonedata
 
     public int? SensorsFingerprintTypeId { get; set; }
 
-    public string? SensorsInfrared { get; set; }
+    public int? SensorsInfrared { get; set; }
 
     public int? RamSpeedId { get; set; }
 
@@ -83,7 +83,7 @@ public partial class Phonedata
 
     public int? PhonePrice { get; set; }
 
-    public string? PhoneInStore { get; set; }
+    public int? PhoneInStore { get; set; }
 
     public int? PhoneInStoreAmount { get; set; }
 

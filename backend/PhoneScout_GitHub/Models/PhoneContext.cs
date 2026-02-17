@@ -167,7 +167,7 @@ public partial class PhoneContext : DbContext
                 .HasMaxLength(64)
                 .HasColumnName("cameraName");
             entity.Property(e => e.CameraOis)
-                .HasMaxLength(8)
+                .HasColumnType("int(1)")
                 .HasColumnName("cameraOIS");
             entity.Property(e => e.CameraResolution)
                 .HasColumnType("int(11)")
@@ -588,13 +588,13 @@ public partial class PhoneContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("connectionConnectionSpeed");
             entity.Property(e => e.ConnectionDualSim)
-                .HasMaxLength(8)
+                .HasColumnType("int(1)")
                 .HasColumnName("connectionDualSim");
             entity.Property(e => e.ConnectionEsim)
-                .HasMaxLength(8)
+                .HasColumnType("int(1)")
                 .HasColumnName("connectionESim");
             entity.Property(e => e.ConnectionJack)
-                .HasMaxLength(8)
+                .HasColumnType("int(1)")
                 .HasColumnName("connectionJack");
             entity.Property(e => e.ConnectionMaxBluetooth)
                 .HasPrecision(10, 2)
@@ -606,7 +606,7 @@ public partial class PhoneContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("connectionMaxWifi");
             entity.Property(e => e.ConnectionNfc)
-                .HasMaxLength(8)
+                .HasColumnType("int(1)")
                 .HasColumnName("connectionNfc");
             entity.Property(e => e.CpuId)
                 .HasColumnType("int(11)")
@@ -621,7 +621,7 @@ public partial class PhoneContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("phoneDeleted");
             entity.Property(e => e.PhoneInStore)
-                .HasMaxLength(8)
+                .HasColumnType("int(1)")
                 .HasColumnName("phoneInStore");
             entity.Property(e => e.PhoneInStoreAmount)
                 .HasColumnType("int(11)")
@@ -670,7 +670,7 @@ public partial class PhoneContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("sensorsFingerprintTypeID");
             entity.Property(e => e.SensorsInfrared)
-                .HasMaxLength(8)
+                .HasColumnType("int(1)")
                 .HasColumnName("sensorsInfrared");
             entity.Property(e => e.SpeakerTypeId)
                 .HasColumnType("int(11)")
