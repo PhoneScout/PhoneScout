@@ -3,6 +3,7 @@ import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Navbar.css';
 import { Link, useNavigate } from 'react-router-dom'; // useNavigate importálása
 import { useAuth } from './AuthContext';
+import axios from 'axios';
 
 export default function Navbar() {
 
@@ -102,8 +103,8 @@ export default function Navbar() {
 
     const fetchPhoneNames = async () => {
         try {
-            const response = await fetch("http://localhost:5175/allPhonesName");
-            const data = await response.json();
+            const response = await axios.get("http://localhost:5175/allPhonesName");
+            const data = response.data;
             setAllPhoneNames(data);
         } catch (error) {
             console.error("Hiba a telefonnevek betöltésekor:", error);

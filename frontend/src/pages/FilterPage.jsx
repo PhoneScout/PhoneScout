@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './FilterPage.css';
 import PhoneCard from '../components/PhoneCard';
+import axios from 'axios';
 
 export default function FilterPage() {
   const [filters, setFilters] = useState({
@@ -43,8 +44,8 @@ export default function FilterPage() {
   const getPhoneDatas = async () => {
     try {
       setIsLoading(true);
-      const response = await fetch(allPhonesURL);
-      const data = await response.json();
+      const response = await axios.get(allPhonesURL);
+      const data = response.data;
       setPhones(data);
       setFilteredPhones(data);
     } catch (error) {
@@ -56,8 +57,8 @@ export default function FilterPage() {
 
   const getFilterDatas = async () => {
     try {
-      const response = await fetch(filterDatasURL);
-      const data = await response.json();
+      const response = await axios.get(filterDatasURL);
+      const data = response.data;
       setFilterData(data);
       console.log("Szűrő adatok:", data);
     } catch (error) {
@@ -155,17 +156,10 @@ export default function FilterPage() {
     console.log("Küldött adatok:", JSON.stringify(filterRequestData, null, 2));
 
     try {
-      const resp = await fetch(filterApiUrl, {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify(filterRequestData)
-      });
+      const resp = await axios.post(filterApiUrl,filterRequestData);
 
-      if (!resp.ok) {
-        const errorText = await resp.text();
+      if (resp.status !== 200) {
+        const errorText = await resp.data;
         console.error("Backend hiba:", errorText);
         throw new Error(`HTTP error! status: ${resp.status}`);
       }

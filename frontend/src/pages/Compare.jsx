@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./Compare.css";
+import axios from 'axios';
 
 export default function Compare() {
   const [phones, setPhones] = useState([]);
@@ -91,10 +92,9 @@ export default function Compare() {
     const fetchAllPhones = async () => {
       setLoadingAllPhones(true);
       try {
-        const res = await fetch("http://localhost:5175/allPhonesName");
-        if (res.ok) {
-          const data = await res.json();
-          setAllPhones(data);
+        const res = await axios.get("http://localhost:5175/allPhonesName");
+        if (res.status === 200) {
+          setAllPhones(res.data);
         }
       } catch (err) {
         console.error("Hiba az összes telefon lekérésekor:", err);
@@ -116,7 +116,7 @@ export default function Compare() {
 
     try {
       const requests = compareIds.map(id =>
-        fetch(`http://localhost:5175/comparePage/${id}`).then(res => res.ok ? res.json() : null)
+        axios.get(`http://localhost:5175/comparePage/${id}`)
       );
       const raw = await Promise.all(requests);
       const flattened = raw.flatMap(p => Array.isArray(p) ? p : (p ? [p] : []));

@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import './PhonePage.css';
+import axios from 'axios';
 
 export default function PhonePage() {
   const { phoneId } = useParams();
@@ -15,11 +16,10 @@ export default function PhonePage() {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://localhost:5175/phonePage/${phoneId}`)
-      .then(res => res.json())
-      .then(data => {
-        setPhone(data);
-        if (data.colors?.length > 0) setSelectedColor(data.colors[0]);
+    axios.get(`http://localhost:5175/phonePage/${phoneId}`)
+      .then(response => {
+        setPhone(response.data);
+        if (response.data.colors?.length > 0) setSelectedColor(response.data.colors[0]);
         setLoading(false);
       })
       .catch(err => {

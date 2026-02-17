@@ -5,6 +5,7 @@ import Navbar from '../components/Navbar'; //we still need the import here
 import PhoneCard from '../components/PhoneCard';
 import InputText from '../components/InputText';
 import { Link } from 'react-router';
+import axios from 'axios';
 
 export default function Home() {
   const allPhonesURL = "http://localhost:5175/mainPage";
@@ -17,10 +18,9 @@ export default function Home() {
   const [allPhonesData, setAllPhonesData] = useState([]);
 
   useEffect(() => {
-    fetch(allPhonesURL)
-      .then((response) => response.json())
-      .then((data) => {
-        setAllPhonesData(data);
+    axios.get(allPhonesURL)
+      .then((response) => {
+        setAllPhonesData(response.data);
       })
       .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
   }, []);

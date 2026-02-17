@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
-
+import axios from 'axios';
 
 
 //fetch('http://localhost:5292/phonePage/2').then(response => response.json()).then(data => console.log(data)) //ID-T KISZEDNI A / MÖGÜL HA VAN
@@ -11,10 +11,9 @@ const Profile = () => {
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [userData, setUserData] = useState({ userFullName: '', userEmail: '' });
-
+  const savedEmail = localStorage.getItem('email');
   useEffect(() => {
     const savedName = localStorage.getItem('fullname');
-    const savedEmail = localStorage.getItem('email');
     setUserData({ userFullName: savedName, userEmail: savedEmail });
   }, []);
 
@@ -170,23 +169,26 @@ const Profile = () => {
 
   const confirmSave = async () => {
     try {
-      const response = await fetch(`http://localhost:5175/api/Profile/UpdateUser/${userData.userEmail.replace('@', '%40')}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(userData),
-      });
-
-      if (response.ok) {
-        // Mentés Local Storage-ba is
-        localStorage.setItem('fullName', userData.userFullName);
+      console.log(userData)
+      const response = await axios.put(
+        `http://localhost:5175/api/Profile/UpdateUser/${savedEmail}`, 
+        {userFullName : userData.userFullName,
+        userEmail : userData.userEmail}
+      );
+  
+      if (response.status === 200) {
+        // Itt is figyelj a konzisztens elnevezésre:
+        localStorage.setItem('fullname', userData.userFullName);
         localStorage.setItem('email', userData.userEmail);
-
+  
         setEditingProfile(false);
         setShowConfirmModal(false);
         alert('Sikeres mentés!');
       }
     } catch (error) {
-      console.error('Hiba a mentés során:', error);
+      // Axios hiba esetén itt nézd meg, mit mond a szerver:
+      console.error('Hiba:', error.response?.data || error.message);
+      alert('Hiba történt a mentés során!');
     }
   };
 
@@ -240,27 +242,23 @@ const Profile = () => {
     }
 
     try {
-      const saltResponse = await fetch(`http://localhost:5175/api/Login/GetSalt/${encodeURIComponent(userData.userEmail)}`);
-      if (!saltResponse.ok) throw new Error("Nem sikerült lekérni a saltot.");
-      const currentDbSalt = await saltResponse.text();
+      const saltResponse = await axios.get(`http://localhost:5175/api/Login/GetSalt/${encodeURIComponent(userData.userEmail)}`);
+      if (saltResponse.status !== 200) throw new Error("Nem sikerült lekérni a saltot.");
+      const currentDbSalt = await saltResponse.data;
 
       const oldHashed = await hashPassword(userData.currentPassword, currentDbSalt);
 
       const newSalt = GenerateSalt(64);
       const newHashed = await hashPassword(userData.newPassword, newSalt);
 
-      const response = await fetch("http://localhost:5175/api/Registration/ChangePassword", {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      const response = await axios.put("http://localhost:5175/api/Registration/ChangePassword", {
           email: userData.userEmail,
           oldPassword: oldHashed,
           newPassword: newHashed,
           salt: newSalt
-        })
       });
 
-      if (response.ok) {
+      if (response.status === 200) {
         setStatusMessage({ text: "Sikeres jelszó módosítás!", isError: false });
 
         setUserData(prev => ({
@@ -271,7 +269,7 @@ const Profile = () => {
         }));
         setPasswordStrength({ score: 0, label: "", color: "#ccc" });
       } else {
-        const errorMsg = await response.text();
+        const errorMsg = await response.data;
         setStatusMessage({ text: "Hiba: " + errorMsg, isError: true });
       }
     } catch (error) {
@@ -550,7 +548,7 @@ const Profile = () => {
                     />
                   </div>
                 </div>
-                {statusMessage.text && (
+                {statusMessage.data && (
                   <div style={{
                     color: statusMessage.isError ? "#ff4d4d" : "#2ecc71",
                     textAlign: "center",
@@ -561,7 +559,7 @@ const Profile = () => {
                     backgroundColor: statusMessage.isError ? "#ffe6e6" : "#e6fffa", // Halvány háttér a jobb olvashatóságért
                     borderRadius: "4px"
                   }}>
-                    {statusMessage.text}
+                    {statusMessage.data}
                   </div>
                 )}
                 <div className="form-actions">

@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ChatbotWidget.css";
+import axios from "axios";
 
 const TYPING_SPEED = 15;
 
@@ -1341,23 +1342,17 @@ function ChatbotWidget() {
         ]
       };
 
-      const res = await fetch(
+      const res = await axios.post(
         // ITT A VÁLTOZÁS: gemini-2.5-pro
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(requestBody)
-        }
-      );
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`,requestBody);
 
-      if (!res.ok) {
-        const errorData = await res.json();
+      if (res.status !== 200) {
+        const errorData = await res.data;
         throw new Error(`API hiba ${res.status}: ${errorData?.error?.message || "Ismeretlen hiba"}`);
       }
 
-      const data = await res.json();
-      const answer = data.candidates?.[0]?.content?.parts?.[0]?.text || "Nem kaptam választ.";
+      const data = await res.data;
+      const answer = data.candidates?.[0]?.content?.parts?.[0]?.data || "Nem kaptam választ.";
 
       historyRef.current.push({ role: "user", text: question });
       historyRef.current.push({ role: "assistant", text: answer });

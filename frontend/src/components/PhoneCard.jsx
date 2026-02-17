@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./PhoneCard.css";
 import { Link } from "react-router-dom";
 import JSZip from "jszip";
+import axios from "axios";
 
 export default function PhoneCard({
   phoneId,
@@ -24,11 +25,11 @@ export default function PhoneCard({
 
     const loadFirstImage = async () => {
       try {
-        const response = await fetch(
+        const response = await axios.get(
           `http://localhost:5175/api/blob/GetPicturesZip/${phoneId}`
         );
 
-        if (!response.ok) {
+        if (response.status !== 200) {
           console.error("Képek nem találhatók!");
           return;
         }
