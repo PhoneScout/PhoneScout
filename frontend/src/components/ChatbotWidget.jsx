@@ -1352,7 +1352,7 @@ function ChatbotWidget() {
       }
 
       const data = await res.data;
-      const answer = data.candidates?.[0]?.content?.parts?.[0]?.data || "Nem kaptam választ.";
+      const answer = data.candidates?.[0]?.content?.parts?.[0]?.text || "Nem kaptam választ.";
 
       historyRef.current.push({ role: "user", text: question });
       historyRef.current.push({ role: "assistant", text: answer });
