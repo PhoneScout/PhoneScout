@@ -18,7 +18,7 @@ namespace PhoneScout_GitHub.DTOs
         public int? connectionDualSim { get; set; }
         public int? connectionEsim { get; set; }
         public int? connectionNfc { get; set; }
-        public double? connectionConnectionSpeed { get; set; }
+        public decimal? connectionConnectionSpeed { get; set; }
         public int? connectionJack { get; set; }
 
         public int? sensorsInfrared { get; set; }

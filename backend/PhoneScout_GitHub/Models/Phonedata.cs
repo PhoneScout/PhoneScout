@@ -41,7 +41,7 @@ public partial class Phonedata
 
     public int? ConnectionNfc { get; set; }
 
-    public int? ConnectionConnectionSpeed { get; set; }
+    public decimal? ConnectionConnectionSpeed { get; set; }
 
     public int? ConnectionJack { get; set; }
 
