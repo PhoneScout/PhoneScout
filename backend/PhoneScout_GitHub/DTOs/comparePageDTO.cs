@@ -23,7 +23,7 @@ namespace PhoneScout_GitHub.DTOs
         public int? batteryMaxChargingWired { get; set; }
         public int? batteryMaxChargingWireless { get; set; }
         public int? phonePrice { get; set; }
-        public string? phoneInStore { get; set; }
+        public int? phoneInStore { get; set; }
 
         //Adatok kapcsolótáblákból
         public string? cpuName { get; set; }
