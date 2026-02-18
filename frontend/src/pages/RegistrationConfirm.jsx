@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useSearchParams, Link, useNavigate } from 'react-router-dom'; // Importáld a useNavigate-et
 import './ResigstrationConfirm.css';
+import axios from 'axios';
 
 export default function RegistrationConfirm() {
     const [searchParams] = useSearchParams();
@@ -15,11 +16,9 @@ export default function RegistrationConfirm() {
         e.preventDefault();
         
         try {
-            const response = await fetch(`http://localhost:5175/api/Registration?name=${name}&email=${email}`, {
-                method: 'GET'
-            });
+            const response = await axios.get(`http://localhost:5175/api/Registration?name=${name}&email=${email}`);
 
-            if(response.ok) {
+            if(response.status === 200) {
                 setMessage("Sikeres aktiválás! Most már bejelentkezhetsz. Átirányítás...");
                 setIsSuccess(true);
 

@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.css';
 import InputText from './InputText';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import axios from 'axios';
 
 export default function Login({ onSwitchToRegister }) {
 
@@ -27,16 +28,13 @@ export default function Login({ onSwitchToRegister }) {
 
         try {
             // Salt lekérése
-            const saltResponse = await fetch(`http://localhost:5175/api/Login/GetSalt/${encodeURIComponent(email)}`, {
-                method: 'GET',
-                headers: { 'Accept': 'application/json' }
-            });
+            const saltResponse = await axios.get(`http://localhost:5175/api/Login/GetSalt/${encodeURIComponent(email)}`);
 
-            if (!saltResponse.ok) {
+            if (saltResponse.status !== 200) {
                 throw new Error("A felhasználó nem található.");
             }
 
-            let salt = await saltResponse.text();
+            let salt = await saltResponse.data;
 
             if (salt.startsWith('"') && salt.endsWith('"')) {
                 try {
@@ -62,17 +60,10 @@ export default function Login({ onSwitchToRegister }) {
                 tmpHash: hashedPassword
             };
 
-            const response = await fetch('http://localhost:5175/api/Login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(loginData),
-            });
+            const response = await axios.post('http://localhost:5175/api/Login',loginData);
 
-            if (!response.ok) {
-                const errorText = await response.text();
+            if (response.status !== 200) {
+                const errorText = await response.data;
                 alertBox.innerText = `Belépési hiba: ${errorText}`;
                 return;
             }
@@ -81,7 +72,7 @@ export default function Login({ onSwitchToRegister }) {
             alertBox.style.color = "green";
             alertBox.innerText = "Sikeres bejelentkezés! Átirányítás...";
 
-            const result = await response.json();
+            const result = await response.data;
             console.log("Szerver válasza:", result);
 
             if (result.token) {

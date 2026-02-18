@@ -6,7 +6,7 @@ namespace PhoneScout_GitHub.DTOs
         public int? cameraResolution { get; set; }
         public string? cameraAperture { get; set; }
         public int? cameraFocalLength { get; set; }
-        public string? cameraOis { get; set; }
+        public int? cameraOis { get; set; }
         public string? cameraType { get; set; }
     }
 }

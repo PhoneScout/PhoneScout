@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
 using Swashbuckle.AspNetCore.Annotations;
@@ -23,34 +24,104 @@ namespace PhoneScout_GitHub.Controllers
         [HttpGet("GetIndex/{phoneID}")]
         public async Task<IActionResult> GetIndex(int phoneID)
         {
-            var phonePictures = cx.Phonepictures.Where(p => p.IsIndex == 0)
-                                        .FirstOrDefault(p => p.PhoneId == phoneID);
+            var picture = await cx.Phonepictures
+                .FirstOrDefaultAsync(p => p.PhoneId == phoneID && p.IsIndex == 0);
 
-            if (phonePictures == null || phonePictures.PhonePicture1 == null)
-                return NotFound("A telefonhoz tartozó képek nem találhatók.");
+            if (picture == null || picture.PhonePicture1 == null)
+                return NotFound("Index picture not found.");
 
-            return File(phonePictures.PhonePicture1, phonePictures.ContentType);
+            return File(picture.PhonePicture1, picture.ContentType);
         }
 
         [HttpGet("GetAllPictures/{phoneID}")]
-        public IActionResult GetAllPictures(int phoneID)
+        public async Task<IActionResult> GetAllPictures(int phoneID)
         {
-            var phonePictures = cx.Phonepictures
-                                  .Where(p => p.PhoneId == phoneID)
-                                  .ToList();
+            var pictures = await cx.Phonepictures
+                .Where(p => p.PhoneId == phoneID)
+                .Select(p => new
+                {
+                    p.Id,
+                    p.ContentType,
+                    ImageUrl = Url.Action("GetPictureById", new { id = p.Id })
+                })
+                .ToListAsync();
 
-            if (!phonePictures.Any())
-                return NotFound("A telefonhoz tartozó képek nem találhatók.");
+            if (!pictures.Any())
+                return NotFound("No pictures found.");
 
-            var result = phonePictures.Select(p => new
-            {
-                Image = Convert.ToBase64String(p.PhonePicture1),
-                ContentType = p.ContentType
-            });
+            return Ok(pictures);
 
-            return Ok(result);
         }
 
+        [HttpGet("GetPictureById/{id}")]
+        public async Task<IActionResult> GetPictureById(int id)
+        {
+            var picture = await cx.Phonepictures.FindAsync(id);
+
+            if (picture == null)
+                return NotFound();
+
+            return File(picture.PhonePicture1, picture.ContentType);
+        }
+
+
+        [HttpPost("PostPicture/{phoneID}")]
+        public async Task<IActionResult> PostPicture(int phoneID, IFormFile file, bool isIndex)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("Invalid file.");
+
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+
+            var newPicture = new Phonepicture
+            {
+                PhoneId = phoneID,
+                PhonePicture1 = ms.ToArray(),
+                ContentType = file.ContentType,
+                IsIndex = isIndex ? 0 : 1
+            };
+
+            cx.Phonepictures.Add(newPicture);
+            await cx.SaveChangesAsync();
+
+            return Ok("Picture uploaded.");
+        }
+
+        [HttpPut("UpdatePicture/{id}")]
+        public async Task<IActionResult> UpdatePicture(int id, IFormFile file, bool isIndex)
+        {
+            var picture = await cx.Phonepictures.FindAsync(id);
+
+            if (picture == null)
+                return NotFound();
+
+            using var ms = new MemoryStream();
+            await file.CopyToAsync(ms);
+
+            picture.PhonePicture1 = ms.ToArray();
+            picture.ContentType = file.ContentType;
+            picture.IsIndex = isIndex ? 0 : 1;
+
+            await cx.SaveChangesAsync();
+
+            return Ok("Picture updated.");
+        }
+
+
+        [HttpDelete("DeletePicture/{id}")]
+        public async Task<IActionResult> DeletePicture(int id)
+        {
+            var picture = await cx.Phonepictures.FindAsync(id);
+
+            if (picture == null)
+                return NotFound();
+
+            cx.Phonepictures.Remove(picture);
+            await cx.SaveChangesAsync();
+
+            return NoContent();
+        }
 
         // GET
         /*[HttpGet("GetPicture/{phoneID}/{position}")]

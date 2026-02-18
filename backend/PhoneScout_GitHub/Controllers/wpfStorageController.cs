@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.DataProtection.XmlEncryption;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using PhoneScout_GitHub.DTOs;
 using PhoneScout_GitHub.Models;
 using Swashbuckle.AspNetCore.Annotations;
@@ -151,5 +152,5 @@ namespace PhoneScout_GitHub.Controllers
                 return BadRequest(ex.Message);
             }
         }
-    }
-}
+
+    }}
