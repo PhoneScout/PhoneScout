@@ -4082,8 +4082,7 @@ INSERT INTO `postalcode` (`Iranyitoszam`, `Telepules`, `Megye`) VALUES
 (2890, 'Tata', 'Komárom-Esztergom'),
 (2800, 'Tatabánya', 'Komárom-Esztergom'),
 (6451, 'Tataháza', 'Bács-Kiskun'),
-(2375, 'Tatárszentgyörgy', 'Pest');
-INSERT INTO `postalcode` (`Iranyitoszam`, `Telepules`, `Megye`) VALUES
+(2375, 'Tatárszentgyörgy', 'Pest'),
 (6236, 'Tázlár', 'Bács-Kiskun'),
 (4243, 'Téglás', 'Hajdú-Bihar'),
 (7381, 'Tékes', 'Baranya'),
