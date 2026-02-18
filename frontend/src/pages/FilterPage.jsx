@@ -290,11 +290,7 @@ export default function FilterPage() {
     if (!phone || !phone.phoneID) return;
 
     let comparePhones = JSON.parse(localStorage.getItem("comparePhones") || "[]");
-    if (!comparePhones.includes(phone.phoneID)) {
-      if (comparePhones.length >= 4) {
-        alert("Maximum 4 telefont lehet összehasonlítani!");
-        return;
-      }
+    if (!comparePhones.includes(phone.phoneID)) {      
       comparePhones.push(phone.phoneID);
       localStorage.setItem("comparePhones", JSON.stringify(comparePhones));
       alert(`${phone.phoneName} hozzáadva az összehasonlításhoz!`);
@@ -478,11 +474,14 @@ export default function FilterPage() {
     return filteredPhones.map((phone) => (
       
         <PhoneCard
-          phoneId={phone.phoneID}
-          phoneName={phone.phoneName}
-          phoneInStore={phone.phoneInStore}
-          phonePrice={phone.phonePrice}
-        />
+                key={phone.phoneID}
+                phoneId={phone.phoneID}
+                phoneName={phone.phoneName}
+                phoneInStore={(phone.phoneInStore === 1 ? "Raktáron" : "Nincs raktáron")}
+                phonePrice={phone.phonePrice}
+                colors={phone.colors || []}
+                ramStoragePairs={phone.ramStoragePairs || []}
+              />
     ));
   };
 

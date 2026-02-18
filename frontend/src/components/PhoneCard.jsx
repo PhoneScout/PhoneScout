@@ -71,6 +71,10 @@ export default function PhoneCard({
   }, []);
 
   const isInCompare = compareIds.includes(phoneId);
+  const isInStock =
+    phoneInStore === 1 ||
+    phoneInStore === true ||
+    String(phoneInStore).trim().toLowerCase() === "raktáron";
 
   const normalizeCart = () => {
     const raw = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -228,7 +232,9 @@ export default function PhoneCard({
             alt={phoneName}
           />
           <div className="price-bubble">{phonePrice} Ft</div>
-          <div className="stock-bubble phonestockFalse">{phoneInStore}</div>
+          <div className={`stock-bubble ${isInStock ? "phonestockTrue" : "phonestockFalse"}`}>
+            {phoneInStore}
+          </div>
         </div>
 
         <div className="phoneDetails">

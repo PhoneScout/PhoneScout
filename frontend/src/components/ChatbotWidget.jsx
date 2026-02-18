@@ -4,6 +4,8 @@ import "./ChatbotWidget.css";
 import axios from "axios";
 
 const TYPING_SPEED = 15;
+const STORE_ADDRESS = "Miskolc, Palóczy László utca 3, 3525";
+const STORE_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(STORE_ADDRESS)}`;
 
 const PHONES_DATA = `List of phones we sell:
       ================ NEXT PHONE =================
@@ -1162,7 +1164,7 @@ const SYSTEM_INSTRUCTION = `
     - Can I repair my phone here? Yes, PhoneScout provides repair services for screens, batteries, and software issues.
 
     PhoneScout contact info:
-    - Customers can contact us via email at phonescoutofficial@gmail.co or call +1-800-123-4567.
+    - Customers can contact us via email at phonescoutofficial@gmail.co or call +36-46-500-930.
     - Our working hours are Monday to Friday, 9am to 6pm, and Saturday 10am to 4pm.
 
     Guidelines for the assistant:
@@ -1184,6 +1186,7 @@ const SYSTEM_INSTRUCTION = `
     - If the user wants service, they can fill a form too to request a repair.
     - If the user comes in person, they should fill the form for easier and faster service, but if they dont want to fill the form, it will take longer in person to 
     - After the user filled the form there is a description of what they have to do.
+    
     `;
 
 const QUICK_BUTTONS = [
@@ -1279,6 +1282,12 @@ function ChatbotWidget() {
     return buyingKeywords.some(keyword => lowerText.includes(keyword));
   };
 
+  const isLocationRelated = (text) => {
+    const locationKeywords = ["hol található", "hol van", "cím", "címet", "üzlet", "bolt", "hely", "address", "location"];
+    const lowerText = text.toLowerCase();
+    return locationKeywords.some((keyword) => lowerText.includes(keyword));
+  };
+
   const ask = async (question, options = {}) => {
     const { skipUser = false } = options;
 
@@ -1311,6 +1320,25 @@ function ChatbotWidget() {
       role: "loading",
       text: "AI gondolkodik..."
     });
+
+    if (isLocationRelated(question)) {
+      const locationAnswer = `Üzletünk címe: ${STORE_ADDRESS}`;
+
+      historyRef.current.push({ role: "user", text: question });
+      historyRef.current.push({ role: "assistant", text: locationAnswer });
+
+      await typeMessage(loadingId, locationAnswer, TYPING_SPEED);
+
+      addMessage({
+        id: `location-btn-${Date.now()}`,
+        role: "location-button",
+        text: "location"
+      });
+
+      setFollowUps([]);
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const apiKey = process.env.REACT_APP_GEMINI_API_KEY;
@@ -1439,6 +1467,13 @@ function ChatbotWidget() {
                   onClick={() => navigate("/szerviz")}
                 >
                   Szervíz igénylése
+                </button>
+              ) : message.role === "location-button" ? (
+                <button
+                  className="service-button-link"
+                  onClick={() => window.open(STORE_MAP_URL, "_blank", "noopener,noreferrer")}
+                >
+                  Megnyitás térképen
                 </button>
               ) : (
                 message.text

@@ -46,7 +46,7 @@ export default function Home() {
         key={phone.phoneID}
         phoneId={phone.phoneID}
         phoneName={phone.phoneName}
-        phoneInStore={(phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron")}
+        phoneInStore={(phone.phoneInStore === 1 ? "Raktáron" : "Nincs raktáron")}
         phonePrice={phone.phonePrice}
         colors={phone.colors || []}
         ramStoragePairs={phone.ramStoragePairs || []}
