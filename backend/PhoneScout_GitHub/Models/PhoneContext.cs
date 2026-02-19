@@ -421,7 +421,7 @@ public partial class PhoneContext : DbContext
                 .HasMaxLength(64)
                 .HasColumnName("city");
             entity.Property(e => e.OrderId)
-                .HasColumnType("int(11)")
+                .HasMaxLength(22)
                 .HasColumnName("orderID");
             entity.Property(e => e.PhoneColorHex).HasMaxLength(7);
             entity.Property(e => e.PhoneColorName)
