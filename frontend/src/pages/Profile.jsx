@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import axios from 'axios';
+import { UNSAFE_useScrollRestoration } from 'react-router';
 
 
 //fetch('http://localhost:5292/phonePage/2').then(response => response.json()).then(data => console.log(data)) //ID-T KISZEDNI A / MÖGÜL HA VAN
@@ -19,8 +20,7 @@ const Profile = () => {
 
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, label: "", color: "#ccc" });
   const [statusMessage, setStatusMessage] = useState({ text: "", isError: false });
-
-
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   const [phones, setPhones] = useState([
     {
@@ -171,19 +171,25 @@ const Profile = () => {
     try {
       console.log(userData)
       const response = await axios.put(
-        `http://localhost:5175/api/Profile/UpdateUser/${savedEmail}`, 
-        {userFullName : userData.userFullName,
-        userEmail : userData.userEmail}
+        `http://localhost:5175/api/Profile/UpdateUser/${savedEmail}`,
+        {
+          userFullName: userData.userFullName,
+          userEmail: userData.userEmail
+        }
       );
-  
+
       if (response.status === 200) {
         // Itt is figyelj a konzisztens elnevezésre:
         localStorage.setItem('fullname', userData.userFullName);
         localStorage.setItem('email', userData.userEmail);
-  
+        window.dispatchEvent(new Event('userProfileUpdated'));
+
         setEditingProfile(false);
         setShowConfirmModal(false);
-        alert('Sikeres mentés!');
+        setShowSuccessModal(true);
+        setTimeout(() => {
+          setShowSuccessModal(false);
+        }, 2000);
       }
     } catch (error) {
       // Axios hiba esetén itt nézd meg, mit mond a szerver:
@@ -252,10 +258,10 @@ const Profile = () => {
       const newHashed = await hashPassword(userData.newPassword, newSalt);
 
       const response = await axios.put("http://localhost:5175/api/Registration/ChangePassword", {
-          email: userData.userEmail,
-          oldPassword: oldHashed,
-          newPassword: newHashed,
-          salt: newSalt
+        email: userData.userEmail,
+        oldPassword: oldHashed,
+        newPassword: newHashed,
+        salt: newSalt
       });
 
       if (response.status === 200) {
@@ -266,7 +272,9 @@ const Profile = () => {
           currentPassword: "",
           newPassword: "",
           confirmPassword: ""
+          
         }));
+        
         setPasswordStrength({ score: 0, label: "", color: "#ccc" });
       } else {
         const errorMsg = await response.data;
@@ -412,6 +420,11 @@ const Profile = () => {
     setNewAddress({ ...newAddress, [name]: value });
   };
 
+  const passwordsDoNotMatch =
+    !!userData.newPassword &&
+    !!userData.confirmPassword &&
+    userData.newPassword !== userData.confirmPassword;
+
   return (
 
     <div className="profile-container">
@@ -496,6 +509,16 @@ const Profile = () => {
               </div>
             )}
 
+            {showSuccessModal && (
+              <div className="profile-modal-overlay">
+                <div className="profile-modal-content">
+                  <div className="profile-modal-body">
+                    <h3>Sikeres mentés</h3>
+                  </div>
+                </div>
+              </div>
+            )}
+
 
             {/* Jelszó változtatás */}
             <div className="password-section">
@@ -546,9 +569,14 @@ const Profile = () => {
                       value={userData.confirmPassword}
                       onChange={handleInputChange}
                     />
+                    {passwordsDoNotMatch && (
+                      <small style={{ color: "#ff4d4d", display: "block", marginTop: "6px" }}>
+                        Az új jelszó és a megerősítés nem egyezik.
+                      </small>
+                    )}
                   </div>
                 </div>
-                {statusMessage.data && (
+                {statusMessage.text && (
                   <div style={{
                     color: statusMessage.isError ? "#ff4d4d" : "#2ecc71",
                     textAlign: "center",
@@ -559,7 +587,7 @@ const Profile = () => {
                     backgroundColor: statusMessage.isError ? "#ffe6e6" : "#e6fffa", // Halvány háttér a jobb olvashatóságért
                     borderRadius: "4px"
                   }}>
-                    {statusMessage.data}
+                    {statusMessage.text}
                   </div>
                 )}
                 <div className="form-actions">

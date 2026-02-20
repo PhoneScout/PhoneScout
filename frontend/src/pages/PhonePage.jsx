@@ -12,6 +12,7 @@ export default function PhonePage() {
   const [selectedCameraIdx, setSelectedCameraIdx] = useState(0);
   const [showVariantModal, setShowVariantModal] = useState(false);
   const [selectedQty, setSelectedQty] = useState(1);
+  const [compareIds, setCompareIds] = useState([]);
   const timeoutsRef = useRef([]);
 
   const svgRef = useRef(null);
@@ -29,6 +30,22 @@ export default function PhonePage() {
         setLoading(false);
       });
   }, [phoneId]);
+
+  useEffect(() => {
+    const syncCompare = () => {
+      const saved = JSON.parse(localStorage.getItem('comparePhones') || '[]');
+      setCompareIds(saved);
+    };
+
+    syncCompare();
+    window.addEventListener('compareUpdated', syncCompare);
+    window.addEventListener('storage', syncCompare);
+
+    return () => {
+      window.removeEventListener('compareUpdated', syncCompare);
+      window.removeEventListener('storage', syncCompare);
+    };
+  }, []);
 
   // SVG interakciók
   useEffect(() => {
@@ -109,13 +126,31 @@ export default function PhonePage() {
     setShowVariantModal(true);
   };
 
+  const handleCompareClick = () => {
+    const currentPhoneId = parseInt(phoneId, 10);
+    if (Number.isNaN(currentPhoneId)) return;
+
+    let comparePhones = JSON.parse(localStorage.getItem('comparePhones') || '[]');
+
+    if (!comparePhones.includes(currentPhoneId)) {
+      comparePhones.push(currentPhoneId);
+      localStorage.setItem('comparePhones', JSON.stringify(comparePhones));
+      window.dispatchEvent(new Event('compareUpdated'));
+
+      const compareElement = document.getElementById('compareCount');
+      if (compareElement) {
+        compareElement.textContent = `(${comparePhones.length})`;
+      }
+    }
+  };
+
   const addToCartWithVariants = () => {
     if (!selectedColor || selectedRamIdx === null || selectedQty < 1) return;
 
     const cartItems = JSON.parse(localStorage.getItem("cart")) || [];
-    
+
     const selectedPair = phone.ramStoragePairs[selectedRamIdx];
-    
+
     const matchIndex = cartItems.findIndex(
       (item) =>
         item.phoneID === parseInt(phoneId) &&
@@ -143,6 +178,8 @@ export default function PhonePage() {
     window.dispatchEvent(new Event("cartUpdated"));
     setShowVariantModal(false);
   };
+
+  const isInCompare = compareIds.includes(parseInt(phoneId, 10));
 
   if (loading) return <div className="text-center mt-5"><h3>Betöltés...</h3></div>;
   if (!phone) return <div className="text-center mt-5"><h3>Készülék nem található.</h3></div>;
@@ -237,7 +274,14 @@ export default function PhonePage() {
               </div>
               <div className="price">{phone.phonePrice?.toLocaleString()} Ft</div>
               <button className="phoneSiteButton phoneSiteCartButton mt-3" onClick={handleCartClick}>Kosárba rakom</button>
-              <button className="phoneSiteButton phoneSiteCompareButton mt-2">Összehasonlítás</button>
+              <button
+                className="phoneSiteButton phoneSiteCompareButton mt-2"
+                onClick={handleCompareClick}
+                disabled={isInCompare}
+              >
+                {isInCompare ? 'Már összehasonlításban' : 'Összehasonlítás'}
+              </button>
+             
             </div>
           </div>
         </div>
