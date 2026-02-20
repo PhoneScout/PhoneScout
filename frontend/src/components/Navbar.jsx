@@ -224,8 +224,17 @@ export default function Navbar() {
     const [jogosultsag, setJogosultsag] = useState(null);
 
     useEffect(() => {
-        setFullname(localStorage.getItem("fullname"));
-        setJogosultsag(localStorage.getItem("jogosultsag"));
+        const syncUserData = () => {
+            setFullname(localStorage.getItem("fullname"));
+            setJogosultsag(localStorage.getItem("jogosultsag"));
+        };
+
+        syncUserData();
+        window.addEventListener('userProfileUpdated', syncUserData);
+
+        return () => {
+            window.removeEventListener('userProfileUpdated', syncUserData);
+        };
     }, [token]);
 
     function logout() {
@@ -401,7 +410,7 @@ export default function Navbar() {
                             }}
                         >
                             <i id="cart" className="fa-solid fa-cart-shopping"></i>
-                            <span className="cart-badge">{cartCount > 0 ? cartCount : ''}</span>
+                            <span className="cart-badge">{cartCount > 0 ? cartCount : '0'}</span>
                         </Link>
                     </div>
                 </div>
@@ -417,7 +426,7 @@ export default function Navbar() {
                             }}
                         >
                             <i id="cart" className="fa-solid fa-cart-shopping"></i>
-                            <span className="cart-badge">{cartCount > 0 ? cartCount : ''}</span>
+                            <span className="cart-badge">{cartCount > 0 ? cartCount : '0'}</span>
                         </Link>
                     </div>
                 </div>

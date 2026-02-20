@@ -57,7 +57,6 @@ export default function Home() {
   return (
     <div>
       <br />
-      <Link to="/profil">Profil</Link>
       <br />
       <div className="row">
         <div className="col-1">

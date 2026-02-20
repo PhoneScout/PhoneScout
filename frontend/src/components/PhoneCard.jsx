@@ -246,10 +246,10 @@ export default function PhoneCard({
             className={`button ${isInCompare ? "button--compare-added" : ""}`}
             onClick={handleCompareClick}
           >
-            <img src="/images/compare-removebg-preview_1.png" alt="Összehasonlítás" />
+            <i className="fa-solid fa-scale-unbalanced-flip"></i>
           </div>
-          <div className="button" onClick={handleCartClick}>
-            <img src="/images/cart-removebg-preview_1.png" alt="Kosár" />
+          <div className="button" onClick={handleCartClick} alt="Kosár">
+            <i className="fa-solid fa-cart-shopping" ></i>
           </div>
         </div>
       </Link>
