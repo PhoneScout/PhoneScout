@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./PhoneCard.css";
 import { Link } from "react-router-dom";
+import { createPortal } from "react-dom";
 import JSZip from "jszip";
 import axios from "axios";
 
@@ -248,13 +249,13 @@ export default function PhoneCard({
           >
             <i className="fa-solid fa-scale-unbalanced-flip"></i>
           </div>
-          <div className="button" onClick={handleCartClick} alt="Kosár">
+          <div className="button" onClick={handleCartClick}>
             <i className="fa-solid fa-cart-shopping" ></i>
           </div>
         </div>
       </Link>
 
-      {showVariantModal && colors.length > 0 && ramStoragePairs.length > 0 && (
+      {showVariantModal && colors.length > 0 && ramStoragePairs.length > 0 && createPortal(
         <div className="phoneCardVariantModalOverlay" onClick={() => setShowVariantModal(false)}>
           <div className="phoneCardVariantModal" onClick={(e) => e.stopPropagation()}>
             <h3>Válassz színt és RAM/Storage verziót</h3>
@@ -340,7 +341,8 @@ export default function PhoneCard({
               </button>
             </div>
           </div>
-        </div>
+        </div>,
+        document.body
       )}
     </>
   );

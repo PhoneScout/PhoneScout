@@ -159,11 +159,12 @@ export default function FilterPage() {
       const resp = await axios.post(filterApiUrl,filterRequestData);
 
       if (resp.status !== 200) {
-        console.error("Backend hiba:", resp.data);
+        const errorText = await resp.data;
+        console.error("Backend hiba:", errorText);
         throw new Error(`HTTP error! status: ${resp.status}`);
       }
 
-      const data = resp.data;
+      const data = await resp.json();
       console.log("Sikeres válasz:", data);
       
       if (Array.isArray(data)) {

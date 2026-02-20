@@ -32,6 +32,7 @@ export default function Navbar() {
     const [searchResults, setSearchResults] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
     const [allPhoneNames, setAllPhoneNames] = useState([]);
+    const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const navigate = useNavigate(); // useNavigate hook
 
@@ -49,7 +50,7 @@ export default function Navbar() {
                 setIsMenuOpen(false);
             }
         };
-        
+
         window.addEventListener('resize', handleResize);
         return () => window.removeEventListener('resize', handleResize);
     }, []);
@@ -57,8 +58,8 @@ export default function Navbar() {
     // Handle click outside mobile menu
     useEffect(() => {
         function handleClickOutside(event) {
-            if (isMenuOpen && 
-                mobileMenuRef.current && 
+            if (isMenuOpen &&
+                mobileMenuRef.current &&
                 !mobileMenuRef.current.contains(event.target) &&
                 !event.target.closest('.hamburger-btn')) {
                 setIsMenuOpen(false);
@@ -74,7 +75,7 @@ export default function Navbar() {
 
         document.addEventListener('mousedown', handleClickOutside);
         document.addEventListener('keydown', handleEscapeKey);
-        
+
         return () => {
             document.removeEventListener('mousedown', handleClickOutside);
             document.removeEventListener('keydown', handleEscapeKey);
@@ -89,9 +90,9 @@ export default function Navbar() {
     // Handle click outside search dropdown
     useEffect(() => {
         function handleClickOutsideSearch(event) {
-            if (searchBoxRef.current && 
-                searchDropdownRef.current && 
-                !searchBoxRef.current.contains(event.target) && 
+            if (searchBoxRef.current &&
+                searchDropdownRef.current &&
+                !searchBoxRef.current.contains(event.target) &&
                 !searchDropdownRef.current.contains(event.target)) {
                 setShowDropdown(false);
             }
@@ -115,9 +116,9 @@ export default function Navbar() {
     const handleSearch = (e) => {
         const query = e.target.value;
         setSearchQuery(query);
-        
+
         if (query.length > 0) {
-            const filteredResults = allPhoneNames.filter(phone => 
+            const filteredResults = allPhoneNames.filter(phone =>
                 phone.phoneName.toLowerCase().includes(query.toLowerCase())
             ).slice(0, 5); // Limit to 5 results
             setSearchResults(filteredResults);
@@ -131,13 +132,13 @@ export default function Navbar() {
     // Open phone page from search result
     const openPhonePage = (phoneID, phoneName) => {
         localStorage.setItem("selectedPhone", phoneID);
-        
+
         // Add to page history
         checkPagesHistory(phoneName, `/telefon/${phoneID}`);
-        
+
         // Navigate to phone page
         navigate(`/telefon/${phoneID}`);
-        
+
         // Clear search
         setSearchQuery('');
         setShowDropdown(false);
@@ -211,11 +212,11 @@ export default function Navbar() {
             setCartCount(itemCount);
         }
         updateCartCount();
-        
+
         // Listen for cart updates if you have a custom event
         const handleCartUpdate = () => updateCartCount();
         window.addEventListener('cartUpdated', handleCartUpdate);
-        
+
         return () => window.removeEventListener('cartUpdated', handleCartUpdate);
     }, []);
 
@@ -243,12 +244,17 @@ export default function Navbar() {
         localStorage.removeItem("fullname");
         localStorage.removeItem("email")
         localStorage.removeItem("jogosultsag");
-        alert("Sikeres kijelentkezés!");
-        
+        setShowSuccessModal(true);
+        setTimeout(() => {
+            setShowSuccessModal(false);
+        }, 2000);
+
+        //IDE KELL VISSZAJÖNNÖM
+
         // Reset page history
         setPreviousPages([{ pageName: "Főoldal", pageURL: "/" }]);
         localStorage.removeItem("pagesHistory");
-        
+
         // Navigate to home page
         navigate("/");
         closeMobileMenu();
@@ -266,23 +272,33 @@ export default function Navbar() {
             setCompareCount(comparePhones.length);
         }
         updateCompareCount();
-        
+
         // Listen for compare updates
         const handleCompareUpdate = () => updateCompareCount();
         window.addEventListener('compareUpdated', handleCompareUpdate);
-        
+
         return () => window.removeEventListener('compareUpdated', handleCompareUpdate);
     }, []);
 
     return (
         <div className="navbar-wrapper">
+            {showSuccessModal && (
+                <div
+                    className="position-fixed top-0 start-50 translate-middle-x mt-3 alert alert-success shadow-sm"
+                    role="alert"
+                    style={{ zIndex: 2000 }}
+                >
+                    Sikeres kijelentkezés!
+                </div>
+            )}
+
             {/* Main Navbar */}
             <div className="custom-header">
                 {/* Logo and Hamburger */}
                 <div className="col-8 col-md-4 col-lg-3 logo-container">
                     <div className="d-flex align-items-center">
                         {/* Hamburger button - visible only on mobile/tablet */}
-                        <button 
+                        <button
                             className={`hamburger-btn ${isMobileView ? 'd-block' : 'd-none'}`}
                             onClick={toggleMenu}
                             aria-label="Toggle menu"
@@ -290,9 +306,9 @@ export default function Navbar() {
                         >
                             <i className={`fa-solid ${isMenuOpen ? 'fa-times' : 'fa-bars'}`}></i>
                         </button>
-                        
+
                         <Link to="/" className="logo-link" onClick={closeMobileMenu}>
-                            <img src="/images/ImagePhoneScoutLogo.png" alt="PhoneScout Logo" className="logo-img"/>
+                            <img src="/images/ImagePhoneScoutLogo.png" alt="PhoneScout Logo" className="logo-img" />
                             <div className="logo-text blue">Phone</div>
                             <div className="logo-text green">Scout</div>
                         </Link>
@@ -301,9 +317,9 @@ export default function Navbar() {
 
                 {/* Desktop Navigation - hidden on mobile */}
                 <div className="col-lg-4 NavBarCol nav-links d-none d-lg-flex">
-                    <Link 
-                        to="/szures" 
-                        className="menuPoints" 
+                    <Link
+                        to="/szures"
+                        className="menuPoints"
                         onClick={() => {
                             closeMobileMenu();
                             checkPagesHistory('Minden telefon', '/szures');
@@ -311,9 +327,9 @@ export default function Navbar() {
                     >
                         Minden telefon
                     </Link>
-                    <Link 
-                        to="/szerviz" 
-                        className="menuPoints" 
+                    <Link
+                        to="/szerviz"
+                        className="menuPoints"
                         onClick={() => {
                             closeMobileMenu();
                             checkPagesHistory('Szerviz', '/szerviz');
@@ -321,9 +337,9 @@ export default function Navbar() {
                     >
                         Szerviz
                     </Link>
-                    <Link 
-                        to="/osszehasonlitas" 
-                        className="menuPoints" 
+                    <Link
+                        to="/osszehasonlitas"
+                        className="menuPoints"
                         id="osszehasonlitas"
                         onClick={() => {
                             closeMobileMenu();
@@ -340,21 +356,21 @@ export default function Navbar() {
                         <i className="fa-solid fa-magnifying-glass"></i>
                     </div>
                     <div className="search-input" ref={searchBoxRef}>
-                        <input 
+                        <input
                             value={searchQuery}
                             onChange={handleSearch}
                             onFocus={handleSearchFocus}
-                            placeholder="Keresés..." 
-                            type="text" 
-                            id="searchBox" 
+                            placeholder="Keresés..."
+                            type="text"
+                            id="searchBox"
                             autoComplete="off"
                         />
                         {showDropdown && searchResults.length > 0 && (
                             <div className={`search-dropdown ${showDropdown ? 'active' : ''}`} ref={searchDropdownRef}>
                                 {searchResults.map(phone => (
-                                    <div 
+                                    <div
                                         key={phone.phoneID}
-                                        className="dropdown-item" 
+                                        className="dropdown-item"
                                         onClick={() => openPhonePage(phone.phoneID, phone.phoneName)}
                                     >
                                         {phone.phoneName}
@@ -375,7 +391,7 @@ export default function Navbar() {
                                 <div id="userChange">
                                     <div id="fullName">{fullname}</div>
                                     <div className="user-img-wrapper">
-                                        <img src="../Images/doneUserIcon1.png" alt="User"/>
+                                        <img src="../Images/doneUserIcon1.png" alt="User" />
                                     </div>
                                 </div>
                             </a>
@@ -386,8 +402,8 @@ export default function Navbar() {
                         </div>
                     ) : (
                         // Not logged in - show login link
-                        <Link 
-                            to="/bejelentkezes" 
+                        <Link
+                            to="/bejelentkezes"
                             className="userIcon"
                             id="loginLink"
                             style={{ textDecoration: 'none', color: 'inherit' }}
@@ -395,14 +411,14 @@ export default function Navbar() {
                             <div id="userChange">
                                 <div id="fullName">Bejelentkezés</div>
                                 <div className="user-img-wrapper">
-                                    <img src="../Images/doneUserIcon1.png" alt="User"/>
+                                    <img src="../Images/doneUserIcon1.png" alt="User" />
                                 </div>
                             </div>
                         </Link>
                     )}
 
                     <div className="cart-icon">
-                        <Link 
+                        <Link
                             to="/kosar"
                             onClick={() => {
                                 checkPagesHistory('Kosár', '/kosar');
@@ -418,7 +434,7 @@ export default function Navbar() {
                 {/* Mobile Cart Icon - visible only on mobile */}
                 <div className="col-4 col-md-8 col-lg-0 d-flex d-lg-none justify-content-end align-items-center">
                     <div className="cart-icon mobile-cart">
-                        <Link 
+                        <Link
                             to="/kosar"
                             onClick={() => {
                                 checkPagesHistory('Kosár', '/kosar');
@@ -437,19 +453,19 @@ export default function Navbar() {
                 <div className="mobile-menu-wrapper" ref={mobileMenuRef}>
                     <div className="mobile-menu-content">
                         {/* Close button inside menu */}
-                        <button 
-                            className="mobile-menu-close" 
+                        <button
+                            className="mobile-menu-close"
                             onClick={() => setIsMenuOpen(false)}
                             aria-label="Close menu"
                         >
                             <i className="fa-solid fa-times"></i>
                         </button>
-                        
+
                         {/* Mobile Navigation Links */}
                         <div className="mobile-nav-links">
-                            <Link 
-                                to="/szures" 
-                                className="mobile-menu-point" 
+                            <Link
+                                to="/szures"
+                                className="mobile-menu-point"
                                 onClick={() => {
                                     closeMobileMenu();
                                     checkPagesHistory('Minden telefon', '/szures');
@@ -458,8 +474,8 @@ export default function Navbar() {
                                 <i className="fa-solid fa-mobile-screen-button"></i>
                                 Minden telefon
                             </Link>
-                            <Link 
-                                to="/szerviz" 
+                            <Link
+                                to="/szerviz"
                                 className="mobile-menu-point"
                                 onClick={() => {
                                     closeMobileMenu();
@@ -469,8 +485,8 @@ export default function Navbar() {
                                 <i className="fa-solid fa-screwdriver-wrench"></i>
                                 Szerviz
                             </Link>
-                            <Link 
-                                to="/osszehasonlitas" 
+                            <Link
+                                to="/osszehasonlitas"
                                 className="mobile-menu-point"
                                 onClick={() => {
                                     closeMobileMenu();
@@ -485,13 +501,13 @@ export default function Navbar() {
                         {/* Mobile Search */}
                         <div className="mobile-search-container">
                             <div className="search-input">
-                                <input 
+                                <input
                                     value={searchQuery}
                                     onChange={handleSearch}
                                     onFocus={handleSearchFocus}
-                                    placeholder="Keresés..." 
-                                    type="text" 
-                                    id="mobileSearchBox" 
+                                    placeholder="Keresés..."
+                                    type="text"
+                                    id="mobileSearchBox"
                                     autoComplete="off"
                                 />
                                 <div className="search-icon">
@@ -499,11 +515,11 @@ export default function Navbar() {
                                 </div>
                             </div>
                             {showDropdown && searchResults.length > 0 && (
-                                <div className={`search-dropdown ${showDropdown ? 'active' : ''}`} style={{marginTop: '10px'}}>
+                                <div className={`search-dropdown ${showDropdown ? 'active' : ''}`} style={{ marginTop: '10px' }}>
                                     {searchResults.map(phone => (
-                                        <div 
+                                        <div
                                             key={phone.phoneID}
-                                            className="dropdown-item" 
+                                            className="dropdown-item"
                                             onClick={() => {
                                                 openPhonePage(phone.phoneID, phone.phoneName);
                                                 closeMobileMenu();
@@ -519,7 +535,7 @@ export default function Navbar() {
                         {/* Mobile User Section */}
                         <div className="mobile-user-section">
                             <div className="mobile-user-info">
-                                <img src="../Images/doneUserIcon1.png" alt="User" className="mobile-user-img"/>
+                                <img src="../Images/doneUserIcon1.png" alt="User" className="mobile-user-img" />
                                 <div className="mobile-user-text">
                                     <div className="mobile-user-name">{fullname || "Vendég"}</div>
                                     <div className="mobile-user-status">
@@ -527,19 +543,19 @@ export default function Navbar() {
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div className="mobile-user-actions">
                                 {fullname ? (
                                     <>
-                                        <Link 
-                                            to="/profil" 
+                                        <Link
+                                            to="/profil"
                                             className="mobile-user-action-btn profile-btn"
                                             onClick={closeMobileMenu}
                                         >
                                             <i className="fa-solid fa-user"></i>
                                             Profil
                                         </Link>
-                                        <button 
+                                        <button
                                             className="mobile-user-action-btn logout-btn"
                                             onClick={logout}
                                         >
@@ -548,8 +564,8 @@ export default function Navbar() {
                                         </button>
                                     </>
                                 ) : (
-                                    <Link 
-                                        to="/bejelentkezes" 
+                                    <Link
+                                        to="/bejelentkezes"
                                         className="mobile-user-action-btn login-btn"
                                         onClick={closeMobileMenu}
                                     >
