@@ -1,0 +1,151 @@
+.info-page {
+    padding-top: 28px;
+    padding-bottom: 40px;
+}
+
+.info-hero {
+    background: linear-gradient(135deg, #2300B3 0%, #3e28bd 50%, #68F145 100%);
+    color: #fff;
+    border-radius: 20px;
+    padding: 36px 32px;
+    box-shadow: 0 6px 18px rgba(35, 0, 179, 0.2);
+}
+
+.info-hero h1 {
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.info-hero p {
+    margin-bottom: 0;
+    font-size: 1.05rem;
+}
+
+.info-pill {
+    display: inline-block;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    border-radius: 999px;
+    padding: 6px 14px;
+    margin-right: 8px;
+    margin-top: 10px;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.info-section {
+    margin-top: 24px;
+}
+
+.info-card {
+    background: #fff;
+    border: 1px solid #e7e7e7;
+    border-radius: 16px;
+    padding: 22px;
+    height: 100%;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.info-card h5 {
+    color: #2300B3;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.info-card p,
+.info-card li {
+    color: #333;
+}
+
+.info-list {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.info-list li {
+    margin-bottom: 8px;
+}
+
+.info-kpi {
+    border-radius: 14px;
+    padding: 14px;
+    background: #f7f9ff;
+    border: 1px solid #dfe6ff;
+    text-align: center;
+}
+
+.info-kpi strong {
+    color: #2300B3;
+    display: block;
+    font-size: 1.5rem;
+}
+
+.info-btn {
+    margin-top: 12px;
+    background-color: #68F145;
+    border: none;
+    color: #0a0a0a;
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-weight: 700;
+}
+
+.info-btn:hover {
+    background-color: #59d63b;
+    color: #0a0a0a;
+}
+
+.info-btn-secondary {
+    margin-top: 12px;
+    background-color: #fff;
+    border: 2px solid #2300B3;
+    color: #2300B3;
+    border-radius: 999px;
+    padding: 10px 18px;
+    font-weight: 700;
+}
+
+.info-btn-secondary:hover {
+    background-color: #2300B3;
+    color: #fff;
+}
+
+.info-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.info-steps {
+    margin: 0;
+    padding-left: 18px;
+}
+
+.info-steps li {
+    margin-bottom: 12px;
+}
+
+.info-badge {
+    display: inline-block;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #2300B3;
+    background: #eef0ff;
+    border: 1px solid #d9ddff;
+    border-radius: 999px;
+    padding: 4px 10px;
+    margin-bottom: 10px;
+}
+
+.info-note {
+    background: #f4fff1;
+    border: 1px solid #c8f7bc;
+    border-radius: 12px;
+    padding: 14px;
+}
+
+@media (max-width: 768px) {
+    .info-hero {
+        padding: 28px 20px;
+    }
+}

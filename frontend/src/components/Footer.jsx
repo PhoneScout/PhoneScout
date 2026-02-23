@@ -1,11 +1,12 @@
 import React from 'react'
 import './Footer.css';
+import { Link } from 'react-router-dom';
 
 export default function Footer() {
   return (
     <footer>
         <h3>Partnereink</h3>
-        <div class="partner-logos">
+      <div className="partner-logos">
             <img loading="lazy" src="./images/XiaomiLogo.png" alt="Xiaomi"/>
             <img loading="lazy" src="./images/samsung_logo.png" alt="Samsung"/>
             <img loading="lazy" src="./images/apple_logo.png" alt="Apple"/>
@@ -13,13 +14,13 @@ export default function Footer() {
             <img loading="lazy" src="./images/sony_logo.png" alt="Sony"/>
         </div>
         <h3>PhoneScout</h3>
-        <div class="footer-nav">
-            <a href="./elerhetosegek">Elérhetőségek</a>
-            <a href="./rolunk">Rólunk</a>
-            <a href="./kapcsolat">Kapcsolat</a>
-            <a href="./bolt">Bolt</a>
+      <div className="footer-nav">
+        <Link to="/elerhetosegek">Elérhetőségek</Link>
+        <Link to="/rolunk">Rólunk</Link>
+        <Link to="/kapcsolat">Kapcsolat</Link>
+        <Link to="/bolt">Bolt</Link>
         </div>
-        <div class="address">Miskolc, Palóczy László utca 3, 3525</div>
+      <div className="address">Miskolc, Palóczy László utca 3, 3525</div>
     </footer>
   )
 }
