@@ -62,7 +62,7 @@ namespace PhoneScout_GitHub.Controllers
                     ramAmount = p.Ramstorage.RamAmount,
                     storageAmount = p.Ramstorage.StorageAmount
                 }).ToList()
-            });
+            }).FirstOrDefault();
 
         
             return Ok(phone);

@@ -12,6 +12,11 @@ import ServiceRequest from './pages/ServiceRequest';
 import LoginRegister from './pages/LoginRegister';
 import RegistrationConfirm from './pages/RegistrationConfirm';
 import KepTeszt from './pages/KepTeszt';
+import AboutUs from './pages/AboutUs';
+import Contact from './pages/Contact';
+import Contacts from './pages/Contacts';
+import Shop from './pages/Shop';
+import PackagingTerms from './pages/PackagingTerms';
 import ChatbotWidget from './components/ChatbotWidget';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -44,6 +49,11 @@ function App() {
         <Route path="/bejelentkezes" element={<LoginRegister />}></Route>
         <Route path='/fiokaktivalas' element={<RegistrationConfirm />} />
         <Route path='/teszt' element={<KepTeszt />} />
+        <Route path='/rolunk' element={<AboutUs />} />
+        <Route path='/kapcsolat' element={<Contact />} />
+        <Route path='/elerhetosegek' element={<Contacts />} />
+        <Route path='/bolt' element={<Shop />} />
+        <Route path='/csomagolasfeltetelek' element={<PackagingTerms />} />
 
       </Routes>
 
