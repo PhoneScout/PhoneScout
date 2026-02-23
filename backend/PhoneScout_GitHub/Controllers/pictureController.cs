@@ -27,8 +27,8 @@ namespace PhoneScout_GitHub.Controllers
             var picture = await cx.Phonepictures
                 .FirstOrDefaultAsync(p => p.PhoneId == phoneID && p.IsIndex == 1);
 
-            if (picture == null || picture.PhonePicture1 == null)
-                return NotFound("Index picture not found.");
+            if (picture == null)
+                return NotFound("Nem található indexkép.");
 
             return File(picture.PhonePicture1, picture.ContentType);
         }
@@ -47,7 +47,7 @@ namespace PhoneScout_GitHub.Controllers
                 .ToListAsync();
 
             if (!pictures.Any())
-                return NotFound("No pictures found.");
+                return NotFound("Nem található kép.");
 
             return Ok(pictures);
 
@@ -65,7 +65,7 @@ namespace PhoneScout_GitHub.Controllers
         }
 
 
-        [HttpPost("PostPicture/{phoneID}")]
+        [HttpPost("PostPicture/{phoneID}/{isIndex}")]
         public async Task<IActionResult> PostPicture(int phoneID, IFormFile file, bool isIndex)
         {
             if (file == null || file.Length == 0)
@@ -87,7 +87,7 @@ namespace PhoneScout_GitHub.Controllers
                 cx.Phonepictures.Add(newPicture);
                 await cx.SaveChangesAsync();
 
-                return Ok("Picture uploaded.");
+                return Ok("A kép feltöltve.");
             }
             else
             {
@@ -114,7 +114,7 @@ namespace PhoneScout_GitHub.Controllers
 
                 await cx.SaveChangesAsync();
 
-                return Ok("Picture updated.");
+                return Ok("A kép frissítve.");
             }
             else
             {
@@ -136,7 +136,7 @@ namespace PhoneScout_GitHub.Controllers
             cx.Phonepictures.Remove(picture);
             await cx.SaveChangesAsync();
 
-            return NoContent();
+            return Ok("A kép törölve.");
         }
     }
 }
