@@ -118,9 +118,21 @@ export default function Compare() {
       const requests = compareIds.map(id =>
         axios.get(`http://localhost:5175/comparePage/${id}`)
       );
-      const raw = await Promise.all(requests);
-      const flattened = raw.flatMap(p => Array.isArray(p) ? p : (p ? [p] : []));
-      setPhones(flattened);
+      const responses = await Promise.all(requests);
+      const phones = responses.map(res => {
+        // Az axios response .data mezőjéből vesszük ki az adatokat
+        let data = Array.isArray(res.data) ? res.data[0] : res.data;
+        
+        // Ha van ramStorage tömb, kivonjuk az első elementum adatait
+        if (data && data.ramStorage && Array.isArray(data.ramStorage) && data.ramStorage.length > 0) {
+          const { ramAmount, storageAmount } = data.ramStorage[0];
+          data.ramAmount = ramAmount;
+          data.storageAmount = storageAmount;
+        }
+        
+        return data;
+      }).filter(p => p); // Nullok/undefined szűrése
+      setPhones(phones);
     } catch (err) {
       console.error("Hiba az adatok lekérésekor:", err);
     } finally {
