@@ -70,68 +70,66 @@ const Profile = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [addressStatusMessage, setAddressStatusMessage] = useState({ text: "", isError: false });
 
-  const [phones, setPhones] = useState([
-    {
-      phoneName: 'Samsung Galaxy S23',
-      amount: 1,
-      price: 349999,
-      status: 'feldolgozás alatt',
-      ramStorage: '8/256',
-      color: 'fekete'
-    },
-    {
-      phoneName: 'iPhone 14 Pro',
-      amount: 2,
-      price: 589999,
-      status: 'kiszállítva',
-      ramStorage: '6/256',
-      color: 'lila'
+  const [phones, setPhones] = useState([]);
+  const [serviceRequests, setServiceRequests] = useState([]);
+
+  // Szervízrendelések betöltése az API-ből
+  useEffect(() => {
+    const loadServiceRequests = async () => {
+      try {
+        if (!userID) {
+          console.error('UserID nem elérhető');
+          return;
+        }
+
+        const response = await axios.get(`http://localhost:5175/api/Profile/GetRepair/${userID}`);
+        if (Array.isArray(response.data)) {
+          setServiceRequests(response.data);
+        }
+      } catch (error) {
+        console.error('Hiba a szervízrendelések betöltésekor:', error);
+      }
+    };
+
+    loadServiceRequests();
+  }, [userID]);
+
+  // Rendelések betöltése az API-ből
+  useEffect(() => {
+    const loadOrders = async () => {
+      try {
+        if (!userID) {
+          console.error('UserID nem elérhető');
+          return;
+        }
+
+        const response = await axios.get(`http://localhost:5175/api/Profile/GetOrder/${userID}`);
+        if (Array.isArray(response.data)) {
+          setPhones(response.data);
+        }
+      } catch (error) {
+        console.error('Hiba a rendelések betöltésekor:', error);
+      }
+    };
+
+    loadOrders();
+  }, [userID]);
+
+  // Státusz konvertálása szövegre
+  const getStatusText = (statusCode) => {
+    switch (statusCode) {
+      case 0:
+        return 'feldolgozás alatt';
+      case 1:
+        return 'feldolgozva';
+      case 2:
+        return 'átvételre kész';
+      case 3:
+        return 'teljesítve';
+      default:
+        return 'ismeretlen';
     }
-  ]);
-  const [serviceRequests, setServiceRequests] = useState([
-    {
-      name: "Kovács János",
-      useremail: "kovacs.janos@example.com",
-      phonenumber: "+36 30 123 4567",
-      zippostalcosde: "1117",
-      city: "Budapest",
-      street: "Fehérvári út",
-      housenumber: "45",
-      phonemanufacturer: "Samsung Galaxy S21",
-      whatswrong: "kijelző",
-      inspection: true,
-      status: "feldolgozás alatt",
-      description: "A kijelző megrepedt, az érintés csak részben működik."
-    },
-    {
-      name: "Nagy Eszter",
-      useremail: "nagy.eszter@example.com",
-      phonenumber: "+36 20 987 6543",
-      zippostalcosde: "4025",
-      city: "Debrecen",
-      street: "Piac utca",
-      housenumber: "12",
-      phonemanufacturer: "iPhone 12",
-      whatswrong: "akkumulátor",
-      inspection: false,
-      status: "átvételre kész",
-      description: "Az akkumulátor gyorsan merül, egy napot sem bír ki."
-    },
-    {
-      name: "Szabó Péter",
-      useremail: "szabo.peter@example.com",
-      phonenumber: "+36 70 555 1122",
-      zippostalcosde: "7621",
-      city: "Pécs",
-      street: "Király utca",
-      housenumber: "8",
-      phonemanufacturer: "Xiaomi Redmi Note 11",
-      whatswrong: "töltőcsatlakozó",
-      inspection: true,
-      status: "kész",
-      description: "A telefon csak bizonyos szögben tölt, a kábel lötyög."
-    }
-  ]);
+  };
 
   // Szállítási címek
   const [shippingAddresses, setShippingAddresses] = useState([]);
@@ -1053,16 +1051,16 @@ const Profile = () => {
                 <div key={index} className="order-card">
                   <div className="order-header">
                     <h3>{phone.phoneName}</h3>
-                    <span className={`order-status status-${phone.status.replace(/\s/g, '-')}`}>
-                      {phone.status}
+                    <span className={`order-status status-${getStatusText(phone.status).replace(/\s/g, '-')}`}>
+                      {getStatusText(phone.status)}
                     </span>
                   </div>
 
                   <div className="order-details">
                     <p><strong>Darabszám:</strong> {phone.amount} db</p>
                     <p><strong>Ár:</strong> {phone.price.toLocaleString()} Ft</p>
-                    <p><strong>Memória:</strong> {phone.ramStorage}</p>
-                    <p><strong>Szín:</strong> {phone.color}</p>
+                    <p><strong>RAM/Tárhely:</strong> {phone.phoneRam}/{phone.phoneStorage}</p>
+                    <p><strong>Szín:</strong> {phone.phoneColorName}</p>
                   </div>
                 </div>
               ))}
@@ -1073,29 +1071,35 @@ const Profile = () => {
 
           {/*Szerviz kérések */}
           <section id="service-requests" className="profile-section">
-            <div className="section-header ">
+            <div className="section-header">
               <h2>Szervizeltetések</h2>
             </div>
-            <div>
-              {serviceRequests.map((request, index) => (
-                <div key={index} className="service-request-card">
-                  <div className="service-request-header">
-                    <h3>{request.phonemanufacturer}</h3>
-                    <span className={`service-request-status status-${request.status.replace(/\s/g, '-')}`}>
-                      {request.status}
-                    </span>
+
+            <div className="orders-grid">
+              {serviceRequests.length > 0 ? (
+                serviceRequests.map((request, index) => (
+                  <div key={index} className="service-request-card">
+                    <div className="service-request-header">
+                      <h3>{request.phoneName}</h3>
+                      <span className={`service-request-status status-${getStatusText(request.status).replace(/\s/g, '-')}`}>
+                        {getStatusText(request.status)}
+                      </span>
+                    </div>
+                    <div className="service-request-details">
+                      <p><strong>Gyártó:</strong> {request.manufacturerName}</p>
+                      <p><strong>Irányítószám:</strong> {request.postalCode}</p>
+                      <p><strong>Város:</strong> {request.city}</p>
+                      <p><strong>Cím:</strong> {request.address}</p>
+                      <p><strong>Telefonszám:</strong> {request.phoneNumber}</p>
+                      <p><strong>Hiba leírása:</strong> {request.problemDescription}</p>
+                      <p><strong>Vizsgálat:</strong> {request.phoneInspection ? "érdekelne" : "nem érdekelne"}</p>
+                      <p><strong>Ár:</strong> {request.price ? request.price.toLocaleString() + ' Ft' : 'Árajánlat függőben'}</p>
+                    </div>
                   </div>
-                  <div className="service-request-details">
-                    <p><strong>Felhasználó:</strong> {request.name}</p>
-                    <p><strong>Email:</strong> {request.useremail}</p>
-                    <p><strong>Telefon:</strong> {request.phonenumber}</p>
-                    <p><strong>Cím:</strong> {request.zippostalcosde}, {request.city}, {request.street} {request.housenumber}</p>
-                    <p><strong>Hiba:</strong> {request.whatswrong}</p>
-                    <p><strong>Vizsgálat:</strong> {request.inspection ? "igen" : "nem"}</p>
-                    <p><strong>Leírás:</strong> {request.description}</p>
-                  </div>
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="text-muted">Nincs szervizeltetési kérés.</p>
+              )}
             </div>
           </section>
 
