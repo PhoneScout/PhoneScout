@@ -6,6 +6,9 @@ import axios from 'axios';
 export default function PhonePage() {
   const { phoneId } = useParams();
   const [phone, setPhone] = useState(null);
+  const [pictures, setPictures] = useState([]);
+  const [activePictureIdx, setActivePictureIdx] = useState(0);
+  const [showImageModal, setShowImageModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedRamIdx, setSelectedRamIdx] = useState(0);
@@ -28,6 +31,19 @@ export default function PhonePage() {
       .catch(err => {
         console.error("Hiba:", err);
         setLoading(false);
+      });
+  }, [phoneId]);
+
+  useEffect(() => {
+    axios.get(`http://localhost:5175/api/blob/GetAllPictures/${phoneId}`)
+      .then(response => {
+        const loadedPictures = Array.isArray(response.data) ? response.data : [];
+        setPictures(loadedPictures);
+        setActivePictureIdx(0);
+      })
+      .catch(err => {
+        console.error("Hiba a képek betöltésekor:", err);
+        setPictures([]);
       });
   }, [phoneId]);
 
@@ -181,6 +197,34 @@ export default function PhonePage() {
 
   const isInCompare = compareIds.includes(parseInt(phoneId, 10));
 
+  const normalizeImageUrl = (url) => {
+    if (!url) return "";
+    if (url.startsWith("http://") || url.startsWith("https://")) return url;
+    return `http://localhost:5175${url}`;
+  };
+
+  const displayedPictures = pictures.length > 0
+    ? pictures
+    : [{ id: "placeholder", imageUrl: "../Images/RedMagicTesztTelefonElolHatulKep.jpg" }];
+
+  const activeImage = displayedPictures[activePictureIdx] || displayedPictures[0];
+
+  const goToPreviousImage = () => {
+    setActivePictureIdx((prev) => (prev - 1 + displayedPictures.length) % displayedPictures.length);
+  };
+
+  const goToNextImage = () => {
+    setActivePictureIdx((prev) => (prev + 1) % displayedPictures.length);
+  };
+
+  const openImageModal = () => {
+    setShowImageModal(true);
+  };
+
+  const closeImageModal = () => {
+    setShowImageModal(false);
+  };
+
   if (loading) return <div className="text-center mt-5"><h3>Betöltés...</h3></div>;
   if (!phone) return <div className="text-center mt-5"><h3>Készülék nem található.</h3></div>;
 
@@ -196,9 +240,51 @@ export default function PhonePage() {
             <div className="carouselDiv">
               <div id="carouselExample" className="carousel slide" data-bs-ride="carousel">
                 <div className="carousel-inner text-center">
-                  <div className="carousel-item active">
-                    <img src="../Images/RedMagicTesztTelefonElolHatulKep.jpg" className="img-fluid" alt="Telefon elöl" style={{ maxHeight: '450px' }} />
+                  <div className="carousel-item active phonePageCarouselItem">
+                    <img
+                      src={normalizeImageUrl(activeImage?.imageUrl)}
+                      className="d-block w-100"
+                      alt={`Telefon kép ${activePictureIdx + 1}`}
+                      onClick={openImageModal}
+                    />
                   </div>
+                </div>
+
+                {displayedPictures.length > 1 && (
+                  <>
+                    <button
+                      className="carousel-control-prev carouselButtonPhone"
+                      type="button"
+                      onClick={goToPreviousImage}
+                      onMouseUp={(e) => e.currentTarget.blur()}
+                    >
+                      <span className="fa-solid fa-arrow-left" aria-hidden="true"></span>
+                      <span className="visually-hidden">Előző</span>
+                    </button>
+                    <button
+                      className="carousel-control-next carouselButtonPhone"
+                      type="button"
+                      onClick={goToNextImage}
+                      onMouseUp={(e) => e.currentTarget.blur()}
+                    >
+                      <span className="fa-solid fa-arrow-right" aria-hidden="true"></span>
+                      <span className="visually-hidden">Következő</span>
+                    </button>
+                  </>
+                )}
+              </div>
+
+              <div className="carousel-thumbnails-container mt-3">
+                <div className="carousel-thumbnails d-flex justify-content-start">
+                  {displayedPictures.map((pic, idx) => (
+                    <img
+                      key={pic.id ?? idx}
+                      src={normalizeImageUrl(pic.imageUrl)}
+                      className="img-thumbnail mx-1"
+                      alt={`Telefon thumbnail ${idx + 1}`}
+                      onClick={() => setActivePictureIdx(idx)}
+                    />
+                  ))}
                 </div>
               </div>
             </div>
@@ -221,6 +307,7 @@ export default function PhonePage() {
                     onClick={() => setSelectedColor(c)}
                   />
                 ))}
+                {selectedColor && <span className="color-name">{selectedColor.colorName}</span>}
               </div>
             </div>
 
@@ -394,6 +481,32 @@ export default function PhonePage() {
           </div>
         </div>
       </div>
+
+      {showImageModal && (
+        <div className="phonePageImageModalOverlay" onClick={closeImageModal}>
+          <div className="phonePageImageModal" onClick={(e) => e.stopPropagation()}>
+            <div className="phonePageImageModalMain">
+              <button className="phonePageImageModalClose" type="button" onClick={closeImageModal}><i className="fas fa-times"></i></button>
+              <img
+                src={normalizeImageUrl(activeImage?.imageUrl)}
+                alt={`Telefon nagy kép ${activePictureIdx + 1}`}
+                className="phonePageImageModalImg"
+              />
+            </div>
+            <div className="phonePageImageModalThumbs">
+              {displayedPictures.map((pic, idx) => (
+                <img
+                  key={pic.id ?? idx}
+                  src={normalizeImageUrl(pic.imageUrl)}
+                  className={`phonePageImageModalThumb ${activePictureIdx === idx ? 'phonePageImageModalThumb--active' : ''}`}
+                  alt={`Telefon thumbnail ${idx + 1}`}
+                  onClick={() => setActivePictureIdx(idx)}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {showVariantModal && (
         <div className="phonePageVariantModalOverlay" onClick={() => setShowVariantModal(false)}>

@@ -1,0 +1,43 @@
+:root {
+	--scrollbar-size: 12px;
+	--scrollbar-track: #e9f2ff;
+	--scrollbar-thumb-start: #2300b3;
+	--scrollbar-thumb-end: #68f145;
+	--scrollbar-thumb-hover-start: #1a0086;
+	--scrollbar-thumb-hover-end: #56cb39;
+}
+
+html,
+body {
+	scrollbar-width: thin;
+	scrollbar-color: var(--scrollbar-thumb-start) var(--scrollbar-track);
+}
+
+* {
+	scrollbar-width: thin;
+	scrollbar-color: var(--scrollbar-thumb-start) var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar {
+	width: var(--scrollbar-size);
+	height: var(--scrollbar-size);
+}
+
+*::-webkit-scrollbar-track {
+	background: var(--scrollbar-track);
+	border-radius: 12px;
+}
+
+*::-webkit-scrollbar-thumb {
+	background: linear-gradient(180deg, var(--scrollbar-thumb-start), var(--scrollbar-thumb-end));
+	border-radius: 12px;
+	border: 2px solid var(--scrollbar-track);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+	background: linear-gradient(180deg, var(--scrollbar-thumb-hover-start), var(--scrollbar-thumb-hover-end));
+}
+
+*::-webkit-scrollbar-corner {
+	background: var(--scrollbar-track);
+}

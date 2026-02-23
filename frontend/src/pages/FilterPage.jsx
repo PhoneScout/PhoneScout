@@ -164,7 +164,7 @@ export default function FilterPage() {
         throw new Error(`HTTP error! status: ${resp.status}`);
       }
 
-      const data = await resp.json();
+      const data = resp.data;
       console.log("Sikeres válasz:", data);
       
       if (Array.isArray(data)) {

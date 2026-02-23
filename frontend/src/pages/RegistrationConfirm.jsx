@@ -16,7 +16,7 @@ export default function RegistrationConfirm() {
         e.preventDefault();
         
         try {
-            const response = await axios.get(`http://localhost:5175/api/Registration?name=${name}&email=${email}`);
+            const response = await axios.put(`http://localhost:5175/api/Registration?name=${name}&email=${email}`);
 
             if(response.status === 200) {
                 setMessage("Sikeres aktiválás! Most már bejelentkezhetsz. Átirányítás...");

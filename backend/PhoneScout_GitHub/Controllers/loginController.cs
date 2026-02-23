@@ -95,7 +95,8 @@ namespace PhoneScout_GitHub.Controllers
                     FullName = user.Name,
                     Email = user.Email,
                     Privilege = (int)user.PrivilegeId,
-                    Token = token
+                    Token = token,
+                    Active = user.Active   // ADD THIS
                 });
             }
             catch (Exception ex)
@@ -103,5 +104,25 @@ namespace PhoneScout_GitHub.Controllers
                 return BadRequest(ex.InnerException != null ? ex.InnerException.Message : ex.Message);
             }
         }
+
+        [HttpGet("GetUserInfo/{Email}")]
+        [SwaggerOperation(
+    Summary = "Lekéri a felhasználó adatait email alapján",
+    Description = "Visszaadja a felhasználó privilegiumát és aktiváltsági státuszát"
+)]
+        public IActionResult GetUserInfo(string Email)
+        {
+            var user = _cx.Users.FirstOrDefault(u => u.Email == Email);
+            if (user == null)
+                return BadRequest("Nincs ilyen felhasználó!");
+
+            return Ok(new
+            {
+                Email = user.Email,
+                Privilege = (int)user.PrivilegeId,
+                Active = user.Active
+            });
+        }
+
     }
 }
