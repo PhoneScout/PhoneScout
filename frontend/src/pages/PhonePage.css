@@ -1,4 +1,3 @@
-
 .color-picker {
     position: relative;
     font-family: 'Inter';
@@ -384,161 +383,429 @@ footer .address {
 /* Címsorok feletti border eltüntetése */
 #phoneTable .first_row td,
 #phoneTable .first_row th {
-  border-top: none;
+    border-top: none;
 }
 
 /* Üres elválasztó sorok borderének eltüntetése */
 #phoneTable .more_rows td {
-  border-top: none;
-  border-bottom: none;
-  padding: 0;
-  height: 1rem;
+    border-top: none;
+    border-bottom: none;
+    padding: 0;
+    height: 1rem;
 }
 
 .hovered-row {
-  background-color: #38ec38bd !important;
-  transition: background-color 0.3s ease;
+    background-color: #38ec38bd !important;
+    transition: background-color 0.3s ease;
 }
 
 /* PhonePage.css */
 .flash-highlight {
-  background-color: #38ec38bd !important;
-  transition: background-color 0.3s ease;
+    background-color: #38ec38bd !important;
+    transition: background-color 0.3s ease;
 }
 
 .row.align-items-start {
-    overflow: visible !important; 
+    overflow: visible !important;
 }
 
 @keyframes titlePulse {
-  0% { background-color: transparent; }
-  50% { background-color: #68f14580; }
-  100% { background-color: transparent; }
+    0% {
+        background-color: transparent;
+    }
+
+    50% {
+        background-color: #68f14580;
+    }
+
+    100% {
+        background-color: transparent;
+    }
 }
 
 .title-highlight {
-  animation: titlePulse 1s ease;
+    animation: titlePulse 1s ease;
 }
 
 /* Variant Modal Styles */
 .phonePageVariantModalOverlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10000;
 }
 
 .phonePageVariantModal {
-  background: #fff;
-  padding: 24px;
-  border-radius: 12px;
-  width: 420px;
-  max-width: 90vw;
-  max-height: 90vh;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-  overflow-y: auto;
-  position: relative;
+    background: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    width: 420px;
+    max-width: 90vw;
+    max-height: 90vh;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+    overflow-y: auto;
+    position: relative;
 }
 
 .phonePageVariantSection {
-  margin: 12px 0;
+    margin: 12px 0;
 }
 
 .phonePageVariantTitle {
-  font-weight: 600;
-  margin-bottom: 8px;
+    font-weight: 600;
+    margin-bottom: 8px;
 }
 
 .phonePageColorOptions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .phonePageColorCircle {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 2px solid #ddd;
-  cursor: pointer;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    cursor: pointer;
 }
 
 .phonePageColorCircle--selected {
-  border-color: #68F145;
-  box-shadow: 0 0 0 2px rgba(104, 241, 69, 0.4);
+    border-color: #68F145;
+    box-shadow: 0 0 0 2px rgba(104, 241, 69, 0.4);
 }
 
 .phonePagePairOptions {
-  display: flex;
-  gap: 8px;
-  flex-wrap: wrap;
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
 }
 
 .phonePagePairButton {
-  padding: 6px 10px;
-  border: 1px solid #ddd;
-  height: auto;
-  background: #f6f6f6;
-  border-radius: 6px;
-  cursor: pointer;
+    padding: 6px 10px;
+    border: 1px solid #ddd;
+    height: auto;
+    background: #f6f6f6;
+    border-radius: 6px;
+    cursor: pointer;
 }
 
 .phonePagePairButton--selected {
-  border-color: #68F145;
-  background: #eaffea;
+    border-color: #68F145;
+    background: #eaffea;
 }
 
 .phonePageVariantLabel {
-  margin-top: 6px;
-  font-size: 0.9rem;
-  color: #444;
+    margin-top: 6px;
+    font-size: 0.9rem;
+    color: #444;
 }
 
 .phonePageQuantityNumber {
-  font-size: 1.2rem;
-  font-weight: 600;
-  color: #000;
-  margin-top: auto;
-  margin-bottom: auto;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #000;
+    margin-top: auto;
+    margin-bottom: auto;
 }
 
 .phonePageVariantActions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  margin-top: 14px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 14px;
 }
 
 .phonePageVariantCancel,
 .phonePageVariantConfirm {
-  padding: 8px 12px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
+    padding: 8px 12px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
 }
 
 .phonePageVariantCancel {
-  background: #eee;
+    background: #eee;
 }
 
 .phonePageVariantConfirm {
-  background: #68F145;
-  color: #0b2b00;
+    background: #68F145;
+    color: #0b2b00;
 }
 
 .phonePageVariantError {
-  color: #d32f2f;
-  font-size: 0.85rem;
-  font-weight: 500;
-  margin-top: 6px;
-  padding: 6px 8px;
-  background-color: #ffebee;
-  border-left: 3px solid #d32f2f;
-  border-radius: 3px;
+    color: #d32f2f;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 6px;
+    padding: 6px 8px;
+    background-color: #ffebee;
+    border-left: 3px solid #d32f2f;
+    border-radius: 3px;
+}
+
+.carouselDiv {
+    max-width: 540px;
+    margin: 0 auto;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+    border: 1px solid #e7ebf0;
+    border-radius: 16px;
+    box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+    padding: 12px;
+}
+
+.phonePageCarouselItem {
+    border-radius: 14px;
+    overflow: hidden;
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2f6 100%);
+}
+
+.phonePageCarouselItem img {
+    width: 100%;
+    height: 420px;
+    object-fit: contain;
+    display: block;
+    cursor: pointer;
+    transition: transform 0.25s ease;
+}
+
+.phonePageCarouselItem img:hover {
+    transform: scale(1.01);
+}
+
+
+.carouselButtonPhone {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 44px;
+    height: 44px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    background: rgba(15, 23, 42, 0.6);
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 6px 16px rgba(2, 6, 23, 0.28);
+    z-index: 3;
+    backdrop-filter: blur(2px);
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    opacity: 1;
+}
+
+.carousel-control-prev.carouselButtonPhone {
+    left: 10px;
+}
+
+.carousel-control-next.carouselButtonPhone {
+    right: 10px;
+}
+
+.carouselButtonPhone:hover,
+.carouselButtonPhone:focus,
+.carouselButtonPhone:focus-visible,
+.carouselButtonPhone:active {
+    background: rgba(15, 23, 42, 0.78);
+    color: #ffffff;
+    outline: none;
+    box-shadow: 0 8px 20px rgba(2, 6, 23, 0.35);
+    transform: translateY(-50%) scale(1.03);
+}
+
+.carouselButtonPhone .fa-solid {
+    font-size: 20px;
+}
+
+
+
+.carousel-thumbnails-container {
+    overflow-x: auto;
+    padding: 10px 2px 4px;
+    scrollbar-width: thin;
+}
+
+.carousel-thumbnails {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.carousel-thumbnails .img-thumbnail {
+    width: 90px;
+    height: 90px;
+    object-fit: cover;
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-radius: 10px;
+    padding: 0;
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, 0.1);
+    transition: all 0.2s ease;
+}
+
+.carousel-thumbnails .img-thumbnail:hover {
+    transform: translateY(-2px);
+    border-color: rgba(35, 0, 179, 0.35);
+    box-shadow: 0 8px 16px rgba(15, 23, 42, 0.18);
+}
+
+@media (max-width: 768px) {
+    .phonePageCarouselItem img {
+        height: 320px;
+    }
+
+    .carouselButtonPhone {
+        width: 36px;
+        height: 36px;
+    }
+}
+
+.phonePageImageModalOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 11000;
+    padding: 20px;
+}
+
+.phonePageImageModal {
+    position: relative;
+    display: flex;
+    align-items: stretch;
+    justify-content: center;
+    gap: 12px;
+    width: 1100px;
+    border-radius: 16px;
+    overflow: hidden;
+    max-width: 96vw;
+    max-height: 90vh;
+}
+
+.phonePageImageModalMain {
+    position: relative;
+    width: 980px;
+    flex: 0 0 980px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 0;
+}
+
+.phonePageImageModalImg {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 28px;
+    background: linear-gradient(135deg,
+            rgba(35, 0, 179, 0.4) 0%,
+            rgba(104, 241, 69, 0.4) 100%);
+    border: linear-gradient(135deg,
+            rgba(35, 0, 179, 0.7) 0%,
+            rgba(104, 241, 69, 0.7) 100%);
+    backdrop-filter: blur(8px) saturate(1.15);
+    -webkit-backdrop-filter: blur(8px) saturate(1.15);
+}
+
+.phonePageImageModalThumbs {
+    width: 108px;
+    min-width: 108px;
+    max-height: 90vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 4px;
+}
+
+.phonePageImageModalThumb {
+    width: 100%;
+    height: 96px;
+    object-fit: cover;
+    border-radius: 10px;
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #111;
+}
+
+.phonePageImageModalThumb:hover {
+    border-color: rgba(255, 255, 255, 0.45);
+    transform: translateY(-1px);
+}
+
+.phonePageImageModalThumb--active {
+    border-color: #68f145;
+    box-shadow: 0 0 0 1px rgba(104, 241, 69, 0.35);
+}
+
+.phonePageImageModalClose {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    z-index: 20;
+    display: flex;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    background: rgb(46, 46, 46);
+    color: #fff;
+    font-size: 30px;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: all 0.2s ease;
+    align-items: center;
+    justify-content: center;
+}
+
+.phonePageImageModalClose:hover {
+    background-color: rgb(87, 85, 85)
+}
+
+@media (max-width: 768px) {
+    .phonePageImageModal {
+        width: 100%;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .phonePageImageModalMain {
+        width: 100%;
+        flex: 1 1 auto;
+    }
+
+    .phonePageImageModalThumbs {
+        width: 100%;
+        min-width: 0;
+        max-height: none;
+        overflow-y: visible;
+        overflow-x: auto;
+        flex-direction: row;
+        padding: 2px;
+    }
+
+    .phonePageImageModalThumb {
+        width: 84px;
+        min-width: 84px;
+        height: 84px;
+    }
 }
