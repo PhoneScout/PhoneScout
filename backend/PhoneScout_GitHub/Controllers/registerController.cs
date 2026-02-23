@@ -124,7 +124,7 @@ namespace PhoneScout_GitHub.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpPut]
         [SwaggerOperation(
             Summary = "Fiók aktiválás",
             Description = "A regisztrációnál kapott emailen keresztül elérhető, fiók aktiválás után jogosult az oldalra történő bejelentkezésre."
@@ -135,6 +135,42 @@ namespace PhoneScout_GitHub.Controllers
             {
                 // Felhasználó megkeresése
                 User? user = await _cx.Users.FirstOrDefaultAsync(f => f.Name == name && f.Email == email);
+
+                if (user == null)
+                {
+                    return Ok("Sikertelen aktiválás. Nincs ilyen felhasználó!");
+                }
+
+                if (user.Active != 0)
+                {
+                    return Ok("A regisztráció befejezése már korábban megtörtént.");
+                }
+
+                // Aktiválás
+                user.Active = 1;
+                _cx.Users.Update(user);
+                await _cx.SaveChangesAsync();
+
+                return Ok("Sikeres aktiválás! Most már bejelentkezhet.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Hiba az aktiválás során: {ex.Message}");
+            }
+        }
+
+        [HttpPut("ActivateAccountWPF")]
+        [SwaggerOperation(
+            Summary = "Fiók aktiválás WPF",
+            Description = "A regisztrációnál kapott emailen keresztül elérhető, fiók aktiválás után jogosult az oldalra történő bejelentkezésre."
+        )]
+        
+        public async Task<IActionResult> ActivateAccountWPF([FromQuery] string email)
+        {
+            try
+            {
+                // Felhasználó megkeresése
+                User? user = await _cx.Users.FirstOrDefaultAsync(f => f.Email == email);
 
                 if (user == null)
                 {
