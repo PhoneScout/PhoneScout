@@ -12,15 +12,63 @@ const Profile = () => {
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [userData, setUserData] = useState({ userFullName: '', userEmail: '' });
+  const [userID, setUserID] = useState(null);
   const savedEmail = localStorage.getItem('email');
+  
+  // UserID betöltése az email alapján
   useEffect(() => {
-    const savedName = localStorage.getItem('fullname');
-    setUserData({ userFullName: savedName, userEmail: savedEmail });
-  }, []);
+    const loadUserData = async () => {
+      try {
+        const savedName = localStorage.getItem('fullname');
+        setUserData({ userFullName: savedName, userEmail: savedEmail });
+
+        if (savedEmail) {
+          const response = await axios.get(`http://localhost:5175/api/Registration/GetId/${encodeURIComponent(savedEmail)}`);
+          if (response.data) {
+            setUserID(response.data);
+            localStorage.setItem('userid', response.data);
+          }
+        }
+      } catch (error) {
+        console.error('Hiba a user adatok betöltésekor:', error);
+      }
+    };
+
+    loadUserData();
+  }, [savedEmail]);
+
+  // Címek betöltése az API-ből
+  useEffect(() => {
+    const loadAddresses = async () => {
+      try {
+        if (!userID) {
+          console.error('UserID nem elérhető');
+          return;
+        }
+
+        // Szállítási címek (addressType=1)
+        const shippingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/1`);
+        if (Array.isArray(shippingRes.data)) {
+          setShippingAddresses(shippingRes.data);
+        }
+
+        // Számlázási címek (addressType=0)
+        const billingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/0`);
+        if (Array.isArray(billingRes.data)) {
+          setBillingAddresses(billingRes.data);
+        }
+      } catch (error) {
+        console.error('Hiba a címek betöltésekor:', error);
+      }
+    };
+
+    loadAddresses();
+  }, [userID]);
 
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, label: "", color: "#ccc" });
   const [statusMessage, setStatusMessage] = useState({ text: "", isError: false });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [addressStatusMessage, setAddressStatusMessage] = useState({ text: "", isError: false });
 
   const [phones, setPhones] = useState([
     {
@@ -86,69 +134,18 @@ const Profile = () => {
   ]);
 
   // Szállítási címek
-  const [shippingAddresses, setShippingAddresses] = useState([
-    {
-      id: 1,
-      name: 'Otthoni cím',
-      country: 'Magyarország',
-      zipCode: '1052',
-      city: 'Budapest',
-      street: 'Kossuth Lajos utca 12.',
-      isPrimary: true
-    },
-    {
-      id: 2,
-      name: 'Munkahelyi cím',
-      country: 'Magyarország',
-      zipCode: '1077',
-      city: 'Budapest',
-      street: 'Rákóczi út 45.',
-      isPrimary: false
-    },
-    {
-      id: 3,
-      name: 'Szülői ház',
-      country: 'Magyarország',
-      zipCode: '4024',
-      city: 'Debrecen',
-      street: 'Petőfi Sándor utca 8.',
-      isPrimary: false
-    }
-  ]);
-
+  const [shippingAddresses, setShippingAddresses] = useState([]);
+  
   // Számlázási címek
-  const [billingAddresses, setBillingAddresses] = useState([
-    {
-      id: 1,
-      name: 'Fő számlázási cím',
-      country: 'Magyarország',
-      zipCode: '1052',
-      city: 'Budapest',
-      street: 'Kossuth Lajos utca 12.',
-      taxNumber: '12345678-1-42',
-      isPrimary: true
-    },
-    {
-      id: 2,
-      name: 'Céges számlázás',
-      country: 'Magyarország',
-      zipCode: '1132',
-      city: 'Budapest',
-      street: 'Váci út 67.',
-      taxNumber: '87654321-2-31',
-      isPrimary: false
-    }
-  ]);
+  const [billingAddresses, setBillingAddresses] = useState([]);
 
   // Új cím form
   const [newAddress, setNewAddress] = useState({
     type: 'shipping',
-    name: '',
-    country: 'Magyarország',
-    zipCode: '',
+    postalCode: '',
     city: '',
-    street: '',
-    taxNumber: ''
+    address: '',
+    phoneNumber: ''
   });
 
   // Módosítás státuszok
@@ -156,6 +153,12 @@ const Profile = () => {
   const [editingShippingId, setEditingShippingId] = useState(null);
   const [editingBillingId, setEditingBillingId] = useState(null);
   const [showNewAddressForm, setShowNewAddressForm] = useState(false);
+  const [newAddressType, setNewAddressType] = useState(null); // 'shipping' vagy 'billing'
+
+  // Delete modal state
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deleteAddressType, setDeleteAddressType] = useState(null);
+  const [deleteAddressId, setDeleteAddressId] = useState(null);
 
   // function GetProfile(){
   //   fetch("")
@@ -296,96 +299,189 @@ const Profile = () => {
 
 
   // Szállítási cím mentése
-  const handleShippingSubmit = (e, id) => {
+  const handleShippingSubmit = async (e) => {
     e.preventDefault();
-    // Itt lenne az API hívás
-    setEditingShippingId(null);
-    alert('Szállítási cím frissítve!');
+    setAddressStatusMessage({ text: "", isError: false });
+
+    try {
+      if (shippingAddresses.length === 0) return;
+
+      if (!userID) {
+        setAddressStatusMessage({ text: "Bejelentkezés szükséges!", isError: true });
+        return;
+      }
+
+      const address = shippingAddresses[0];
+
+      const response = await axios.put(
+        `http://localhost:5175/api/address/PutAddress/${userID}/1`,
+        {
+          postalCode: address.postalCode,
+          city: address.city,
+          address: address.address,
+          phoneNumber: address.phoneNumber,
+          addressType: 1,
+          userID: parseInt(userID)
+        }
+      );
+
+      if (response.status === 200) {
+        setAddressStatusMessage({ text: "Szállítási cím sikeresen frissítve!", isError: false });
+        setEditingShippingId(null);
+        setTimeout(() => setAddressStatusMessage({ text: "", isError: false }), 3000);
+      }
+    } catch (error) {
+      const errorMsg = error.response?.data || 'Hiba történt a mentés során!';
+      setAddressStatusMessage({ text: errorMsg, isError: true });
+    }
   };
 
   // Számlázási cím mentése
-  const handleBillingSubmit = (e, id) => {
+  const handleBillingSubmit = async (e) => {
     e.preventDefault();
-    // Itt lenne az API hívás
-    setEditingBillingId(null);
-    alert('Számlázási cím frissítve!');
+    setAddressStatusMessage({ text: "", isError: false });
+
+    try {
+      if (billingAddresses.length === 0) return;
+
+      if (!userID) {
+        setAddressStatusMessage({ text: "Bejelentkezés szükséges!", isError: true });
+        return;
+      }
+
+      const address = billingAddresses[0];
+
+      const response = await axios.put(
+        `http://localhost:5175/api/address/PutAddress/${userID}/0`,
+        {
+          postalCode: address.postalCode,
+          city: address.city,
+          address: address.address,
+          phoneNumber: address.phoneNumber,
+          addressType: 0,
+          userID: parseInt(userID)
+        }
+      );
+
+      if (response.status === 200) {
+        setAddressStatusMessage({ text: "Számlázási cím sikeresen frissítve!", isError: false });
+        setEditingBillingId(null);
+        setTimeout(() => setAddressStatusMessage({ text: "", isError: false }), 3000);
+      }
+    } catch (error) {
+      const errorMsg = error.response?.data || 'Hiba történt a mentés során!';
+      setAddressStatusMessage({ text: errorMsg, isError: true });
+    }
   };
 
   // Új cím hozzáadása
-  const handleAddNewAddress = (e) => {
+  const handleAddNewAddress = async (e) => {
     e.preventDefault();
+    setAddressStatusMessage({ text: "", isError: false });
 
-    if (newAddress.type === 'shipping' && shippingAddresses.length >= 3) {
-      alert('Maximum 3 szállítási címet adhatsz meg!');
-      return;
-    }
-
-    if (newAddress.type === 'billing' && billingAddresses.length >= 3) {
-      alert('Maximum 3 számlázási címet adhatsz meg!');
-      return;
-    }
-
-    const newId = Date.now();
-    const addressToAdd = {
-      id: newId,
-      name: newAddress.name,
-      country: newAddress.country,
-      zipCode: newAddress.zipCode,
-      city: newAddress.city,
-      street: newAddress.street,
-      isPrimary: false
-    };
-
-    if (newAddress.type === 'shipping') {
-      setShippingAddresses([...shippingAddresses, addressToAdd]);
-    } else {
-      addressToAdd.taxNumber = newAddress.taxNumber;
-      setBillingAddresses([...billingAddresses, addressToAdd]);
-    }
-
-    // Form reset
-    setNewAddress({
-      type: 'shipping',
-      name: '',
-      country: 'Magyarország',
-      zipCode: '',
-      city: '',
-      street: '',
-      taxNumber: ''
-    });
-    setShowNewAddressForm(false);
-    alert('Új cím sikeresen hozzáadva!');
-  };
-
-  // Elsődleges cím beállítása
-  const setPrimaryAddress = (type, id) => {
-    if (type === 'shipping') {
-      const updated = shippingAddresses.map(addr => ({
-        ...addr,
-        isPrimary: addr.id === id
-      }));
-      setShippingAddresses(updated);
-    } else {
-      const updated = billingAddresses.map(addr => ({
-        ...addr,
-        isPrimary: addr.id === id
-      }));
-      setBillingAddresses(updated);
-    }
-    alert('Elsődleges cím beállítva!');
-  };
-
-  // Cím törlése
-  const deleteAddress = (type, id) => {
-    if (window.confirm('Biztosan törölni szeretnéd ezt a címet?')) {
-      if (type === 'shipping') {
-        const updated = shippingAddresses.filter(addr => addr.id !== id);
-        setShippingAddresses(updated);
-      } else {
-        const updated = billingAddresses.filter(addr => addr.id !== id);
-        setBillingAddresses(updated);
+    try {
+      if (!userID) {
+        setAddressStatusMessage({ text: "Bejelentkezés szükséges!", isError: true });
+        return;
       }
-      alert('Cím sikeresen törölve!');
+
+      const addressType = newAddress.type === 'shipping' ? 1 : 0;
+
+      const response = await axios.post(
+        `http://localhost:5175/api/address/PostAddress`,
+        {
+          postalCode: newAddress.postalCode,
+          city: newAddress.city,
+          address: newAddress.address,
+          phoneNumber: newAddress.phoneNumber,
+          addressType: addressType,
+          userID: parseInt(userID)
+        }
+      );
+
+      if (response.status === 200) {
+        setAddressStatusMessage({ text: "Új cím sikeresen hozzáadva!", isError: false });
+        
+        // Újra betöltjük a címeket
+        setTimeout(async () => {
+          const shippingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/1`);
+          if (Array.isArray(shippingRes.data)) {
+            setShippingAddresses(shippingRes.data);
+          }
+
+          const billingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/0`);
+          if (Array.isArray(billingRes.data)) {
+            setBillingAddresses(billingRes.data);
+          }
+
+          setAddressStatusMessage({ text: "", isError: false });
+        }, 1500);
+
+        // Form reset
+        setNewAddress({
+          type: 'shipping',
+          postalCode: '',
+          city: '',
+          address: '',
+          phoneNumber: ''
+        });
+        setNewAddressType(null);
+      }
+    } catch (error) {
+      const errorMsg = error.response?.data || 'Hiba történt a cím hozzáadásakor!';
+      setAddressStatusMessage({ text: errorMsg, isError: true });
+    }
+  };
+
+  // Cím törlésének megerősítése
+  const deleteAddress = (type, id) => {
+    setDeleteAddressType(type);
+    setDeleteAddressId(id);
+    setShowDeleteModal(true);
+  };
+
+  // Valós törlés az API-n keresztül
+  const confirmDeleteAddress = async () => {
+    setAddressStatusMessage({ text: "", isError: false });
+
+    try {
+      if (!userID) {
+        setAddressStatusMessage({ text: "Bejelentkezés szükséges!", isError: true });
+        return;
+      }
+
+      const addressType = deleteAddressType === 'shipping' ? 1 : 0;
+
+      const response = await axios.delete(
+        `http://localhost:5175/api/address/DeleteAddress/${userID}/${addressType}`
+      );
+
+      if (response.status === 200) {
+        setAddressStatusMessage({ text: "Cím sikeresen törölve!", isError: false });
+
+        // Újra betöltjük a címeket
+        setTimeout(async () => {
+          const shippingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/1`);
+          if (Array.isArray(shippingRes.data)) {
+            setShippingAddresses(shippingRes.data);
+          }
+
+          const billingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/0`);
+          if (Array.isArray(billingRes.data)) {
+            setBillingAddresses(billingRes.data);
+          }
+
+          setAddressStatusMessage({ text: "", isError: false });
+        }, 1500);
+      }
+
+      setShowDeleteModal(false);
+      setDeleteAddressType(null);
+      setDeleteAddressId(null);
+    } catch (error) {
+      const errorMsg = error.response?.data || 'Hiba történt a törlés során!';
+      setAddressStatusMessage({ text: errorMsg, isError: true });
+      setShowDeleteModal(false);
     }
   };
 
@@ -399,17 +495,17 @@ const Profile = () => {
     }
   };
 
-  const handleAddressInputChange = (e, type, id, field) => {
+  const handleAddressInputChange = (e, type, idx, field) => {
     const { value } = e.target;
 
     if (type === 'shipping') {
-      const updated = shippingAddresses.map(addr =>
-        addr.id === id ? { ...addr, [field]: value } : addr
+      const updated = shippingAddresses.map((addr, i) =>
+        i === idx ? { ...addr, [field]: value } : addr
       );
       setShippingAddresses(updated);
     } else {
-      const updated = billingAddresses.map(addr =>
-        addr.id === id ? { ...addr, [field]: value } : addr
+      const updated = billingAddresses.map((addr, i) =>
+        i === idx ? { ...addr, [field]: value } : addr
       );
       setBillingAddresses(updated);
     }
@@ -426,7 +522,6 @@ const Profile = () => {
     userData.newPassword !== userData.confirmPassword;
 
   return (
-
     <div className="profile-container">
       {/* Fejléc */}
       <header className="profile-header">
@@ -602,231 +697,352 @@ const Profile = () => {
           {/* 2. Szállítási címek szakasz */}
           <section id="shipping" className="profile-section">
             <div className="section-header">
-              <h2>Szállítási címek</h2>
-              {shippingAddresses.length < 3 && (
+              <h2>Szállítási cím</h2>
+              {!shippingAddresses.length && !newAddressType && (
                 <button
                   className="btn-add"
-                  onClick={() => setShowNewAddressForm(true)}
+                  onClick={() => {
+                    setNewAddress({ type: 'shipping', postalCode: '', city: '', address: '', phoneNumber: '' });
+                    setNewAddressType('shipping');
+                  }}
                 >
                   + Új cím
                 </button>
               )}
             </div>
 
-            <div className="addresses-grid">
-              {shippingAddresses.map((address) => (
-                <div
-                  key={address.id}
-                  className={`address-card ${address.isPrimary ? 'primary' : ''}`}
-                >
-                  <div className="address-header">
-                    <h3>{address.name}</h3>
-                    {address.isPrimary && (
-                      <span className="badge-primary">Elsődleges</span>
+            {shippingAddresses.length > 0 ? (
+              <div className="addresses-grid">
+                {shippingAddresses.map((address, idx) => (
+                  <div key={idx} className="address-card">
+                    {editingShippingId === idx ? (
+                      <form onSubmit={handleShippingSubmit}>
+                        <div className="form-group">
+                          <label>Irányítószám</label>
+                          <input
+                            type="text"
+                            value={address.postalCode || ''}
+                            onChange={(e) => handleAddressInputChange(e, 'shipping', idx, 'postalCode')}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>Város</label>
+                          <input
+                            type="text"
+                            value={address.city || ''}
+                            onChange={(e) => handleAddressInputChange(e, 'shipping', idx, 'city')}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>Utca, házszám</label>
+                          <input
+                            type="text"
+                            value={address.address || ''}
+                            onChange={(e) => handleAddressInputChange(e, 'shipping', idx, 'address')}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>Telefonszám</label>
+                          <input
+                            type="text"
+                            value={address.phoneNumber || ''}
+                            onChange={(e) => handleAddressInputChange(e, 'shipping', idx, 'phoneNumber')}
+                          />
+                        </div>
+                        <div className="address-actions">
+                          <button type="submit" className="btn-save">Mentés</button>
+                          <button
+                            type="button"
+                            className="btn-cancel"
+                            onClick={() => setEditingShippingId(null)}
+                          >
+                            Mégse
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <>
+                        <div className="address-details">
+                          <p><strong>Irányítószám:</strong> {address.postalCode}</p>
+                          <p><strong>Város:</strong> {address.city}</p>
+                          <p><strong>Cím:</strong> {address.address}</p>
+                          <p><strong>Telefonszám:</strong> {address.phoneNumber}</p>
+                        </div>
+                        <div className="address-actions">
+                          <button
+                            className="btn-edit"
+                            onClick={() => setEditingShippingId(idx)}
+                          >
+                            Szerkesztés
+                          </button>
+                          <button
+                            className="btn-delete"
+                            onClick={() => deleteAddress('shipping', null)}
+                          >
+                            Törlés
+                          </button>
+                        </div>
+                      </>
                     )}
                   </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted">Nincs szállítási cím megadva.</p>
+            )}
 
-                  {editingShippingId === address.id ? (
-                    <form onSubmit={(e) => handleShippingSubmit(e, address.id)}>
-                      <div className="form-group">
-                        <label>Cím megnevezése</label>
-                        <input
-                          type="text"
-                          value={address.name}
-                          onChange={(e) => handleAddressInputChange(e, 'shipping', address.id, 'name')}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Irányítószám</label>
-                        <input
-                          type="text"
-                          value={address.zipCode}
-                          onChange={(e) => handleAddressInputChange(e, 'shipping', address.id, 'zipCode')}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Város</label>
-                        <input
-                          type="text"
-                          value={address.city}
-                          onChange={(e) => handleAddressInputChange(e, 'shipping', address.id, 'city')}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Utca, házszám</label>
-                        <input
-                          type="text"
-                          value={address.street}
-                          onChange={(e) => handleAddressInputChange(e, 'shipping', address.id, 'street')}
-                        />
-                      </div>
-                      <div className="address-actions">
-                        <button type="submit" className="btn-save">Mentés</button>
-                        <button
-                          type="button"
-                          className="btn-cancel"
-                          onClick={() => setEditingShippingId(null)}
-                        >
-                          Mégse
-                        </button>
-                      </div>
-                    </form>
-                  ) : (
-                    <>
-                      <div className="address-details">
-                        <p><strong>Ország:</strong> {address.country}</p>
-                        <p><strong>Irányítószám:</strong> {address.zipCode}</p>
-                        <p><strong>Város:</strong> {address.city}</p>
-                        <p><strong>Cím:</strong> {address.street}</p>
-                      </div>
-                      <div className="address-actions">
-                        {!address.isPrimary && (
-                          <button
-                            className="btn-set-primary"
-                            onClick={() => setPrimaryAddress('shipping', address.id)}
-                          >
-                            Elsődlegessé teszem
-                          </button>
-                        )}
-                        <button
-                          className="btn-edit"
-                          onClick={() => setEditingShippingId(address.id)}
-                        >
-                          Szerkesztés
-                        </button>
-                        <button
-                          className="btn-delete"
-                          onClick={() => deleteAddress('shipping', address.id)}
-                        >
-                          Törlés
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
+            {addressStatusMessage.text && (
+              <div style={{
+                color: addressStatusMessage.isError ? "#ff4d4d" : "#2ecc71",
+                textAlign: "center",
+                padding: "10px",
+                marginTop: "10px",
+                fontSize: "14px",
+                fontWeight: "bold",
+                backgroundColor: addressStatusMessage.isError ? "#ffe6e6" : "#e6fffa",
+                borderRadius: "4px"
+              }}>
+                {addressStatusMessage.text}
+              </div>
+            )}
+
+            {newAddressType === 'shipping' && (
+              <div className="address-card" style={{ marginTop: '20px' }}>
+                <h4>Új szállítási cím</h4>
+                <form onSubmit={handleAddNewAddress}>
+                  <div className="form-group">
+                    <label>Irányítószám</label>
+                    <input
+                      type="text"
+                      value={newAddress.postalCode}
+                      onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
+                      placeholder="1052"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Város</label>
+                    <input
+                      type="text"
+                      value={newAddress.city}
+                      onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                      placeholder="Budapest"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Utca, házszám</label>
+                    <input
+                      type="text"
+                      value={newAddress.address}
+                      onChange={(e) => setNewAddress({ ...newAddress, address: e.target.value })}
+                      placeholder="Kossuth Lajos utca 12."
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Telefonszám</label>
+                    <input
+                      type="text"
+                      value={newAddress.phoneNumber}
+                      onChange={(e) => setNewAddress({ ...newAddress, phoneNumber: e.target.value })}
+                      placeholder="+36 30 123 4567"
+                      required
+                    />
+                  </div>
+                  <div className="address-actions">
+                    <button type="submit" className="btn-save">
+                      Cím hozzáadása
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-cancel"
+                      onClick={() => {
+                        setNewAddressType(null);
+                        setNewAddress({ type: 'shipping', postalCode: '', city: '', address: '', phoneNumber: '' });
+                      }}
+                    >
+                      Mégse
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
           </section>
-
-          {/* 3. Számlázási címek szakasz */}
           <section id="billing" className="profile-section">
             <div className="section-header">
-              <h2>Számlázási címek</h2>
-              {billingAddresses.length < 3 && (
+              <h2>Számlázási cím</h2>
+              {!billingAddresses.length && !newAddressType && (
                 <button
                   className="btn-add"
-                  onClick={() => setShowNewAddressForm(true)}
+                  onClick={() => {
+                    setNewAddress({ type: 'billing', postalCode: '', city: '', address: '', phoneNumber: '' });
+                    setNewAddressType('billing');
+                  }}
                 >
                   + Új cím
                 </button>
               )}
             </div>
 
-            <div className="addresses-grid">
-              {billingAddresses.map((address) => (
-                <div
-                  key={address.id}
-                  className={`address-card ${address.isPrimary ? 'primary' : ''}`}
-                >
-                  <div className="address-header">
-                    <h3>{address.name}</h3>
-                    {address.isPrimary && (
-                      <span className="badge-primary">Elsődleges</span>
+            {billingAddresses.length > 0 ? (
+              <div className="addresses-grid">
+                {billingAddresses.map((address, idx) => (
+                  <div key={idx} className="address-card">
+                    {editingBillingId === idx ? (
+                      <form onSubmit={handleBillingSubmit}>
+                        <div className="form-group">
+                          <label>Irányítószám</label>
+                          <input
+                            type="text"
+                            value={address.postalCode || ''}
+                            onChange={(e) => handleAddressInputChange(e, 'billing', idx, 'postalCode')}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>Város</label>
+                          <input
+                            type="text"
+                            value={address.city || ''}
+                            onChange={(e) => handleAddressInputChange(e, 'billing', idx, 'city')}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>Utca, házszám</label>
+                          <input
+                            type="text"
+                            value={address.address || ''}
+                            onChange={(e) => handleAddressInputChange(e, 'billing', idx, 'address')}
+                          />
+                        </div>
+                        <div className="form-group">
+                          <label>Telefonszám</label>
+                          <input
+                            type="text"
+                            value={address.phoneNumber || ''}
+                            onChange={(e) => handleAddressInputChange(e, 'billing', idx, 'phoneNumber')}
+                          />
+                        </div>
+                        <div className="address-actions">
+                          <button type="submit" className="btn-save">Mentés</button>
+                          <button
+                            type="button"
+                            className="btn-cancel"
+                            onClick={() => setEditingBillingId(null)}
+                          >
+                            Mégse
+                          </button>
+                        </div>
+                      </form>
+                    ) : (
+                      <>
+                        <div className="address-details">
+                          <p><strong>Irányítószám:</strong> {address.postalCode}</p>
+                          <p><strong>Város:</strong> {address.city}</p>
+                          <p><strong>Cím:</strong> {address.address}</p>
+                          <p><strong>Telefonszám:</strong> {address.phoneNumber}</p>
+                        </div>
+                        <div className="address-actions">
+                          <button
+                            className="btn-edit"
+                            onClick={() => setEditingBillingId(idx)}
+                          >
+                            Szerkesztés
+                          </button>
+                          <button
+                            className="btn-delete"
+                            onClick={() => deleteAddress('billing', null)}
+                          >
+                            Törlés
+                          </button>
+                        </div>
+                      </>
                     )}
                   </div>
+                ))}
+              </div>
+            ) : (
+              <p className="text-muted">Nincs számlázási cím megadva.</p>
+            )}
 
-                  {editingBillingId === address.id ? (
-                    <form onSubmit={(e) => handleBillingSubmit(e, address.id)}>
-                      <div className="form-group">
-                        <label>Cím megnevezése</label>
-                        <input
-                          type="text"
-                          value={address.name}
-                          onChange={(e) => handleAddressInputChange(e, 'billing', address.id, 'name')}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Irányítószám</label>
-                        <input
-                          type="text"
-                          value={address.zipCode}
-                          onChange={(e) => handleAddressInputChange(e, 'billing', address.id, 'zipCode')}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Város</label>
-                        <input
-                          type="text"
-                          value={address.city}
-                          onChange={(e) => handleAddressInputChange(e, 'billing', address.id, 'city')}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Utca, házszám</label>
-                        <input
-                          type="text"
-                          value={address.street}
-                          onChange={(e) => handleAddressInputChange(e, 'billing', address.id, 'street')}
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Adószám</label>
-                        <input
-                          type="text"
-                          value={address.taxNumber}
-                          onChange={(e) => handleAddressInputChange(e, 'billing', address.id, 'taxNumber')}
-                        />
-                      </div>
-                      <div className="address-actions">
-                        <button type="submit" className="btn-save">Mentés</button>
-                        <button
-                          type="button"
-                          className="btn-cancel"
-                          onClick={() => setEditingBillingId(null)}
-                        >
-                          Mégse
-                        </button>
-                      </div>
-                    </form>
-                  ) : (
-                    <>
-                      <div className="address-details">
-                        <p><strong>Ország:</strong> {address.country}</p>
-                        <p><strong>Irányítószám:</strong> {address.zipCode}</p>
-                        <p><strong>Város:</strong> {address.city}</p>
-                        <p><strong>Cím:</strong> {address.street}</p>
-                        <p><strong>Adószám:</strong> {address.taxNumber}</p>
-                      </div>
-                      <div className="address-actions">
-                        {!address.isPrimary && (
-                          <button
-                            className="btn-set-primary"
-                            onClick={() => setPrimaryAddress('billing', address.id)}
-                          >
-                            Elsődlegessé teszem
-                          </button>
-                        )}
-                        <button
-                          className="btn-edit"
-                          onClick={() => setEditingBillingId(address.id)}
-                        >
-                          Szerkesztés
-                        </button>
-                        <button
-                          className="btn-delete"
-                          onClick={() => deleteAddress('billing', address.id)}
-                        >
-                          Törlés
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
+            {addressStatusMessage.text && (
+              <div style={{
+                color: addressStatusMessage.isError ? "#ff4d4d" : "#2ecc71",
+                textAlign: "center",
+                padding: "10px",
+                marginTop: "10px",
+                fontSize: "14px",
+                fontWeight: "bold",
+                backgroundColor: addressStatusMessage.isError ? "#ffe6e6" : "#e6fffa",
+                borderRadius: "4px"
+              }}>
+                {addressStatusMessage.text}
+              </div>
+            )}
+
+            {newAddressType === 'billing' && (
+              <div className="address-card" style={{ marginTop: '20px' }}>
+                <h4>Új számlázási cím</h4>
+                <form onSubmit={handleAddNewAddress}>
+                  <div className="form-group">
+                    <label>Irányítószám</label>
+                    <input
+                      type="text"
+                      value={newAddress.postalCode}
+                      onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
+                      placeholder="1052"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Város</label>
+                    <input
+                      type="text"
+                      value={newAddress.city}
+                      onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                      placeholder="Budapest"
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Utca, házszám</label>
+                    <input
+                      type="text"
+                      value={newAddress.address}
+                      onChange={(e) => setNewAddress({ ...newAddress, address: e.target.value })}
+                      placeholder="Kossuth Lajos utca 12."
+                      required
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label>Telefonszám</label>
+                    <input
+                      type="text"
+                      value={newAddress.phoneNumber}
+                      onChange={(e) => setNewAddress({ ...newAddress, phoneNumber: e.target.value })}
+                      placeholder="+36 30 123 4567"
+                      required
+                    />
+                  </div>
+                  <div className="address-actions">
+                    <button type="submit" className="btn-save">
+                      Cím hozzáadása
+                    </button>
+                    <button
+                      type="button"
+                      className="btn-cancel"
+                      onClick={() => {
+                        setNewAddressType(null);
+                        setNewAddress({ type: 'billing', postalCode: '', city: '', address: '', phoneNumber: '' });
+                      }}
+                    >
+                      Mégse
+                    </button>
+                  </div>
+                </form>
+              </div>
+            )}
           </section>
-
-          {/* Megrendelések */}
           <section id="orders" className="profile-section">
             <div className="section-header">
               <h2>Megrendelések</h2>
@@ -883,129 +1099,40 @@ const Profile = () => {
             </div>
           </section>
 
+          {/* Cím törlés megerősítő modal */}
+          {showDeleteModal && (
+            <div className="profile-modal-overlay">
+              <div className="profile-modal-content">
+                <div className="profile-modal-header">
+                  <h3 className="profile-modal-title">Megerősítés</h3>
+                </div>
+                <div className="profile-modal-body">
+                  <p className="profile-modal-text">Biztosan szeretnéd törölni ezt a címet?</p>
+                </div>
+                <div className="profile-modal-actions">
+                  <button 
+                    onClick={() => {
+                      setShowDeleteModal(false);
+                      setDeleteAddressType(null);
+                      setDeleteAddressId(null);
+                    }} 
+                    className="profile-modal-btn-cancel"
+                  >
+                    Mégse
+                  </button>
+                  <button 
+                    onClick={confirmDeleteAddress}
+                    className="profile-modal-btn-confirm"
+                  >
+                    Igen, törlés
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
 
         </main>
       </div>
-
-      {/* Új cím hozzáadása modal */}
-      {showNewAddressForm && (
-        <div className="modal-overlay">
-          <div className="modal">
-            <div className="modal-header">
-              <h2>Új cím hozzáadása</h2>
-              <button
-                className="modal-close"
-                onClick={() => setShowNewAddressForm(false)}
-              >
-                ×
-              </button>
-            </div>
-
-            <form onSubmit={handleAddNewAddress}>
-              <div className="form-group">
-                <label>Cím típusa</label>
-                <select
-                  name="type"
-                  value={newAddress.type}
-                  onChange={handleNewAddressChange}
-                >
-                  <option value="shipping">Szállítási cím</option>
-                  <option value="billing">Számlázási cím</option>
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label>Cím megnevezése (pl: Otthoni cím, Munkahelyi cím)</label>
-                <input
-                  type="text"
-                  name="name"
-                  value={newAddress.name}
-                  onChange={handleNewAddressChange}
-                  placeholder="Cím megnevezése"
-                  required
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Ország</label>
-                <select
-                  name="country"
-                  value={newAddress.country}
-                  onChange={handleNewAddressChange}
-                >
-                  <option value="Magyarország">Magyarország</option>
-                  <option value="Románia">Románia</option>
-                  <option value="Szlovákia">Szlovákia</option>
-                  <option value="Ausztria">Ausztria</option>
-                </select>
-              </div>
-
-              <div className="form-grid">
-                <div className="form-group">
-                  <label>Irányítószám</label>
-                  <input
-                    type="text"
-                    name="zipCode"
-                    value={newAddress.zipCode}
-                    onChange={handleNewAddressChange}
-                    placeholder="1052"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Város</label>
-                  <input
-                    type="text"
-                    name="city"
-                    value={newAddress.city}
-                    onChange={handleNewAddressChange}
-                    placeholder="Budapest"
-                    required
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label>Utca, házszám</label>
-                <input
-                  type="text"
-                  name="street"
-                  value={newAddress.street}
-                  onChange={handleNewAddressChange}
-                  placeholder="Kossuth Lajos utca 12."
-                  required
-                />
-              </div>
-
-              {newAddress.type === 'billing' && (
-                <div className="form-group">
-                  <label>Adószám (opcionális)</label>
-                  <input
-                    type="text"
-                    name="taxNumber"
-                    value={newAddress.taxNumber}
-                    onChange={handleNewAddressChange}
-                    placeholder="12345678-1-42"
-                  />
-                </div>
-              )}
-
-              <div className="modal-actions">
-                <button type="submit" className="btn-save">
-                  Cím hozzáadása
-                </button>
-                <button
-                  type="button"
-                  className="btn-cancel"
-                  onClick={() => setShowNewAddressForm(false)}
-                >
-                  Mégse
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
     </div>
   );
 };
