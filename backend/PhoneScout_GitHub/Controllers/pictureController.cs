@@ -81,7 +81,7 @@ namespace PhoneScout_GitHub.Controllers
                     PhoneId = phoneID,
                     PhonePicture1 = ms.ToArray(),
                     ContentType = file.ContentType,
-                    IsIndex = isIndex ? 0 : 1
+                    IsIndex = isIndex ? 1 : 0,
                 };
 
                 cx.Phonepictures.Add(newPicture);

@@ -36,7 +36,7 @@ namespace PhoneScout_GitHub.Controllers
                 // Ellenőrizzük, létezik-e már az email
                 if (await _cx.Users.AnyAsync(f => f.Email == user.email))
                 {
-                    return Ok("Létezik ilyen email cím!");
+                    return BadRequest("Létezik ilyen email cím!");
                 }
 
                 // Jogosultság lekérése

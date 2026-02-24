@@ -23,7 +23,7 @@ namespace PhoneScout_GitHub.Controllers
         public ActionResult<phoneDTO> GetPhonePage(int id)
         {
             var phone = _context.Phonedatas
-                .Where(p => p.PhoneId == id)
+                .Where(p => p.PhoneId == id)                
                 .Select(p => new phoneDTO
                 {
                     phoneId = p.PhoneId,
@@ -88,6 +88,7 @@ namespace PhoneScout_GitHub.Controllers
                             cameraType = c.CameraType.CameraType1
                         }).ToList(),
                     ramStoragePairs = p.Connphoneramstorages
+                        .OrderBy(r=>r.Ramstorage.RamAmount).ThenBy(r=>r.Ramstorage.StorageAmount)
                         .Select(r => new ramStorageDTO { ramAmount = r.Ramstorage.RamAmount, storageAmount = r.Ramstorage.StorageAmount })
                         .ToList()
                 })
