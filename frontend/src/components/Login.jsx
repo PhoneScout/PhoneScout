@@ -116,6 +116,10 @@ export default function Login({ onSwitchToRegister }) {
 
                     <p id="alertLog" className={styles.alertMessage}></p>
 
+                    <Link to="/elfelejtettjelszo" className={styles.switchLink} style={{display: 'inline-block', marginRight: '10px'}}>
+                        Elfelejtett jelszó?
+                    </Link>
+
                     <button
                         type="button"
                         onClick={onSwitchToRegister}

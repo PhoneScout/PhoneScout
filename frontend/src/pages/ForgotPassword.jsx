@@ -12,10 +12,12 @@ export default function ForgotPassword() {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [statusMessage, setStatusMessage] = useState({ text: "", isError: false });
+    const [emailInput, setEmailInput] = useState("");
+    const [emailSent, setEmailSent] = useState(false);
 
     // URL paraméterek
-    const name = searchParams.get('name') || 'Felhasználó';
-    const email = searchParams.get('email');
+    const name = searchParams.get('name') || '';
+    const email = searchParams.get('email') || '';
 
     const [passwordStrength, setPasswordStrength] = useState({
         score: 0, label: "", color: "#ccc"
@@ -57,6 +59,42 @@ export default function ForgotPassword() {
         return salt;
     }
 
+    // Email kérés kezelése
+    const handleEmailRequest = async (e) => {
+        e.preventDefault();
+        setStatusMessage({ text: "", isError: false });
+
+        if (!emailInput.trim()) {
+            setStatusMessage({ text: "Kérjük, adjon meg egy email címet!", isError: true });
+            return;
+        }
+
+        try {
+            const response = await axios.get(`http://localhost:5175/api/Registration/ForgotPasswordEmail/${encodeURIComponent(emailInput)}`);
+            
+            if (response.status === 200) {
+                setStatusMessage({ text: "Email elküldve! Kérjük, ellenőrizze postafiókját az elfelejtett jelszó visszaállítási linkhez.", isError: false });
+                setEmailSent(true);
+                setEmailInput("");
+                setTimeout(() => {
+                    navigate("/bejelentkezes");
+                }, 4000);
+            }
+        } catch (error) {
+            const errorText = error.response?.data || "Hálózati hiba történt!";
+            setStatusMessage({ text: "Hiba: " + errorText, isError: true });
+        }
+    };
+
+    function GenerateSalt(SaltLength) {
+        const karakterek = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        let salt = "";
+        for (let i = 0; i < SaltLength; i++) {
+            salt += karakterek[Math.floor(Math.random() * karakterek.length)];
+        }
+        return salt;
+    }
+
     const handlePasswordChange = async (e) => {
         e.preventDefault();
         setStatusMessage({ text: "", isError: false });
@@ -72,7 +110,7 @@ export default function ForgotPassword() {
         }
 
         if (passwordStrength.score < 5) {
-            setStatusMessage({ text: "A jelszó nem elég erős!", isError: true });
+            setStatusMessage({ text: "A jelszó nem elég erős! Használjon kisbetűt, nagybetűt, számot és speciális karaktert!", isError: true });
             return;
         }
 
@@ -80,8 +118,6 @@ export default function ForgotPassword() {
             const newSalt = GenerateSalt(64);
             const newHashed = await hashPassword(password, newSalt);
 
-            // Figyelem: Elfelejtett jelszónál általában nem kell az "oldPassword"
-            // Ha a backend mégis kéri, ellenőrizd a végpontot!
             const response = await axios.put("http://localhost:5175/api/Registration/ResetPassword", {
                 email: email,
                 newPassword: newHashed,
@@ -89,10 +125,10 @@ export default function ForgotPassword() {
             });
 
             if (response.status === 200) {
-                setStatusMessage({ text: "Sikeres jelszó módosítás! Jelentkezzen be.", isError: false });
+                setStatusMessage({ text: "Sikeres jelszó módosítás! Átirányítás a bejelentkezéshez...", isError: false });
                 setPassword("");
                 setConfirmPassword("");
-                setTimeout(() => navigate("/login"), 3000);
+                setTimeout(() => navigate("/bejelentkezes"), 2000);
             }
         } catch (error) {
             const errorText = error.response?.data || "Hálózati hiba történt!";
@@ -107,65 +143,113 @@ export default function ForgotPassword() {
                     <Link to="/"><i className="fa-solid fa-arrow-left"></i> Vissza az oldalra</Link>
                 </div>
 
-                <h2 className="title_RegistrationConfirm">Új jelszó megadása</h2>
+                {!email ? (
+                    // Email kérés képernyő
+                    <>
+                        <h2 className="title_RegistrationConfirm">Elfelejtett jelszó</h2>
 
-                <p className="infoText_RegistrationConfirm">
-                    Kedves <strong>{name}</strong>! Adja meg az új jelszavát!
-                </p>
+                        <p className="infoText_RegistrationConfirm">
+                            Adja meg az email címét, és küldünk Önnek egy linket a jelszó visszaállításához.
+                        </p>
 
-                {statusMessage.text && (
-                    <div style={{ color: statusMessage.isError ? 'red' : 'green', textAlign: 'center', marginBottom: '10px' }}>
-                        {statusMessage.text}
-                    </div>
-                )}
-
-                <form onSubmit={handlePasswordChange}>
-                    <div>
-                        <InputText
-                            type="password"
-                            id="registerPassword"
-                            label="Új jelszó"
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                                checkPasswordStrength(e.target.value);
-                            }}
-                            inputStyle={{
-                                borderColor: passwordStrength.color,
-                                backgroundColor: password ? passwordStrength.color + "20" : "white"
-                            }}
-                        />
-
-                        <InputText
-                            type="password"
-                            id="registerPasswordAgain"
-                            label="Jelszó újra"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            required
-                        />
-                    </div>
-
-                    {password && (
-                        <div className="passwordStrengthContainer" style={{ marginBottom: '20px' }}>
-                            <div style={{ background: "#eee", height: "6px", borderRadius: "4px", width: "100%" }}>
-                                <div style={{ 
-                                    width: `${passwordStrength.score * 20}%`, 
-                                    height: "100%", 
-                                    background: passwordStrength.color, 
-                                    transition: "0.3s" 
-                                }} />
+                        {statusMessage.text && (
+                            <div className="statusDisplay_ForgotPassword" style={{ color: statusMessage.isError ? 'red' : 'green' }}>
+                                {statusMessage.text}
                             </div>
-                            <small style={{ color: passwordStrength.color, display: "block", textAlign: "center" }}>
-                                {passwordStrength.label}
-                            </small>
-                        </div>
-                    )}
+                        )}
 
-                    <button type='submit' className="submitButton_RegistrationConfirm">
-                        Jelszó mentése
-                    </button>
-                </form>
+                        <form onSubmit={handleEmailRequest}>
+                            <div>
+                                <InputText
+                                    type="email"
+                                    id="forgotEmail"
+                                    label="Email cím"
+                                    value={emailInput}
+                                    onChange={(e) => setEmailInput(e.target.value)}
+                                />
+                            </div>
+
+                            <button type='submit' className="submitButton_RegistrationConfirm" disabled={emailSent}>
+                                {emailSent ? "Email elküldve!" : "Email küldés"}
+                            </button>
+                        </form>
+
+                        <Link to="/bejelentkezes" className="switchLink_RegistrationConfirm">
+                            Vissza a bejelentkezéshez
+                        </Link>
+                    </>
+                ) : (
+                    // Jelszó módosítás képernyő
+                    <>
+                        <h2 className="title_RegistrationConfirm">Új jelszó megadása</h2>
+
+                        <p className="infoText_RegistrationConfirm">
+                            Kedves <strong>{name}</strong>! <br />
+                            Adja meg az új jelszavát az alábbi mezőkben.
+                        </p>
+
+                        <p className="emailDisplay_RegistrationConfirm">
+                            Regisztrált e-mail cím: {email}
+                        </p>
+
+                        {statusMessage.text && (
+                            <div className="statusDisplay_ForgotPassword" style={{ color: statusMessage.isError ? 'red' : 'green' }}>
+                                {statusMessage.text}
+                            </div>
+                        )}
+
+                        <form onSubmit={handlePasswordChange}>
+                            <div>
+                                <InputText
+                                    type="password"
+                                    id="forgotPassword"
+                                    label="Új jelszó"
+                                    value={password}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                        checkPasswordStrength(e.target.value);
+                                    }}
+                                    inputStyle={{
+                                        borderColor: passwordStrength.color,
+                                        backgroundColor: password ? passwordStrength.color + "20" : "white"
+                                    }}
+                                />
+
+                                <InputText
+                                    type="password"
+                                    id="forgotPasswordConfirm"
+                                    label="Jelszó újra"
+                                    value={confirmPassword}
+                                    onChange={(e) => setConfirmPassword(e.target.value)}
+                                />
+                            </div>
+
+                            {password && (
+                                <div className="passwordStrengthContainer_ForgotPassword">
+                                    <div style={{ background: "#eee", height: "6px", borderRadius: "4px", width: "100%" }}>
+                                        <div style={{ 
+                                            width: `${passwordStrength.score * 20}%`, 
+                                            height: "100%", 
+                                            background: passwordStrength.color, 
+                                            transition: "0.3s" 
+                                        }} />
+                                    </div>
+                                    <small style={{ color: passwordStrength.color, display: "block", textAlign: "center" }}>
+                                        {passwordStrength.label}
+                                    </small>
+                                </div>
+                            )}
+
+                            <button type='submit' className="submitButton_RegistrationConfirm">
+                                Jelszó mentése
+                            </button>
+                        </form>
+
+                        <Link to="/bejelentkezes" className="switchLink_RegistrationConfirm">
+                            Már tudod a jelszavad? Jelentkezz be!
+                        </Link>
+                    </>
+                )}
             </div>
         </div>
     );

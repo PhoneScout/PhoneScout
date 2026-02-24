@@ -255,6 +255,37 @@ namespace PhoneScout_GitHub.Controllers
             }
         }
 
+        [HttpPut("ResetPassword")]
+        [SwaggerOperation(
+            Summary = "Jelszó visszaállítása (elfelejtett jelszó)",
+            Description = "Az elfelejtett jelszó visszaállítási folyamatban használt végpont. Az email cím alapján visszaállítja a felhasználó jelszavát az új hodnákra. Nem szükséges az régi jelszó."
+        )]
+        public async Task<IActionResult> ResetPassword([FromBody] ChangePasswordDTO request)
+        {
+            try
+            {
+                var user = await _cx.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
+
+                if (user == null)
+                {
+                    return NotFound("A felhasználó nem található.");
+                }
+
+                // Jelszó módosítása - az elfelejtett jelszó esetén nem kell az oldPassword ellenőrzés
+                user.Hash = Program.CreateSHA256(request.NewPassword);
+                user.Salt = request.SALT;
+
+                _cx.Users.Update(user);
+                await _cx.SaveChangesAsync();
+
+                return Ok("A jelszó sikeresen módosítva. Mostantól az új jelszóval tud bejelentkezni.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"Hiba történt a jelszó visszaállítása során: {ex.Message}");
+            }
+        }
+
         [HttpGet("ForgotPasswordEmail/{Email}")]
         [SwaggerOperation(
             Summary = "Elfelejtett jelszó email küldés",
