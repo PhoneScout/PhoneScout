@@ -15,6 +15,9 @@ export default function Register({ onSwitchToLogin }) {
     });
 
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPasswordAgain, setShowPasswordAgain] = useState(false);
+
 
     const checkPasswordStrength = (value) => {
         let score = 0;
@@ -139,8 +142,19 @@ export default function Register({ onSwitchToLogin }) {
 
         } catch (error) {
             alertBox.style.color = "red";
-            alertBox.innerText = "Hálózati hiba történt a szerverrel való kapcsolódáskor.";
-            console.error(error);
+
+            if (error.response) {
+                const serverError = error.response.data;
+                alertBox.innerText = `Szerver hiba: ${typeof serverError === 'object' ? JSON.stringify(serverError) : serverError}`;
+            }
+            else if (error.request) {
+                alertBox.innerText = "A szerver nem válaszol. Ellenőrizze a hálózatot!";
+            }
+            else {
+                alertBox.innerText = "Hiba történt a kérés feldolgozása közben.";
+            }
+
+            console.error("Hiba részletei:", error);
         }
     };
 
@@ -166,26 +180,32 @@ export default function Register({ onSwitchToLogin }) {
                     </div>
 
                     <div className={styles.formRow}>
-                        <InputText
-                            type="password"
-                            id="registerPassword"
-                            label="Jelszó"
-                            value={password}
-                            onChange={(e) => {
-                                setPassword(e.target.value);
-                                checkPasswordStrength(e.target.value);
-                            }}
-                            inputStyle={{
-                                borderColor: passwordStrength.color,
-                                backgroundColor:
-                                    password.length === 0
-                                        ? "white"
-                                        : passwordStrength.color + "20"
-                            }}
-                        />
-                        <InputText type="password" id="registerPasswordAgain" label="Jelszó újra" required />
-                    </div>
+                        <div>
+                            <InputText
+                                type="password"
+                                id="registerPassword"
+                                label="Jelszó"
+                                value={password}
+                                onChange={(e) => {
+                                    setPassword(e.target.value);
+                                    checkPasswordStrength(e.target.value);
+                                }}
+                                inputStyle={{
+                                    borderColor: passwordStrength.color,
+                                    backgroundColor: password.length === 0 ? "white" : passwordStrength.color + "20"
+                                }}
+                            />
+                        </div>
 
+                        <div>
+                            <InputText
+                                type="password"
+                                id="registerPasswordAgain"
+                                label="Jelszó újra"
+                                required
+                            />
+                        </div>
+                    </div>
                     {password && (
                         <div className={styles.passwordStrengthContainer}>
                             <div

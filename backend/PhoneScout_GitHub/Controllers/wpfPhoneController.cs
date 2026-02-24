@@ -258,6 +258,7 @@ namespace PhoneScout_GitHub.Controllers
                 PhonePrice = dto.phonePrice,
                 PhoneInStore = dto.phoneInStore,
                 PhoneInStoreAmount = dto.phoneInStoreAmount,
+                PhoneDeleted = (int)dto.phoneAvailable,
                 CpuId = cpu.Id,
                 ManufacturerId = manufacturer.Id,
                 BackMaterialId = backMaterial.Id,
@@ -441,9 +442,9 @@ namespace PhoneScout_GitHub.Controllers
             phone.CaseThickness = dto.caseThickness;
             phone.PhoneWeight = dto.phoneWeight;
             phone.PhoneReleaseDate = dto.phoneReleaseDate;
-            phone.PhonePrice = dto.phonePrice;
-            phone.PhoneInStore = dto.phoneInStore;
-            phone.PhoneInStoreAmount = dto.phoneInStoreAmount;
+            
+            
+            
 
             // FK assignments
             phone.Cpu = cpu;

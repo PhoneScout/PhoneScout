@@ -36,7 +36,7 @@ namespace PhoneScout_GitHub.Controllers
                 // Ellenőrizzük, létezik-e már az email
                 if (await _cx.Users.AnyAsync(f => f.Email == user.email))
                 {
-                    return Ok("Létezik ilyen email cím!");
+                    return BadRequest("Létezik ilyen email cím!");
                 }
 
                 // Jogosultság lekérése
@@ -164,7 +164,7 @@ namespace PhoneScout_GitHub.Controllers
             Summary = "Fiók aktiválás WPF",
             Description = "A regisztrációnál kapott emailen keresztül elérhető, fiók aktiválás után jogosult az oldalra történő bejelentkezésre."
         )]
-        
+
         public async Task<IActionResult> ActivateAccountWPF([FromQuery] string email)
         {
             try
@@ -254,5 +254,74 @@ namespace PhoneScout_GitHub.Controllers
                 return BadRequest($"Hiba történt a módosítás során: {ex.Message}");
             }
         }
+
+        [HttpGet("ForgotPasswordEmail/{Email}")]
+        [SwaggerOperation(
+            Summary = "Elfelejtett jelszó email küldés",
+            Description = "Amennyiben a felhasználó elfelejtette a jelszavát, megadhatja az email címét, amire egy üzenet fog érkezni a jelszó módosításához szükséges információkkal"
+        )]
+        public async Task<IActionResult> ForgotPasswordEmailAsync(string Email)
+        {
+            try
+            {
+                var user = _cx.Users.FirstOrDefault(f => f.Email == Email);
+                if (user == null)
+                {
+                    return BadRequest("Nincs ilyen email című felhasználó!");
+                }
+                string emailTargy = "Elfelejtett jelszó";
+                string emailTorzs = $@"
+                    <div style=""background: linear-gradient(135deg, #2300B3 0%, #68F145 100%); margin: 0; padding: 0; min-height: 100vh;"">
+                        <!-- Külső táblázat a teljes magasság és a vertikális középre igazítás miatt -->
+                        <table width=""100%"" height=""100%"" cellpadding=""0"" cellspacing=""0"" border=""0"" style=""min-height: 100vh; width: 100%;"">
+                            <tr>
+                                <td align=""center"" valign=""middle"" style=""padding: 20px;"">
+                                    
+                                    <!-- Fehér kártya (formContainer stílus) -->
+                                    <div style=""max-width: 600px; width: 100%; background-color: #ffffff; border-radius: 12px; box-shadow: 0 0 20px rgba(0, 0, 0, 0.25); overflow: hidden; display: inline-block; text-align: left;"">
+                                        <div style=""padding: 40px 30px; text-align: center;"">
+                                            
+                                            <h2 style=""color: #333333; font-size: 28px; margin-bottom: 30px; margin-top: 0; font-family: Arial, sans-serif;"">Elfelejtett jelszó</h2>
+                                            
+                                            <h3 style=""color: #333333; font-size: 18px; margin-bottom: 20px; font-family: Arial, sans-serif;"">Kedves {user.Name}!</h3>
+                                            
+                                            <p style=""color: #555555; font-size: 16px; line-height: 1.5; margin-bottom: 35px; font-family: Arial, sans-serif;"">
+                                                A jelszó visszaállításához kattints az alábbi linkre:
+                                            </p>
+
+                                            <!-- Gomb -->
+                                            <div style=""margin-bottom: 10px;"">
+                                                <a href=""http://localhost:3000/elfelejtettjelszo?name={user.Name}&email={user.Email}"" 
+                                                target=""_blank"" 
+                                                style=""display: inline-block; width: 80%; max-width: 280px; background-color: #28a745; color: #ffffff; padding: 18px 25px; text-decoration: none; border-radius: 4px; font-size: 18px; font-weight: bold; font-family: Arial, sans-serif;"">
+                                                Fiók visszaállítása
+                                                </a>
+                                            </div>
+
+                                            <!-- Lábjegyzet -->
+                                            <div style=""margin-top: 45px; border-top: 1px solid #eeeeee; padding-top: 20px; text-align: left;"">
+                                                <p style=""color: #333333; font-size: 14px; margin: 0; font-family: Arial, sans-serif;"">Üdvözlettel,<br><strong>PhoneScout Team</strong></p>
+                                                <p style=""font-size: 12px; color: #777777; margin-top: 15px; line-height: 1.4; font-family: Arial, sans-serif;"">Ez egy automatikusan generált üzenet, kérjük ne válaszoljon rá.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </td>
+                            </tr>
+                        </table>
+                    </div>";
+
+
+
+                // Email küldése (Program.cs-ben lévő metódussal)
+                await Program.SendEmail(user.Email, emailTargy, emailTorzs);
+                return Ok("Email elküldve.");
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
     }
 }
