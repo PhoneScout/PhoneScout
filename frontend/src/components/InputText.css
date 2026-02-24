@@ -1,7 +1,9 @@
 /* --- Shared Container for All Text Inputs --- */
 .textBox {
   position: relative;
-  margin: 2%;
+  margin: 10px 0; 
+  width: 100%;
+  box-sizing: border-box;
 }
 
 /* --- Input Styling --- */
