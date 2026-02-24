@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Feb 24. 12:07
+-- Létrehozás ideje: 2026. Feb 24. 18:33
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -353,8 +353,6 @@ INSERT INTO `connectionparts` (`ID`, `repairID`, `partID`) VALUES
 (1, '1', 1),
 (2, '5', 1),
 (3, 'jsjksjhkdsjk', 1),
-(4, 'string', 1),
-(5, 'adad', 1),
 (6, 'adadad', 1);
 
 -- --------------------------------------------------------
@@ -366,10 +364,14 @@ INSERT INTO `connectionparts` (`ID`, `repairID`, `partID`) VALUES
 CREATE TABLE `connectionservice` (
   `repairID` varchar(22) NOT NULL,
   `userID` int(11) NOT NULL,
-  `postalCode` int(4) NOT NULL,
-  `city` varchar(64) NOT NULL,
-  `address` varchar(256) NOT NULL,
-  `phoneNumber` bigint(11) NOT NULL,
+  `billingPostalCode` int(4) NOT NULL,
+  `billingCity` varchar(64) NOT NULL,
+  `billingAddress` varchar(256) NOT NULL,
+  `billingPhoneNumber` bigint(11) NOT NULL,
+  `deliveryPostalCode` int(11) NOT NULL,
+  `deliveryCity` varchar(64) NOT NULL,
+  `deliveryAddress` varchar(256) NOT NULL,
+  `deliveryPhoneNumber` bigint(11) NOT NULL,
   `phoneName` varchar(64) NOT NULL,
   `price` int(11) NOT NULL,
   `status` int(1) NOT NULL,
@@ -382,16 +384,14 @@ CREATE TABLE `connectionservice` (
 -- A tábla adatainak kiíratása `connectionservice`
 --
 
-INSERT INTO `connectionservice` (`repairID`, `userID`, `postalCode`, `city`, `address`, `phoneNumber`, `phoneName`, `price`, `status`, `manufacturerName`, `phoneInspection`, `problemDescription`) VALUES
-('1', 3, 0, '', '', 0, 'alma', 32, 2, 'alma', 1, 'baj van'),
-('2', 3, 0, '', '', 0, 'string', 0, 0, 'string', 0, 'string'),
-('3', 3, 0, '', '', 0, 'string', 0, 0, 'string', 0, 'string'),
-('4', 3, 0, '', '', 0, 'string', 0, 0, 'string', 0, 'string'),
-('5', 3, 0, '', '', 0, 'string', 0, 3, 'string', 0, 'string'),
-('adad', 3, 0, 'string', 'string', 0, 'string', 0, 6, 'string', 0, 'string'),
-('adadad', 4, 0, 'string', 'string', 0, 'string', 0, 0, 'string', 0, 'string'),
-('jsjksjhkdsjk', 3, 0, '', '', 0, 'string', 0, 5, 'string', 0, 'string'),
-('string', 3, 3535, 'string', 'string', 0, 'string', 0, 0, 'string', 0, 'string');
+INSERT INTO `connectionservice` (`repairID`, `userID`, `billingPostalCode`, `billingCity`, `billingAddress`, `billingPhoneNumber`, `deliveryPostalCode`, `deliveryCity`, `deliveryAddress`, `deliveryPhoneNumber`, `phoneName`, `price`, `status`, `manufacturerName`, `phoneInspection`, `problemDescription`) VALUES
+('1', 3, 0, '', '', 0, 0, '', '', 0, 'alma', 32, 2, 'alma', 1, 'baj van'),
+('2', 3, 0, '', '', 0, 0, '', '', 0, 'string', 0, 0, 'string', 0, 'string'),
+('3', 3, 0, '', '', 0, 0, '', '', 0, 'string', 0, 0, 'string', 0, 'string'),
+('4', 3, 0, '', '', 0, 0, '', '', 0, 'string', 0, 0, 'string', 0, 'string'),
+('5', 3, 0, '', '', 0, 0, '', '', 0, 'string', 0, 3, 'string', 0, 'string'),
+('adadad', 4, 0, 'string', 'string', 0, 0, '', '', 0, 'string', 0, 0, 'string', 0, 'string'),
+('jsjksjhkdsjk', 3, 0, '', '', 0, 0, '', '', 0, 'string', 0, 5, 'string', 0, 'string');
 
 -- --------------------------------------------------------
 
@@ -718,10 +718,14 @@ CREATE TABLE `connuserorder` (
   `ID` int(11) NOT NULL,
   `orderID` varchar(22) NOT NULL,
   `userID` int(11) NOT NULL,
-  `postalCode` int(4) NOT NULL,
-  `city` varchar(64) NOT NULL,
-  `address` varchar(256) NOT NULL,
-  `phoneNumber` bigint(11) NOT NULL,
+  `billingPostalCode` int(4) NOT NULL,
+  `billingCity` varchar(64) NOT NULL,
+  `billingAddress` varchar(256) NOT NULL,
+  `billingPhoneNumber` bigint(11) NOT NULL,
+  `deliveryPostalCode` int(4) NOT NULL,
+  `deliveryCity` varchar(64) NOT NULL,
+  `deliveryAddress` varchar(256) NOT NULL,
+  `deliveryPhoneNumber` bigint(11) NOT NULL,
   `phoneName` varchar(64) NOT NULL,
   `phoneColorName` varchar(32) NOT NULL,
   `PhoneColorHex` varchar(7) NOT NULL,
@@ -736,8 +740,8 @@ CREATE TABLE `connuserorder` (
 -- A tábla adatainak kiíratása `connuserorder`
 --
 
-INSERT INTO `connuserorder` (`ID`, `orderID`, `userID`, `postalCode`, `city`, `address`, `phoneNumber`, `phoneName`, `phoneColorName`, `PhoneColorHex`, `phoneRam`, `phoneStorage`, `price`, `amount`, `status`) VALUES
-(14, '0', 4, 3525, 'bbbbb', 'gftdgffhdutfxoutgouhxggkcjizcvxucgmvxgvcogccc', 12345678912, 'hgcdhfd', 'gf', '#ffffff', 12, 12, 12, 12, 1);
+INSERT INTO `connuserorder` (`ID`, `orderID`, `userID`, `billingPostalCode`, `billingCity`, `billingAddress`, `billingPhoneNumber`, `deliveryPostalCode`, `deliveryCity`, `deliveryAddress`, `deliveryPhoneNumber`, `phoneName`, `phoneColorName`, `PhoneColorHex`, `phoneRam`, `phoneStorage`, `price`, `amount`, `status`) VALUES
+(15, 'string', 3, 0, 'string', 'string', 0, 0, 'string', 'string', 0, 'string', 'string', 'string', 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -876,43 +880,42 @@ CREATE TABLE `phonedatas` (
   `phonePrice` int(11) DEFAULT NULL,
   `phoneInStore` int(1) DEFAULT NULL,
   `phonePopularity` int(11) DEFAULT NULL,
-  `phoneDeleted` int(11) NOT NULL,
-  `phoneInStoreAmount` int(11) NOT NULL
+  `phoneDeleted` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
 
 --
 -- A tábla adatainak kiíratása `phonedatas`
 --
 
-INSERT INTO `phonedatas` (`phoneID`, `manufacturerID`, `phoneName`, `cpuID`, `phoneAntutu`, `screenTypeID`, `phoneResolutionHeight`, `phoneResolutionWidth`, `screenSize`, `screenRefreshRate`, `screenMaxBrightness`, `screenSharpness`, `connectionMaxWifi`, `connectionMaxBluetooth`, `connectionMaxMobileNetwork`, `connectionDualSim`, `connectionESim`, `connectionNfc`, `connectionConnectionSpeed`, `connectionJack`, `chargerTypeID`, `sensorsFingerprintPlaceID`, `sensorsFingerprintTypeID`, `sensorsInfrared`, `ramSpeedID`, `storageSpeedID`, `batteryTypeID`, `batteryCapacity`, `batteryMaxChargingWired`, `batteryMaxChargingWireless`, `caseHeight`, `caseWidth`, `caseThickness`, `waterproofTypeID`, `backMaterialID`, `speakerTypeID`, `phoneWeight`, `phoneReleaseDate`, `phonePrice`, `phoneInStore`, `phonePopularity`, `phoneDeleted`, `phoneInStoreAmount`) VALUES
-(1, 1, 'Xiaomi 13T', 1, 905365, 1, 2712, 1220, 6.67, 144, 2600, 466, 7, 5.30, 5, 1, 1, 1, 2, 0, 1, 1, 1, 1, 1, 1, 1, 5000, 67, 0, 162.20, 75.50, 8.49, 1, 1, 1, 193.00, '2023-09-26', 135000, 1, 90, 0, 0),
-(2, 2, 'ZTE nubia Red Magic 9S Pro', 2, 2369542, 1, 2480, 1116, 2.80, 120, 1600, 400, 7, 5.20, 5, 1, 0, 1, 3, 1, 1, 1, 1, 1, 2, 2, 2, 6500, 80, 0, 164.00, 86.40, 9.80, 2, 2, 1, 229.00, '2024-07-09', 341270, 0, 80, 0, 0),
-(3, 3, 'Samsung Galaxy S24 Ultra', 3, 1814869, 2, 2480, 1116, 6.80, 120, 2600, 505, 7, 5.30, 5, 1, 1, 1, 3, 0, 1, 1, 2, 0, 2, 2, 3, 5000, 45, 15, 162.30, 79.00, 8.60, 1, 2, 1, 233.00, '2025-02-03', 338640, 0, 70, 0, 0),
-(4, 4, 'Apple iPhone 16 Pro Max', 4, 1753018, 3, 2868, 1320, 6.90, 120, 2000, 460, 7, 5.30, 5, 1, 1, 1, 3, 0, 1, 2, 3, 0, 3, 3, 1, 4685, 25, 25, 163.00, 77.60, 8.25, 1, 2, 1, 227.00, '2024-09-20', 546940, 0, 60, 0, 0),
-(5, 3, 'Samsung Galaxy S25 Ultra', 5, 2265528, 4, 3120, 1440, 6.86, 120, 2600, 505, 7, 5.40, 5, 1, 1, 1, 3, 0, 1, 1, 2, 0, 2, 2, 3, 5000, 45, 15, 162.80, 77.60, 8.20, 1, 2, 1, 218.00, '2025-02-03', 359020, 0, 100, 0, 0),
-(6, 5, 'Honor Magic 7 Pro', 5, 3040000, 5, 2800, 1280, 6.80, 120, 5000, 453, 7, 5.40, 5, 1, 1, 1, 3, 0, 1, 1, 2, 1, 2, 2, 3, 5270, 100, 80, 162.70, 77.10, 8.80, 3, 2, 1, 223.00, '2024-11-08', 320640, 0, 50, 1, 0),
-(7, 6, 'Google Pixel 9 Pro XL', 6, 1148512, 5, 1344, 2992, 6.80, 120, 3000, 482, 7, 5.30, 5, 1, 1, 1, 3, 0, 1, 1, 2, 0, 3, 1, 3, 5060, 37, 23, 162.75, 76.59, 8.54, 1, 2, 1, 210.00, '2024-08-22', 372990, 0, 40, 0, 0),
-(8, 1, 'Xiaomi Redmi Note 14 Pro 5G', 7, 704404, 1, 2712, 1220, 6.67, 120, 3000, 446, 6, 5.40, 5, 1, 1, 1, 2, 0, 1, 3, 1, 1, 5, 4, 2, 5110, 45, 0, 162.30, 74.40, 8.20, 1, 2, 1, 190.00, '2025-01-15', 84160, 0, 30, 0, 0),
-(10, 1, 'Xiaomi Redmi Note 14 4G', 14, 116000, 9, 2400, 1080, 6.67, 120, 1200, 395, 5, 5.30, 4, 1, 0, 1, 2, 1, 1, 3, 1, 1, 5, 6, 6, 5500, 33, 0, 163.30, 76.60, 8.20, 7, 5, 1, 196.50, '2024-02-25', 57800, 0, NULL, 0, 0),
-(11, 10, 'Xiaomi Redmi Note 14 5G', 15, 463129, 9, 2400, 1080, 6.67, 120, 1200, 395, 5, 5.30, 5, 1, 0, 1, 2, 1, 1, 3, 1, 1, 5, 6, 7, 5110, 45, 0, 162.40, 75.70, 7.99, 8, 5, 1, 190.00, '2025-01-16', 75600, 0, NULL, 0, 0),
-(12, 10, 'Xiaomi Redmi Note 14S', 14, 450000, 9, 2400, 1080, 6.67, 120, 1300, 395, 5, 5.30, 4, 1, 0, 1, 2, 0, 1, 3, 1, 1, 5, 6, 7, 5000, 67, 0, 161.10, 75.00, 8.00, 8, 5, 1, 179.00, '2025-03-14', 64800, 0, NULL, 0, 0),
-(13, 10, 'Xiaomi Redmi Note 14 Pro 4G', 16, 423868, 9, 2400, 1080, 6.67, 120, 1800, 395, 5, 5.30, 4, 1, 0, 1, 2, 1, 1, 3, 1, 1, 5, 6, 7, 5500, 45, 0, 162.20, 74.90, 8.20, 8, 5, 1, 180.00, '2025-01-16', 73990, 0, NULL, 0, 0),
-(14, 10, 'Xiaomi Redmi Note 14 Pro+ 5G', 17, 750292, 9, 2712, 1220, 6.67, 120, 3000, 446, 5, 5.40, 5, 1, 1, 1, 2, 1, 1, 3, 1, 1, 5, 6, 7, 5110, 120, 0, 162.50, 74.70, 8.80, 6, 2, 1, 205.00, '2025-01-15', 102490, 0, NULL, 0, 0),
-(15, 1, 'Xiaomi 14', 19, 2089308, 1, 2670, 1200, 6.36, 120, 3000, 460, 7, 5.40, 5, 1, 1, 1, 3, 0, 1, 5, 1, 1, 2, 7, 1, 4610, 90, 50, 152.80, 71.50, 8.20, 1, 2, 1, 193.00, '2023-10-01', 299990, 0, NULL, 0, 0),
-(16, 9, 'Motorola Edge 50 Fusion', 10, 603451, 8, 2400, 1080, 6.67, 144, 1600, 393, 5, 5.30, 5, 1, 0, 1, 2, 0, 1, 3, 1, 0, 5, 4, 2, 5000, 68, 0, 161.91, 73.05, 7.76, 1, 3, 1, 175.00, '2024-05-15', 91820, 0, NULL, 0, 0),
-(17, 9, 'Motorola Edge 50 Ultra', 11, 1523879, 8, 2712, 1220, 6.70, 144, 2500, 444, 7, 5.40, 5, 1, 0, 1, 3, 0, 1, 3, 1, 0, 2, 2, 2, 4500, 125, 50, 161.08, 72.37, 8.59, 1, 3, 1, 197.00, '2024-05-15', 217160, 0, NULL, 0, 0),
-(18, 9, 'Motorola Edge 50 Neo', 12, 696931, 8, 2670, 1200, 6.40, 120, 3000, 460, 0, 5.30, 0, 0, 0, 1, 2, 0, 1, 3, 1, 0, 3, 2, 2, 4310, 68, 15, 154.10, 71.20, 8.10, 1, 3, 1, 171.00, '2024-08-29', 117000, 0, NULL, 0, 0),
-(19, 9, 'Motorola Edge 50', 13, 722062, 8, 2712, 1220, 6.70, 120, 1600, 446, 0, 5.20, 0, 0, 0, 1, 2, 0, 1, 3, 1, 0, 3, 4, 2, 5000, 68, 15, 160.80, 72.40, 7.80, 1, 3, 1, 180.00, '2024-08-08', 108000, 0, NULL, 0, 0),
-(20, 6, 'Google Pixel 9 Pro', 6, 1148512, 8, 2856, 1280, 6.30, 120, 2400, 497, 7, 5.30, 5, 1, 0, 1, 3, 0, 1, 3, 2, 0, 3, 1, 5, 4700, 27, 21, 152.80, 72.90, 8.50, 1, 3, 1, 199.00, '2024-09-09', 335000, 0, NULL, 0, 0),
-(21, 1, 'Xiaomi 15', 18, 2746580, 2, 2670, 1200, 6.36, 120, 3200, 460, 7, 6.00, 5, 1, 0, 1, 3, 0, 1, 5, 2, 1, 2, 7, 3, 5240, 90, 50, 152.30, 71.20, 8.08, 1, 2, 1, 190.50, '2024-10-29', 255590, 0, NULL, 0, 0),
-(22, 1, 'Xiaomi 15 Ultra', 18, 2746580, 2, 3200, 1400, 6.73, 120, 3200, 522, 7, 6.00, 5, 1, 1, 1, 3, 0, 1, 5, 2, 1, 2, 8, 3, 5410, 90, 80, 161.30, 75.30, 9.35, 1, 2, 1, 229.00, '2025-02-27', 374790, 0, NULL, 0, 0),
-(23, 7, 'teszt3', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0, 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 0, NULL, 0, 0),
-(24, 7, 'teszt4', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0, 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 0, NULL, 0, 0),
-(25, 8, 'string', 9, 0, 10, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, 4, 4, 6, 0, 4, 5, 8, 0, 0, 0, 0.00, 0.00, 0.00, 5, 7, 3, 0.00, '2026-02-17', 0, 0, NULL, 0, 0),
-(26, 1, 'Xiaomi 13T', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, 0, 0),
-(27, 1, 'alma', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, 0, 0),
-(28, 1, 'alm', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, 0, 0),
-(29, 1, 'Xiaomi 13T', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, 0, 0);
+INSERT INTO `phonedatas` (`phoneID`, `manufacturerID`, `phoneName`, `cpuID`, `phoneAntutu`, `screenTypeID`, `phoneResolutionHeight`, `phoneResolutionWidth`, `screenSize`, `screenRefreshRate`, `screenMaxBrightness`, `screenSharpness`, `connectionMaxWifi`, `connectionMaxBluetooth`, `connectionMaxMobileNetwork`, `connectionDualSim`, `connectionESim`, `connectionNfc`, `connectionConnectionSpeed`, `connectionJack`, `chargerTypeID`, `sensorsFingerprintPlaceID`, `sensorsFingerprintTypeID`, `sensorsInfrared`, `ramSpeedID`, `storageSpeedID`, `batteryTypeID`, `batteryCapacity`, `batteryMaxChargingWired`, `batteryMaxChargingWireless`, `caseHeight`, `caseWidth`, `caseThickness`, `waterproofTypeID`, `backMaterialID`, `speakerTypeID`, `phoneWeight`, `phoneReleaseDate`, `phonePrice`, `phoneInStore`, `phonePopularity`, `phoneDeleted`) VALUES
+(1, 1, 'Xiaomi 13T', 1, 905365, 1, 2712, 1220, 6.67, 144, 2600, 466, 7, 5.30, 5, 1, 1, 1, 2, 0, 1, 1, 1, 1, 1, 1, 1, 5000, 67, 0, 162.20, 75.50, 8.49, 1, 1, 1, 193.00, '2023-09-26', 135000, 1, 90, 0),
+(2, 2, 'ZTE nubia Red Magic 9S Pro', 2, 2369542, 1, 2480, 1116, 2.80, 120, 1600, 400, 7, 5.20, 5, 1, 0, 1, 3, 1, 1, 1, 1, 1, 2, 2, 2, 6500, 80, 0, 164.00, 86.40, 9.80, 2, 2, 1, 229.00, '2024-07-09', 341270, 0, 80, 0),
+(3, 3, 'Samsung Galaxy S24 Ultra', 3, 1814869, 2, 2480, 1116, 6.80, 120, 2600, 505, 7, 5.30, 5, 1, 1, 1, 3, 0, 1, 1, 2, 0, 2, 2, 3, 5000, 45, 15, 162.30, 79.00, 8.60, 1, 2, 1, 233.00, '2025-02-03', 338640, 0, 70, 0),
+(4, 4, 'Apple iPhone 16 Pro Max', 4, 1753018, 3, 2868, 1320, 6.90, 120, 2000, 460, 7, 5.30, 5, 1, 1, 1, 3, 0, 1, 2, 3, 0, 3, 3, 1, 4685, 25, 25, 163.00, 77.60, 8.25, 1, 2, 1, 227.00, '2024-09-20', 546940, 0, 60, 0),
+(5, 3, 'Samsung Galaxy S25 Ultra', 5, 2265528, 4, 3120, 1440, 6.86, 120, 2600, 505, 7, 5.40, 5, 1, 1, 1, 3, 0, 1, 1, 2, 0, 2, 2, 3, 5000, 45, 15, 162.80, 77.60, 8.20, 1, 2, 1, 218.00, '2025-02-03', 359020, 0, 100, 0),
+(6, 5, 'Honor Magic 7 Pro', 5, 3040000, 5, 2800, 1280, 6.80, 120, 5000, 453, 7, 5.40, 5, 1, 1, 1, 3, 0, 1, 1, 2, 1, 2, 2, 3, 5270, 100, 80, 162.70, 77.10, 8.80, 3, 2, 1, 223.00, '2024-11-08', 320640, 0, 50, 1),
+(7, 6, 'Google Pixel 9 Pro XL', 6, 1148512, 5, 1344, 2992, 6.80, 120, 3000, 482, 7, 5.30, 5, 1, 1, 1, 3, 0, 1, 1, 2, 0, 3, 1, 3, 5060, 37, 23, 162.75, 76.59, 8.54, 1, 2, 1, 210.00, '2024-08-22', 372990, 0, 40, 0),
+(8, 1, 'Xiaomi Redmi Note 14 Pro 5G', 7, 704404, 1, 2712, 1220, 6.67, 120, 3000, 446, 6, 5.40, 5, 1, 1, 1, 2, 0, 1, 3, 1, 1, 5, 4, 2, 5110, 45, 0, 162.30, 74.40, 8.20, 1, 2, 1, 190.00, '2025-01-15', 84160, 0, 30, 0),
+(10, 1, 'Xiaomi Redmi Note 14 4G', 14, 116000, 9, 2400, 1080, 6.67, 120, 1200, 395, 5, 5.30, 4, 1, 0, 1, 2, 1, 1, 3, 1, 1, 5, 6, 6, 5500, 33, 0, 163.30, 76.60, 8.20, 7, 5, 1, 196.50, '2024-02-25', 57800, 0, NULL, 0),
+(11, 10, 'Xiaomi Redmi Note 14 5G', 15, 463129, 9, 2400, 1080, 6.67, 120, 1200, 395, 5, 5.30, 5, 1, 0, 1, 2, 1, 1, 3, 1, 1, 5, 6, 7, 5110, 45, 0, 162.40, 75.70, 7.99, 8, 5, 1, 190.00, '2025-01-16', 75600, 0, NULL, 0),
+(12, 10, 'Xiaomi Redmi Note 14S', 14, 450000, 9, 2400, 1080, 6.67, 120, 1300, 395, 5, 5.30, 4, 1, 0, 1, 2, 0, 1, 3, 1, 1, 5, 6, 7, 5000, 67, 0, 161.10, 75.00, 8.00, 8, 5, 1, 179.00, '2025-03-14', 64800, 0, NULL, 0),
+(13, 10, 'Xiaomi Redmi Note 14 Pro 4G', 16, 423868, 9, 2400, 1080, 6.67, 120, 1800, 395, 5, 5.30, 4, 1, 0, 1, 2, 1, 1, 3, 1, 1, 5, 6, 7, 5500, 45, 0, 162.20, 74.90, 8.20, 8, 5, 1, 180.00, '2025-01-16', 73990, 0, NULL, 0),
+(14, 10, 'Xiaomi Redmi Note 14 Pro+ 5G', 17, 750292, 9, 2712, 1220, 6.67, 120, 3000, 446, 5, 5.40, 5, 1, 1, 1, 2, 1, 1, 3, 1, 1, 5, 6, 7, 5110, 120, 0, 162.50, 74.70, 8.80, 6, 2, 1, 205.00, '2025-01-15', 102490, 0, NULL, 0),
+(15, 1, 'Xiaomi 14', 19, 2089308, 1, 2670, 1200, 6.36, 120, 3000, 460, 7, 5.40, 5, 1, 1, 1, 3, 0, 1, 5, 1, 1, 2, 7, 1, 4610, 90, 50, 152.80, 71.50, 8.20, 1, 2, 1, 193.00, '2023-10-01', 299990, 0, NULL, 0),
+(16, 9, 'Motorola Edge 50 Fusion', 10, 603451, 8, 2400, 1080, 6.67, 144, 1600, 393, 5, 5.30, 5, 1, 0, 1, 2, 0, 1, 3, 1, 0, 5, 4, 2, 5000, 68, 0, 161.91, 73.05, 7.76, 1, 3, 1, 175.00, '2024-05-15', 91820, 0, NULL, 0),
+(17, 9, 'Motorola Edge 50 Ultra', 11, 1523879, 8, 2712, 1220, 6.70, 144, 2500, 444, 7, 5.40, 5, 1, 0, 1, 3, 0, 1, 3, 1, 0, 2, 2, 2, 4500, 125, 50, 161.08, 72.37, 8.59, 1, 3, 1, 197.00, '2024-05-15', 217160, 0, NULL, 0),
+(18, 9, 'Motorola Edge 50 Neo', 12, 696931, 8, 2670, 1200, 6.40, 120, 3000, 460, 0, 5.30, 0, 0, 0, 1, 2, 0, 1, 3, 1, 0, 3, 2, 2, 4310, 68, 15, 154.10, 71.20, 8.10, 1, 3, 1, 171.00, '2024-08-29', 117000, 0, NULL, 0),
+(19, 9, 'Motorola Edge 50', 13, 722062, 8, 2712, 1220, 6.70, 120, 1600, 446, 0, 5.20, 0, 0, 0, 1, 2, 0, 1, 3, 1, 0, 3, 4, 2, 5000, 68, 15, 160.80, 72.40, 7.80, 1, 3, 1, 180.00, '2024-08-08', 108000, 0, NULL, 0),
+(20, 6, 'Google Pixel 9 Pro', 6, 1148512, 8, 2856, 1280, 6.30, 120, 2400, 497, 7, 5.30, 5, 1, 0, 1, 3, 0, 1, 3, 2, 0, 3, 1, 5, 4700, 27, 21, 152.80, 72.90, 8.50, 1, 3, 1, 199.00, '2024-09-09', 335000, 0, NULL, 0),
+(21, 1, 'Xiaomi 15', 18, 2746580, 2, 2670, 1200, 6.36, 120, 3200, 460, 7, 6.00, 5, 1, 0, 1, 3, 0, 1, 5, 2, 1, 2, 7, 3, 5240, 90, 50, 152.30, 71.20, 8.08, 1, 2, 1, 190.50, '2024-10-29', 255590, 0, NULL, 0),
+(22, 1, 'Xiaomi 15 Ultra', 18, 2746580, 2, 3200, 1400, 6.73, 120, 3200, 522, 7, 6.00, 5, 1, 1, 1, 3, 0, 1, 5, 2, 1, 2, 8, 3, 5410, 90, 80, 161.30, 75.30, 9.35, 1, 2, 1, 229.00, '2025-02-27', 374790, 0, NULL, 0),
+(23, 7, 'teszt3', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0, 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 0, NULL, 0),
+(24, 7, 'teszt4', 8, 0, 2, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, 1, 2, 3, 0, 3, 3, 2, 0, 0, 0, 10.15, 10.15, 10.15, 4, 3, 2, 0.00, '0000-00-00', 0, 0, NULL, 0),
+(25, 8, 'string', 9, 0, 10, 0, 0, 0.00, 0, 0, 0, 0, 0.00, 0, 0, 0, 0, 0, 0, 4, 4, 6, 0, 4, 5, 8, 0, 0, 0, 0.00, 0.00, 0.00, 5, 7, 3, 0.00, '2026-02-17', 0, 0, NULL, 0),
+(26, 1, 'Xiaomi 13T', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, 0),
+(27, 1, 'alma', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, 0),
+(28, 1, 'alm', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, 0),
+(29, 1, 'Xiaomi 13T', 1, 0, 1, 0, 0, 0.00, 0, 0, NULL, 0, 0.00, 0, 0, 0, 0, 0, 0, 5, 1, 1, 0, 1, 1, 1, 0, NULL, NULL, 0.00, 0.00, 0.00, 1, 1, 1, 0.00, '0001-01-01', 0, 0, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -4763,7 +4766,8 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`ID`, `name`, `email`, `SALT`, `HASH`, `privilegeID`, `active`) VALUES
 (3, 'a', 'string', 'a', 'a', 5, 1),
-(4, 'b', 'b', 'b', 'b', 5, 0);
+(4, 'b', 'b', 'b', 'b', 5, 0),
+(9, 'Pocsai Gergő', 'pocsaig1@kkszki.hu', 'b6def9ed-2463-497a-8537-eaea6506a0c7', '287ee9fca46ba663ab2554c949edc1128d9ec738739d504b01be76dc2a4b53ea', 6, 1);
 
 -- --------------------------------------------------------
 
@@ -5040,7 +5044,7 @@ ALTER TABLE `color`
 -- AUTO_INCREMENT a táblához `connectionparts`
 --
 ALTER TABLE `connectionparts`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT a táblához `connphonecamera`
@@ -5064,7 +5068,7 @@ ALTER TABLE `connphoneramstorage`
 -- AUTO_INCREMENT a táblához `connuserorder`
 --
 ALTER TABLE `connuserorder`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT a táblához `cpu`
@@ -5148,7 +5152,7 @@ ALTER TABLE `storagespeed`
 -- AUTO_INCREMENT a táblához `users`
 --
 ALTER TABLE `users`
-  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT a táblához `waterprooftype`
@@ -5171,7 +5175,7 @@ ALTER TABLE `addresses`
 --
 ALTER TABLE `connectionparts`
   ADD CONSTRAINT `connectionparts_ibfk_1` FOREIGN KEY (`partID`) REFERENCES `parts` (`ID`),
-  ADD CONSTRAINT `connectionparts_ibfk_2` FOREIGN KEY (`repairID`) REFERENCES `connectionservice` (`repairID`);
+  ADD CONSTRAINT `connectionparts_ibfk_2` FOREIGN KEY (`repairID`) REFERENCES `connectionservice` (`repairID`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Megkötések a táblához `connectionservice`

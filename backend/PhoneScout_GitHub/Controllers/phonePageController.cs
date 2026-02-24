@@ -54,7 +54,6 @@ namespace PhoneScout_GitHub.Controllers
                     phoneReleaseDate = p.PhoneReleaseDate,
                     phonePrice = p.PhonePrice,
                     phoneInStore = p.PhoneInStore,
-                    phoneInStoreAmount = p.PhoneInStoreAmount,
                     backMaterial = p.BackMaterial.BackMaterial1,
                     batteryType = p.BatteryType.BatteryType1,
                     chargerType = p.ChargerType.ChargerType1,

@@ -56,10 +56,14 @@ namespace PhoneScout_GitHub.Controllers
                         repairID = aRepair.RepairId,
                         userID = aRepair.UserId,
                         name = user.Email,
-                        postalCode = aRepair.PostalCode,
-                        city = aRepair.City,
-                        address = aRepair.Address,
-                        phoneNumber = aRepair.PhoneNumber,
+                        billingPostalCode = aRepair.BillingPostalCode,
+                        billingCity = aRepair.BillingCity,
+                        billingAddress = aRepair.BillingAddress,
+                        billingPhoneNumber = aRepair.BillingPhoneNumber,
+                        deliveryPostalCode = aRepair.DeliveryPostalCode,
+                        deliveryCity = aRepair.DeliveryCity,
+                        deliveryAddress = aRepair.DeliveryAddress,
+                        deliveryPhoneNumber = aRepair.DeliveryPhoneNumber,
                         phoneName = aRepair.PhoneName,
                         price = aRepair.Price,
                         status = aRepair.Status,
@@ -106,10 +110,14 @@ namespace PhoneScout_GitHub.Controllers
                         orderID = anOrder.OrderId,
                         userID = cx.Users.FirstOrDefault(u => u.Id == anOrder.UserId).Id,
                         userEmail = cx.Users.FirstOrDefault(u => u.Id == anOrder.UserId).Email,
-                        postalCode = anOrder.PostalCode,
-                        city = anOrder.City,
-                        address = anOrder.Address,
-                        phoneNumber = anOrder.PhoneNumber,
+                        billingPostalCode = anOrder.BillingPostalCode,
+                        billingCity = anOrder.BillingCity,
+                        billingAddress = anOrder.BillingAddress,
+                        billingPhoneNumber = anOrder.BillingPhoneNumber,
+                        deliveryPostalCode = anOrder.DeliveryPostalCode,
+                        deliveryCity = anOrder.DeliveryCity,
+                        deliveryAddress = anOrder.DeliveryAddress,
+                        deliveryPhoneNumber = anOrder.DeliveryPhoneNumber,
                         phoneName = anOrder.PhoneName,
                         phoneColorName = anOrder.PhoneColorName,
                         phoneColorHex = anOrder.PhoneColorHex,
@@ -158,10 +166,14 @@ namespace PhoneScout_GitHub.Controllers
                     {
                         repairID = aRepair.RepairId,
                         name = user.Name,
-                        postalCode = aRepair.PostalCode,
-                        city = aRepair.City,
-                        address = aRepair.Address,
-                        phoneNumber = aRepair.PhoneNumber,
+                        billingPostalCode = aRepair.BillingPostalCode,
+                        billingCity = aRepair.BillingCity,
+                        billingAddress = aRepair.BillingAddress,
+                        billingPhoneNumber = aRepair.BillingPhoneNumber,
+                        deliveryPostalCode = aRepair.DeliveryPostalCode,
+                        deliveryCity = aRepair.DeliveryCity,
+                        deliveryAddress = aRepair.DeliveryAddress,
+                        deliveryPhoneNumber = aRepair.DeliveryPhoneNumber,
                         phoneName = aRepair.PhoneName,
                         price = aRepair.Price,
                         status = aRepair.Status,
@@ -211,10 +223,14 @@ namespace PhoneScout_GitHub.Controllers
                     {
                         userID = anOrder.UserId,
                         orderID = anOrder.OrderId,
-                        postalCode = anOrder.PostalCode,
-                        city = anOrder.City,
-                        address = anOrder.Address,
-                        phoneNumber = anOrder.PhoneNumber,
+                        billingPostalCode = anOrder.BillingPostalCode,
+                        billingCity = anOrder.BillingCity,
+                        billingAddress = anOrder.BillingAddress,
+                        billingPhoneNumber = anOrder.BillingPhoneNumber,
+                        deliveryPostalCode = anOrder.DeliveryPostalCode,
+                        deliveryCity = anOrder.DeliveryCity,
+                        deliveryAddress = anOrder.DeliveryAddress,
+                        deliveryPhoneNumber = anOrder.DeliveryPhoneNumber,
                         phoneName = anOrder.PhoneName,
                         phoneColorName = anOrder.PhoneColorName,
                         phoneColorHex = anOrder.PhoneColorHex,
@@ -257,10 +273,14 @@ namespace PhoneScout_GitHub.Controllers
                     var order = new Connuserorder();
                     order.UserId = dto.userID;
                     order.OrderId = dto.orderID;
-                    order.PostalCode = dto.postalCode;
-                    order.City = dto.city;
-                    order.Address = dto.address;
-                    order.PhoneNumber = dto.phoneNumber;
+                    order.BillingPostalCode = dto.billingPostalCode;
+                    order.BillingCity = dto.billingCity;
+                    order.BillingAddress = dto.billingAddress;
+                    order.BillingPhoneNumber = dto.billingPhoneNumber;
+                    order.DeliveryPostalCode = dto.deliveryPostalCode;
+                    order.DeliveryCity = dto.deliveryCity;
+                    order.DeliveryAddress = dto.deliveryAddress;
+                    order.DeliveryPhoneNumber = dto.deliveryPhoneNumber;
                     order.PhoneName = dto.phoneName;
                     order.PhoneColorName = dto.phoneColorName;
                     order.PhoneColorHex = dto.phoneColorHex;
@@ -306,10 +326,14 @@ namespace PhoneScout_GitHub.Controllers
                 {
                     RepairId = dto.repairID,
                     UserId = dto.userID,
-                    PostalCode = dto.postalCode,
-                    City = dto.city,
-                    Address = dto.address,
-                    PhoneNumber = dto.phoneNumber,
+                    BillingPostalCode = dto.billingPostalCode,
+                    BillingCity = dto.billingCity,
+                    BillingAddress = dto.billingAddress,
+                    BillingPhoneNumber = dto.billingPhoneNumber,
+                    DeliveryPostalCode = dto.deliveryPostalCode,
+                    DeliveryCity = dto.deliveryCity,
+                    DeliveryAddress = dto.deliveryAddress,
+                    DeliveryPhoneNumber = dto.deliveryPhoneNumber,
                     PhoneName = dto.phoneName,
                     Price = dto.price,
                     Status = dto.status,
@@ -400,10 +424,14 @@ namespace PhoneScout_GitHub.Controllers
 
                 // 4. Update repair properties
                 selectedRepair.UserId = dto.userID;
-                selectedRepair.PostalCode = dto.postalCode;
-                selectedRepair.City = dto.city;
-                selectedRepair.Address = dto.address;
-                selectedRepair.PhoneNumber = dto.phoneNumber;
+                selectedRepair.BillingPostalCode = dto.billingPostalCode;
+                selectedRepair.BillingCity = dto.billingCity;
+                selectedRepair.BillingAddress = dto.billingAddress;
+                selectedRepair.BillingPhoneNumber = dto.billingPhoneNumber;
+                selectedRepair.DeliveryPostalCode = dto.deliveryPostalCode;
+                selectedRepair.DeliveryCity = dto.deliveryCity;
+                selectedRepair.DeliveryAddress = dto.deliveryAddress;
+                selectedRepair.DeliveryPhoneNumber = dto.deliveryPhoneNumber;
                 selectedRepair.PhoneName = dto.phoneName;
                 selectedRepair.Price = dto.price;
                 selectedRepair.Status = dto.status;
@@ -433,6 +461,7 @@ namespace PhoneScout_GitHub.Controllers
                 }
 
                 // 6. Save all changes
+                cx.Update(selectedRepair);
                 cx.SaveChanges();
 
                 return Ok("A szerviz igénylés befejeződött.");
@@ -459,10 +488,14 @@ namespace PhoneScout_GitHub.Controllers
                 var order = cx.Connuserorders.FirstOrDefault(o => o.Id == ID);
                 if (order != null)
                 {
-                    order.PostalCode = dto.postalCode;
-                    order.City = dto.city;
-                    order.Address = dto.address;
-                    order.PhoneNumber = dto.phoneNumber;
+                    order.BillingPostalCode = dto.billingPostalCode;
+                    order.BillingCity = dto.billingCity;
+                    order.BillingAddress = dto.billingAddress;
+                    order.BillingPhoneNumber = dto.billingPhoneNumber;
+                    order.DeliveryPostalCode = dto.deliveryPostalCode;
+                    order.DeliveryCity = dto.deliveryCity;
+                    order.DeliveryAddress = dto.deliveryAddress;
+                    order.DeliveryPhoneNumber = dto.deliveryPhoneNumber;
                     order.PhoneName = dto.phoneName;
                     order.PhoneColorHex = dto.phoneColorHex;
                     order.PhoneColorName = dto.phoneColorName;
@@ -472,10 +505,10 @@ namespace PhoneScout_GitHub.Controllers
                     order.Amount = dto.amount;
                     order.Status = dto.status;
 
-
+                    cx.Update(order);
                     cx.SaveChanges();
 
-                    return Ok("A cég adatai frissítve");
+                    return Ok("A megrendelés frissítve");
                 }
                 else
                 {
