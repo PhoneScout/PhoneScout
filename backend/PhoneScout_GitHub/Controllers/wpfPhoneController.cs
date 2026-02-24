@@ -257,7 +257,6 @@ namespace PhoneScout_GitHub.Controllers
                 PhoneReleaseDate = dto.phoneReleaseDate,
                 PhonePrice = dto.phonePrice,
                 PhoneInStore = dto.phoneInStore,
-                PhoneInStoreAmount = dto.phoneInStoreAmount,
                 PhoneDeleted = (int)dto.phoneAvailable,
                 CpuId = cpu.Id,
                 ManufacturerId = manufacturer.Id,

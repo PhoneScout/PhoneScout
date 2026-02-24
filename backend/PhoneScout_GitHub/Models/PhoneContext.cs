@@ -261,12 +261,30 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.RepairId)
                 .HasMaxLength(22)
                 .HasColumnName("repairID");
-            entity.Property(e => e.Address)
+            entity.Property(e => e.BillingAddress)
                 .HasMaxLength(256)
-                .HasColumnName("address");
-            entity.Property(e => e.City)
+                .HasColumnName("billingAddress");
+            entity.Property(e => e.BillingCity)
                 .HasMaxLength(64)
-                .HasColumnName("city");
+                .HasColumnName("billingCity");
+            entity.Property(e => e.BillingPhoneNumber)
+                .HasColumnType("bigint(11)")
+                .HasColumnName("billingPhoneNumber");
+            entity.Property(e => e.BillingPostalCode)
+                .HasColumnType("int(4)")
+                .HasColumnName("billingPostalCode");
+            entity.Property(e => e.DeliveryAddress)
+                .HasMaxLength(256)
+                .HasColumnName("deliveryAddress");
+            entity.Property(e => e.DeliveryCity)
+                .HasMaxLength(64)
+                .HasColumnName("deliveryCity");
+            entity.Property(e => e.DeliveryPhoneNumber)
+                .HasColumnType("bigint(11)")
+                .HasColumnName("deliveryPhoneNumber");
+            entity.Property(e => e.DeliveryPostalCode)
+                .HasColumnType("int(11)")
+                .HasColumnName("deliveryPostalCode");
             entity.Property(e => e.ManufacturerName)
                 .HasMaxLength(24)
                 .HasColumnName("manufacturerName");
@@ -276,12 +294,6 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.PhoneName)
                 .HasMaxLength(64)
                 .HasColumnName("phoneName");
-            entity.Property(e => e.PhoneNumber)
-                .HasColumnType("bigint(11)")
-                .HasColumnName("phoneNumber");
-            entity.Property(e => e.PostalCode)
-                .HasColumnType("int(4)")
-                .HasColumnName("postalCode");
             entity.Property(e => e.Price)
                 .HasColumnType("int(11)")
                 .HasColumnName("price");
@@ -411,15 +423,33 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.Id)
                 .HasColumnType("int(11)")
                 .HasColumnName("ID");
-            entity.Property(e => e.Address)
-                .HasMaxLength(256)
-                .HasColumnName("address");
             entity.Property(e => e.Amount)
                 .HasColumnType("int(11)")
                 .HasColumnName("amount");
-            entity.Property(e => e.City)
+            entity.Property(e => e.BillingAddress)
+                .HasMaxLength(256)
+                .HasColumnName("billingAddress");
+            entity.Property(e => e.BillingCity)
                 .HasMaxLength(64)
-                .HasColumnName("city");
+                .HasColumnName("billingCity");
+            entity.Property(e => e.BillingPhoneNumber)
+                .HasColumnType("bigint(11)")
+                .HasColumnName("billingPhoneNumber");
+            entity.Property(e => e.BillingPostalCode)
+                .HasColumnType("int(4)")
+                .HasColumnName("billingPostalCode");
+            entity.Property(e => e.DeliveryAddress)
+                .HasMaxLength(256)
+                .HasColumnName("deliveryAddress");
+            entity.Property(e => e.DeliveryCity)
+                .HasMaxLength(64)
+                .HasColumnName("deliveryCity");
+            entity.Property(e => e.DeliveryPhoneNumber)
+                .HasColumnType("bigint(11)")
+                .HasColumnName("deliveryPhoneNumber");
+            entity.Property(e => e.DeliveryPostalCode)
+                .HasColumnType("int(4)")
+                .HasColumnName("deliveryPostalCode");
             entity.Property(e => e.OrderId)
                 .HasMaxLength(22)
                 .HasColumnName("orderID");
@@ -430,18 +460,12 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.PhoneName)
                 .HasMaxLength(64)
                 .HasColumnName("phoneName");
-            entity.Property(e => e.PhoneNumber)
-                .HasColumnType("bigint(11)")
-                .HasColumnName("phoneNumber");
             entity.Property(e => e.PhoneRam)
                 .HasColumnType("int(4)")
                 .HasColumnName("phoneRam");
             entity.Property(e => e.PhoneStorage)
                 .HasColumnType("int(4)")
                 .HasColumnName("phoneStorage");
-            entity.Property(e => e.PostalCode)
-                .HasColumnType("int(4)")
-                .HasColumnName("postalCode");
             entity.Property(e => e.Price)
                 .HasColumnType("int(11)")
                 .HasColumnName("price");
@@ -623,9 +647,6 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.PhoneInStore)
                 .HasColumnType("int(1)")
                 .HasColumnName("phoneInStore");
-            entity.Property(e => e.PhoneInStoreAmount)
-                .HasColumnType("int(11)")
-                .HasColumnName("phoneInStoreAmount");
             entity.Property(e => e.PhoneName)
                 .HasMaxLength(64)
                 .HasColumnName("phoneName");

@@ -34,7 +34,6 @@ namespace PhoneScout_GitHub.DTOs
         public DateOnly? phoneReleaseDate { get; set; }
         public int? phonePrice { get; set; }
         public int? phoneInStore { get; set; }
-        public int? phoneInStoreAmount { get; set; }
         public int? phoneAvailable { get; set; }
 
         // Related entities

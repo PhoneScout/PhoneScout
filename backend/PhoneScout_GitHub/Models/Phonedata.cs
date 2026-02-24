@@ -85,8 +85,6 @@ public partial class Phonedata
 
     public int? PhoneInStore { get; set; }
 
-    public int? PhoneInStoreAmount { get; set; }
-
     public int? PhonePopularity { get; set; }
 
     public int PhoneDeleted { get; set; }

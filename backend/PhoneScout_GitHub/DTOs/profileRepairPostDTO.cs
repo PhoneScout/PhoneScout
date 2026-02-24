@@ -7,10 +7,14 @@ namespace PhoneScout_GitHub.DTOs
         public string repairID { get; set; }
 
         public int userID { get; set; }
-        public int postalCode { get; set; }
-        public string city { get; set; }
-        public string address { get; set; }
-        public long phoneNumber { get; set; }
+        public int billingPostalCode { get; set; }
+        public string billingCity { get; set; }
+        public string billingAddress { get; set; }
+        public long billingPhoneNumber { get; set; } 
+        public int deliveryPostalCode { get; set; }
+        public string deliveryCity { get; set; }
+        public string deliveryAddress { get; set; }
+        public long deliveryPhoneNumber { get; set; } 
 
         public string phoneName { get; set; }
 
