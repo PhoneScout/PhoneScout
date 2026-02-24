@@ -20,13 +20,14 @@ import PackagingTerms from './pages/PackagingTerms';
 import ChatbotWidget from './components/ChatbotWidget';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import ForgotPassword from './pages/ForgotPassword';
 
 
 
 function App() {
 
   const location = useLocation();
-  const excludeLayout = ['/bejelentkezes', '/fiokaktivalas'];
+  const excludeLayout = ['/bejelentkezes', '/fiokaktivalas','/elfelejtettjelszo'];
   const shouldShowLayout = !excludeLayout.includes(location.pathname);
 
   return (
@@ -54,6 +55,7 @@ function App() {
         <Route path='/elerhetosegek' element={<Contacts />} />
         <Route path='/bolt' element={<Shop />} />
         <Route path='/csomagolasfeltetelek' element={<PackagingTerms />} />
+        <Route path='/elfelejtettjelszo' element={<ForgotPassword />} />
 
       </Routes>
 
