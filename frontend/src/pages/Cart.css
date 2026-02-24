@@ -15,6 +15,7 @@
     background-color: #f9f9f9;
     height: auto;
     transition: transform 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
 }
 
 
@@ -37,6 +38,22 @@
 .phoneDetailsCart h3 {
     margin: 0;
     font-size: 1.2em;
+}
+
+.variantInfo {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.colorSwatch {
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    flex-shrink: 0;
 }
 
 .phonePriceCart {
@@ -70,11 +87,38 @@
     color: white;
     border-radius: 4px;
 }
+.emptyCartMessage{
+    text-align: center;
+}
+.phoneQuantityCart .decreaseQuantity--delete {
+    background-color: red;
+}
 
 .phoneQuantityCart .removeFromCart {
     background-color: red;
     color: white;
     border-radius: 4px;
+}
+
+.stock-bubbleCart {
+    flex: 1;
+    text-align: center;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.stock-bubbleCart.phonestockTrue {
+    background-color: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.stock-bubbleCart.phonestockFalse {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
 }
 
 .totalPriceCart {

@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import "./PhoneCard.css";
 import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
-import JSZip from "jszip";
 import axios from "axios";
 
 export default function PhoneCard({
@@ -19,9 +18,11 @@ export default function PhoneCard({
   const [showVariantModal, setShowVariantModal] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedPair, setSelectedPair] = useState(null);
+  const [selectedPairIdx, setSelectedPairIdx] = useState(null);
   const [selectedQty, setSelectedQty] = useState(1);
   const [colorError, setColorError] = useState(false);
   const [pairError, setPairError] = useState(false);
+  const [calculatedPrice, setCalculatedPrice] = useState(phonePrice);
 
   useEffect(() => {
     if (!phoneId) return;
@@ -29,23 +30,16 @@ export default function PhoneCard({
     const loadFirstImage = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5175/api/blob/GetPicturesZip/${phoneId}`
+          `http://localhost:5175/api/blob/GetIndex/${phoneId}`,
+          { responseType: 'blob' }
         );
 
         if (response.status !== 200) {
-          console.error("Képek nem találhatók!");
+          console.error("Kép nem található!");
           return;
         }
 
-        const zipBlob = await response.blob();
-        const zip = await JSZip.loadAsync(zipBlob);
-
-        const firstFileName = Object.keys(zip.files)[0];
-        const firstFile = zip.files[firstFileName];
-
-        const blob = await firstFile.async("blob");
-        const url = URL.createObjectURL(blob);
-
+        const url = URL.createObjectURL(response.data);
         setPhoneImg(url);
       } catch (err) {
         console.error("Hiba a kép betöltésekor:", err);
@@ -71,6 +65,17 @@ export default function PhoneCard({
     };
   }, []);
 
+  // Calculate price based on storage index
+  useEffect(() => {
+    if (selectedPairIdx !== null && phonePrice) {
+      const basePrice = phonePrice;
+      const priceMultiplier = 1 + (selectedPairIdx * 0.1);
+      setCalculatedPrice(Math.round(basePrice * priceMultiplier));
+    } else {
+      setCalculatedPrice(phonePrice);
+    }
+  }, [selectedPairIdx, phonePrice]);
+
   const isInCompare = compareIds.includes(phoneId);
   const isInStock =
     phoneInStore === 1 ||
@@ -79,7 +84,13 @@ export default function PhoneCard({
 
   const normalizeCart = () => {
     const raw = JSON.parse(localStorage.getItem("cart") || "[]");
-    if (Array.isArray(raw)) return raw;
+    if (Array.isArray(raw)) {
+      // Ensure all items have storageIndex, default to 0 if missing
+      return raw.map(item => ({
+        ...item,
+        storageIndex: item.storageIndex ?? 0
+      }));
+    }
 
     // Legacy object -> array
     const legacyItems = Object.entries(raw).map(([id, qty]) => ({
@@ -89,6 +100,7 @@ export default function PhoneCard({
       colorHex: "",
       ramAmount: null,
       storageAmount: null,
+      storageIndex: 0,
       phoneName: "",
       phonePrice: 0
     }));
@@ -167,9 +179,11 @@ export default function PhoneCard({
     
     setSelectedColor(null);
     setSelectedPair(null);
+    setSelectedPairIdx(null);
     setSelectedQty(1);
     setColorError(false);
     setPairError(false);
+    setCalculatedPrice(phonePrice);
     setShowVariantModal(true);
   };
 
@@ -183,7 +197,7 @@ export default function PhoneCard({
       setColorError(false);
     }
 
-    if (!selectedPair) {
+    if (!selectedPair || selectedPairIdx === null) {
       setPairError(true);
       hasErrors = true;
     } else {
@@ -211,6 +225,7 @@ export default function PhoneCard({
         colorHex: selectedColor.colorHex,
         ramAmount: selectedPair.ramAmount,
         storageAmount: selectedPair.storageAmount,
+        storageIndex: selectedPairIdx,
         phoneName,
         phonePrice
       });
@@ -291,9 +306,10 @@ export default function PhoneCard({
                 {ramStoragePairs.map((p, idx) => (
                   <button
                     key={`${p.ramAmount}-${p.storageAmount}-${idx}`}
-                    className={`phoneCardPairButton ${selectedPair?.ramAmount === p.ramAmount && selectedPair?.storageAmount === p.storageAmount ? "phoneCardPairButton--selected" : ""}`}
+                    className={`phoneCardPairButton ${selectedPairIdx === idx ? "phoneCardPairButton--selected" : ""}`}
                     onClick={() => {
                       setSelectedPair(p);
+                      setSelectedPairIdx(idx);
                       setPairError(false);
                     }}
                     type="button"
@@ -325,6 +341,16 @@ export default function PhoneCard({
                 >
                   +
                 </button>
+              </div>
+            </div>
+
+            <div className="phoneCardVariantSection">
+              <div className="phoneCardVariantTitle">Ár</div>
+              <div className="phoneCardVariantLabel" style={{ fontSize: '0.9rem', fontWeight: 'normal', color: '#666' }}>
+                {calculatedPrice?.toLocaleString()} Ft / db
+              </div>
+              <div className="phoneCardVariantLabel" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#68F145', marginTop: '8px' }}>
+                {(calculatedPrice * selectedQty)?.toLocaleString()} Ft
               </div>
             </div>
 

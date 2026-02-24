@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import JSZip from 'jszip';
 import "./Cart.css";
 import axios from 'axios';
 
@@ -26,7 +25,13 @@ export default function Cart() {
 
   const normalizeCart = () => {
     const raw = JSON.parse(localStorage.getItem("cart") || "[]");
-    if (Array.isArray(raw)) return raw;
+    if (Array.isArray(raw)) {
+      // Ensure all items have storageIndex, default to 0 if missing
+      return raw.map(item => ({
+        ...item,
+        storageIndex: item.storageIndex ?? 0
+      }));
+    }
 
     const legacyItems = Object.entries(raw).map(([id, qty]) => ({
       phoneID: Number(id),
@@ -35,6 +40,7 @@ export default function Cart() {
       colorHex: "",
       ramAmount: null,
       storageAmount: null,
+      storageIndex: 0,
       phoneName: "",
       phonePrice: 0
     }));
@@ -54,16 +60,22 @@ export default function Cart() {
 
         const phoneMap = new Map(allPhones.data.map(p => [p.phoneID, p]));
 
-        const merged = cartItems.map(item => ({
-          ...item,
-          phone: phoneMap.get(item.phoneID)
-        }));
+        const merged = cartItems.map(item => {
+          const basePrice = item.phone?.phonePrice ?? item.phonePrice ?? 0;
+          const storageIdx = item.storageIndex ?? 0;
+          const calculatedPrice = Math.round(basePrice * (1 + storageIdx * 0.1));
+          
+          return {
+            ...item,
+            phone: phoneMap.get(item.phoneID),
+            calculatedPrice
+          };
+        });
 
         setCartPhones(merged);
 
         const total = merged.reduce((sum, item) => {
-          const price = item.phone?.phonePrice ?? item.phonePrice ?? 0;
-          return sum + price * (item.quantity || 0);
+          return sum + item.calculatedPrice * (item.quantity || 0);
         }, 0);
         setTotalPrice(total);
 
@@ -76,27 +88,20 @@ export default function Cart() {
       .catch(error => console.error("Error fetching phone data:", error));
   }, [cartItems]);
 
-  // Load phone image from backend ZIP
+  // Load phone image from backend
   const loadPhoneImage = async (phoneID) => {
     try {
       const response = await axios.get(
-        `http://localhost:5175/api/blob/GetPicturesZip/${phoneID}`
+        `http://localhost:5175/api/blob/GetIndex/${phoneID}`,
+        { responseType: 'blob' }
       );
 
       if (response.status !== 200) {
-        console.error("Képek nem találhatók!");
+        console.error("Kép nem található!");
         return;
       }
 
-      const zipBlob = await response.blob();
-      const zip = await JSZip.loadAsync(zipBlob);
-
-      // Első fájl kiválasztása
-      const firstFileName = Object.keys(zip.files)[0];
-      const firstFile = zip.files[firstFileName];
-
-      const blob = await firstFile.async("blob");
-      const url = URL.createObjectURL(blob);
+      const url = URL.createObjectURL(response.data);
 
       setPhoneImages(prev => ({ ...prev, [phoneID]: url }));
     } catch (err) {
@@ -194,6 +199,7 @@ export default function Cart() {
       for (const item of cartPhones) {
         const phone = item.phone || {};
         const quantity = item.quantity || 0;
+        const finalPrice = item.calculatedPrice ?? phone.phonePrice ?? item.phonePrice ?? 0;
 
         const orderData = {
           id: 0,
@@ -209,7 +215,7 @@ export default function Cart() {
           phoneColorHex: item.colorHex ?? "",
           phoneRam: parseInt(item.ramAmount, 10) || 0,
           phoneStorage: parseInt(item.storageAmount, 10) || 0,
-          price: Number(phone.phonePrice ?? item.phonePrice ?? 0),
+          price: Number(finalPrice),
           amount: Number(quantity),
           status: 0
         };
@@ -249,7 +255,9 @@ export default function Cart() {
           <div className="col-2"></div>
           <div className="col-8">
             {cartPhones.length === 0 ? (
-              <p>A kosarad üres.</p>
+              <div className="emptyCartMessage">
+                <h>A kosarad üres.</h>
+              </div>
             ) : (
               <div>
                 <div className="totalPriceCart">
@@ -299,20 +307,20 @@ export default function Cart() {
                       </div>
 
                       <div className="phonePriceCart">
-                        <p>{formatPrice(phone.phonePrice ?? item.phonePrice ?? 0)} Ft</p>
+                        <p>{formatPrice(item.calculatedPrice ?? phone.phonePrice ?? item.phonePrice ?? 0)} Ft <strong>/ db</strong></p>
                       </div>
-                      <div className={`stock-bubbleCart ${phone.phoneInStore === "van" ? "phonestockTrue" : "phonestockFalse"}`}>
-                        {phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
+                      <div className={`stock-bubbleCart ${phone.phoneInStore === 1 || phone.phoneInStore === "1" ? "phonestockTrue" : "phonestockFalse"}`}>
+                        {phone.phoneInStore === 1 || phone.phoneInStore === "1" ? "Raktáron" : "Nincs raktáron"}
                       </div>
                       <div className="phoneQuantityCart">
                         <button
-                          className="decreaseQuantity"
+                          className={`decreaseQuantity ${quantity === 1 ? 'decreaseQuantity--delete' : ''}`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleQuantityChange(itemKey, -1);
                           }}
                         >
-                          -
+                          {quantity === 1 ? <i className="fa-solid fa-trash"></i> : "-"}
                         </button>
                         <span>{quantity}</span>
                         <button

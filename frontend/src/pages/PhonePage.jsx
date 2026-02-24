@@ -8,6 +8,8 @@ export default function PhonePage() {
   const [phone, setPhone] = useState(null);
   const [pictures, setPictures] = useState([]);
   const [activePictureIdx, setActivePictureIdx] = useState(0);
+  const [prevPictureIdx, setPrevPictureIdx] = useState(null);
+  const [slideDirection, setSlideDirection] = useState(null);
   const [showImageModal, setShowImageModal] = useState(false);
   const [loading, setLoading] = useState(true);
   const [selectedColor, setSelectedColor] = useState(null);
@@ -16,6 +18,7 @@ export default function PhonePage() {
   const [showVariantModal, setShowVariantModal] = useState(false);
   const [selectedQty, setSelectedQty] = useState(1);
   const [compareIds, setCompareIds] = useState([]);
+  const [calculatedPrice, setCalculatedPrice] = useState(0);
   const timeoutsRef = useRef([]);
 
   const svgRef = useRef(null);
@@ -62,6 +65,15 @@ export default function PhonePage() {
       window.removeEventListener('storage', syncCompare);
     };
   }, []);
+
+  // Calculate price based on storage index
+  useEffect(() => {
+    if (phone?.phonePrice) {
+      const basePrice = phone.phonePrice;
+      const priceMultiplier = 1 + (selectedRamIdx * 0.1);
+      setCalculatedPrice(Math.round(basePrice * priceMultiplier));
+    }
+  }, [selectedRamIdx, phone]);
 
   // SVG interakciók
   useEffect(() => {
@@ -185,6 +197,7 @@ export default function PhonePage() {
         colorHex: selectedColor.colorHex,
         ramAmount: selectedPair.ramAmount,
         storageAmount: selectedPair.storageAmount,
+        storageIndex: selectedRamIdx,
         phoneName: phone.phoneName,
         phonePrice: phone.phonePrice
       });
@@ -210,12 +223,34 @@ export default function PhonePage() {
   const activeImage = displayedPictures[activePictureIdx] || displayedPictures[0];
 
   const goToPreviousImage = () => {
+    setPrevPictureIdx(activePictureIdx);
+    setSlideDirection('left');
     setActivePictureIdx((prev) => (prev - 1 + displayedPictures.length) % displayedPictures.length);
   };
 
   const goToNextImage = () => {
+    setPrevPictureIdx(activePictureIdx);
+    setSlideDirection('right');
     setActivePictureIdx((prev) => (prev + 1) % displayedPictures.length);
   };
+
+  const handleThumbnailClick = (idx) => {
+    if (idx === activePictureIdx) return;
+    setPrevPictureIdx(activePictureIdx);
+    setSlideDirection(idx > activePictureIdx ? 'right' : 'left');
+    setActivePictureIdx(idx);
+  };
+
+  // Clear animation after it completes
+  useEffect(() => {
+    if (slideDirection) {
+      const timer = setTimeout(() => {
+        setSlideDirection(null);
+        setPrevPictureIdx(null);
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [slideDirection]);
 
   const openImageModal = () => {
     setShowImageModal(true);
@@ -241,9 +276,18 @@ export default function PhonePage() {
               <div id="carouselExample" className="carousel slide" data-bs-ride="carousel">
                 <div className="carousel-inner text-center">
                   <div className="carousel-item active phonePageCarouselItem">
+                    {prevPictureIdx !== null && slideDirection && (
+                      <img
+                        key={`prev-${prevPictureIdx}`}
+                        src={normalizeImageUrl(displayedPictures[prevPictureIdx]?.imageUrl)}
+                        className={`d-block w-100 carousel-image-transitioning slide-out-${slideDirection}`}
+                        alt={`Previous image`}
+                      />
+                    )}
                     <img
+                      key={activePictureIdx}
                       src={normalizeImageUrl(activeImage?.imageUrl)}
-                      className="d-block w-100"
+                      className={`d-block w-100 ${slideDirection ? `slide-in-${slideDirection}` : ''}`}
                       alt={`Telefon kép ${activePictureIdx + 1}`}
                       onClick={openImageModal}
                     />
@@ -282,7 +326,7 @@ export default function PhonePage() {
                       src={normalizeImageUrl(pic.imageUrl)}
                       className="img-thumbnail mx-1"
                       alt={`Telefon thumbnail ${idx + 1}`}
-                      onClick={() => setActivePictureIdx(idx)}
+                      onClick={() => handleThumbnailClick(idx)}
                     />
                   ))}
                 </div>
@@ -359,7 +403,7 @@ export default function PhonePage() {
               <div className="phoneStock" style={{ color: phone.phoneInStore === "van" ? "#68F145" : "red" }}>
                 {phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
               </div>
-              <div className="price">{phone.phonePrice?.toLocaleString()} Ft</div>
+              <div className="price">{calculatedPrice?.toLocaleString()} Ft</div>
               <button className="phoneSiteButton phoneSiteCartButton mt-3" onClick={handleCartClick}>Kosárba rakom</button>
               <button
                 className="phoneSiteButton phoneSiteCompareButton mt-2"
@@ -487,11 +531,42 @@ export default function PhonePage() {
           <div className="phonePageImageModal" onClick={(e) => e.stopPropagation()}>
             <div className="phonePageImageModalMain">
               <button className="phonePageImageModalClose" type="button" onClick={closeImageModal}><i className="fas fa-times"></i></button>
+              {prevPictureIdx !== null && slideDirection && (
+                <img
+                  key={`modal-prev-${prevPictureIdx}`}
+                  src={normalizeImageUrl(displayedPictures[prevPictureIdx]?.imageUrl)}
+                  className={`phonePageImageModalImg modal-image-transitioning slide-out-${slideDirection}`}
+                  alt={`Previous modal image`}
+                />
+              )}
               <img
+                key={`modal-${activePictureIdx}`}
                 src={normalizeImageUrl(activeImage?.imageUrl)}
                 alt={`Telefon nagy kép ${activePictureIdx + 1}`}
-                className="phonePageImageModalImg"
+                className={`phonePageImageModalImg ${slideDirection ? `slide-in-${slideDirection}` : ''}`}
               />
+              {displayedPictures.length > 1 && (
+                <>
+                  <button
+                    className="phonePageModalNavButton phonePageModalNavButton--prev"
+                    type="button"
+                    onClick={goToPreviousImage}
+                    onMouseUp={(e) => e.currentTarget.blur()}
+                  >
+                    <span className="fa-solid fa-arrow-left" aria-hidden="true"></span>
+                    <span className="visually-hidden">Előző</span>
+                  </button>
+                  <button
+                    className="phonePageModalNavButton phonePageModalNavButton--next"
+                    type="button"
+                    onClick={goToNextImage}
+                    onMouseUp={(e) => e.currentTarget.blur()}
+                  >
+                    <span className="fa-solid fa-arrow-right" aria-hidden="true"></span>
+                    <span className="visually-hidden">Következő</span>
+                  </button>
+                </>
+              )}
             </div>
             <div className="phonePageImageModalThumbs">
               {displayedPictures.map((pic, idx) => (
@@ -500,7 +575,7 @@ export default function PhonePage() {
                   src={normalizeImageUrl(pic.imageUrl)}
                   className={`phonePageImageModalThumb ${activePictureIdx === idx ? 'phonePageImageModalThumb--active' : ''}`}
                   alt={`Telefon thumbnail ${idx + 1}`}
-                  onClick={() => setActivePictureIdx(idx)}
+                  onClick={() => handleThumbnailClick(idx)}
                 />
               ))}
             </div>
@@ -566,6 +641,16 @@ export default function PhonePage() {
                 >
                   +
                 </button>
+              </div>
+            </div>
+
+            <div className="phonePageVariantSection">
+              <div className="phonePageVariantTitle">Ár</div>
+              <div className="phonePageVariantLabel" style={{ fontSize: '0.9rem', fontWeight: 'normal', color: '#666' }}>
+                {calculatedPrice?.toLocaleString()} Ft / db
+              </div>
+              <div className="phonePageVariantLabel" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#68F145', marginTop: '8px' }}>
+                {(calculatedPrice * selectedQty)?.toLocaleString()} Ft
               </div>
             </div>
 

@@ -134,9 +134,8 @@ br {
 }
 
 .phoneDataBox {
-    background: linear-gradient(135deg,
-            rgba(35, 0, 179, 0.7) 0%,
-            rgba(104, 241, 69, 0.7) 100%);
+    
+    background: linear-gradient(135deg, rgba(35, 0, 179, 0.9), rgba(104, 241, 69, 0.9));    
     padding: 20px;
     border-radius: 10px;
     width: 97%;
@@ -558,12 +557,14 @@ footer .address {
     border-radius: 16px;
     box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
     padding: 12px;
+    overflow: hidden;
 }
 
 .phonePageCarouselItem {
     border-radius: 14px;
     overflow: hidden;
     background: linear-gradient(180deg, #f8fafc 0%, #eef2f6 100%);
+    position: relative;
 }
 
 .phonePageCarouselItem img {
@@ -573,6 +574,85 @@ footer .address {
     display: block;
     cursor: pointer;
     transition: transform 0.25s ease;
+}
+
+.phonePageCarouselItem img.carousel-image-transitioning {
+    position: absolute;
+    top: 0;
+    left: 0;
+    pointer-events: none;
+}
+
+.phonePageCarouselItem img:hover {
+    transform: scale(1.01);
+}
+
+/* Slide IN animations */
+@keyframes slideInFromRight {
+    from {
+        transform: translateX(100%);
+        opacity: 0.7;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes slideInFromLeft {
+    from {
+        transform: translateX(-100%);
+        opacity: 0.7;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/* Slide OUT animations */
+@keyframes slideOutToLeft {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+@keyframes slideOutToRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+/* Apply slide-in animations */
+.phonePageCarouselItem img.slide-in-right {
+    animation: slideInFromRight 0.4s ease-out;
+}
+
+.phonePageCarouselItem img.slide-in-left {
+    animation: slideInFromLeft 0.4s ease-out;
+}
+
+/* Apply slide-out animations */
+.phonePageCarouselItem img.slide-out-right {
+    animation: slideOutToLeft 0.4s ease-out forwards;
+}
+
+.phonePageCarouselItem img.slide-out-left {
+    animation: slideOutToRight 0.4s ease-out forwards;
 }
 
 .phonePageCarouselItem img:hover {
@@ -701,11 +781,16 @@ footer .address {
 .phonePageImageModalMain {
     position: relative;
     width: 980px;
-    flex: 0 0 980px;
+    flex: 980px;
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 0;
+    overflow: hidden;
+    background: linear-gradient(135deg, rgba(35, 0, 179, 0.5), rgba(104, 241, 69, 0.5));
+    backdrop-filter: blur(8px) saturate(1.15);
+    -webkit-backdrop-filter: blur(8px) saturate(1.15);
+    border-radius: 28px;
 }
 
 .phonePageImageModalImg {
@@ -715,14 +800,59 @@ footer .address {
     max-height: 90vh;
     object-fit: contain;
     border-radius: 28px;
-    background: linear-gradient(135deg,
-            rgba(35, 0, 179, 0.4) 0%,
-            rgba(104, 241, 69, 0.4) 100%);
-    border: linear-gradient(135deg,
-            rgba(35, 0, 179, 0.7) 0%,
-            rgba(104, 241, 69, 0.7) 100%);
-    backdrop-filter: blur(8px) saturate(1.15);
-    -webkit-backdrop-filter: blur(8px) saturate(1.15);
+}
+
+.phonePageImageModalImg.modal-image-transitioning {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    pointer-events: none;
+    z-index: 2;
+}
+
+/* Modal slide-in animations - keep normal since they're positioned relative */
+.phonePageImageModalImg.slide-in-right {
+    animation: slideInFromRight 0.4s ease-out;
+}
+
+.phonePageImageModalImg.slide-in-left {
+    animation: slideInFromLeft 0.4s ease-out;
+}
+
+/* Modal slide-out animations for absolute positioned images */
+@keyframes modalSlideOutToLeft {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+}
+
+@keyframes modalSlideOutToRight {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    to {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+}
+
+.phonePageImageModalImg.modal-image-transitioning.slide-out-right {
+    animation: modalSlideOutToLeft 0.4s ease-out forwards;
+}
+
+.phonePageImageModalImg.modal-image-transitioning.slide-out-left {
+    animation: modalSlideOutToRight 0.4s ease-out forwards;
 }
 
 .phonePageImageModalThumbs {
@@ -781,6 +911,51 @@ footer .address {
     background-color: rgb(87, 85, 85)
 }
 
+.phonePageModalNavButton {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 50px;
+    height: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.9);
+    background: rgba(15, 23, 42, 0.6);
+    color: #ffffff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 6px 16px rgba(2, 6, 23, 0.3);
+    z-index: 10;
+    backdrop-filter: blur(2px);
+    transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    opacity: 1;
+}
+
+.phonePageModalNavButton--prev {
+    left: 15px;
+}
+
+.phonePageModalNavButton--next {
+    right: 15px;
+}
+
+.phonePageModalNavButton:hover,
+.phonePageModalNavButton:focus,
+.phonePageModalNavButton:focus-visible,
+.phonePageModalNavButton:active {
+    background: rgba(15, 23, 42, 0.85);
+    color: #ffffff;
+    outline: none;
+    box-shadow: 0 8px 20px rgba(2, 6, 23, 0.4);
+    transform: translateY(-50%) scale(1.08);
+}
+
+.phonePageModalNavButton .fa-solid {
+    font-size: 22px;
+}
+
 @media (max-width: 768px) {
     .phonePageImageModal {
         width: 100%;
@@ -807,5 +982,22 @@ footer .address {
         width: 84px;
         min-width: 84px;
         height: 84px;
+    }
+
+    .phonePageModalNavButton {
+        width: 42px;
+        height: 42px;
+    }
+
+    .phonePageModalNavButton--prev {
+        left: 10px;
+    }
+
+    .phonePageModalNavButton--next {
+        right: 10px;
+    }
+
+    .phonePageModalNavButton .fa-solid {
+        font-size: 18px;
     }
 }
