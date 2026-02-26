@@ -55,7 +55,8 @@ namespace PhoneScout_GitHub.Controllers
                     {
                         repairID = aRepair.RepairId,
                         userID = aRepair.UserId,
-                        name = user.Email,
+                        userEmail = user.Email,
+                        userName = user.Name,
                         billingPostalCode = aRepair.BillingPostalCode,
                         billingCity = aRepair.BillingCity,
                         billingAddress = aRepair.BillingAddress,
