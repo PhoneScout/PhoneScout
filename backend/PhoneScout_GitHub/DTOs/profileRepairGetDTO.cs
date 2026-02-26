@@ -6,7 +6,8 @@ namespace PhoneScout_GitHub.DTOs
     {
         public string repairID { get; set; }
         public int userID { get; set; }
-        public string name { get; set; }
+        public string userEmail { get; set; }
+        public string useRName { get; set; }
         public int billingPostalCode { get; set; }
         public string billingCity { get; set; }
         public string billingAddress { get; set; }

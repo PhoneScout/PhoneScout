@@ -44,6 +44,8 @@ public partial class PhoneContext : DbContext
 
     public virtual DbSet<Cpu> Cpus { get; set; }
 
+    public virtual DbSet<Event> Events { get; set; }
+
     public virtual DbSet<Manufacturer> Manufacturers { get; set; }
 
     public virtual DbSet<Part> Parts { get; set; }
@@ -246,7 +248,6 @@ public partial class PhoneContext : DbContext
 
             entity.HasOne(d => d.Repair).WithMany(p => p.Connectionparts)
                 .HasForeignKey(d => d.RepairId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("connectionparts_ibfk_2");
         });
 
@@ -503,6 +504,36 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.CpuName)
                 .HasMaxLength(64)
                 .HasColumnName("cpuName");
+        });
+
+        modelBuilder.Entity<Event>(entity =>
+        {
+            entity.HasKey(e => e.EventId).HasName("PRIMARY");
+
+            entity.ToTable("events");
+
+            entity.HasIndex(e => e.EventHostId, "eventHostID");
+
+            entity.Property(e => e.EventId)
+                .HasColumnType("int(11)")
+                .HasColumnName("eventID");
+            entity.Property(e => e.EventDate)
+                .HasColumnType("datetime")
+                .HasColumnName("eventDate");
+            entity.Property(e => e.EventHostId)
+                .HasColumnType("int(11)")
+                .HasColumnName("eventHostID");
+            entity.Property(e => e.EventName)
+                .HasMaxLength(256)
+                .HasColumnName("eventName");
+            entity.Property(e => e.EventUrl)
+                .HasMaxLength(256)
+                .HasColumnName("eventURL");
+
+            entity.HasOne(d => d.EventHost).WithMany(p => p.Events)
+                .HasForeignKey(d => d.EventHostId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("events_ibfk_1");
         });
 
         modelBuilder.Entity<Manufacturer>(entity =>

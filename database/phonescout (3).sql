@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Gép: 127.0.0.1
--- Létrehozás ideje: 2026. Feb 24. 18:33
+-- Létrehozás ideje: 2026. Feb 26. 19:38
 -- Kiszolgáló verziója: 10.4.32-MariaDB
 -- PHP verzió: 8.2.12
 
@@ -741,7 +741,7 @@ CREATE TABLE `connuserorder` (
 --
 
 INSERT INTO `connuserorder` (`ID`, `orderID`, `userID`, `billingPostalCode`, `billingCity`, `billingAddress`, `billingPhoneNumber`, `deliveryPostalCode`, `deliveryCity`, `deliveryAddress`, `deliveryPhoneNumber`, `phoneName`, `phoneColorName`, `PhoneColorHex`, `phoneRam`, `phoneStorage`, `price`, `amount`, `status`) VALUES
-(15, 'string', 3, 0, 'string', 'string', 0, 0, 'string', 'string', 0, 'string', 'string', 'string', 0, 0, 0, 0, 0);
+(15, 'string', 3, 0, 'string', 'string', 0, 0, 'string', 'string', 0, 'string', 'string', 'string', 0, 0, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -781,6 +781,27 @@ INSERT INTO `cpu` (`ID`, `cpuName`, `cpuMaxClockSpeed`, `cpuCoreNumber`, `cpuMan
 (17, 'Qualcomm SM7635 Snapdragon 7s Gen 3', 2, 8, 4),
 (18, 'Snapdragon 8 Elite', 4, 8, 3),
 (19, 'Snapdragon® 8 Gen 3', 3, 8, 4);
+
+-- --------------------------------------------------------
+
+--
+-- Tábla szerkezet ehhez a táblához `events`
+--
+
+CREATE TABLE `events` (
+  `eventID` int(11) NOT NULL,
+  `eventHostID` int(11) NOT NULL,
+  `eventName` varchar(256) NOT NULL,
+  `eventDate` datetime NOT NULL,
+  `eventURL` varchar(256) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_hungarian_ci;
+
+--
+-- A tábla adatainak kiíratása `events`
+--
+
+INSERT INTO `events` (`eventID`, `eventHostID`, `eventName`, `eventDate`, `eventURL`) VALUES
+(1, 1, 'Teszt event 2', '2026-02-28 12:00:00', 'asd');
 
 -- --------------------------------------------------------
 
@@ -830,7 +851,7 @@ CREATE TABLE `parts` (
 --
 
 INSERT INTO `parts` (`ID`, `partName`, `partStock`) VALUES
-(1, 'alma', 3);
+(1, 'alma', 10);
 
 -- --------------------------------------------------------
 
@@ -4766,8 +4787,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`ID`, `name`, `email`, `SALT`, `HASH`, `privilegeID`, `active`) VALUES
 (3, 'a', 'string', 'a', 'a', 5, 1),
-(4, 'b', 'b', 'b', 'b', 5, 0),
-(9, 'Pocsai Gergő', 'pocsaig1@kkszki.hu', 'b6def9ed-2463-497a-8537-eaea6506a0c7', '287ee9fca46ba663ab2554c949edc1128d9ec738739d504b01be76dc2a4b53ea', 6, 1);
+(4, 'b', 'b', 'b', 'b', 5, 0);
 
 -- --------------------------------------------------------
 
@@ -4893,6 +4913,13 @@ ALTER TABLE `connuserorder`
 --
 ALTER TABLE `cpu`
   ADD PRIMARY KEY (`ID`);
+
+--
+-- A tábla indexei `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`eventID`),
+  ADD KEY `eventHostID` (`eventHostID`);
 
 --
 -- A tábla indexei `manufacturer`
@@ -5077,6 +5104,12 @@ ALTER TABLE `cpu`
   MODIFY `ID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
+-- AUTO_INCREMENT a táblához `events`
+--
+ALTER TABLE `events`
+  MODIFY `eventID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT a táblához `manufacturer`
 --
 ALTER TABLE `manufacturer`
@@ -5210,6 +5243,12 @@ ALTER TABLE `connphoneramstorage`
 --
 ALTER TABLE `connuserorder`
   ADD CONSTRAINT `connuserorder_ibfk_3` FOREIGN KEY (`userID`) REFERENCES `users` (`ID`);
+
+--
+-- Megkötések a táblához `events`
+--
+ALTER TABLE `events`
+  ADD CONSTRAINT `events_ibfk_1` FOREIGN KEY (`eventHostID`) REFERENCES `manufacturer` (`ID`);
 
 --
 -- Megkötések a táblához `phonedatas`

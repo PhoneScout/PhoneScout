@@ -103,13 +103,13 @@ namespace PhoneScout_GitHub.Controllers
             {
 
                 var orders = cx.Connuserorders
-
                     .Select(anOrder => new profileCartGetDTO
                     {
                         ID = anOrder.Id,
                         orderID = anOrder.OrderId,
                         userID = cx.Users.FirstOrDefault(u => u.Id == anOrder.UserId).Id,
                         userEmail = cx.Users.FirstOrDefault(u => u.Id == anOrder.UserId).Email,
+                        userName = cx.Users.FirstOrDefault(u => u.Id == anOrder.UserId).Name,
                         billingPostalCode = anOrder.BillingPostalCode,
                         billingCity = anOrder.BillingCity,
                         billingAddress = anOrder.BillingAddress,
@@ -165,7 +165,8 @@ namespace PhoneScout_GitHub.Controllers
                     profileRepairGetDTO repair = new profileRepairGetDTO
                     {
                         repairID = aRepair.RepairId,
-                        name = user.Name,
+                        userEmail = user.Email,
+                        userName = user.Name,
                         billingPostalCode = aRepair.BillingPostalCode,
                         billingCity = aRepair.BillingCity,
                         billingAddress = aRepair.BillingAddress,

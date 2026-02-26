@@ -42,7 +42,8 @@ namespace PhoneScout_GitHub.Controllers
                 {
                     p.Id,
                     p.ContentType,
-                    ImageUrl = Url.Action("GetPictureById", new { id = p.Id })
+                    ImageUrl = Url.Action("GetPictureById", new { id = p.Id }),
+                    p.IsIndex
                 })
                 .ToListAsync();
 
@@ -95,35 +96,32 @@ namespace PhoneScout_GitHub.Controllers
             }
         }
 
-        [HttpPut("UpdatePicture/{id}")]
-        public async Task<IActionResult> UpdatePicture(int id, IFormFile file, bool isIndex)
+       
+
+        [HttpPut("SetIndex/{phoneId}/{pictureId}")]
+        public async Task<IActionResult> SetIndex(int phoneId, int pictureId)
         {
-            var picture = await cx.Phonepictures.FindAsync(id);
+            var pictures = await cx.Phonepictures
+                .Where(p => p.PhoneId == phoneId)
+                .ToListAsync();
 
-            if (picture == null)
-                return NotFound();
+            if (!pictures.Any())
+                return NotFound("No pictures found.");
 
-            if (isIndex == true && cx.Phonepictures.Where(x=>x.IsIndex == 1).FirstOrDefault(p=>p.Id == id) != null  || isIndex == true && cx.Phonepictures.Where(x=>x.IsIndex == 0).Where(y=>y.PhoneId == picture.PhoneId).Count() == cx.Phonepictures.Where(z=>z.PhoneId==picture.PhoneId).Count() || isIndex == false)
-            {
-                using var ms = new MemoryStream();
-                await file.CopyToAsync(ms);
+            foreach (var pic in pictures)
+                pic.IsIndex = 0;
 
-                picture.PhonePicture1 = ms.ToArray();
-                picture.ContentType = file.ContentType;
-                picture.IsIndex = isIndex ? 1 : 0;
+            var selected = pictures.FirstOrDefault(p => p.Id == pictureId);
 
-                await cx.SaveChangesAsync();
+            if (selected == null)
+                return NotFound("Picture not found.");
 
-                return Ok("A kép frissítve.");
-            }
-            else
-            {
-                return BadRequest("A telefonhoz már tartozik indexkép.");
-            }
+            selected.IsIndex = 1;
 
+            await cx.SaveChangesAsync();
 
+            return Ok("Index updated.");
         }
-
 
         [HttpDelete("DeletePicture/{id}")]
         public async Task<IActionResult> DeletePicture(int id)
