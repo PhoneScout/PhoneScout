@@ -118,6 +118,7 @@ namespace PhoneScout_GitHub.Controllers
 
             return Ok(new
             {
+                Name = user.Name,
                 Email = user.Email,
                 Privilege = (int)user.PrivilegeId,
                 Active = user.Active
