@@ -1,8 +1,10 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./Compare.css";
 import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 export default function Compare() {
+  const navigate = useNavigate();
   const [phones, setPhones] = useState([]);
   const [loading, setLoading] = useState(true);
   const [highlightDifferences, setHighlightDifferences] = useState(false);
@@ -16,6 +18,17 @@ export default function Compare() {
   const [allPhones, setAllPhones] = useState([]);
   const [loadingAllPhones, setLoadingAllPhones] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const [phoneImages, setPhoneImages] = useState({});
+  const [showVariantModal, setShowVariantModal] = useState(false);
+  const [variantPhone, setVariantPhone] = useState(null);
+  const [variantLoading, setVariantLoading] = useState(false);
+  const [selectedColor, setSelectedColor] = useState(null);
+  const [selectedPair, setSelectedPair] = useState(null);
+  const [selectedPairIdx, setSelectedPairIdx] = useState(null);
+  const [selectedQty, setSelectedQty] = useState(1);
+  const [colorError, setColorError] = useState(false);
+  const [pairError, setPairError] = useState(false);
+  const [calculatedPrice, setCalculatedPrice] = useState(0);
 
   // Csoportosított tulajdonságok
   const groupedProps = [
@@ -33,11 +46,11 @@ export default function Compare() {
           label: "Felbontás",
           key: "phoneResolution",
           format: (_, p) => (p.phoneResolutionWidth && p.phoneResolutionHeight) 
-            ? `${p.phoneResolutionWidth} x ${p.phoneResolutionHeight}` : "-"
+            ? `${p.phoneResolutionWidth} x ${p.phoneResolutionHeight} px` : "-"
         },
         { label: "Kijelző méret", key: "screenSize", format: v => v ? `${v.toFixed(2)}"` : "-" },
-        { label: "Kijelző max fényerő", key: "screenMaxBrightness" },
-        { label: "Kijelző élesség", key: "screenSharpness" },
+        { label: "Kijelző max fényerő", key: "screenMaxBrightness", format: v => v ? `${v} nit` : "-" },
+        { label: "Kijelző élesség", key: "screenSharpness", format: v => v ? `${v} ppi` : "-" },
         { label: "Kijelző típusa", key: "screenType" }
       ]
     },
@@ -45,23 +58,23 @@ export default function Compare() {
       group: "CPU",
       props: [
         { label: "CPU név", key: "cpuName" },
-        { label: "Antutu pontszám", key: "phoneAntutu" },
-        { label: "CPU max órajel", key: "cpuMaxClockSpeed" },
-        { label: "CPU magok száma", key: "cpuCoreNumber" },
-        { label: "CPU gyártástechnológia", key: "cpuManufacturingTechnology" }
+        { label: "Antutu pontszám", key: "phoneAntutu", format: v => v ? `${v} pont` : "-" },
+        { label: "CPU max órajel", key: "cpuMaxClockSpeed", format: v => v ? `${v} MHz` : "-" },
+        { label: "CPU magok száma", key: "cpuCoreNumber", format: v => v ? `${v} mag` : "-" },
+        { label: "Gyártástechnológia", key: "cpuManufacturingTechnology", format: v => v ? `${v} nm` : "-" }
       ]
     },
     {
       group: "RAM",
       props: [
-        { label: "RAM mennyiség", key: "ramAmount", format: v => v ? `${v} GB` : "-" },
+        { label: "Min. RAM", key: "ramAmount", format: v => v ? `${v} GB` : "-" },
         { label: "RAM sebesség", key: "ramSpeed" }
       ]
     },
     {
       group: "Tárhely",
       props: [
-        { label: "Tárhely mennyiség", key: "storageAmount", format: v => v ? `${v} GB` : "-" },
+        { label: "Min. tárhely", key: "storageAmount", format: v => v ? `${v} GB` : "-" },
         { label: "Tárhely sebesség", key: "storageSpeed" }
       ]
     },
@@ -86,6 +99,8 @@ export default function Compare() {
   const nonNumericProps = [
     "screenType", "cpuName", "sensorsFingerprintPlace", "sensorsFingerprintType", "waterproofType", "phoneResolution"
   ];
+
+  const logicalValueKeys = ["phoneInStore"];
 
   // Összes telefon betöltése (modálhoz)
   useEffect(() => {
@@ -123,11 +138,23 @@ export default function Compare() {
         // Az axios response .data mezőjéből vesszük ki az adatokat
         let data = Array.isArray(res.data) ? res.data[0] : res.data;
         
-        // Ha van ramStorage tömb, kivonjuk az első elementum adatait
+        // Ha van ramStorage tömb, kivonjuk a minimum RAM és minimum tárhely adatokat
         if (data && data.ramStorage && Array.isArray(data.ramStorage) && data.ramStorage.length > 0) {
-          const { ramAmount, storageAmount } = data.ramStorage[0];
-          data.ramAmount = ramAmount;
-          data.storageAmount = storageAmount;
+          const ramValues = data.ramStorage
+            .map(pair => Number(pair.ramAmount))
+            .filter(value => !Number.isNaN(value));
+
+          const storageValues = data.ramStorage
+            .map(pair => Number(pair.storageAmount))
+            .filter(value => !Number.isNaN(value));
+
+          if (ramValues.length > 0) {
+            data.ramAmount = Math.min(...ramValues);
+          }
+
+          if (storageValues.length > 0) {
+            data.storageAmount = Math.min(...storageValues);
+          }
         }
         
         return data;
@@ -143,6 +170,32 @@ export default function Compare() {
   useEffect(() => {
     loadPhones();
   }, [loadPhones, refreshTrigger]);
+
+  useEffect(() => {
+    const loadPhoneImage = async (phoneID) => {
+      try {
+        const response = await axios.get(
+          `http://localhost:5175/api/blob/GetIndex/${phoneID}`,
+          { responseType: 'blob' }
+        );
+
+        if (response.status !== 200) {
+          return;
+        }
+
+        const url = URL.createObjectURL(response.data);
+        setPhoneImages(prev => ({ ...prev, [phoneID]: url }));
+      } catch {
+        // nincs kép vagy nem elérhető
+      }
+    };
+
+    phones.forEach((phone) => {
+      if (phone?.phoneID && !phoneImages[phone.phoneID]) {
+        loadPhoneImage(phone.phoneID);
+      }
+    });
+  }, [phones, phoneImages]);
 
   // Görgetés
   const scroll = (direction) => {
@@ -168,12 +221,41 @@ export default function Compare() {
   };
 
   // Kiemelés
+  const normalizeLogicalValue = (value) => {
+    if (value === 1 || value === true) return "van";
+    if (value === 0 || value === false) return "nincs";
+
+    if (typeof value === "string") {
+      const lowered = value.trim().toLowerCase();
+      if (["1", "igen", "true", "van", "raktáron", "raktaron"].includes(lowered)) return "van";
+      if (["0", "nem", "false", "nincs", "nincs raktáron", "nincs raktaron"].includes(lowered)) return "nincs";
+    }
+
+    return "-";
+  };
+
+  const getDisplayValue = (key, rawValue, phone, formatter) => {
+    if (logicalValueKeys.includes(key)) {
+      return normalizeLogicalValue(rawValue) === "van" ? "Van" : "Nincs";
+    }
+
+    if (formatter) {
+      return formatter(rawValue, phone);
+    }
+
+    if (rawValue === null || rawValue === undefined || rawValue === "") {
+      return "-";
+    }
+
+    return rawValue;
+  };
+
   const getHighlightClass = (key, value) => {
   if (!selectedFilters.has(key) || phones.length < 2) return "";
 
   // Speciális kezelés a "Készleten" mezőre
-  if (key === "phoneInStore") {
-    const values = phones.map(p => p[key]);
+  if (logicalValueKeys.includes(key)) {
+    const values = phones.map(p => normalizeLogicalValue(p[key]));
     const hasVan = values.includes("van");
     const hasNincs = values.includes("nincs");
 
@@ -181,8 +263,9 @@ export default function Compare() {
     if (!hasVan || !hasNincs) return "";
 
     // Különben: "van" = legjobb (zöld), "nincs" = legrosszabb (narancs)
-    if (value === "van") return "highlight-green";
-    if (value === "nincs") return "highlight-orange";
+    const normalizedCurrent = normalizeLogicalValue(value);
+    if (normalizedCurrent === "van") return "highlight-green";
+    if (normalizedCurrent === "nincs") return "highlight-orange";
     return "";
   }
 
@@ -224,6 +307,95 @@ export default function Compare() {
     compareIds = compareIds.filter(id => String(id) !== String(phoneId));
     localStorage.setItem("comparePhones", JSON.stringify(compareIds));
     setRefreshTrigger(prev => prev + 1);
+  };
+
+  const handleCardNavigation = (phoneId) => {
+    localStorage.setItem("selectedPhone", String(phoneId));
+    navigate(`/telefon/${phoneId}`);
+  };
+
+  const handleCartButtonClick = (e, phoneId) => {
+    e.stopPropagation();
+    handleCardNavigation(phoneId);
+  };
+
+  useEffect(() => {
+    const basePrice = variantPhone?.phonePrice || 0;
+    if (selectedPairIdx !== null && basePrice) {
+      const priceMultiplier = 1 + (selectedPairIdx * 0.1);
+      setCalculatedPrice(Math.round(basePrice * priceMultiplier));
+    } else {
+      setCalculatedPrice(basePrice);
+    }
+  }, [selectedPairIdx, variantPhone]);
+
+  const addToCartWithVariants = (e) => {
+    e.stopPropagation();
+
+    if (!variantPhone) return;
+
+    let hasErrors = false;
+
+    if (!selectedColor) {
+      setColorError(true);
+      hasErrors = true;
+    } else {
+      setColorError(false);
+    }
+
+    if (!selectedPair || selectedPairIdx === null) {
+      setPairError(true);
+      hasErrors = true;
+    } else {
+      setPairError(false);
+    }
+
+    if (hasErrors || selectedQty < 1) return;
+
+    const raw = JSON.parse(localStorage.getItem("cart") || "[]");
+    const cartItems = Array.isArray(raw)
+      ? raw
+      : Object.entries(raw).map(([id, qty]) => ({
+          phoneID: Number(id),
+          quantity: Number(qty),
+          colorName: "",
+          colorHex: "",
+          ramAmount: null,
+          storageAmount: null,
+          storageIndex: 0,
+          phoneName: "",
+          phonePrice: 0
+        }));
+
+    const cartItem = {
+      phoneID: variantPhone.phoneID,
+      quantity: selectedQty,
+      colorName: selectedColor.colorName,
+      colorHex: selectedColor.colorHex,
+      ramAmount: selectedPair.ramAmount,
+      storageAmount: selectedPair.storageAmount,
+      storageIndex: selectedPairIdx,
+      phoneName: variantPhone.phoneName ?? "",
+      phonePrice: variantPhone.phonePrice ?? 0
+    };
+
+    const matchIndex = cartItems.findIndex(
+      (item) =>
+        item.phoneID === cartItem.phoneID &&
+        item.colorHex === cartItem.colorHex &&
+        Number(item.ramAmount) === Number(cartItem.ramAmount) &&
+        Number(item.storageAmount) === Number(cartItem.storageAmount)
+    );
+
+    if (matchIndex >= 0) {
+      cartItems[matchIndex].quantity = (cartItems[matchIndex].quantity || 0) + 1;
+    } else {
+      cartItems.push(cartItem);
+    }
+
+    localStorage.setItem("cart", JSON.stringify(cartItems));
+    window.dispatchEvent(new Event("cartUpdated"));
+    setShowVariantModal(false);
   };
 
   const filteredAllPhones = allPhones.filter(phone =>
@@ -420,16 +592,54 @@ export default function Compare() {
               ref={scrollContainerRef}
             >
               {phones.map((phone) => (
-                <div className="compare-card" key={phone.phoneID}>
-                  <div className="compare-card-title">{phone.phoneName}</div>
-                  
+                <div className="compare-card" key={phone.phoneID} onClick={() => handleCardNavigation(phone.phoneID)}>
+                  <button
+                    className="compare-card-remove-btn"
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleRemovePhone(phone.phoneID);
+                    }}
+                    title="Eltávolítás az összehasonlításból"
+                  >
+                    ×
+                  </button>
+
+                  <div className="compare-card-header">
+                    <div className="compare-card-image-wrap">
+                      <img
+                        className="compare-card-image"
+                        src={phoneImages[phone.phoneID] || "/images/placeholder.png"}
+                        alt={phone.phoneName}
+                      />
+                      <div className="compare-card-price">{phone.phonePrice ? `${phone.phonePrice} Ft` : "-"}</div>
+                      <div className={`compare-card-stock ${normalizeLogicalValue(phone.phoneInStore) === "van" ? "compare-card-stock--true" : "compare-card-stock--false"}`}>
+                        {normalizeLogicalValue(phone.phoneInStore) === "van" ? "Raktáron" : "Nincs raktáron"}
+                      </div>
+                    </div>
+
+                    <div className="compare-card-title-row">
+                      <div className="compare-card-title" title={phone.phoneName}>{phone.phoneName}</div>
+                      <div className="compare-card-actions">
+                        <button
+                          type="button"
+                          className="compare-card-action-btn"
+                          title="Kosárba"
+                          onClick={(e) => handleCartButtonClick(e, phone.phoneID)}
+                        >
+                          <i className="fa-solid fa-cart-shopping"></i>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+
                   <div className="compare-card-parts">
                     {groupedProps.map((group) => (
-                      <React.Fragment key={group.group}>
+                      <div className="compare-group-block" key={group.group}>
                         <div className="compare-part-group-title">{group.group}</div>
                         {group.props.map((prop) => {
                           const rawValue = phone[prop.key];
-                          const displayValue = prop.format ? prop.format(rawValue, phone) : rawValue;
+                          const displayValue = getDisplayValue(prop.key, rawValue, phone, prop.format);
                           const highlightClass = getHighlightClass(prop.key, rawValue);
                           const isDiff = isDifferentRow(prop.key);
 
@@ -437,6 +647,7 @@ export default function Compare() {
                             <div 
                               key={prop.key} 
                               className={`compare-part ${isDiff ? 'border-start border-3 border-primary ps-2' : ''}`}
+                              title={String(displayValue || "-")}
                             >
                               <span className="compare-part-label">{prop.label}:</span>
                               <span className={`compare-part-value ${highlightClass}`}>
@@ -445,7 +656,7 @@ export default function Compare() {
                             </div>
                           );
                         })}
-                      </React.Fragment>
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -523,6 +734,112 @@ export default function Compare() {
                 Bezárás
               </button>
             </div>
+          </div>
+        </div>
+      )}
+
+      {showVariantModal && (
+        <div className="compareVariantModalOverlay" onClick={() => setShowVariantModal(false)}>
+          <div className="compareVariantModal" onClick={(e) => e.stopPropagation()}>
+            {variantLoading || !variantPhone ? (
+              <p>Variánsok betöltése...</p>
+            ) : (
+              <>
+                <h3>Válassz színt és RAM/Storage verziót</h3>
+
+                <div className="compareVariantSection">
+                  <div className="compareVariantTitle">Szín</div>
+                  <div className="compareColorOptions">
+                    {(variantPhone.colors || []).map((c, idx) => (
+                      <button
+                        key={`${c.colorHex}-${idx}`}
+                        className={`compareColorCircle ${selectedColor?.colorHex === c.colorHex ? "compareColorCircle--selected" : ""}`}
+                        style={{ backgroundColor: c.colorHex }}
+                        title={c.colorName}
+                        onClick={() => {
+                          setSelectedColor(c);
+                          setColorError(false);
+                        }}
+                        type="button"
+                      />
+                    ))}
+                  </div>
+                  {selectedColor && (
+                    <div className="compareVariantLabel">{selectedColor.colorName}</div>
+                  )}
+                  {colorError && (
+                    <div className="compareVariantError">Kérjük, válasszon ki egy színt!</div>
+                  )}
+                </div>
+
+                <div className="compareVariantSection">
+                  <div className="compareVariantTitle">RAM / Storage</div>
+                  <div className="comparePairOptions">
+                    {(variantPhone.ramStoragePairs || []).map((p, idx) => (
+                      <button
+                        key={`${p.ramAmount}-${p.storageAmount}-${idx}`}
+                        className={`comparePairButton ${selectedPairIdx === idx ? "comparePairButton--selected" : ""}`}
+                        onClick={() => {
+                          setSelectedPair(p);
+                          setSelectedPairIdx(idx);
+                          setPairError(false);
+                        }}
+                        type="button"
+                      >
+                        {p.ramAmount} GB / {p.storageAmount} GB
+                      </button>
+                    ))}
+                  </div>
+                  {pairError && (
+                    <div className="compareVariantError">Kérjük, válasszon ki egy RAM/Storage verziót!</div>
+                  )}
+                </div>
+
+                <div className="compareVariantSection">
+                  <div className="compareVariantTitle">Mennyiség</div>
+                  <div className="comparePairOptions">
+                    <button
+                      className="comparePairButton"
+                      type="button"
+                      onClick={() => setSelectedQty((q) => Math.max(1, q - 1))}
+                    >
+                      -
+                    </button>
+                    <span className="compareQuantityNumber">{selectedQty}</span>
+                    <button
+                      className="comparePairButton"
+                      type="button"
+                      onClick={() => setSelectedQty((q) => q + 1)}
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+
+                <div className="compareVariantSection">
+                  <div className="compareVariantTitle">Ár</div>
+                  <div className="compareVariantLabel" style={{ fontSize: '0.9rem', fontWeight: 'normal', color: '#666' }}>
+                    {calculatedPrice?.toLocaleString()} Ft / db
+                  </div>
+                  <div className="compareVariantLabel" style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#68F145', marginTop: '8px' }}>
+                    {(calculatedPrice * selectedQty)?.toLocaleString()} Ft
+                  </div>
+                </div>
+
+                <div className="compareVariantActions">
+                  <button className="compareVariantCancel" onClick={() => setShowVariantModal(false)} type="button">
+                    Mégse
+                  </button>
+                  <button
+                    className="compareVariantConfirm"
+                    onClick={addToCartWithVariants}
+                    type="button"
+                  >
+                    Kosárba
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}

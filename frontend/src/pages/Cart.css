@@ -255,6 +255,8 @@
     border-radius: 16px;
     min-width: 700px;
     max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
     box-shadow: 0 8px 32px rgba(0,0,0,0.15);
     position: relative;
     display: flex;
@@ -275,6 +277,7 @@
 }
 .formsContainer {
     display: flex;
+    flex-wrap: wrap;
     gap: 40px;
     justify-content: center;
     width: 100%;
@@ -316,6 +319,35 @@
 .modalForm input:focus {
     border-color: #0984e3;
     outline: none;
+}
+
+.addressInfoText {
+    font-size: 0.9em;
+    color: #636e72;
+    margin-bottom: 10px;
+}
+
+.addressCheckboxRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.addressCheckboxRow input[type="checkbox"] {
+    width: auto;
+    margin-bottom: 0;
+}
+
+.addressCheckboxRow label {
+    margin-bottom: 0;
+    font-size: 0.95em;
+}
+
+.invalid-feedback {
+    display: block;
+    margin-top: -6px;
+    margin-bottom: 10px;
 }
 .submitPaymentBtn {
     display: inline-block;
