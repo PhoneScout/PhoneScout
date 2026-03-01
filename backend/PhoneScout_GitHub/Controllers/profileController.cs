@@ -66,7 +66,9 @@ namespace PhoneScout_GitHub.Controllers
                         deliveryAddress = aRepair.DeliveryAddress,
                         deliveryPhoneNumber = aRepair.DeliveryPhoneNumber,
                         phoneName = aRepair.PhoneName,
-                        price = aRepair.Price,
+                        basePrice = aRepair.BasePrice,
+                        repairPrice = aRepair.RepairPrice,
+                        isPriceAccepted = aRepair.IsPriceAccepted,
                         status = aRepair.Status,
                         manufacturerName = aRepair.ManufacturerName,
                         phoneInspection = aRepair.PhoneInspection,
@@ -177,7 +179,9 @@ namespace PhoneScout_GitHub.Controllers
                         deliveryAddress = aRepair.DeliveryAddress,
                         deliveryPhoneNumber = aRepair.DeliveryPhoneNumber,
                         phoneName = aRepair.PhoneName,
-                        price = aRepair.Price,
+                        basePrice = aRepair.BasePrice,
+                        repairPrice = aRepair.RepairPrice,
+                        isPriceAccepted = aRepair.IsPriceAccepted,
                         status = aRepair.Status,
                         manufacturerName = aRepair.ManufacturerName,
                         phoneInspection = aRepair.PhoneInspection,
@@ -337,7 +341,9 @@ namespace PhoneScout_GitHub.Controllers
                     DeliveryAddress = dto.deliveryAddress,
                     DeliveryPhoneNumber = dto.deliveryPhoneNumber,
                     PhoneName = dto.phoneName,
-                    Price = dto.price,
+                    BasePrice = dto.basePrice,
+                    RepairPrice = dto.repairPrice,
+                    IsPriceAccepted = dto.isPriceAccepted,
                     Status = dto.status,
 
                     ManufacturerName = dto.manufacturerName,
@@ -435,13 +441,40 @@ namespace PhoneScout_GitHub.Controllers
                 selectedRepair.DeliveryAddress = dto.deliveryAddress;
                 selectedRepair.DeliveryPhoneNumber = dto.deliveryPhoneNumber;
                 selectedRepair.PhoneName = dto.phoneName;
-                selectedRepair.Price = dto.price;
+                selectedRepair.BasePrice = dto.basePrice;
+                selectedRepair.RepairPrice = dto.repairPrice;
+                selectedRepair.IsPriceAccepted = dto.isPriceAccepted;
                 selectedRepair.Status = dto.status;
                 selectedRepair.ManufacturerName = dto.manufacturerName;
                 selectedRepair.PhoneInspection = dto.phoneInspection;
                 selectedRepair.ProblemDescription = dto.problemDescription;
 
                 // 5. Update parts (add only if not already linked)
+
+                var existingConnections = cx.Connectionparts
+    .Where(p => p.RepairId == repairID)
+    .Select(p => p.PartId)
+    .ToList();
+
+                var updatedPartIds = cx.Parts
+                    .Where(p => dto.parts.Contains(p.PartName))
+                    .Select(p => p.Id)
+                    .ToList();
+
+                var partsToRemove = existingConnections
+                    .Except(updatedPartIds)
+                    .ToList();
+
+                foreach (var partId in partsToRemove)
+                {
+                    var connection = cx.Connectionparts
+                        .FirstOrDefault(p => p.RepairId == repairID && p.PartId == partId);
+
+                    if (connection != null)
+                        cx.Connectionparts.Remove(connection);
+                }
+
+
                 foreach (var partName in dto.parts)
                 {
                     var part = cx.Parts.FirstOrDefault(p => p.PartName == partName);
@@ -539,9 +572,18 @@ namespace PhoneScout_GitHub.Controllers
             try
             {
                 var repair = cx.Connectionservices.FirstOrDefault(o => o.RepairId == repairID);
+
+                var partsConnections = cx.Connectionparts.Where(p => p.RepairId == repairID);
+
+
+
                 if (repair != null)
                 {
                     cx.Connectionservices.Remove(repair);
+                    foreach (var item in partsConnections)
+                    {
+                        cx.Connectionparts.Remove(item);
+                    }
                     cx.SaveChanges();
                     return Ok("Javítás törölve.");
                 }

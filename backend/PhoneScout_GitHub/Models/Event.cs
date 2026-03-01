@@ -15,5 +15,9 @@ public partial class Event
 
     public string EventUrl { get; set; } = null!;
 
-    public virtual Manufacturer? EventHost { get; set; } = null!;
+    public byte[] EventImage { get; set; } = null!;
+
+    public string ContentType { get; set; } = null!;
+
+    public virtual Manufacturer EventHost { get; set; } = null!;
 }

@@ -27,7 +27,11 @@ public partial class Connectionservice
 
     public string PhoneName { get; set; } = null!;
 
-    public int Price { get; set; }
+    public int BasePrice { get; set; }
+
+    public int RepairPrice { get; set; }
+
+    public int IsPriceAccepted { get; set; }
 
     public int Status { get; set; }
 

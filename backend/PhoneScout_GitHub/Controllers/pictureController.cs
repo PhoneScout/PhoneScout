@@ -76,7 +76,7 @@ namespace PhoneScout_GitHub.Controllers
             {
                 using var ms = new MemoryStream();
                 await file.CopyToAsync(ms);
-
+ 
                 var newPicture = new Phonepicture
                 {
                     PhoneId = phoneID,

@@ -262,6 +262,9 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.RepairId)
                 .HasMaxLength(22)
                 .HasColumnName("repairID");
+            entity.Property(e => e.BasePrice)
+                .HasColumnType("int(11)")
+                .HasColumnName("basePrice");
             entity.Property(e => e.BillingAddress)
                 .HasMaxLength(256)
                 .HasColumnName("billingAddress");
@@ -286,6 +289,9 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.DeliveryPostalCode)
                 .HasColumnType("int(11)")
                 .HasColumnName("deliveryPostalCode");
+            entity.Property(e => e.IsPriceAccepted)
+                .HasColumnType("int(1)")
+                .HasColumnName("isPriceAccepted");
             entity.Property(e => e.ManufacturerName)
                 .HasMaxLength(24)
                 .HasColumnName("manufacturerName");
@@ -295,12 +301,12 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.PhoneName)
                 .HasMaxLength(64)
                 .HasColumnName("phoneName");
-            entity.Property(e => e.Price)
-                .HasColumnType("int(11)")
-                .HasColumnName("price");
             entity.Property(e => e.ProblemDescription)
                 .HasColumnType("text")
                 .HasColumnName("problemDescription");
+            entity.Property(e => e.RepairPrice)
+                .HasColumnType("int(11)")
+                .HasColumnName("repairPrice");
             entity.Property(e => e.Status)
                 .HasColumnType("int(1)")
                 .HasColumnName("status");
@@ -517,12 +523,18 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.EventId)
                 .HasColumnType("int(11)")
                 .HasColumnName("eventID");
+            entity.Property(e => e.ContentType)
+                .HasMaxLength(100)
+                .HasColumnName("contentType");
             entity.Property(e => e.EventDate)
                 .HasColumnType("datetime")
                 .HasColumnName("eventDate");
             entity.Property(e => e.EventHostId)
                 .HasColumnType("int(11)")
                 .HasColumnName("eventHostID");
+            entity.Property(e => e.EventImage)
+                .HasColumnType("mediumblob")
+                .HasColumnName("eventImage");
             entity.Property(e => e.EventName)
                 .HasMaxLength(256)
                 .HasColumnName("eventName");

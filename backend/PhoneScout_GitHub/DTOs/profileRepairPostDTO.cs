@@ -18,7 +18,9 @@ namespace PhoneScout_GitHub.DTOs
 
         public string phoneName { get; set; }
 
-        public int price { get; set; }
+        public int basePrice { get; set; }
+        public int repairPrice { get; set; }
+        public int isPriceAccepted { get; set; }
 
         public int status { get; set; }
 
