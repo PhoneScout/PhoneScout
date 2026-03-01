@@ -9,6 +9,7 @@ export default function FilterPage() {
   const [filters, setFilters] = useState({
     manufacturerNames: [],
     cpuNames: [],
+    phoneReleaseDate: '',
     phoneAntutu: '',
     cpuMaxClockSpeed: '',
     cpuCoreNumber: '',
@@ -110,11 +111,34 @@ export default function FilterPage() {
     });
   };
 
-  const handleSliderChange = (field, value, isMin = true) => {
-    setFilters(prev => ({
-      ...prev,
-      [isMin ? `${field}Min` : `${field}Max`]: value
-    }));
+  const handleDualRangeChange = (field, type, rawValue, min, max, step = 1) => {
+    const numericValue = parseFloat(rawValue);
+    const parsedMin = parseFloat(min);
+    const parsedMax = parseFloat(max);
+    const safeStep = parseFloat(step) || 1;
+
+    if (Number.isNaN(numericValue)) return;
+
+    const clamped = Math.min(Math.max(numericValue, parsedMin), parsedMax);
+
+    setFilters(prev => {
+      const currentMin = parseFloat(prev[`${field}Min`] || parsedMin);
+      const currentMax = parseFloat(prev[`${field}Max`] || parsedMax);
+
+      if (type === 'min') {
+        const nextMin = Math.min(clamped, currentMax - safeStep);
+        return {
+          ...prev,
+          [`${field}Min`]: Number.isFinite(nextMin) ? nextMin : parsedMin
+        };
+      }
+
+      const nextMax = Math.max(clamped, currentMin + safeStep);
+      return {
+        ...prev,
+        [`${field}Max`]: Number.isFinite(nextMax) ? nextMax : parsedMax
+      };
+    });
   };
 
   const handleSingleSliderChange = (field, value) => {
@@ -136,7 +160,7 @@ export default function FilterPage() {
     const filterRequestData = {
       phoneID: 0,
       manufacturerNames: filters.manufacturerNames,
-      phoneReleaseDate: 0,
+      phoneReleaseDate: parseNumber(filters.phoneReleaseDate),
       cpuNames: filters.cpuNames,
       phoneAntutu: parseNumber(filters.phoneAntutu),
       cpuMaxClockSpeed: parseNumber(filters.cpuMaxClockSpeed),
@@ -197,6 +221,18 @@ export default function FilterPage() {
         }
       }
 
+      // Megjelenési dátum (év) szűrés
+      if (filters.phoneReleaseDate) {
+        const selectedYear = parseNumber(filters.phoneReleaseDate);
+
+        if (phone.phoneReleaseDate) {
+          const phoneDate = new Date(phone.phoneReleaseDate);
+          if (!Number.isNaN(phoneDate.getTime()) && phoneDate.getFullYear() < selectedYear) {
+            return false;
+          }
+        }
+      }
+
       // Egyéb szűrők
       if (filters.phoneAntutu && phone.phoneAntutu) {
         if (phone.phoneAntutu < parseNumber(filters.phoneAntutu)) return false;
@@ -251,6 +287,7 @@ export default function FilterPage() {
     setFilters({
       manufacturerNames: [],
       cpuNames: [],
+      phoneReleaseDate: '',
       phoneAntutu: '',
       cpuMaxClockSpeed: '',
       cpuCoreNumber: '',
@@ -344,6 +381,12 @@ export default function FilterPage() {
 
   const renderRangeSlider = (title, field, min, max, step = 1) => {
     if (!filterData || min === undefined || max === undefined) return null;
+
+    const minValue = Number(filters[`${field}Min`] || min);
+    const maxValue = Number(filters[`${field}Max`] || max);
+    const range = Number(max) - Number(min);
+    const leftPercent = range > 0 ? ((minValue - Number(min)) / range) * 100 : 0;
+    const rightPercent = range > 0 ? ((maxValue - Number(min)) / range) * 100 : 100;
     
     return (
       <div className="filter-section mt-3">
@@ -355,8 +398,8 @@ export default function FilterPage() {
               id={`${field}Min`}
               className="form-control"
               placeholder="Min"
-              value={filters[`${field}Min`] || min}
-              onChange={handleFilterChange}
+              value={minValue}
+              onChange={(e) => handleDualRangeChange(field, 'min', e.target.value, min, max, step)}
               disabled={isLoading}
               min={min}
               max={max}
@@ -369,8 +412,8 @@ export default function FilterPage() {
               id={`${field}Max`}
               className="form-control"
               placeholder="Max"
-              value={filters[`${field}Max`] || max}
-              onChange={handleFilterChange}
+              value={maxValue}
+              onChange={(e) => handleDualRangeChange(field, 'max', e.target.value, min, max, step)}
               disabled={isLoading}
               min={min}
               max={max}
@@ -378,33 +421,36 @@ export default function FilterPage() {
             />
           </div>
         </div>
-        <div className="row g-3">
-          <div className="col-12">
-            <label className="form-label">Min: {filters[`${field}Min`] || min}</label>
-            <input
-              type="range"
-              className="form-range"
-              min={min}
-              max={max}
-              step={step}
-              value={filters[`${field}Min`] || min}
-              onChange={(e) => handleSliderChange(field, e.target.value, true)}
-              disabled={isLoading}
-            />
+        <div className="dual-slider-wrap">
+          <div className="dual-slider-values">
+            <span>Min: {minValue}</span>
+            <span>Max: {maxValue}</span>
           </div>
-          <div className="col-12">
-            <label className="form-label">Max: {filters[`${field}Max`] || max}</label>
-            <input
-              type="range"
-              className="form-range"
-              min={min}
-              max={max}
-              step={step}
-              value={filters[`${field}Max`] || max}
-              onChange={(e) => handleSliderChange(field, e.target.value, false)}
-              disabled={isLoading}
-            />
+
+          <div className="dual-slider-track">
+            <div className="dual-slider-range" style={{ left: `${leftPercent}%`, width: `${Math.max(rightPercent - leftPercent, 0)}%` }} />
           </div>
+
+          <input
+            type="range"
+            className="dual-slider-thumb"
+            min={min}
+            max={max}
+            step={step}
+            value={minValue}
+            onChange={(e) => handleDualRangeChange(field, 'min', e.target.value, min, max, step)}
+            disabled={isLoading}
+          />
+          <input
+            type="range"
+            className="dual-slider-thumb"
+            min={min}
+            max={max}
+            step={step}
+            value={maxValue}
+            onChange={(e) => handleDualRangeChange(field, 'max', e.target.value, min, max, step)}
+            disabled={isLoading}
+          />
         </div>
       </div>
     );
@@ -492,7 +538,7 @@ export default function FilterPage() {
         <div className="row">
           <div className="col-3">
             <div id="filterPanel">
-              <div className="d-flex justify-content-between align-items-center mb-3">
+              <div className="filter-sticky-header d-flex justify-content-between align-items-center mb-3">
                 <h3 className="mb-0">Szűrők</h3>
                 <div>
                   <button 
@@ -534,6 +580,14 @@ export default function FilterPage() {
                 handleCpuChange,
                 showCpuDropdown,
                 setShowCpuDropdown
+              )}
+
+              {renderSingleSlider(
+                "Megjelenési dátum (év)",
+                "phoneReleaseDate",
+                filterData?.minPhoneReleaseDate || 2000,
+                filterData?.maxPhoneReleaseDate || new Date().getFullYear(),
+                1
               )}
 
               {renderSingleSlider(
@@ -662,7 +716,6 @@ export default function FilterPage() {
           </div>
         </div>
       </div>
-
     </div>
   );
 }

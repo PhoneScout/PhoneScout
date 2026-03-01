@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css';
 import Home from './pages/Home';
@@ -21,6 +22,7 @@ import ChatbotWidget from './components/ChatbotWidget';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ForgotPassword from './pages/ForgotPassword';
+import ScrollToTopButton from './components/ScrollToTopButton';
 
 
 
@@ -29,6 +31,42 @@ function App() {
   const location = useLocation();
   const excludeLayout = ['/bejelentkezes', '/fiokaktivalas','/elfelejtettjelszo'];
   const shouldShowLayout = !excludeLayout.includes(location.pathname);
+
+  const getPageTitle = (pathname) => {
+    const staticTitles = {
+      '/': 'Főoldal',
+      '/szures': 'Szűrés',
+      '/szerviz': 'Szerviz',
+      '/kosar': 'Kosár',
+      '/osszehasonlitas': 'Összehasonlítás',
+      '/profil': 'Profil',
+      '/szervizigenyles': 'Szervizigénylés',
+      '/bejelentkezes': 'Bejelentkezés',
+      '/fiokaktivalas': 'Fiókaktiválás',
+      '/teszt': 'Teszt',
+      '/rolunk': 'Rólunk',
+      '/kapcsolat': 'Kapcsolat',
+      '/elerhetosegek': 'Elérhetőségek',
+      '/bolt': 'Bolt',
+      '/csomagolasfeltetelek': 'Csomagolási feltételek',
+      '/elfelejtettjelszo': 'Elfelejtett jelszó'
+    };
+
+    if (pathname.startsWith('/telefon/')) {
+      return 'Telefon adatlap';
+    }
+
+    return staticTitles[pathname] || 'PhoneScout';
+  };
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const pageTitle = getPageTitle(location.pathname);
+    document.title = `${pageTitle} | PhoneScout`;
+  }, [location.pathname]);
 
   return (
 
@@ -62,6 +100,7 @@ function App() {
       {shouldShowLayout && <Footer />}
 
       <ChatbotWidget />
+      <ScrollToTopButton />
 
     </div>
 

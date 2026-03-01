@@ -51,6 +51,12 @@ export default function PhonePage() {
   }, [phoneId]);
 
   useEffect(() => {
+    if (phone?.phoneName) {
+      document.title = `${phone.phoneName} | PhoneScout`;
+    }
+  }, [phone?.phoneName]);
+
+  useEffect(() => {
     const syncCompare = () => {
       const saved = JSON.parse(localStorage.getItem('comparePhones') || '[]');
       setCompareIds(saved);

@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import "./Cart.css";
 import axios from 'axios';
 
+const EMPTY_ADDRESS = {
+  postalCode: '',
+  city: '',
+  address: '',
+  phoneNumber: ''
+};
+
 export default function Cart() {
   const [cartItems, setCartItems] = useState([]);
-  const [phones, setPhones] = useState([]);
   const [cartPhones, setCartPhones] = useState([]);
   const [phoneImages, setPhoneImages] = useState({});
   const [totalPrice, setTotalPrice] = useState(0);
@@ -20,8 +26,38 @@ export default function Cart() {
     cardName: ''
   });
   const [formErrors, setFormErrors] = useState({});
+  const [deliveryAddressData, setDeliveryAddressData] = useState(EMPTY_ADDRESS);
+  const [billingAddressData, setBillingAddressData] = useState(EMPTY_ADDRESS);
+  const [billingSameAsDelivery, setBillingSameAsDelivery] = useState(true);
+  const [addressErrors, setAddressErrors] = useState({});
+  const [addressLoading, setAddressLoading] = useState(false);
+  const [addressLoadError, setAddressLoadError] = useState('');
 
   const navigate = useNavigate();
+
+  const getUserContext = () => {
+    const userID = parseInt(localStorage.getItem("userid") || localStorage.getItem("userID") || "0", 10);
+    const userEmail = localStorage.getItem("email") || localStorage.getItem("userEmail") || "";
+    const userName = localStorage.getItem("fullname") || "";
+
+    return { userID, userEmail, userName };
+  };
+
+  const normalizeAddress = (address) => ({
+    postalCode: address?.postalCode?.toString() || '',
+    city: address?.city || '',
+    address: address?.address || '',
+    phoneNumber: address?.phoneNumber?.toString() || ''
+  });
+
+  const areAddressesEqual = (a, b) => {
+    return (
+      (a.postalCode || '').trim() === (b.postalCode || '').trim() &&
+      (a.city || '').trim().toLowerCase() === (b.city || '').trim().toLowerCase() &&
+      (a.address || '').trim().toLowerCase() === (b.address || '').trim().toLowerCase() &&
+      (a.phoneNumber || '').trim() === (b.phoneNumber || '').trim()
+    );
+  };
 
   const normalizeCart = () => {
     const raw = JSON.parse(localStorage.getItem("cart") || "[]");
@@ -56,8 +92,6 @@ export default function Cart() {
   useEffect(() => {
     axios.get("http://localhost:5175/mainPage")
       .then(allPhones => {
-        setPhones(allPhones.data);
-
         const phoneMap = new Map(allPhones.data.map(p => [p.phoneID, p]));
 
         const merged = cartItems.map(item => {
@@ -87,6 +121,53 @@ export default function Cart() {
       })
       .catch(error => console.error("Error fetching phone data:", error));
   }, [cartItems]);
+
+  useEffect(() => {
+    if (!showPaymentModal) return;
+
+    const loadAddresses = async () => {
+      const { userID } = getUserContext();
+
+      if (!userID || Number.isNaN(userID) || userID <= 0) {
+        setAddressLoadError('A címek betöltéséhez bejelentkezés szükséges.');
+        setDeliveryAddressData(EMPTY_ADDRESS);
+        setBillingAddressData(EMPTY_ADDRESS);
+        setBillingSameAsDelivery(true);
+        return;
+      }
+
+      setAddressLoadError('');
+      setAddressLoading(true);
+
+      try {
+        const [shippingRes, billingRes] = await Promise.all([
+          axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/1`),
+          axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/0`)
+        ]);
+
+        const shippingAddress = normalizeAddress(Array.isArray(shippingRes.data) && shippingRes.data.length > 0 ? shippingRes.data[0] : null);
+        const billingAddress = normalizeAddress(Array.isArray(billingRes.data) && billingRes.data.length > 0 ? billingRes.data[0] : null);
+
+        const deliveryToSet = shippingAddress;
+        const billingToSet = billingAddress.address || billingAddress.city || billingAddress.postalCode || billingAddress.phoneNumber
+          ? billingAddress
+          : shippingAddress;
+
+        const isSame = areAddressesEqual(deliveryToSet, billingToSet);
+
+        setDeliveryAddressData(deliveryToSet);
+        setBillingAddressData(billingToSet);
+        setBillingSameAsDelivery(isSame);
+      } catch (error) {
+        console.error('Hiba a címek betöltésekor:', error);
+        setAddressLoadError('A címek betöltése sikertelen. A mezők kézzel kitölthetők.');
+      } finally {
+        setAddressLoading(false);
+      }
+    };
+
+    loadAddresses();
+  }, [showPaymentModal]);
 
   // Load phone image from backend
   const loadPhoneImage = async (phoneID) => {
@@ -178,6 +259,36 @@ export default function Cart() {
     setFormData(prev => ({ ...prev, [id]: processedValue }));
   };
 
+  const handleAddressInputChange = (type, field, value) => {
+    let processedValue = value;
+
+    if (field === 'postalCode') {
+      processedValue = value.replace(/\D/g, '').slice(0, 4);
+    }
+
+    if (field === 'phoneNumber') {
+      processedValue = value.replace(/\D/g, '').slice(0, 15);
+    }
+
+    if (type === 'delivery') {
+      setDeliveryAddressData(prev => ({ ...prev, [field]: processedValue }));
+
+      if (billingSameAsDelivery) {
+        setBillingAddressData(prev => ({ ...prev, [field]: processedValue }));
+      }
+    } else {
+      setBillingAddressData(prev => ({ ...prev, [field]: processedValue }));
+    }
+  };
+
+  const toggleBillingSameAsDelivery = (checked) => {
+    setBillingSameAsDelivery(checked);
+
+    if (checked) {
+      setBillingAddressData(deliveryAddressData);
+    }
+  };
+
   const validateForm = () => {
     const errors = {};
     Object.keys(formData).forEach(key => {
@@ -185,16 +296,49 @@ export default function Cart() {
         errors[key] = "A mező kitöltése kötelező!";
       }
     });
+
+    const addressValidationErrors = {};
+    const requiredFields = ['postalCode', 'city', 'address', 'phoneNumber'];
+
+    requiredFields.forEach(field => {
+      if (!deliveryAddressData[field]?.toString().trim()) {
+        addressValidationErrors[`delivery-${field}`] = 'A mező kitöltése kötelező!';
+      }
+    });
+
+    if (!billingSameAsDelivery) {
+      requiredFields.forEach(field => {
+        if (!billingAddressData[field]?.toString().trim()) {
+          addressValidationErrors[`billing-${field}`] = 'A mező kitöltése kötelező!';
+        }
+      });
+    }
+
     setFormErrors(errors);
-    return Object.keys(errors).length === 0;
+    setAddressErrors(addressValidationErrors);
+
+    return Object.keys(errors).length === 0 && Object.keys(addressValidationErrors).length === 0;
+  };
+
+  const openPaymentModal = () => {
+    setFormErrors({});
+    setAddressErrors({});
+    setShowPaymentModal(true);
   };
 
   const handlePayment = async () => {
     if (!validateForm()) return;
 
     try {
-      const userID = parseInt(localStorage.getItem("userID") || "0", 10);
-      const userEmail = localStorage.getItem("userEmail") || "";
+      const { userID, userEmail, userName } = getUserContext();
+
+      if (!userID || Number.isNaN(userID) || userID <= 0) {
+        setAddressLoadError('A rendelés leadásához jelentkezz be újra.');
+        return;
+      }
+
+      const selectedBillingAddress = billingSameAsDelivery ? deliveryAddressData : billingAddressData;
+      const orderID = `ORD-${Date.now()}`;
 
       for (const item of cartPhones) {
         const phone = item.phone || {};
@@ -203,13 +347,18 @@ export default function Cart() {
 
         const orderData = {
           id: 0,
-          orderID: `ORD-${Date.now()}`,
+          orderID,
           userID,
           userEmail,
-          postalCode: "1234",
-          city: "Tesztváros",
-          address: "Teszt utca 1",
-          phoneNumber: "36301234567",
+          userName,
+          billingPostalCode: parseInt(selectedBillingAddress.postalCode, 10) || 0,
+          billingCity: selectedBillingAddress.city,
+          billingAddress: selectedBillingAddress.address,
+          billingPhoneNumber: parseInt(selectedBillingAddress.phoneNumber, 10) || 0,
+          deliveryPostalCode: parseInt(deliveryAddressData.postalCode, 10) || 0,
+          deliveryCity: deliveryAddressData.city,
+          deliveryAddress: deliveryAddressData.address,
+          deliveryPhoneNumber: parseInt(deliveryAddressData.phoneNumber, 10) || 0,
           phoneName: phone.phoneName ?? item.phoneName ?? "",
           phoneColorName: item.colorName ?? "",
           phoneColorHex: item.colorHex ?? "",
@@ -264,7 +413,7 @@ export default function Cart() {
                   Végösszeg: {formatPrice(totalPrice)} Ft
                 </div>
 
-                <button className="paymentButton" onClick={() => setShowPaymentModal(true)}>
+                <button className="paymentButton" onClick={openPaymentModal}>
                   Fizetés
                 </button>
 
@@ -357,6 +506,8 @@ export default function Cart() {
           <div className="modalContent">
             <span className="closeModal" onClick={() => setShowPaymentModal(false)}>&times;</span>
             <h2 className="modalTitle">Fizetés</h2>
+            {addressLoadError && <div className="error-message">{addressLoadError}</div>}
+            {addressLoading && <div className="addressInfoText">Címadatok betöltése...</div>}
             <div className="formsContainer">
               <form id="paymentForm" className="modalForm" onSubmit={(e) => e.preventDefault()}>
                 <h4>Bankkártya adatok</h4>
@@ -408,6 +559,109 @@ export default function Cart() {
                 />
                 {formErrors.cardName && <div className="invalid-feedback">{formErrors.cardName}</div>}
               </form>
+
+              <form className="modalForm" onSubmit={(e) => e.preventDefault()}>
+                <h4>Szállítási cím</h4>
+                <div className="addressInfoText">Automatikusan kitöltve a profil alapján, szükség esetén módosítható.</div>
+
+                <label>Irányítószám:</label>
+                <input
+                  type="text"
+                  maxLength="4"
+                  required
+                  placeholder="1234"
+                  value={deliveryAddressData.postalCode}
+                  onChange={(e) => handleAddressInputChange('delivery', 'postalCode', e.target.value)}
+                />
+                {addressErrors['delivery-postalCode'] && <div className="invalid-feedback">{addressErrors['delivery-postalCode']}</div>}
+
+                <label>Város:</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Város"
+                  value={deliveryAddressData.city}
+                  onChange={(e) => handleAddressInputChange('delivery', 'city', e.target.value)}
+                />
+                {addressErrors['delivery-city'] && <div className="invalid-feedback">{addressErrors['delivery-city']}</div>}
+
+                <label>Cím:</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="Utca, házszám"
+                  value={deliveryAddressData.address}
+                  onChange={(e) => handleAddressInputChange('delivery', 'address', e.target.value)}
+                />
+                {addressErrors['delivery-address'] && <div className="invalid-feedback">{addressErrors['delivery-address']}</div>}
+
+                <label>Telefonszám:</label>
+                <input
+                  type="text"
+                  required
+                  placeholder="36301234567"
+                  value={deliveryAddressData.phoneNumber}
+                  onChange={(e) => handleAddressInputChange('delivery', 'phoneNumber', e.target.value)}
+                />
+                {addressErrors['delivery-phoneNumber'] && <div className="invalid-feedback">{addressErrors['delivery-phoneNumber']}</div>}
+
+                <div className="addressCheckboxRow">
+                  <input
+                    id="billingSameAsDelivery"
+                    type="checkbox"
+                    checked={billingSameAsDelivery}
+                    onChange={(e) => toggleBillingSameAsDelivery(e.target.checked)}
+                  />
+                  <label htmlFor="billingSameAsDelivery">A számlázási cím megegyezik a szállítási címmel</label>
+                </div>
+              </form>
+
+              {!billingSameAsDelivery && (
+                <form className="modalForm" onSubmit={(e) => e.preventDefault()}>
+                  <h4>Számlázási cím</h4>
+
+                  <label>Irányítószám:</label>
+                  <input
+                    type="text"
+                    maxLength="4"
+                    required
+                    placeholder="1234"
+                    value={billingAddressData.postalCode}
+                    onChange={(e) => handleAddressInputChange('billing', 'postalCode', e.target.value)}
+                  />
+                  {addressErrors['billing-postalCode'] && <div className="invalid-feedback">{addressErrors['billing-postalCode']}</div>}
+
+                  <label>Város:</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Város"
+                    value={billingAddressData.city}
+                    onChange={(e) => handleAddressInputChange('billing', 'city', e.target.value)}
+                  />
+                  {addressErrors['billing-city'] && <div className="invalid-feedback">{addressErrors['billing-city']}</div>}
+
+                  <label>Cím:</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="Utca, házszám"
+                    value={billingAddressData.address}
+                    onChange={(e) => handleAddressInputChange('billing', 'address', e.target.value)}
+                  />
+                  {addressErrors['billing-address'] && <div className="invalid-feedback">{addressErrors['billing-address']}</div>}
+
+                  <label>Telefonszám:</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="36301234567"
+                    value={billingAddressData.phoneNumber}
+                    onChange={(e) => handleAddressInputChange('billing', 'phoneNumber', e.target.value)}
+                  />
+                  {addressErrors['billing-phoneNumber'] && <div className="invalid-feedback">{addressErrors['billing-phoneNumber']}</div>}
+                </form>
+              )}
             </div>
             <button
               id="submitPayment"

@@ -1143,16 +1143,14 @@ const SYSTEM_INSTRUCTION = `
     I am an assistant at PhoneScout, and I am here to help customers with any questions.
 
     PhoneScout services:
-    - Selling new and used phones.
+    - Selling new phones.
     - Phone repairs, including screen replacement and battery replacement.
     - Software updates for phones.
     - Data backup and transfer services.
     - Trade-in program for old phones.
-    - Accessories: chargers, earphones, cases, and screen protectors.
 
     Warranty and returns:
     - All new phones have a 12-month warranty.
-    - Used phones have a 6-month warranty.
     - Returns accepted within 14 days with receipt.
     - Repairs are guaranteed for 3 months after service.
 
@@ -1186,8 +1184,33 @@ const SYSTEM_INSTRUCTION = `
     - If the user wants service, they can fill a form too to request a repair.
     - If the user comes in person, they should fill the form for easier and faster service, but if they dont want to fill the form, it will take longer in person to 
     - After the user filled the form there is a description of what they have to do.
+    - If you list phones, make it obious that its a list, for example by saying "Here are some phones we have:" and then list them, and if they ask about a specific phone, give them the details about that phone.
+    - The address is Miskolc, Palóczy László utca 3, 3525. both to the service and the shop. If they ask about the address, tell them this and that both the service and the shop are in the same place.
     
     `;
+
+const normalizeText = (value = "") =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+const PHONE_RECORDS = PHONES_DATA
+  .split("================ NEXT PHONE =================")
+  .map((block) => {
+    const nameMatch = block.match(/^\s*Name:\s*(.+)$/m);
+    const nfcMatch = block.match(/^\s*NFC:\s*(.+)$/m);
+
+    if (!nameMatch) return null;
+
+    const name = nameMatch[1].trim();
+    return {
+      name,
+      normalizedName: normalizeText(name),
+      nfc: nfcMatch?.[1]?.trim() || null
+    };
+  })
+  .filter(Boolean);
 
 const QUICK_BUTTONS = [
   "Betört a kijelzőm",
@@ -1271,21 +1294,67 @@ function ChatbotWidget() {
   };
 
   const isServiceRelated = (text) => {
-    const serviceKeywords = ["szerviz", "javít", "javítás", "szervizelni", "repair", "service", "hiba", "nem működik"];
-    const lowerText = text.toLowerCase();
-    return serviceKeywords.some(keyword => lowerText.includes(keyword));
+    const serviceKeywords = ["szerviz", "javit", "javitas", "szervizelni", "repair", "service", "hiba", "nem mukodik"];
+    const lowerText = normalizeText(text);
+    return serviceKeywords.some((keyword) => lowerText.includes(keyword));
+  };
+
+  const getMatchedPhone = (text) => {
+    const normalizedQuestion = normalizeText(text);
+    return PHONE_RECORDS.find((phone) => normalizedQuestion.includes(phone.normalizedName));
+  };
+
+  const mentionsKnownPhone = (text) => Boolean(getMatchedPhone(text));
+
+  const isNfcQuestion = (text) => /\bnfc\b/.test(normalizeText(text));
+
+  const isPhoneDataRelated = (text) => {
+    const normalizedText = normalizeText(text);
+    const specKeywords = [
+      "nfc", "wifi", "bluetooth", "kamera", "selfie", "akku", "akkumulator", "battery",
+      "ram", "tarhely", "storage", "processzor", "cpu", "chip", "kijelzo", "display",
+      "spec", "specifikacio", "mit tud", "miket tudsz", "adatlap"
+    ];
+
+    return mentionsKnownPhone(text) || specKeywords.some((keyword) => normalizedText.includes(keyword));
   };
 
   const isBuyingRelated = (text) => {
-    const buyingKeywords = ["vásárol", "venni", "akarok", "szeretnék", "telefont", "telefon", "buy", "purchase", "ár", "ára", "árak", "price", "cost", "érdekel", "melyik", "mely", "legjobb", "ajánl"];
-    const lowerText = text.toLowerCase();
-    return buyingKeywords.some(keyword => lowerText.includes(keyword));
+    const buyingKeywords = [
+      "vasarol", "venni", "akarok", "szeretnek", "telefont", "telefon", "buy", "purchase",
+      "ar", "arak", "price", "cost", "erdekel", "melyik", "mely", "legjobb", "ajanl"
+    ];
+    const lowerText = normalizeText(text);
+    return buyingKeywords.some((keyword) => lowerText.includes(keyword)) || mentionsKnownPhone(text);
   };
 
   const isLocationRelated = (text) => {
-    const locationKeywords = ["hol található", "hol van", "cím", "címet", "üzlet", "bolt", "hely", "address", "location"];
-    const lowerText = text.toLowerCase();
-    return locationKeywords.some((keyword) => lowerText.includes(keyword));
+    const normalized = normalizeText(text).trim().replace(/\s+/g, " ");
+
+    const explicitPhrases = [
+      "hol talalhato",
+      "hol van",
+      "mi a cimetek",
+      "mi a cim",
+      "mi az uzlet cime",
+      "mi a bolt cime",
+      "hol vagytok",
+      "merre vagytok",
+      "uzlet cime",
+      "bolt cime",
+      "szerviz cime",
+      "address",
+      "location"
+    ];
+
+    if (explicitPhrases.some((phrase) => normalized.includes(phrase))) {
+      return true;
+    }
+
+    const hasWhereIntent = /\b(hol|merre)\b/.test(normalized);
+    const hasAddressTarget = /\b(cim|cimetek|uzlet|bolt|szerviz|phonescout|telephely)\b/.test(normalized);
+
+    return hasWhereIntent && hasAddressTarget;
   };
 
   const ask = async (question, options = {}) => {
@@ -1321,6 +1390,29 @@ function ChatbotWidget() {
       text: "AI gondolkodik..."
     });
 
+    const matchedPhone = getMatchedPhone(question);
+
+    if (isNfcQuestion(question) && matchedPhone) {
+      const nfcValue = normalizeText(matchedPhone.nfc || "");
+      let nfcText = "nem egyértelműen szerepel NFC adat";
+
+      if (["yes", "igen", "van", "true", "1"].some((value) => nfcValue.includes(value))) {
+        nfcText = "van NFC";
+      } else if (["no", "nincs", "nem", "false", "0"].some((value) => nfcValue.includes(value))) {
+        nfcText = "nincs NFC";
+      }
+
+      const nfcAnswer = `A(z) ${matchedPhone.name} készülékben ${nfcText}.`;
+
+      historyRef.current.push({ role: "user", text: question });
+      historyRef.current.push({ role: "assistant", text: nfcAnswer });
+
+      await typeMessage(loadingId, nfcAnswer, TYPING_SPEED);
+      setFollowUps([]);
+      setIsLoading(false);
+      return;
+    }
+
     if (isLocationRelated(question)) {
       const locationAnswer = `Üzletünk címe: ${STORE_ADDRESS}`;
 
@@ -1353,8 +1445,8 @@ function ChatbotWidget() {
 
       // Dinamikusan adjuk hozzá a telefonok adatait az aktuális kérdéshez, ha vásárlásról van szó
       let userQuestion = question;
-      if (isBuyingRelated(question)) {
-        userQuestion = `${PHONES_DATA}\n\nFelhasználó kérdése: ${question}`;
+      if (isBuyingRelated(question) || isPhoneDataRelated(question)) {
+        userQuestion = `${PHONES_DATA}\n\nFelhasználó kérdése: ${question}\n\nFontos: ha a kérdés konkrét modellre vonatkozik, abból a modellből adj választ a fenti adatok alapján.`;
       }
 
       const requestBody = {
