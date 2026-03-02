@@ -267,7 +267,7 @@ namespace PhoneScout_GitHub.Controllers
             Summary = "Jelszó visszaállítása (elfelejtett jelszó)",
             Description = "Az elfelejtett jelszó visszaállítási folyamatban használt végpont. Az email cím alapján visszaállítja a felhasználó jelszavát az új hodnákra. Nem szükséges az régi jelszó."
         )]
-        public async Task<IActionResult> ResetPassword([FromBody] ChangePasswordDTO request)
+        public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordDTO request)
         {
             try
             {

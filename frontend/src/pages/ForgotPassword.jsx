@@ -81,19 +81,17 @@ export default function ForgotPassword() {
                 }, 4000);
             }
         } catch (error) {
-            const errorText = error.response?.data || "Hálózati hiba történt!";
+            let errorText = "Hálózati hiba történt!";
+            if (error.response?.data) {
+                if (typeof error.response.data === 'object') {
+                    try { errorText = JSON.stringify(error.response.data); } catch { errorText = error.response.data.toString(); }
+                } else {
+                    errorText = error.response.data;
+                }
+            }
             setStatusMessage({ text: "Hiba: " + errorText, isError: true });
         }
     };
-
-    function GenerateSalt(SaltLength) {
-        const karakterek = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        let salt = "";
-        for (let i = 0; i < SaltLength; i++) {
-            salt += karakterek[Math.floor(Math.random() * karakterek.length)];
-        }
-        return salt;
-    }
 
     const handlePasswordChange = async (e) => {
         e.preventDefault();
@@ -121,7 +119,7 @@ export default function ForgotPassword() {
             const response = await axios.put("http://localhost:5175/api/Registration/ResetPassword", {
                 email: email,
                 newPassword: newHashed,
-                salt: newSalt
+                SALT: newSalt
             });
 
             if (response.status === 200) {
@@ -131,7 +129,15 @@ export default function ForgotPassword() {
                 setTimeout(() => navigate("/bejelentkezes"), 2000);
             }
         } catch (error) {
-            const errorText = error.response?.data || "Hálózati hiba történt!";
+            console.error("ResetPassword error:", error.response?.data || error.message);
+            let errorText = "Hálózati hiba történt!";
+            if (error.response?.data) {
+                if (typeof error.response.data === 'object') {
+                    try { errorText = JSON.stringify(error.response.data); } catch { errorText = error.response.data.toString(); }
+                } else {
+                    errorText = error.response.data;
+                }
+            }
             setStatusMessage({ text: "Hiba: " + errorText, isError: true });
         }
     };
