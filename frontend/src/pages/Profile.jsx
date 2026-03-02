@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import axios from 'axios';
 import { UNSAFE_useScrollRestoration } from 'react-router';
+import InputText from '../components/InputText';
 
 
 //fetch('http://localhost:5292/phonePage/2').then(response => response.json()).then(data => console.log(data)) //ID-T KISZEDNI A / MÖGÜL HA VAN
@@ -37,38 +38,27 @@ const Profile = () => {
     loadUserData();
   }, [savedEmail]);
 
-  // Címek betöltése az API-ből
+  // Címek betöltése az API-ből (újrahasznosítjuk a refreshAddresses segédfüggvényt)
   useEffect(() => {
-    const loadAddresses = async () => {
-      try {
-        if (!userID) {
-          console.error('UserID nem elérhető');
-          return;
-        }
-
-        // Szállítási címek (addressType=1)
-        const shippingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/1`);
-        if (Array.isArray(shippingRes.data)) {
-          setShippingAddresses(shippingRes.data);
-        }
-
-        // Számlázási címek (addressType=0)
-        const billingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/0`);
-        if (Array.isArray(billingRes.data)) {
-          setBillingAddresses(billingRes.data);
-        }
-      } catch (error) {
-        console.error('Hiba a címek betöltésekor:', error);
-      }
-    };
-
-    loadAddresses();
+    if (userID) {
+      refreshAddresses();
+    }
   }, [userID]);
 
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, label: "", color: "#ccc" });
   const [statusMessage, setStatusMessage] = useState({ text: "", isError: false });
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [addressStatusMessage, setAddressStatusMessage] = useState({ text: "", isError: false });
+
+  const MAX_PHONE_LENGTH = 15;
+
+  // helper to remove plus and enforce length
+  const sanitizePhone = (val) => {
+    if (!val) return val;
+    let s = val.replace(/[+]/g, '');
+    if (s.length > MAX_PHONE_LENGTH) s = s.slice(0, MAX_PHONE_LENGTH);
+    return s;
+  };
 
   const [phones, setPhones] = useState([]);
   const [serviceRequests, setServiceRequests] = useState([]);
@@ -150,12 +140,10 @@ const Profile = () => {
   const [editingProfile, setEditingProfile] = useState(false);
   const [editingShippingId, setEditingShippingId] = useState(null);
   const [editingBillingId, setEditingBillingId] = useState(null);
-  const [showNewAddressForm, setShowNewAddressForm] = useState(false);
   const [newAddressType, setNewAddressType] = useState(null); // 'shipping' vagy 'billing'
 
   // Delete modal state
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [deleteAddressType, setDeleteAddressType] = useState(null);
   const [deleteAddressId, setDeleteAddressId] = useState(null);
 
   // function GetProfile(){
@@ -237,13 +225,16 @@ const Profile = () => {
     setStatusMessage({ text: "", isError: false }); // Előző üzenet törlése
 
     if (userData.newPassword !== userData.confirmPassword) {
-      // alert helyett:
       setStatusMessage({ text: "Az új jelszó és a megerősítés nem egyezik!", isError: true });
       return;
     }
 
+    if (userData.currentPassword && userData.newPassword && userData.currentPassword === userData.newPassword) {
+      setStatusMessage({ text: "Az új jelszó nem lehet ugyanaz, mint a régi.", isError: true });
+      return;
+    }
+
     if (passwordStrength.score < 5) {
-      // alert helyett:
       setStatusMessage({ text: "A jelszó nem elég erős! Használjon kisbetűt, nagybetűt, számot és speciális karaktert!", isError: true });
       return;
     }
@@ -297,35 +288,37 @@ const Profile = () => {
 
 
   // Szállítási cím mentése
-  const handleShippingSubmit = async (e) => {
-    e.preventDefault();
+  // generic save function for both address types
+  const saveAddress = async (type, idx, e) => {
+    if (e) e.preventDefault();
     setAddressStatusMessage({ text: "", isError: false });
 
     try {
-      if (shippingAddresses.length === 0) return;
-
       if (!userID) {
         setAddressStatusMessage({ text: "Bejelentkezés szükséges!", isError: true });
         return;
       }
 
-      const address = shippingAddresses[0];
+      const list = type === 'shipping' ? shippingAddresses : billingAddresses;
+      if (!list[idx]) return;
+      const address = list[idx];
 
       const response = await axios.put(
-        `http://localhost:5175/api/address/PutAddress/${userID}/1`,
+        `http://localhost:5175/api/address/PutAddress/${address.id}`,
         {
           postalCode: address.postalCode,
           city: address.city,
           address: address.address,
           phoneNumber: address.phoneNumber,
-          addressType: 1,
+          addressType: type === 'shipping' ? 1 : 0,
           userID: parseInt(userID)
         }
       );
 
       if (response.status === 200) {
-        setAddressStatusMessage({ text: "Szállítási cím sikeresen frissítve!", isError: false });
-        setEditingShippingId(null);
+        setAddressStatusMessage({ text: "Cím sikeresen frissítve!", isError: false });
+        if (type === 'shipping') setEditingShippingId(null);
+        else setEditingBillingId(null);
         setTimeout(() => setAddressStatusMessage({ text: "", isError: false }), 3000);
       }
     } catch (error) {
@@ -334,43 +327,7 @@ const Profile = () => {
     }
   };
 
-  // Számlázási cím mentése
-  const handleBillingSubmit = async (e) => {
-    e.preventDefault();
-    setAddressStatusMessage({ text: "", isError: false });
-
-    try {
-      if (billingAddresses.length === 0) return;
-
-      if (!userID) {
-        setAddressStatusMessage({ text: "Bejelentkezés szükséges!", isError: true });
-        return;
-      }
-
-      const address = billingAddresses[0];
-
-      const response = await axios.put(
-        `http://localhost:5175/api/address/PutAddress/${userID}/0`,
-        {
-          postalCode: address.postalCode,
-          city: address.city,
-          address: address.address,
-          phoneNumber: address.phoneNumber,
-          addressType: 0,
-          userID: parseInt(userID)
-        }
-      );
-
-      if (response.status === 200) {
-        setAddressStatusMessage({ text: "Számlázási cím sikeresen frissítve!", isError: false });
-        setEditingBillingId(null);
-        setTimeout(() => setAddressStatusMessage({ text: "", isError: false }), 3000);
-      }
-    } catch (error) {
-      const errorMsg = error.response?.data || 'Hiba történt a mentés során!';
-      setAddressStatusMessage({ text: errorMsg, isError: true });
-    }
-  };
+  // Számlázási cím mentése handled by saveAddress helper
 
   // Új cím hozzáadása
   const handleAddNewAddress = async (e) => {
@@ -399,25 +356,10 @@ const Profile = () => {
 
       if (response.status === 200) {
         setAddressStatusMessage({ text: "Új cím sikeresen hozzáadva!", isError: false });
-        
-        // Újra betöltjük a címeket
-        setTimeout(async () => {
-          const shippingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/1`);
-          if (Array.isArray(shippingRes.data)) {
-            setShippingAddresses(shippingRes.data);
-          }
-
-          const billingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/0`);
-          if (Array.isArray(billingRes.data)) {
-            setBillingAddresses(billingRes.data);
-          }
-
-          setAddressStatusMessage({ text: "", isError: false });
-        }, 1500);
-
+        await refreshAddresses();
         // Form reset
         setNewAddress({
-          type: 'shipping',
+          type: newAddress.type,
           postalCode: '',
           city: '',
           address: '',
@@ -431,9 +373,8 @@ const Profile = () => {
     }
   };
 
-  // Cím törlésének megerősítése
-  const deleteAddress = (type, id) => {
-    setDeleteAddressType(type);
+  // Cím törlésének megerősítése (id alapján)
+  const deleteAddress = (id) => {
     setDeleteAddressId(id);
     setShowDeleteModal(true);
   };
@@ -448,33 +389,17 @@ const Profile = () => {
         return;
       }
 
-      const addressType = deleteAddressType === 'shipping' ? 1 : 0;
-
       const response = await axios.delete(
-        `http://localhost:5175/api/address/DeleteAddress/${userID}/${addressType}`
+        `http://localhost:5175/api/address/DeleteAddress/${deleteAddressId}`
       );
 
       if (response.status === 200) {
         setAddressStatusMessage({ text: "Cím sikeresen törölve!", isError: false });
-
-        // Újra betöltjük a címeket
-        setTimeout(async () => {
-          const shippingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/1`);
-          if (Array.isArray(shippingRes.data)) {
-            setShippingAddresses(shippingRes.data);
-          }
-
-          const billingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/0`);
-          if (Array.isArray(billingRes.data)) {
-            setBillingAddresses(billingRes.data);
-          }
-
-          setAddressStatusMessage({ text: "", isError: false });
-        }, 1500);
+        // refresh addresses
+        await refreshAddresses();
       }
 
       setShowDeleteModal(false);
-      setDeleteAddressType(null);
       setDeleteAddressId(null);
     } catch (error) {
       const errorMsg = error.response?.data || 'Hiba történt a törlés során!';
@@ -494,7 +419,10 @@ const Profile = () => {
   };
 
   const handleAddressInputChange = (e, type, idx, field) => {
-    const { value } = e.target;
+    let { value } = e.target;
+    if (field === 'phoneNumber') {
+      value = sanitizePhone(value);
+    }
 
     if (type === 'shipping') {
       const updated = shippingAddresses.map((addr, i) =>
@@ -511,7 +439,64 @@ const Profile = () => {
 
   const handleNewAddressChange = (e) => {
     const { name, value } = e.target;
-    setNewAddress({ ...newAddress, [name]: value });
+    let v = value;
+    if (name === 'phoneNumber') {
+      v = sanitizePhone(value);
+    }
+    setNewAddress({ ...newAddress, [name]: v });
+  };
+
+  const refreshAddresses = async () => {
+    if (!userID) return;
+    try {
+      const shippingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/1`);
+      if (Array.isArray(shippingRes.data)) {
+        setShippingAddresses(shippingRes.data);
+      }
+      const billingRes = await axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/0`);
+      if (Array.isArray(billingRes.data)) {
+        setBillingAddresses(billingRes.data);
+      }
+      // clear any editing state when data refreshes
+      setEditingShippingId(null);
+      setEditingBillingId(null);
+    } catch (err) {
+      console.error('Hiba a címek frissítésekor', err);
+    }
+  };
+
+  const copyAddress = async (fromType, idx) => {
+    const sourceList = fromType === 'shipping' ? shippingAddresses : billingAddresses;
+    const targetType = fromType === 'shipping' ? 'billing' : 'shipping';
+    const targetList = targetType === 'shipping' ? shippingAddresses : billingAddresses;
+
+    if (targetList.length >= 3) {
+      setAddressStatusMessage({ text: 'A céloldalon már 3 cím szerepel.', isError: true });
+      return;
+    }
+
+    const source = sourceList[idx];
+    if (!source) return;
+
+    const payload = {
+      postalCode: source.postalCode,
+      city: source.city,
+      address: source.address,
+      phoneNumber: source.phoneNumber,
+      addressType: targetType === 'shipping' ? 1 : 0,
+      userID: parseInt(userID),
+    };
+
+    try {
+      const res = await axios.post(`http://localhost:5175/api/address/PostAddress`, payload);
+      if (res.status === 200) {
+        setAddressStatusMessage({ text: 'Cím másolva!', isError: false });
+        await refreshAddresses();
+      }
+    } catch (err) {
+      const msg = err.response?.data || 'Hiba a másolás során';
+      setAddressStatusMessage({ text: msg, isError: true });
+    }
   };
 
   const passwordsDoNotMatch =
@@ -561,20 +546,22 @@ const Profile = () => {
               <div className="form-stack">
                 <div className="form-group">
                   <label>Név</label>
-                  <input
+                  <InputText
                     type="text"
                     value={userData.userFullName}
                     onChange={(e) => setUserData({ ...userData, userFullName: e.target.value })}
                     disabled={!editingProfile}
+                    required
                   />
                 </div>
                 <div className="form-group">
                   <label>Email cím</label>
-                  <input
+                  <InputText
                     type="email"
                     value={userData.userEmail}
                     onChange={(e) => setUserData({ ...userData, userEmail: e.target.value })}
                     disabled={!editingProfile}
+                    required
                   />
                 </div>
               </div>
@@ -620,7 +607,7 @@ const Profile = () => {
                 <div className="form-grid">
                   <div className="form-group">
                     <label>Jelenlegi jelszó</label>
-                    <input
+                    <InputText
                       type="password"
                       name="currentPassword"
                       value={userData.currentPassword}
@@ -629,7 +616,7 @@ const Profile = () => {
                   </div>
                   <div className="form-group">
                     <label>Új jelszó</label>
-                    <input
+                    <InputText
                       type="password"
                       name="newPassword"
                       value={userData.newPassword}
@@ -656,7 +643,7 @@ const Profile = () => {
                   </div>
                   <div className="form-group">
                     <label>Új jelszó megerősítése</label>
-                    <input
+                    <InputText
                       type="password"
                       name="confirmPassword"
                       value={userData.confirmPassword}
@@ -696,7 +683,7 @@ const Profile = () => {
           <section id="shipping" className="profile-section">
             <div className="section-header">
               <h2>Szállítási cím</h2>
-              {!shippingAddresses.length && !newAddressType && (
+              {shippingAddresses.length < 3 && !newAddressType && (
                 <button
                   className="btn-add"
                   onClick={() => {
@@ -712,39 +699,43 @@ const Profile = () => {
             {shippingAddresses.length > 0 ? (
               <div className="addresses-grid">
                 {shippingAddresses.map((address, idx) => (
-                  <div key={idx} className="address-card">
+                  <div key={address.id || idx} className="address-card">
                     {editingShippingId === idx ? (
-                      <form onSubmit={handleShippingSubmit}>
+                      <form onSubmit={(e) => saveAddress('shipping', idx, e)}>
                         <div className="form-group">
                           <label>Irányítószám</label>
-                          <input
+                          <InputText
                             type="text"
                             value={address.postalCode || ''}
                             onChange={(e) => handleAddressInputChange(e, 'shipping', idx, 'postalCode')}
+                            required
                           />
                         </div>
                         <div className="form-group">
                           <label>Város</label>
-                          <input
+                          <InputText
                             type="text"
                             value={address.city || ''}
                             onChange={(e) => handleAddressInputChange(e, 'shipping', idx, 'city')}
+                            required
                           />
                         </div>
                         <div className="form-group">
                           <label>Utca, házszám</label>
-                          <input
+                          <InputText
                             type="text"
                             value={address.address || ''}
                             onChange={(e) => handleAddressInputChange(e, 'shipping', idx, 'address')}
+                            required
                           />
                         </div>
                         <div className="form-group">
                           <label>Telefonszám</label>
-                          <input
-                            type="text"
+                          <InputText
+                            type="tel"
                             value={address.phoneNumber || ''}
                             onChange={(e) => handleAddressInputChange(e, 'shipping', idx, 'phoneNumber')}
+                            maxLength={MAX_PHONE_LENGTH}
                           />
                         </div>
                         <div className="address-actions">
@@ -775,9 +766,16 @@ const Profile = () => {
                           </button>
                           <button
                             className="btn-delete"
-                            onClick={() => deleteAddress('shipping', null)}
+                            onClick={() => deleteAddress(address.id)}
                           >
                             Törlés
+                          </button>
+                          <button
+                            className="btn-copy"
+                            onClick={() => copyAddress('shipping', idx)}
+                            disabled={billingAddresses.length >= 3}
+                          >
+                            Másolás számlázáshoz
                           </button>
                         </div>
                       </>
@@ -810,42 +808,47 @@ const Profile = () => {
                 <form onSubmit={handleAddNewAddress}>
                   <div className="form-group">
                     <label>Irányítószám</label>
-                    <input
+                    <InputText
                       type="text"
+                      name="postalCode"
                       value={newAddress.postalCode}
-                      onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
+                      onChange={handleNewAddressChange}
                       placeholder="1052"
                       required
                     />
                   </div>
                   <div className="form-group">
                     <label>Város</label>
-                    <input
+                    <InputText
                       type="text"
+                      name="city"
                       value={newAddress.city}
-                      onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                      onChange={handleNewAddressChange}
                       placeholder="Budapest"
                       required
                     />
                   </div>
                   <div className="form-group">
                     <label>Utca, házszám</label>
-                    <input
+                    <InputText
                       type="text"
+                      name="address"
                       value={newAddress.address}
-                      onChange={(e) => setNewAddress({ ...newAddress, address: e.target.value })}
+                      onChange={handleNewAddressChange}
                       placeholder="Kossuth Lajos utca 12."
                       required
                     />
                   </div>
                   <div className="form-group">
                     <label>Telefonszám</label>
-                    <input
-                      type="text"
+                    <InputText
+                      type="tel"
+                      name="phoneNumber"
                       value={newAddress.phoneNumber}
-                      onChange={(e) => setNewAddress({ ...newAddress, phoneNumber: e.target.value })}
-                      placeholder="+36 30 123 4567"
+                      onChange={handleNewAddressChange}
+                      placeholder="36 30 123 4567"
                       required
+                      maxLength={MAX_PHONE_LENGTH}
                     />
                   </div>
                   <div className="address-actions">
@@ -870,7 +873,7 @@ const Profile = () => {
           <section id="billing" className="profile-section">
             <div className="section-header">
               <h2>Számlázási cím</h2>
-              {!billingAddresses.length && !newAddressType && (
+              {billingAddresses.length < 3 && !newAddressType && (
                 <button
                   className="btn-add"
                   onClick={() => {
@@ -886,39 +889,43 @@ const Profile = () => {
             {billingAddresses.length > 0 ? (
               <div className="addresses-grid">
                 {billingAddresses.map((address, idx) => (
-                  <div key={idx} className="address-card">
+                  <div key={address.id || idx} className="address-card">
                     {editingBillingId === idx ? (
-                      <form onSubmit={handleBillingSubmit}>
+                      <form onSubmit={(e) => saveAddress('billing', idx, e)}>
                         <div className="form-group">
                           <label>Irányítószám</label>
-                          <input
+                          <InputText
                             type="text"
                             value={address.postalCode || ''}
                             onChange={(e) => handleAddressInputChange(e, 'billing', idx, 'postalCode')}
+                            required
                           />
                         </div>
                         <div className="form-group">
                           <label>Város</label>
-                          <input
+                          <InputText
                             type="text"
                             value={address.city || ''}
                             onChange={(e) => handleAddressInputChange(e, 'billing', idx, 'city')}
+                            required
                           />
                         </div>
                         <div className="form-group">
                           <label>Utca, házszám</label>
-                          <input
+                          <InputText
                             type="text"
                             value={address.address || ''}
                             onChange={(e) => handleAddressInputChange(e, 'billing', idx, 'address')}
+                            required
                           />
                         </div>
                         <div className="form-group">
                           <label>Telefonszám</label>
-                          <input
-                            type="text"
+                          <InputText
+                            type="tel"
                             value={address.phoneNumber || ''}
                             onChange={(e) => handleAddressInputChange(e, 'billing', idx, 'phoneNumber')}
+                            maxLength={MAX_PHONE_LENGTH}
                           />
                         </div>
                         <div className="address-actions">
@@ -949,9 +956,16 @@ const Profile = () => {
                           </button>
                           <button
                             className="btn-delete"
-                            onClick={() => deleteAddress('billing', null)}
+                            onClick={() => deleteAddress(address.id)}
                           >
                             Törlés
+                          </button>
+                          <button
+                            className="btn-copy"
+                            onClick={() => copyAddress('billing', idx)}
+                            disabled={shippingAddresses.length >= 3}
+                          >
+                            Másolás szállításhoz
                           </button>
                         </div>
                       </>
@@ -984,42 +998,47 @@ const Profile = () => {
                 <form onSubmit={handleAddNewAddress}>
                   <div className="form-group">
                     <label>Irányítószám</label>
-                    <input
+                    <InputText
                       type="text"
+                      name="postalCode"
                       value={newAddress.postalCode}
-                      onChange={(e) => setNewAddress({ ...newAddress, postalCode: e.target.value })}
+                      onChange={handleNewAddressChange}
                       placeholder="1052"
                       required
                     />
                   </div>
                   <div className="form-group">
                     <label>Város</label>
-                    <input
+                    <InputText
                       type="text"
+                      name="city"
                       value={newAddress.city}
-                      onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
+                      onChange={handleNewAddressChange}
                       placeholder="Budapest"
                       required
                     />
                   </div>
                   <div className="form-group">
                     <label>Utca, házszám</label>
-                    <input
+                    <InputText
                       type="text"
+                      name="address"
                       value={newAddress.address}
-                      onChange={(e) => setNewAddress({ ...newAddress, address: e.target.value })}
+                      onChange={handleNewAddressChange}
                       placeholder="Kossuth Lajos utca 12."
                       required
                     />
                   </div>
                   <div className="form-group">
                     <label>Telefonszám</label>
-                    <input
-                      type="text"
+                    <InputText
+                      type="tel"
+                      name="phoneNumber"
                       value={newAddress.phoneNumber}
-                      onChange={(e) => setNewAddress({ ...newAddress, phoneNumber: e.target.value })}
-                      placeholder="+36 30 123 4567"
+                      onChange={handleNewAddressChange}
+                      placeholder="36 30 123 4567"
                       required
+                      maxLength={MAX_PHONE_LENGTH}
                     />
                   </div>
                   <div className="address-actions">
@@ -1117,7 +1136,6 @@ const Profile = () => {
                   <button 
                     onClick={() => {
                       setShowDeleteModal(false);
-                      setDeleteAddressType(null);
                       setDeleteAddressId(null);
                     }} 
                     className="profile-modal-btn-cancel"

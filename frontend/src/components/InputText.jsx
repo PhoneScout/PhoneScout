@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "./InputText.css";
 
-export default function InputText({ type, id, label, onChange, inputStyle, value, required }) {
+export default function InputText({ type, id, label, onChange, inputStyle, value, required, ...rest }) {
   const isCheckbox = type === "checkbox";
   const isPasswordType = type === "password";
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
@@ -35,6 +35,7 @@ export default function InputText({ type, id, label, onChange, inputStyle, value
         onChange={onChange}
         value={value}
         required={required}
+        {...rest}
         style={{ 
           ...inputStyle, 
           width: '100%', 

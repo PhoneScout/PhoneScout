@@ -192,6 +192,19 @@
   color: #FF4742;
 }
 
+/* copy button styling */
+.btn-copy {
+  background: #007bff;
+  border-color: #007bff;
+  color: #ffffff;
+  border-radius: 12px;
+}
+
+.btn-copy:hover {
+  background-color: #FFFFFF;
+  color: #007bff;
+}
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));

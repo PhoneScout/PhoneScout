@@ -37,6 +37,7 @@ namespace PhoneScout_GitHub.Controllers
                 {
                     addresses.Add(new addressDTO
                     {
+                        Id = address.Id,
                         postalCode = address.PostalCode,
                         city = address.City,
                         address = address.Address1,
@@ -66,6 +67,13 @@ namespace PhoneScout_GitHub.Controllers
         {
             try
             {
+                // limit a maximum három címre típusonként
+                var count = cx.Addresses.Count(a => a.UserId == address.userID && a.AddressType == address.addressType);
+                if (count >= 3)
+                {
+                    return BadRequest("Maximum három cím adható meg egy típushoz.");
+                }
+
                 var newAddress = new Address()
                 {
                     PostalCode = address.postalCode,
@@ -87,25 +95,27 @@ namespace PhoneScout_GitHub.Controllers
             }
         }
 
-        [HttpPut("PutAddress/{userID}/{addressType}")]
+        // PutAddress has been updated to work with a specific address record
+        [HttpPut("PutAddress/{addressId}")]
         [SwaggerOperation(
                 Summary = "Egy profilhoz tartozó cím módosítása.",
-                Description = "Az elérési útban a felhasználó azonosítóját, és a cím típusát kell megadni, ami lehet: 0 - számlázási | 1 - szállítási, majd az adatok megadása után frissül a kiválasztott cím."
+                Description = "Az elérési útban a cím azonosítóját adjuk meg, és a testben található adatokkal frissítjük." 
             )]
-        public IActionResult PutAddress(int userID, int addressType, [FromBody] addressDTO address)
+        public IActionResult PutAddress(int addressId, [FromBody] addressDTO address)
         {
             try
             {
-                var selectedAddress = cx.Addresses.FirstOrDefault(a => a.UserId == userID && a.AddressType == addressType);
+                var selectedAddress = cx.Addresses.FirstOrDefault(a => a.Id == addressId && a.UserId == address.userID);
+                if (selectedAddress == null)
+                {
+                    return NotFound("A cím nem található vagy nem jogosult a módosításra.");
+                }
+
                 selectedAddress.PostalCode = address.postalCode;
                 selectedAddress.City = address.city;
                 selectedAddress.Address1 = address.address;
                 selectedAddress.PhoneNumber = address.phoneNumber;
                 selectedAddress.AddressType = address.addressType;
-                selectedAddress.UserId = userID;
-
-
-
 
                 cx.Addresses.Update(selectedAddress);
                 cx.SaveChanges();
@@ -118,16 +128,20 @@ namespace PhoneScout_GitHub.Controllers
             }
         }
 
-        [HttpDelete("DeleteAddress/{userID}/{addressType}")]
+        [HttpDelete("DeleteAddress/{addressId}")]
         [SwaggerOperation(
             Summary = "Egy profilhoz tartozó cím törlése.",
-            Description = "Az elérési útban a felhasználó azonosítóját, és a cím típusát kell megadni, ami lehet: 0 - számlázási | 1 - szállítási, majd a kiválasztott cím törlésre kerül."
+            Description = "Az elérési útban a cím azonosítóját adjuk meg, majd a rekord törlésre kerül."
         )]
-        public IActionResult PutAddress(int userID, int addressType)
+        public IActionResult DeleteAddress(int addressId)
         {
             try
             {
-                var selectedAddress = cx.Addresses.FirstOrDefault(a => a.UserId == userID && a.AddressType == addressType);
+                var selectedAddress = cx.Addresses.FirstOrDefault(a => a.Id == addressId);
+                if (selectedAddress == null)
+                {
+                    return NotFound("A cím nem található.");
+                }
 
                 cx.Addresses.Remove(selectedAddress);
                 cx.SaveChanges();

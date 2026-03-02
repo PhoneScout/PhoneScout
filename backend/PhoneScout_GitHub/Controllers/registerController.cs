@@ -234,11 +234,18 @@ namespace PhoneScout_GitHub.Controllers
                     return NotFound("A felhasználó nem található.");
                 }
 
+                // front-end already hashed both old and new passwords with salts
                 string oldHashCheck = Program.CreateSHA256(request.OldPassword);
 
                 if (user.Hash != oldHashCheck)
                 {
                     return BadRequest("A régi jelszó nem megfelelő.");
+                }
+
+                // prevent changing to same password
+                if (request.OldPassword == request.NewPassword)
+                {
+                    return BadRequest("Az új jelszó nem lehet ugyanaz, mint a régi.");
                 }
 
                 user.Hash = Program.CreateSHA256(request.NewPassword);
