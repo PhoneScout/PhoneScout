@@ -116,6 +116,7 @@ namespace PhoneScout_GitHub.Controllers
             try
             {
                 var phoneDatas = _context.Phonedatas
+                .Where(p=>p.PhoneDeleted == 0)
                 .OrderByDescending(p => p.PhonePopularity)
                 .Select(p => new mainPageDTO
                 {
