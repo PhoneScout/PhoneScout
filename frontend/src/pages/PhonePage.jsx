@@ -440,8 +440,10 @@ export default function PhonePage() {
                   {/* CPU SZAKASZ */}
                   <tr className="cpu_table first_row"><td colSpan="2"><strong>CPU / Processzor</strong></td></tr>
                   <tr className="cpu_table"><td>Név / Típus</td><td>{phone.cpuName}</td></tr>
-                  <tr className="cpu_table"><td>Magok / Órajel</td><td>{phone.cpuCores} mag / {phone.cpuClock} GHz</td></tr>
-                  <tr className="cpu_table"><td>Technológia / Antutu</td><td>{phone.cpuTech} nm / {phone.phoneAntutu?.toLocaleString()} pont</td></tr>
+                  <tr className="cpu_table"><td>Magok</td><td>{phone.cpuCores} mag </td></tr>
+                  <tr className="cpu_table"><td>Órajel</td><td>{phone.cpuClock} GHz</td></tr>
+                  <tr className="cpu_table"><td>Technológia</td><td>{phone.cpuTech} nm</td></tr>
+                  <tr className="cpu_table"><td>Antutu</td><td>{phone.phoneAntutu?.toLocaleString()} pont</td></tr>
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
 
@@ -449,7 +451,8 @@ export default function PhonePage() {
                   <tr className="kijelzo_table first_row"><td colSpan="2"><strong>Kijelző</strong></td></tr>
                   <tr className="kijelzo_table"><td>Panel típusa</td><td>{phone.screenType}</td></tr>
                   <tr className="kijelzo_table"><td>Felbontás</td><td>{phone.phoneResolutionHeight} x {phone.phoneResolutionWidth} px ({phone.screenSharpness} ppi)</td></tr>
-                  <tr className="kijelzo_table"><td>Méret / Frissítés</td><td>{phone.screenSize}” / {phone.screenRefreshRate} Hz</td></tr>
+                  <tr className="kijelzo_table"><td>Méret</td><td>{phone.screenSize}” </td></tr>
+                  <tr className="kijelzo_table"><td>Frissítés</td><td>{phone.screenRefreshRate} Hz</td></tr>
                   <tr className="kijelzo_table"><td>Fényerő (Max)</td><td>{phone.screenMaxBrightness} nit</td></tr>
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
@@ -471,18 +474,24 @@ export default function PhonePage() {
                   </tr>
                   <tr className="camera_table"><td>Típus</td><td>{phone.cameras[selectedCameraIdx].cameraType}</td></tr>
                   <tr className="camera_table"><td>Szenzor név</td><td>{phone.cameras[selectedCameraIdx].cameraName || "Nincs adat"}</td></tr>
-                  <tr className="camera_table"><td>Felbontás / Rekesz</td><td>{phone.cameras[selectedCameraIdx].cameraResolution} MP / {phone.cameras[selectedCameraIdx].cameraAperture}</td></tr>
-                  <tr className="camera_table"><td>Fókusztávolság / OIS</td><td>{phone.cameras[selectedCameraIdx].cameraFocalLength}mm / {phone.cameras[selectedCameraIdx].cameraOis}</td></tr>
+                  <tr className="camera_table"><td>Felbontás</td><td>{phone.cameras[selectedCameraIdx].cameraResolution} MP</td></tr>
+                  <tr className="camera_table"><td>Rekesz</td><td>{phone.cameras[selectedCameraIdx].cameraAperture}</td></tr>
+                  <tr className="camera_table"><td>Fókusztávolság</td><td>{phone.cameras[selectedCameraIdx].cameraFocalLength}mm</td></tr>
+                  <tr className="camera_table"><td>OIS</td><td>{phone.cameras[selectedCameraIdx].cameraOis === 1 ? "Van" : "Nincs"}</td></tr>
+                  
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
 
                   {/* CSATLAKOZTATHATÓSÁG SZAKASZ */}
                   <tr className="csatlakozo_table first_row"><td colSpan="2"><strong>Csatlakoztathatóság</strong></td></tr>
-                  <tr className="csatlakozo_table"><td>Wi-Fi / Bluetooth</td><td>Wifi {phone.connectionMaxWifi} / BT {phone.connectionMaxBluetooth}</td></tr>
+                  <tr className="csatlakozo_table"><td>Wi-Fi</td><td>{phone.connectionMaxWifi}</td></tr>
+                  <tr className="csatlakozo_table"><td>Bluetooth</td><td>{phone.connectionMaxBluetooth}</td></tr>
                   <tr className="csatlakozo_table"><td>Mobilhálózat</td><td>{phone.connectionMaxMobileNetwork}. generáció</td></tr>
-                  <tr className="csatlakozo_table"><td>dualSIM / eSIM / NFC</td><td>{phone.connectionDualSim} / {phone.connectionEsim} / {phone.connectionNfc}</td></tr>
-                  <tr className="csatlakozo_table"><td>Jack csatlakozó</td><td>{phone.connectionJack}</td></tr>
-                  <tr className="csatlakozo_table"><td>Infraport</td><td>{phone.sensorsInfrared}</td></tr>
+                  <tr className="csatlakozo_table"><td>dualSIM</td><td>{phone.connectionDualSim === 1 ? "Van" : "Nincs"}</td></tr>
+                  <tr className="csatlakozo_table"><td>eSIM</td><td>{phone.connectionEsim === 1 ? "Van" : "Nincs"}</td></tr>
+                  <tr className="csatlakozo_table"><td>NFC</td><td>{phone.connectionNfc === 1 ? "Van" : "Nincs"}</td></tr>
+                  <tr className="csatlakozo_table"><td>Jack csatlakozó</td><td>{phone.connectionJack === 1 ? "Van" : "Nincs"}</td></tr>
+                  <tr className="csatlakozo_table"><td>Infraport</td><td>{phone.sensorsInfrared === 1 ? "Van" : "Nincs"}</td></tr>
                   <tr className="csatlakozo_table"><td>Ujjlenyomat</td><td>{phone.fingerprintType} ({phone.fingerprintPlace})</td></tr>
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
@@ -499,7 +508,7 @@ export default function PhonePage() {
                   <tr className="akkumulator_table"><td>Akkumulátor kapacitása</td><td>{phone.batteryCapacity} mAh</td></tr>
                   <tr className="akkumulator_table"><td>Akkumulátor típusa</td><td>{phone.batteryType}</td></tr>
                   <tr className="akkumulator_table"><td>Vezetékes töltés</td><td>{phone.batteryMaxChargingWired} W</td></tr>
-                  <tr className="akkumulator_table"><td>Vezeték nélküli töltés</td><td>{phone.batteryMaxChargingWireless} W</td></tr>
+                  <tr className="akkumulator_table"><td>Vezeték nélküli töltés</td><td>{phone.batteryMaxChargingWireless  === 0 ? "Nincs" : `${phone.batteryMaxChargingWireless} W`}</td></tr>
                   <tr className="akkumulator_table"><td>Töltő csatlakozó</td><td>{phone.chargerType}</td></tr>
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
