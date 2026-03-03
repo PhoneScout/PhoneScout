@@ -141,7 +141,8 @@ namespace PhoneScout_GitHub.Controllers
                 manufacturer = new Manufacturer
                 {
                     ManufacturerName = dto.manufacturerName,
-                    ManufacturerUrl = dto.manufacturerURL
+                    ManufacturerUrl = dto.manufacturerURL,
+                    ManufacturerEmail = dto.manufacturerEmail
                 };
                 cx.Manufacturers.Add(manufacturer);
                 cx.SaveChanges();
@@ -375,7 +376,8 @@ namespace PhoneScout_GitHub.Controllers
                       ?? cx.Manufacturers.Add(new Manufacturer
                       {
                           ManufacturerName = dto.manufacturerName,
-                          ManufacturerUrl = dto.manufacturerURL
+                          ManufacturerUrl = dto.manufacturerURL,
+                          ManufacturerEmail = dto.manufacturerEmail
                       }).Entity;
 
             Backmaterial backMaterial = cx.Backmaterials.FirstOrDefault(b => b.BackMaterial1 == dto.backMaterial)

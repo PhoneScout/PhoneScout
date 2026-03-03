@@ -46,6 +46,7 @@ namespace PhoneScout_GitHub.DTOs
         public int? cpuTech { get; set; }
         public string? manufacturerName { get; set; }
         public string? manufacturerURL { get; set; }
+        public string? manufacturerEmail { get; set; }
         public string? ramSpeed { get; set; }
         public string? screenType { get; set; }
         public string? fingerprintType { get; set; }
