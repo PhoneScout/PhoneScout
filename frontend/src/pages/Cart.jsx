@@ -32,6 +32,12 @@ export default function Cart() {
   const [addressErrors, setAddressErrors] = useState({});
   const [addressLoading, setAddressLoading] = useState(false);
   const [addressLoadError, setAddressLoadError] = useState('');
+  const [billingAddressList, setBillingAddressList] = useState([]);
+  const [deliveryAddressList, setDeliveryAddressList] = useState([]);
+  const [selectedBillingAddressId, setSelectedBillingAddressId] = useState(null);
+  const [selectedDeliveryAddressId, setSelectedDeliveryAddressId] = useState(null);
+  const [showBillingAddressForm, setShowBillingAddressForm] = useState(false);
+  const [showDeliveryAddressForm, setShowDeliveryAddressForm] = useState(false);
 
   const navigate = useNavigate();
 
@@ -133,6 +139,9 @@ export default function Cart() {
         setDeliveryAddressData(EMPTY_ADDRESS);
         setBillingAddressData(EMPTY_ADDRESS);
         setBillingSameAsDelivery(true);
+        setBillingAddressList([]);
+        setDeliveryAddressList([]);
+        setSelectedBillingAddressId(null);
         return;
       }
 
@@ -145,22 +154,41 @@ export default function Cart() {
           axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/0`)
         ]);
 
-        const shippingAddress = normalizeAddress(Array.isArray(shippingRes.data) && shippingRes.data.length > 0 ? shippingRes.data[0] : null);
-        const billingAddress = normalizeAddress(Array.isArray(billingRes.data) && billingRes.data.length > 0 ? billingRes.data[0] : null);
+        // Szállítási és számlázási csímlisták feltöltése
+        const shippingAddresses = Array.isArray(shippingRes.data) ? shippingRes.data : [];
+        const billingAddresses = Array.isArray(billingRes.data) ? billingRes.data : [];
 
-        const deliveryToSet = shippingAddress;
-        const billingToSet = billingAddress.address || billingAddress.city || billingAddress.postalCode || billingAddress.phoneNumber
-          ? billingAddress
-          : shippingAddress;
+        setDeliveryAddressList(shippingAddresses);
+        setBillingAddressList(billingAddresses);
 
-        const isSame = areAddressesEqual(deliveryToSet, billingToSet);
+        // Az első szállítási cím beállítása
+        if (shippingAddresses.length > 0) {
+          const firstShippingAddress = shippingAddresses[0];
+          setSelectedDeliveryAddressId(firstShippingAddress.id);
+          setDeliveryAddressData(normalizeAddress(firstShippingAddress));
+        } else {
+          setSelectedDeliveryAddressId(null);
+          setDeliveryAddressData(EMPTY_ADDRESS);
+        }
 
-        setDeliveryAddressData(deliveryToSet);
-        setBillingAddressData(billingToSet);
-        setBillingSameAsDelivery(isSame);
+        // Az első számlázási cím kiválasztása és beállítása
+        if (billingAddresses.length > 0) {
+          const firstBillingAddress = billingAddresses[0];
+          setSelectedBillingAddressId(firstBillingAddress.id);
+          setBillingAddressData(normalizeAddress(firstBillingAddress));
+        } else {
+          setSelectedBillingAddressId(null);
+          setBillingAddressData(EMPTY_ADDRESS);
+        }
+
+        setBillingSameAsDelivery(true);
+        setShowBillingAddressForm(false);
+        setShowDeliveryAddressForm(false);
       } catch (error) {
         console.error('Hiba a címek betöltésekor:', error);
         setAddressLoadError('A címek betöltése sikertelen. A mezők kézzel kitölthetők.');
+        setBillingAddressList([]);
+        setDeliveryAddressList([]);
       } finally {
         setAddressLoading(false);
       }
@@ -289,6 +317,44 @@ export default function Cart() {
     }
   };
 
+  const handleSelectBillingAddress = (addressId) => {
+    if (addressId === 'new') {
+      setShowBillingAddressForm(true);
+      setBillingAddressData(EMPTY_ADDRESS);
+      setSelectedBillingAddressId(null);
+    } else if (addressId) {
+      setShowBillingAddressForm(false);
+      setSelectedBillingAddressId(parseInt(addressId, 10));
+      const selectedAddress = billingAddressList.find(addr => addr.id === parseInt(addressId, 10));
+      if (selectedAddress) {
+        setBillingAddressData(normalizeAddress(selectedAddress));
+      }
+    } else {
+      setShowBillingAddressForm(false);
+      setSelectedBillingAddressId(null);
+      setBillingAddressData(EMPTY_ADDRESS);
+    }
+  };
+
+  const handleSelectDeliveryAddress = (addressId) => {
+    if (addressId === 'new') {
+      setShowDeliveryAddressForm(true);
+      setDeliveryAddressData(EMPTY_ADDRESS);
+      setSelectedDeliveryAddressId(null);
+    } else if (addressId) {
+      setShowDeliveryAddressForm(false);
+      setSelectedDeliveryAddressId(parseInt(addressId, 10));
+      const selectedAddress = deliveryAddressList.find(addr => addr.id === parseInt(addressId, 10));
+      if (selectedAddress) {
+        setDeliveryAddressData(normalizeAddress(selectedAddress));
+      }
+    } else {
+      setShowDeliveryAddressForm(false);
+      setSelectedDeliveryAddressId(null);
+      setDeliveryAddressData(EMPTY_ADDRESS);
+    }
+  };
+
   const validateForm = () => {
     const errors = {};
     Object.keys(formData).forEach(key => {
@@ -300,18 +366,30 @@ export default function Cart() {
     const addressValidationErrors = {};
     const requiredFields = ['postalCode', 'city', 'address', 'phoneNumber'];
 
-    requiredFields.forEach(field => {
-      if (!deliveryAddressData[field]?.toString().trim()) {
-        addressValidationErrors[`delivery-${field}`] = 'A mező kitöltése kötelező!';
-      }
-    });
-
-    if (!billingSameAsDelivery) {
+    // Szállítási cím validálása
+    if (showDeliveryAddressForm) {
+      // Ha formában van az adat, validáljuk az inputokat
       requiredFields.forEach(field => {
-        if (!billingAddressData[field]?.toString().trim()) {
+        if (!deliveryAddressData[field].toString().trim()) {
+          addressValidationErrors[`delivery-${field}`] = 'A mező kitöltése kötelező!';
+        }
+      });
+    } else if (!selectedDeliveryAddressId && !billingSameAsDelivery) {
+      // Ha dropdownból kell kiválasztani és nincs kiválasztva
+      addressValidationErrors['delivery-select'] = 'Válasszon egy szállítási cím!';
+    }
+
+    // Számlázási cím validálása
+    if (showBillingAddressForm) {
+      // Ha formában van az adat, validáljuk az inputokat
+      requiredFields.forEach(field => {
+        if (!billingAddressData[field].toString().trim()) {
           addressValidationErrors[`billing-${field}`] = 'A mező kitöltése kötelező!';
         }
       });
+    } else if (!selectedBillingAddressId) {
+      // Ha dropdownból kell kiválasztani és nincs kiválasztva
+      addressValidationErrors['billing-select'] = 'Válasszon egy számlázási cím!';
     }
 
     setFormErrors(errors);
@@ -506,6 +584,9 @@ export default function Cart() {
           <div className="modalContent">
             <span className="closeModal" onClick={() => setShowPaymentModal(false)}>&times;</span>
             <h2 className="modalTitle">Fizetés</h2>
+            <div className="modalTotalPrice">
+              Végösszeg: <strong>{formatPrice(totalPrice)} Ft</strong>
+            </div>
             {addressLoadError && <div className="error-message">{addressLoadError}</div>}
             {addressLoading && <div className="addressInfoText">Címadatok betöltése...</div>}
             <div className="formsContainer">
@@ -561,49 +642,88 @@ export default function Cart() {
               </form>
 
               <form className="modalForm" onSubmit={(e) => e.preventDefault()}>
-                <h4>Szállítási cím</h4>
-                <div className="addressInfoText">Automatikusan kitöltve a profil alapján, szükség esetén módosítható.</div>
+                <h4>Számlázási cím</h4>
 
-                <label>Irányítószám:</label>
-                <input
-                  type="text"
-                  maxLength="4"
-                  required
-                  placeholder="1234"
-                  value={deliveryAddressData.postalCode}
-                  onChange={(e) => handleAddressInputChange('delivery', 'postalCode', e.target.value)}
-                />
-                {addressErrors['delivery-postalCode'] && <div className="invalid-feedback">{addressErrors['delivery-postalCode']}</div>}
+                {!showBillingAddressForm ? (
+                  <>
+                    <label>Válassza ki a számlázási címet:</label>
+                    <select
+                      value={selectedBillingAddressId || ''}
+                      onChange={(e) => handleSelectBillingAddress(e.target.value)}
+                      className="modalForm-select"
+                    >
+                      <option value="">-- Válasszon egy cím</option>
+                      {billingAddressList.map(addr => (
+                        <option key={addr.id} value={addr.id}>
+                          {addr.postalCode} {addr.city}, {addr.address}
+                        </option>
+                      ))}
+                      <option value="new">+ Új cím hozzáadása</option>
+                    </select>
+                    {addressErrors['billing-select'] && <div className="invalid-feedback">{addressErrors['billing-select']}</div>}
 
-                <label>Város:</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Város"
-                  value={deliveryAddressData.city}
-                  onChange={(e) => handleAddressInputChange('delivery', 'city', e.target.value)}
-                />
-                {addressErrors['delivery-city'] && <div className="invalid-feedback">{addressErrors['delivery-city']}</div>}
+                    {selectedBillingAddressId && (
+                      <div className="addressDisplayBox">
+                        <p><strong>Irányítószám:</strong> {billingAddressData.postalCode}</p>
+                        <p><strong>Város:</strong> {billingAddressData.city}</p>
+                        <p><strong>Cím:</strong> {billingAddressData.address}</p>
+                        <p><strong>Telefonszám:</strong> {billingAddressData.phoneNumber}</p>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <>
+                    <label>Irányítószám:</label>
+                    <input
+                      type="text"
+                      maxLength="4"
+                      required
+                      placeholder="1234"
+                      value={billingAddressData.postalCode}
+                      onChange={(e) => handleAddressInputChange('billing', 'postalCode', e.target.value)}
+                    />
+                    {addressErrors['billing-postalCode'] && <div className="invalid-feedback">{addressErrors['billing-postalCode']}</div>}
 
-                <label>Cím:</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="Utca, házszám"
-                  value={deliveryAddressData.address}
-                  onChange={(e) => handleAddressInputChange('delivery', 'address', e.target.value)}
-                />
-                {addressErrors['delivery-address'] && <div className="invalid-feedback">{addressErrors['delivery-address']}</div>}
+                    <label>Város:</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Város"
+                      value={billingAddressData.city}
+                      onChange={(e) => handleAddressInputChange('billing', 'city', e.target.value)}
+                    />
+                    {addressErrors['billing-city'] && <div className="invalid-feedback">{addressErrors['billing-city']}</div>}
 
-                <label>Telefonszám:</label>
-                <input
-                  type="text"
-                  required
-                  placeholder="36301234567"
-                  value={deliveryAddressData.phoneNumber}
-                  onChange={(e) => handleAddressInputChange('delivery', 'phoneNumber', e.target.value)}
-                />
-                {addressErrors['delivery-phoneNumber'] && <div className="invalid-feedback">{addressErrors['delivery-phoneNumber']}</div>}
+                    <label>Cím:</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Utca, házszám"
+                      value={billingAddressData.address}
+                      onChange={(e) => handleAddressInputChange('billing', 'address', e.target.value)}
+                    />
+                    {addressErrors['billing-address'] && <div className="invalid-feedback">{addressErrors['billing-address']}</div>}
+
+                    <label>Telefonszám:</label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="36301234567"
+                      value={billingAddressData.phoneNumber}
+                      onChange={(e) => handleAddressInputChange('billing', 'phoneNumber', e.target.value)}
+                    />
+                    {addressErrors['billing-phoneNumber'] && <div className="invalid-feedback">{addressErrors['billing-phoneNumber']}</div>}
+
+                    <button
+                      type="button"
+                      className="submitPaymentBtn"
+                      style={{ marginTop: '12px', marginRight: '8px' }}
+                      onClick={() => setShowBillingAddressForm(false)}
+                    >
+                      Inkább választok a mentett címek közül
+                    </button>
+                  </>
+                )}
 
                 <div className="addressCheckboxRow">
                   <input
@@ -612,54 +732,94 @@ export default function Cart() {
                     checked={billingSameAsDelivery}
                     onChange={(e) => toggleBillingSameAsDelivery(e.target.checked)}
                   />
-                  <label htmlFor="billingSameAsDelivery">A számlázási cím megegyezik a szállítási címmel</label>
+                  <label htmlFor="billingSameAsDelivery">A szállítási cím megegyezik a számlázási címmel</label>
                 </div>
               </form>
 
               {!billingSameAsDelivery && (
                 <form className="modalForm" onSubmit={(e) => e.preventDefault()}>
-                  <h4>Számlázási cím</h4>
+                  <h4>Szállítási cím</h4>
 
-                  <label>Irányítószám:</label>
-                  <input
-                    type="text"
-                    maxLength="4"
-                    required
-                    placeholder="1234"
-                    value={billingAddressData.postalCode}
-                    onChange={(e) => handleAddressInputChange('billing', 'postalCode', e.target.value)}
-                  />
-                  {addressErrors['billing-postalCode'] && <div className="invalid-feedback">{addressErrors['billing-postalCode']}</div>}
+                  {!showDeliveryAddressForm ? (
+                    <>
+                      <label>Válassza ki a szállítási címet:</label>
+                      <select
+                        value={selectedDeliveryAddressId || ''}
+                        onChange={(e) => handleSelectDeliveryAddress(e.target.value)}
+                        className="modalForm-select"
+                      >
+                        <option value="">-- Válasszon egy címet</option>
+                        {deliveryAddressList.map(addr => (
+                          <option key={addr.id} value={addr.id}>
+                            {addr.postalCode} {addr.city}, {addr.address}
+                          </option>
+                        ))}
+                        <option value="new">+ Új cím hozzáadása</option>
+                      </select>
+                      {addressErrors['delivery-select'] && <div className="invalid-feedback">{addressErrors['delivery-select']}</div>}
 
-                  <label>Város:</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Város"
-                    value={billingAddressData.city}
-                    onChange={(e) => handleAddressInputChange('billing', 'city', e.target.value)}
-                  />
-                  {addressErrors['billing-city'] && <div className="invalid-feedback">{addressErrors['billing-city']}</div>}
+                      {selectedDeliveryAddressId && (
+                        <div className="addressDisplayBox">
+                          <p><strong>Irányítószám:</strong> {deliveryAddressData.postalCode}</p>
+                          <p><strong>Város:</strong> {deliveryAddressData.city}</p>
+                          <p><strong>Cím:</strong> {deliveryAddressData.address}</p>
+                          <p><strong>Telefonszám:</strong> {deliveryAddressData.phoneNumber}</p>
+                        </div>
+                      )}
+                    </>
+                  ) : (
+                    <>
+                      <label>Irányítószám:</label>
+                      <input
+                        type="text"
+                        maxLength="4"
+                        required
+                        placeholder="1234"
+                        value={deliveryAddressData.postalCode}
+                        onChange={(e) => handleAddressInputChange('delivery', 'postalCode', e.target.value)}
+                      />
+                      {addressErrors['delivery-postalCode'] && <div className="invalid-feedback">{addressErrors['delivery-postalCode']}</div>}
 
-                  <label>Cím:</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="Utca, házszám"
-                    value={billingAddressData.address}
-                    onChange={(e) => handleAddressInputChange('billing', 'address', e.target.value)}
-                  />
-                  {addressErrors['billing-address'] && <div className="invalid-feedback">{addressErrors['billing-address']}</div>}
+                      <label>Város:</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Város"
+                        value={deliveryAddressData.city}
+                        onChange={(e) => handleAddressInputChange('delivery', 'city', e.target.value)}
+                      />
+                      {addressErrors['delivery-city'] && <div className="invalid-feedback">{addressErrors['delivery-city']}</div>}
 
-                  <label>Telefonszám:</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="36301234567"
-                    value={billingAddressData.phoneNumber}
-                    onChange={(e) => handleAddressInputChange('billing', 'phoneNumber', e.target.value)}
-                  />
-                  {addressErrors['billing-phoneNumber'] && <div className="invalid-feedback">{addressErrors['billing-phoneNumber']}</div>}
+                      <label>Cím:</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="Utca, házszám"
+                        value={deliveryAddressData.address}
+                        onChange={(e) => handleAddressInputChange('delivery', 'address', e.target.value)}
+                      />
+                      {addressErrors['delivery-address'] && <div className="invalid-feedback">{addressErrors['delivery-address']}</div>}
+
+                      <label>Telefonszám:</label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="36301234567"
+                        value={deliveryAddressData.phoneNumber}
+                        onChange={(e) => handleAddressInputChange('delivery', 'phoneNumber', e.target.value)}
+                      />
+                      {addressErrors['delivery-phoneNumber'] && <div className="invalid-feedback">{addressErrors['delivery-phoneNumber']}</div>}
+
+                      <button
+                        type="button"
+                        className="submitPaymentBtn"
+                        style={{ marginTop: '12px', marginRight: '8px' }}
+                        onClick={() => setShowDeliveryAddressForm(false)}
+                      >
+                        Inkább választok a mentett címek közül
+                      </button>
+                    </>
+                  )}
                 </form>
               )}
             </div>

@@ -37,7 +37,7 @@ public partial class Connectionservice
 
     public string ManufacturerName { get; set; } = null!;
 
-    public sbyte PhoneInspection { get; set; }
+    public int PhoneInspection { get; set; }
 
     public string ProblemDescription { get; set; } = null!;
 

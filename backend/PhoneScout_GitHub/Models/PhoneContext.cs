@@ -296,7 +296,7 @@ public partial class PhoneContext : DbContext
                 .HasMaxLength(24)
                 .HasColumnName("manufacturerName");
             entity.Property(e => e.PhoneInspection)
-                .HasColumnType("tinyint(4)")
+                .HasColumnType("int(1)")
                 .HasColumnName("phoneInspection");
             entity.Property(e => e.PhoneName)
                 .HasMaxLength(64)

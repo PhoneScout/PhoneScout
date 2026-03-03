@@ -239,6 +239,70 @@
     min-height: 18px;
 }
 
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875em;
+    margin-top: -8px;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.addressInfoText {
+    font-size: 0.9em;
+    color: #636e72;
+    margin-bottom: 12px;
+    font-style: italic;
+}
+
+.addressCheckboxRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.addressCheckboxRow input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.addressCheckboxRow label {
+    margin: 0;
+    cursor: pointer;
+    font-weight: normal;
+}
+
+.modalForm-select {
+    width: 100%;
+    padding: 7px 10px;
+    margin-bottom: 12px;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    font-size: 1em;
+    background: #fff;
+    transition: border 0.2s;
+    cursor: pointer;
+}
+
+.modalForm-select:focus {
+    border-color: #0984e3;
+    outline: none;
+}
+
+.addressDisplayBox {
+    background: #f0f0f0;
+    border: 1px solid #dfe6e9;
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 12px;
+    font-size: 0.95em;
+}
+
+.addressDisplayBox p {
+    margin: 6px 0;
+    color: #2d3436;
+}
+
 /* --- Modal fizetéshez --- */
 .paymentModal {
     display: none;
@@ -356,6 +420,23 @@
 .pagesHistory:last-child:hover{
     scale: 1.00;
     cursor: not-allowed;
+}
+
+.modalTitle {
+    margin: 0 0 8px 0;
+    font-size: 1.5em;
+    color: #2d3436;
+}
+
+.modalTotalPrice {
+    text-align: center;
+    font-size: 1.3em;
+    color: #0984e3;
+    margin-bottom: 16px;
+    padding: 12px;
+    background: #f0f7ff;
+    border-radius: 8px;
+    font-weight: 500;
 }
 
 

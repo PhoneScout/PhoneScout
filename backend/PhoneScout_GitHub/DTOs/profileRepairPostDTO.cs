@@ -26,7 +26,7 @@ namespace PhoneScout_GitHub.DTOs
 
         public string manufacturerName { get; set; } = null!;
 
-        public sbyte phoneInspection { get; set; }
+        public int phoneInspection { get; set; }
     
         public string problemDescription { get; set; } = null!;
 
