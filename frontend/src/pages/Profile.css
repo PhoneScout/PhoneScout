@@ -200,6 +200,28 @@
   border-radius: 12px;
 }
 
+/* offer button on service requests */
+.service-request-actions {
+  margin-top: 0.75rem;
+}
+.service-request-actions .btn-view-offer {
+  background: #68F145;
+  border: 2px solid #000000;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+.service-request-actions .btn-view-offer:hover {
+  transform: scale(1.05);
+}
+.service-request-actions .btn-view-offer:active {
+  background-color: rgb(7, 224, 79);
+  transform: scale(0.97);
+}
+
+
 .btn-copy:hover {
   background-color: #FFFFFF;
   color: #007bff;

@@ -1,7 +1,183 @@
 .row {
     margin-left: 0px;
     margin-right: 0px;
+    margin-top: 0px;
     max-width: 100%;
+}
+
+/* Banner Carousel Styles - Full Width */
+.banner-carousel-section {
+    width: 100%;
+    position: relative;
+    margin-bottom: 32px;
+    padding: 0;
+    overflow: hidden;
+    background: linear-gradient(135deg, #2300B3 0%, #68F145 100%);
+}
+
+.banner-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0;
+    gap: 0;
+    position: relative;
+}
+
+.banner-button-left,
+.banner-button-right {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+}
+
+.banner-button-left {
+    left: 20px;
+}
+
+.banner-button-right {
+    right: 20px;
+}
+
+.banner-content {
+    flex: 1;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    background: transparent;
+}
+
+.banner-slide {
+    text-align: center;
+    color: white;
+    width: 100%;
+    padding: 40px 20px;
+}
+
+.welcome-slide,
+.promo-slide {
+    background: transparent;
+}
+
+.banner-slide h1 {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin: 0 0 15px 0;
+}
+
+.banner-slide p {
+    font-size: 1.2em;
+    margin: 0 0 15px 0;
+}
+
+.banner-slide h3 {
+    font-size: 1em;
+    font-weight: 500;
+    margin: 0;
+}
+
+.carouselButtonBanner {
+    background-color: rgba(255, 255, 255, 0.3);
+    color: white;
+    border: 2px solid white;
+    border-radius: 50%;
+    font-size: 1.2em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    height: 50px;
+    width: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.carouselButtonBanner:hover {
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.banner-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    padding: 4px 0 14px 0;
+    margin: 0;
+    background: transparent;
+}
+
+.banner-dot {
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 20px;
+    height: 20px;
+    border: none;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.banner-dotActive {
+    background-color: white;
+    width: 20px;
+    height: 20px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .banner-slide h1 {
+        font-size: 1.8em;
+    }
+    
+    .banner-slide p {
+        font-size: 1em;
+    }
+    
+    .banner-slide h3 {
+        font-size: 0.9em;
+    }
+    
+    .banner-content {
+        min-height: 250px;
+        padding: 30px 15px;
+    }
+    
+    .carouselButtonBanner {
+        height: 40px;
+        width: 40px;
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    .banner-slide h1 {
+        font-size: 1.3em;
+    }
+    
+    .banner-slide p {
+        font-size: 0.85em;
+    }
+    
+    .banner-slide h3 {
+        font-size: 0.75em;
+    }
+    
+    .banner-content {
+        min-height: 200px;
+        padding: 20px 10px;
+    }
+    
+    .banner-button-left,
+    .banner-button-right {
+        padding: 10px 5px;
+    }
+    
+    .carouselButtonBanner {
+        height: 35px;
+        width: 35px;
+        font-size: 0.8em;
+    }
 }
 
 .hr {
@@ -20,32 +196,36 @@ hr {
 }
 
 .dots {
-    display: flex;
-    justify-content: center;
-    /* centers horizontally */
-    align-items: center;
-    /* centers vertically if needed */
-    gap: 10px;
-    /* optional space between dots */
-    margin-top: 10px;
-    /* optional spacing above */
+    display: none; /* Elavult, helyette phone-carousel-dots */
 }
 
+.phone-carousel-dots {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 15px 0 0 0;
+}
 
 .dot {
+    display: none; /* Elavult, helyette phone-carousel-dot */
+}
+
+.phone-carousel-dot {
     background-color: white;
     width: 20px;
     height: 20px;
     border: solid 1px black;
     border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
 }
 
-.dotActive {
+.phone-carousel-dot.dotActive {
     background-color: black;
     width: 20px;
     height: 20px;
     border: solid 1px black;
-    border-radius: 50%;
 }
 
 #contentRow {

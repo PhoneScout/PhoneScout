@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import axios from 'axios';
-import { UNSAFE_useScrollRestoration } from 'react-router';
+import { UNSAFE_useScrollRestoration, useNavigate } from 'react-router';
 import InputText from '../components/InputText';
 
 
@@ -63,6 +63,34 @@ const Profile = () => {
   const [phones, setPhones] = useState([]);
   const [serviceRequests, setServiceRequests] = useState([]);
 
+  const navigate = useNavigate();
+  // price offer modal state
+  const [showPriceModal, setShowPriceModal] = useState(false);
+  const [activeRepair, setActiveRepair] = useState(null);
+  const [showDeclineConfirm, setShowDeclineConfirm] = useState(false);
+
+  // payment modal for repair offer
+  const [showRepairPaymentModal, setShowRepairPaymentModal] = useState(false);
+  const [paymentFormData, setPaymentFormData] = useState({ cardNumber: '', expiry: '', cvc: '', cardName: '' });
+  const [paymentFormErrors, setPaymentFormErrors] = useState({});
+  const [paymentDeliveryAddressData, setPaymentDeliveryAddressData] = useState({ postalCode: '', city: '', address: '', phoneNumber: '' });
+  const [paymentBillingAddressData, setPaymentBillingAddressData] = useState({ postalCode: '', city: '', address: '', phoneNumber: '' });
+  const [paymentBillingSameAsDelivery, setPaymentBillingSameAsDelivery] = useState(true);
+  const [paymentAddressErrors, setPaymentAddressErrors] = useState({});
+  const [paymentAddressLoading, setPaymentAddressLoading] = useState(false);
+  const [paymentAddressLoadError, setPaymentAddressLoadError] = useState('');
+  const [paymentBillingAddressList, setPaymentBillingAddressList] = useState([]);
+  const [paymentDeliveryAddressList, setPaymentDeliveryAddressList] = useState([]);
+  const [paymentSelectedBillingAddressId, setPaymentSelectedBillingAddressId] = useState(null);
+  const [paymentSelectedDeliveryAddressId, setPaymentSelectedDeliveryAddressId] = useState(null);
+  const [paymentShowBillingAddressForm, setPaymentShowBillingAddressForm] = useState(false);
+  const [paymentShowDeliveryAddressForm, setPaymentShowDeliveryAddressForm] = useState(false);
+  
+  // Feedback messages
+  const [declineSuccessMessage, setDeclineSuccessMessage] = useState('');
+  const [paymentSuccessMessage, setPaymentSuccessMessage] = useState('');
+
+
   // Szervízrendelések betöltése az API-ből
   useEffect(() => {
     const loadServiceRequests = async () => {
@@ -74,7 +102,9 @@ const Profile = () => {
 
         const response = await axios.get(`http://localhost:5175/api/Profile/GetRepair/${userID}`);
         if (Array.isArray(response.data)) {
-          setServiceRequests(response.data);
+          // backend omits userID so inject it manually
+          const withId = response.data.map(r => ({ ...r, userID }));
+          setServiceRequests(withId);
         }
       } catch (error) {
         console.error('Hiba a szervízrendelések betöltésekor:', error);
@@ -82,7 +112,230 @@ const Profile = () => {
     };
 
     loadServiceRequests();
+
+    // listen for external updates (e.g. after payment in cart)
+    const refreshHandler = () => {
+      loadServiceRequests();
+    };
+    window.addEventListener('repairUpdated', refreshHandler);
+    return () => window.removeEventListener('repairUpdated', refreshHandler);
   }, [userID]);
+
+  // helper to open offer modal
+  const openPriceModal = (repair) => {
+    setActiveRepair(repair);
+    setShowPriceModal(true);
+  };
+
+  const closePriceModal = () => {
+    setActiveRepair(null);
+    setShowPriceModal(false);
+    setShowDeclineConfirm(false);
+  };
+
+  // helpers for payment modal
+  const normalizePaymentAddress = (address) => ({
+    postalCode: address?.postalCode?.toString() || '',
+    city: address?.city || '',
+    address: address?.address || '',
+    phoneNumber: address?.phoneNumber?.toString() || ''
+  });
+
+  const handlePaymentInputChange = (e) => {
+    const { id, value } = e.target;
+    let processedValue = value;
+
+    switch (id) {
+      case "cardNumber":
+        processedValue = value.replace(/\D/g, "");
+        processedValue = processedValue.slice(0, 16);
+        processedValue = processedValue.replace(/(.{4})/g, "$1 ").trim();
+        break;
+      case "cvc":
+        processedValue = value.replace(/\D/g, "");
+        processedValue = processedValue.slice(0, 3);
+        break;
+      case "expiry":
+        processedValue = value.replace(/\D/g, "");
+        if (processedValue.length > 4) processedValue = processedValue.slice(0, 4);
+        if (processedValue.length > 2) {
+          let month = processedValue.slice(0, 2);
+          if (parseInt(month, 10) > 12) month = "12";
+          processedValue = month + "/" + processedValue.slice(2);
+        }
+        break;
+      case "cardName":
+        processedValue = value.replace(/[^A-Za-zÁÉÍÓÖŐÚÜŰáéíóöőúüű\s]/g, "");
+        break;
+      default:
+        break;
+    }
+
+    setPaymentFormData(prev => ({ ...prev, [id]: processedValue }));
+  };
+
+  const handleSelectBillingAddressPayment = (id) => {
+    if (id === 'new') {
+      setPaymentShowBillingAddressForm(true);
+      setPaymentSelectedBillingAddressId(null);
+      setPaymentBillingAddressData({ postalCode: '', city: '', address: '', phoneNumber: '' });
+      return;
+    }
+    const selected = paymentBillingAddressList.find(addr => addr.id === parseInt(id, 10));
+    if (selected) {
+      setPaymentBillingAddressData(normalizePaymentAddress(selected));
+      setPaymentSelectedBillingAddressId(selected.id);
+    }
+  };
+
+  const handleSelectDeliveryAddressPayment = (id) => {
+    if (id === 'new') {
+      setPaymentShowDeliveryAddressForm(true);
+      setPaymentSelectedDeliveryAddressId(null);
+      setPaymentDeliveryAddressData({ postalCode: '', city: '', address: '', phoneNumber: '' });
+      return;
+    }
+    const selected = paymentDeliveryAddressList.find(addr => addr.id === parseInt(id, 10));
+    if (selected) {
+      setPaymentDeliveryAddressData(normalizePaymentAddress(selected));
+      setPaymentSelectedDeliveryAddressId(selected.id);
+    }
+  };
+
+  const toggleBillingSameAsDeliveryPayment = (checked) => {
+    setPaymentBillingSameAsDelivery(checked);
+    if (checked) {
+      setPaymentShowDeliveryAddressForm(false);
+      setPaymentSelectedDeliveryAddressId(null);
+      setPaymentDeliveryAddressData({ postalCode: '', city: '', address: '', phoneNumber: '' });
+    }
+  };
+
+  const handlePaymentAddressInputChange = (type, field, value) => {
+    let processed = value;
+    if (field === 'postalCode') {
+      processed = value.replace(/\D/g, '').slice(0, 4);
+    }
+    if (field === 'phoneNumber') {
+      processed = value.replace(/\D/g, '').slice(0, 15);
+    }
+
+    if (type === 'billing') {
+      setPaymentBillingAddressData(prev => ({ ...prev, [field]: processed }));
+    } else {
+      setPaymentDeliveryAddressData(prev => ({ ...prev, [field]: processed }));
+    }
+  };
+
+  const validatePaymentForm = () => {
+    const errors = {};
+    Object.keys(paymentFormData).forEach(key => {
+      if (!paymentFormData[key].trim()) {
+        errors[key] = "A mező kitöltése kötelező!";
+      }
+    });
+
+    setPaymentFormErrors(errors);
+    setPaymentAddressErrors({});
+
+    return Object.keys(errors).length === 0;
+  };
+
+  // Az activeRepair-ből már megvannak a cím adatok, szóval közvetlenül azokat használjuk
+  useEffect(() => {
+    if (!showRepairPaymentModal || !activeRepair) return;
+
+    // Az activeRepair-ből direkten inicializáljuk a szállítási és számlázási adatokat
+    const deliveryData = {
+      postalCode: activeRepair.deliveryPostalCode?.toString() || '',
+      city: activeRepair.deliveryCity || '',
+      address: activeRepair.deliveryAddress || '',
+      phoneNumber: activeRepair.deliveryPhoneNumber?.toString() || ''
+    };
+
+    const billingData = {
+      postalCode: activeRepair.billingPostalCode?.toString() || '',
+      city: activeRepair.billingCity || '',
+      address: activeRepair.billingAddress || '',
+      phoneNumber: activeRepair.billingPhoneNumber?.toString() || ''
+    };
+
+    setPaymentDeliveryAddressData(deliveryData);
+    setPaymentBillingAddressData(billingData);
+    setPaymentBillingSameAsDelivery(true);
+    setPaymentShowBillingAddressForm(false);
+    setPaymentShowDeliveryAddressForm(false);
+  }, [showRepairPaymentModal, activeRepair]);
+
+  const handleRepairPayment = async () => {
+    if (!validatePaymentForm() || !activeRepair) return;
+    try {
+      // construct dto similar to activeRepair but ensure userID and accept status
+      const payload = {
+        ...activeRepair,
+        userID: activeRepair.userID || userID,
+        isPriceAccepted: 1
+      };
+      await axios.put(
+        `http://localhost:5175/api/Profile/updateRepair/${activeRepair.repairID}`,
+        payload
+      );
+      // update local list and notify
+      setServiceRequests(prev => prev.map(r => r.repairID === activeRepair.repairID ? { ...r, isPriceAccepted: 1 } : r));
+      window.dispatchEvent(new Event('repairUpdated'));
+      setPaymentSuccessMessage('Fizetés sikeres!');
+      setTimeout(() => {
+        setShowRepairPaymentModal(false);
+        setActiveRepair(null);
+        setPaymentSuccessMessage('');
+      }, 2000);
+    } catch (err) {
+      console.error('Hiba fizetés után:', err);
+    }
+  };
+
+  const handleAcceptOffer = () => {
+    if (!activeRepair) return;
+    // Közvetlenül a fizetési modalra lépünk az activeRepair már szerzett cím adatokkal
+    setShowPriceModal(false);
+    // reset payment form state
+    setPaymentFormData({ cardNumber: '', expiry: '', cvc: '', cardName: '' });
+    setPaymentFormErrors({});
+    setPaymentAddressErrors({});
+    // A modal megnyitása triggerezni fog egy useEffect-et amely az activeRepair-ből tölti fel a cím adatokat
+    setShowRepairPaymentModal(true);
+  };
+
+  const handleDeclineOffer = () => {
+    setShowDeclineConfirm(true);
+  };
+
+  const confirmDecline = async () => {
+    if (!activeRepair) return;
+    try {
+      const payload = {
+        ...activeRepair,
+        userID: activeRepair.userID || userID,
+        isPriceAccepted: 2
+      };
+      await axios.put(
+        `http://localhost:5175/api/Profile/updateRepair/${activeRepair.repairID}`,
+        payload
+      );
+      // update local list so button disappears
+      setServiceRequests(prev => prev.map(r => r.repairID === activeRepair.repairID ? { ...r, isPriceAccepted: 2 } : r));
+      setDeclineSuccessMessage('Árajánlat sikeresen elutasítva!');
+      setTimeout(() => {
+        setShowDeclineConfirm(false);
+        closePriceModal();
+        setDeclineSuccessMessage('');
+      }, 2000);
+    } catch (err) {
+      console.error('Árajánlat elutasítása hiba:', err);
+      setShowDeclineConfirm(false);
+      closePriceModal();
+    }
+  };
 
   // Rendelések betöltése az API-ből
   useEffect(() => {
@@ -1105,15 +1358,27 @@ const Profile = () => {
                       </span>
                     </div>
                     <div className="service-request-details">
+                      {console.log('Szervizkérés részletei:', request)}
                       <p><strong>Gyártó:</strong> {request.manufacturerName}</p>
-                      <p><strong>Irányítószám:</strong> {request.postalCode}</p>
-                      <p><strong>Város:</strong> {request.city}</p>
-                      <p><strong>Cím:</strong> {request.address}</p>
-                      <p><strong>Telefonszám:</strong> {request.phoneNumber}</p>
+                      <p><strong>Város:</strong> {request.billingCity}</p>
+                      <p><strong>Cím:</strong> {request.billingAddress}</p>
+                      <p><strong>Telefonszám:</strong> {request.billingPhoneNumber}</p>
                       <p><strong>Hiba leírása:</strong> {request.problemDescription}</p>
                       <p><strong>Vizsgálat:</strong> {request.phoneInspection ? "érdekelne" : "nem érdekelne"}</p>
-                      <p><strong>Ár:</strong> {request.price ? request.price.toLocaleString() + ' Ft' : 'Árajánlat függőben'}</p>
+                      <p><strong>Ár:</strong> {request.repairPrice ? request.repairPrice.toLocaleString() + ' Ft' : 'Árajánlat függőben'}</p>
+                      {request.isPriceAccepted === 1 && <p className="text-success"><strong>Árajánlat elfogadva</strong></p>}
+                      {request.isPriceAccepted === 2 && <p className="text-danger"><strong>Árajánlat elutasítva</strong></p>}
                     </div>
+                    {request.isPriceAccepted === 0 && (
+                      <div className="service-request-actions">
+                        <button
+                          className="btn-view-offer"
+                          onClick={() => openPriceModal(request)}
+                        >
+                          Árajánlat megtekintése
+                        </button>
+                      </div>
+                    )}
                   </div>
                 ))
               ) : (
@@ -1122,6 +1387,137 @@ const Profile = () => {
             </div>
           </section>
 
+          {/* árajánlat megtekintése modal */}
+          {showPriceModal && activeRepair && (
+            <div className="profile-modal-overlay">
+              <div className="profile-modal-content">
+                <div className="profile-modal-header">
+                  <h3 className="profile-modal-title">Árajánlat</h3>
+                </div>
+                <div className="profile-modal-body">
+                  <p>Árajánlat összege: <strong>{activeRepair.repairPrice.toLocaleString()} Ft</strong></p>
+                </div>
+                <div className="profile-modal-actions">
+                  <button onClick={handleAcceptOffer} className="profile-modal-btn-confirm">Elfogadás</button>
+                  <button onClick={handleDeclineOffer} className="btn-cancel">Elutasítás</button>
+                  <button onClick={closePriceModal} className="profile-modal-btn-cancel">Vissza</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* elutasítás megerősítő modal */}
+          {showDeclineConfirm && (
+            <div className="profile-modal-overlay">
+              <div className="profile-modal-content">
+                <div className="profile-modal-header">
+                  <h3 className="profile-modal-title">Árajánlat elutasítása</h3>
+                </div>
+                <div className="profile-modal-body">
+                  <p className="profile-modal-text">Biztosan el szeretnéd utasítani az árajánlatot?</p>
+                </div>
+                {declineSuccessMessage && (
+                  <div style={{ color: '#dc3545', textAlign: 'center', marginBottom: '12px', fontWeight: 'bold', fontSize: '16px' }}>
+                    ✓ {declineSuccessMessage}
+                  </div>
+                )}
+                <div className="profile-modal-actions">
+                  <button onClick={confirmDecline} className="btn-cancel">Igen</button>
+                  <button onClick={() => setShowDeclineConfirm(false)} className="profile-modal-btn-cancel">Nem</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* fizetes modal az arajanlatlozahoz */}
+          {showRepairPaymentModal && activeRepair && (
+            <div className="paymentModal" style={{ display: 'flex' }}>
+              <div className="modalContent">
+                <span className="closeModal" onClick={() => setShowRepairPaymentModal(false)}>&times;</span>
+                <h2 className="modalTitle">Fizetés</h2>
+                <div className="modalTotalPrice">
+                  Végösszeg: <strong>{activeRepair.repairPrice.toLocaleString()}</strong> Ft
+                </div>
+                {paymentAddressLoadError && <div className="error-message">{paymentAddressLoadError}</div>}
+                {paymentAddressLoading && <div className="addressInfoText">Címadatok betöltése...</div>}
+                {paymentSuccessMessage && (
+                  <div style={{ color: '#28a745', textAlign: 'center', marginBottom: '12px', fontWeight: 'bold', fontSize: '16px' }}>
+                    ✓ {paymentSuccessMessage}
+                  </div>
+                )}
+                <div className="formsContainer">
+                  <form id="paymentForm" className="modalForm" onSubmit={(e) => e.preventDefault()}>
+                    <h4>Bankkártya adatok</h4>
+                    <label>Kártyaszám:</label>
+                    <input
+                      type="text"
+                      id="cardNumber"
+                      maxLength="19"
+                      required
+                      placeholder="1234 5678 9012 3456"
+                      value={paymentFormData.cardNumber}
+                      onChange={handlePaymentInputChange}
+                      autoFocus
+                    />
+                    {paymentFormErrors.cardNumber && <div className="invalid-feedback">{paymentFormErrors.cardNumber}</div>}
+
+                    <label>Lejárat:</label>
+                    <input
+                      type="text"
+                      id="expiry"
+                      maxLength="5"
+                      required
+                      placeholder="MM/YY"
+                      value={paymentFormData.expiry}
+                      onChange={handlePaymentInputChange}
+                    />
+                    {paymentFormErrors.expiry && <div className="invalid-feedback">{paymentFormErrors.expiry}</div>}
+
+                    <label>CVC:</label>
+                    <input
+                      type="text"
+                      id="cvc"
+                      maxLength="3"
+                      required
+                      placeholder="123"
+                      value={paymentFormData.cvc}
+                      onChange={handlePaymentInputChange}
+                    />
+                    {paymentFormErrors.cvc && <div className="invalid-feedback">{paymentFormErrors.cvc}</div>}
+
+                    <label>Kártyán szereplő név:</label>
+                    <input
+                      type="text"
+                      id="cardName"
+                      required
+                      placeholder="Név"
+                      value={paymentFormData.cardName}
+                      onChange={handlePaymentInputChange}
+                    />
+                    {paymentFormErrors.cardName && <div className="invalid-feedback">{paymentFormErrors.cardName}</div>}
+                  </form>
+
+                  <form className="modalForm" onSubmit={(e) => e.preventDefault()}>
+                    <h4>Számlázási cím (automatikus)</h4>
+                    <div className="addressDisplayBox">
+                      <p><strong>Irányítószám:</strong> {paymentBillingAddressData.postalCode}</p>
+                      <p><strong>Város:</strong> {paymentBillingAddressData.city}</p>
+                      <p><strong>Cím:</strong> {paymentBillingAddressData.address}</p>
+                      <p><strong>Telefonszám:</strong> {paymentBillingAddressData.phoneNumber}</p>
+                    </div>
+                  </form>
+                </div>
+                <button
+                  id="submitPayment"
+                  className="submitPaymentBtn paymentButton"
+                  type="button"
+                  onClick={handleRepairPayment}
+                >
+                  Fizetés leadása
+                </button>
+              </div>
+            </div>
+          )}
           {/* Cím törlés megerősítő modal */}
           {showDeleteModal && (
             <div className="profile-modal-overlay">
@@ -1160,3 +1556,6 @@ const Profile = () => {
 };
 
 export default Profile;
+
+
+

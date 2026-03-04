@@ -10,12 +10,21 @@ import axios from 'axios';
 export default function Home() {
   const allPhonesURL = "http://localhost:5175/mainPage";
 
+  // Banner carousel states
+  const [bannerPage, setBannerPage] = useState(0);
+  const [activeBannerButton, setActiveBannerButton] = useState("right");
+
+  // Phone carousel states
   const [currentPage, setCurrentPage] = useState(0);
   const [activeChangeButton, setActiveChangeButton] = useState("right");
 
 
 
   const [allPhonesData, setAllPhonesData] = useState([]);
+  const [homePreviousPages, setHomePreviousPages] = useState(() => {
+    const stored = localStorage.getItem("pagesHistory");
+    return stored ? JSON.parse(stored) : [{ pageName: "Főoldal", pageURL: "/" }];
+  });
 
   useEffect(() => {
     axios.get(allPhonesURL)
@@ -25,6 +34,32 @@ export default function Home() {
       .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
   }, []);
 
+  useEffect(() => {
+    const handleStorage = () => {
+      const stored = localStorage.getItem("pagesHistory");
+      setHomePreviousPages(stored ? JSON.parse(stored) : [{ pageName: "Főoldal", pageURL: "/" }]);
+    };
+
+    handleStorage();
+    window.addEventListener('storage', handleStorage);
+    window.addEventListener('focus', handleStorage);
+
+    return () => {
+      window.removeEventListener('storage', handleStorage);
+      window.removeEventListener('focus', handleStorage);
+    };
+  }, []);
+
+  function changeBannerPage(direction) {
+    const newPage = bannerPage + direction;
+    setBannerPage(newPage);
+
+    if (newPage === 1) {
+      setActiveBannerButton("left");
+    } else if (newPage === 0) {
+      setActiveBannerButton("right");
+    }
+  }
 
   function changePage(direction) {
     const newPage = currentPage + direction;
@@ -54,10 +89,77 @@ export default function Home() {
     ))
   }
 
+  const homePagesHistoryElements = homePreviousPages.map((page, index) => (
+    <React.Fragment key={`${page.pageName}-${index}`}>
+      <Link to={page.pageURL} className="pagesHistory">
+        <div>{page.pageName}</div>
+      </Link>
+      {index < homePreviousPages.length - 1 && " / "}
+    </React.Fragment>
+  ));
+
   return (
     <div>
-      <br />
-      <br />
+      {/* Banner Carousel - Full Width */}
+      <div className="banner-carousel-section">
+        <div className="banner-controls">
+          <div className="banner-button-left">
+            {
+              activeBannerButton === "left" ?
+                <button onClick={() => changeBannerPage(-1)} className="carouselButtonBanner">
+                  <i className="fa-solid fa-arrow-left"></i>
+                </button> : ""
+            }
+          </div>
+          <div className="banner-content">
+            {bannerPage === 0 && (
+              <div className="banner-slide welcome-slide">
+                <h1>Üdvözlünk a PhoneScout-ban!</h1>
+                <p>Az Ön megbízható telefonkereskedője és szervíz partnere</p>
+                <h3>Fedezze fel a legújabb telefonokat szuper árakon!</h3>
+              </div>
+            )}
+            {bannerPage === 1 && (
+              <div className="banner-slide promo-slide">
+                <h1>Szuperajánlatok az egész hónapban!</h1>
+                <p>Akár 30% kedvezmény a kiválasztott termékekre</p>
+                <h3>Ne hagyja ki ezt az esélyt!</h3>
+              </div>
+            )}
+          </div>
+          <div className="banner-button-right">
+            {
+              activeBannerButton === "right" ?
+                <button onClick={() => changeBannerPage(1)} className="carouselButtonBanner">
+                  <i className="fa-solid fa-arrow-right"></i>
+                </button> : ""
+            }
+          </div>
+        </div>
+        <div className="banner-dots">
+          <div 
+            className={`banner-dot ${bannerPage === 0 ? "banner-dotActive" : ""}`}
+            onClick={() => {
+              setBannerPage(0);
+              setActiveBannerButton("right");
+            }}
+            style={{ cursor: 'pointer' }}
+          ></div>
+          <div 
+            className={`banner-dot ${bannerPage === 1 ? "banner-dotActive" : ""}`}
+            onClick={() => {
+              setBannerPage(1);
+              setActiveBannerButton("left");
+            }}
+            style={{ cursor: 'pointer' }}
+          ></div>
+        </div>
+      </div>
+
+      <div className="container mt-2" id="previousPagesPlace">
+        {homePagesHistoryElements}
+      </div>
+
       <div className="row">
         <div className="col-1">
           {
@@ -83,9 +185,25 @@ export default function Home() {
             </button> : ""
           }
         </div>
-        <div className="dots">
-          <div className={`dot ${currentPage === 0 ? "dotActive" : ""}`} id="leftDot"></div>
-          <div className={`dot ${currentPage === 1 ? "dotActive" : ""}`} id="rightDot"></div>
+        <div className="phone-carousel-dots">
+          <div 
+            className={`phone-carousel-dot ${currentPage === 0 ? "dotActive" : ""}`} 
+            id="leftDot"
+            onClick={() => {
+              setCurrentPage(0);
+              setActiveChangeButton("right");
+            }}
+            style={{ cursor: 'pointer' }}
+          ></div>
+          <div 
+            className={`phone-carousel-dot ${currentPage === 1 ? "dotActive" : ""}`} 
+            id="rightDot"
+            onClick={() => {
+              setCurrentPage(1);
+              setActiveChangeButton("left");
+            }}
+            style={{ cursor: 'pointer' }}
+          ></div>
         </div>
         <div className="hr">
           <hr size="5" />

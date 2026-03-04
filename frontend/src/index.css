@@ -8,6 +8,14 @@
 }
 
 html,
+body,
+#root {
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+html,
 body {
 	scrollbar-width: thin;
 	scrollbar-color: var(--scrollbar-thumb-start) var(--scrollbar-track);

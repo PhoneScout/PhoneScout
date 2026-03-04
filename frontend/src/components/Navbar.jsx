@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Navbar.css';
-import { Link, useNavigate } from 'react-router-dom'; // useNavigate importálása
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // useNavigate importálása
 import { useAuth } from './AuthContext';
 import axios from 'axios';
 
@@ -35,6 +35,7 @@ export default function Navbar() {
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
     const navigate = useNavigate(); // useNavigate hook
+    const location = useLocation();
 
     // Save to localStorage
     useEffect(() => {
@@ -579,10 +580,12 @@ export default function Navbar() {
                 </div>
             )}
 
-            {/* Pages History - Always visible */}
-            <div className="container mt-2" id="previousPagesPlace">
-                {pagesHistoryElements}
-            </div>
+            {/* Pages History - hidden on Home, rendered inside Home page there */}
+            {location.pathname !== '/' && (
+                <div className="container mt-2" id="previousPagesPlace">
+                    {pagesHistoryElements}
+                </div>
+            )}
         </div>
     );
 }
