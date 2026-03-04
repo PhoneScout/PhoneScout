@@ -85,6 +85,10 @@ const Profile = () => {
   const [paymentSelectedDeliveryAddressId, setPaymentSelectedDeliveryAddressId] = useState(null);
   const [paymentShowBillingAddressForm, setPaymentShowBillingAddressForm] = useState(false);
   const [paymentShowDeliveryAddressForm, setPaymentShowDeliveryAddressForm] = useState(false);
+  
+  // Feedback messages
+  const [declineSuccessMessage, setDeclineSuccessMessage] = useState('');
+  const [paymentSuccessMessage, setPaymentSuccessMessage] = useState('');
 
 
   // Szervízrendelések betöltése az API-ből
@@ -279,14 +283,16 @@ const Profile = () => {
       // update local list and notify
       setServiceRequests(prev => prev.map(r => r.repairID === activeRepair.repairID ? { ...r, isPriceAccepted: 1 } : r));
       window.dispatchEvent(new Event('repairUpdated'));
-      setShowRepairPaymentModal(false);
-      setActiveRepair(null);
+      setPaymentSuccessMessage('Fizetés sikeres!');
+      setTimeout(() => {
+        setShowRepairPaymentModal(false);
+        setActiveRepair(null);
+        setPaymentSuccessMessage('');
+      }, 2000);
     } catch (err) {
       console.error('Hiba fizetés után:', err);
-      alert('Hiba történt a fizetés feldolgozásakor.');
     }
   };
-
 
   const handleAcceptOffer = () => {
     if (!activeRepair) return;
@@ -318,10 +324,17 @@ const Profile = () => {
       );
       // update local list so button disappears
       setServiceRequests(prev => prev.map(r => r.repairID === activeRepair.repairID ? { ...r, isPriceAccepted: 2 } : r));
+      setDeclineSuccessMessage('Árajánlat sikeresen elutasítva!');
+      setTimeout(() => {
+        setShowDeclineConfirm(false);
+        closePriceModal();
+        setDeclineSuccessMessage('');
+      }, 2000);
     } catch (err) {
       console.error('Árajánlat elutasítása hiba:', err);
+      setShowDeclineConfirm(false);
+      closePriceModal();
     }
-    closePriceModal();
   };
 
   // Rendelések betöltése az API-ből
@@ -1403,6 +1416,11 @@ const Profile = () => {
                 <div className="profile-modal-body">
                   <p className="profile-modal-text">Biztosan el szeretnéd utasítani az árajánlatot?</p>
                 </div>
+                {declineSuccessMessage && (
+                  <div style={{ color: '#dc3545', textAlign: 'center', marginBottom: '12px', fontWeight: 'bold', fontSize: '16px' }}>
+                    ✓ {declineSuccessMessage}
+                  </div>
+                )}
                 <div className="profile-modal-actions">
                   <button onClick={confirmDecline} className="btn-cancel">Igen</button>
                   <button onClick={() => setShowDeclineConfirm(false)} className="profile-modal-btn-cancel">Nem</button>
@@ -1422,6 +1440,11 @@ const Profile = () => {
                 </div>
                 {paymentAddressLoadError && <div className="error-message">{paymentAddressLoadError}</div>}
                 {paymentAddressLoading && <div className="addressInfoText">Címadatok betöltése...</div>}
+                {paymentSuccessMessage && (
+                  <div style={{ color: '#28a745', textAlign: 'center', marginBottom: '12px', fontWeight: 'bold', fontSize: '16px' }}>
+                    ✓ {paymentSuccessMessage}
+                  </div>
+                )}
                 <div className="formsContainer">
                   <form id="paymentForm" className="modalForm" onSubmit={(e) => e.preventDefault()}>
                     <h4>Bankkártya adatok</h4>
