@@ -1,0 +1,19 @@
+.mobile-phone-spec {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #e8edf6;
+}
+
+.mobile-phone-spec:last-child {
+  border-bottom: none;
+}
+
+.mobile-phone-spec span {
+  color: #667891;
+}
+
+.mobile-phone-spec strong {
+  color: #213550;
+}

@@ -254,7 +254,13 @@ export default function PhoneCard({
         </div>
 
         <div className="phoneDetails">
-          <h3>{phoneName}</h3>
+          <div className="phoneTitleRow">
+            <h3 className="phoneTitleText">{phoneName}</h3>
+            <span className="phoneInlinePrice">{phonePrice} Ft</span>
+          </div>
+          <div className={`phoneInlineStock ${isInStock ? "phonestockTrue" : "phonestockFalse"}`}>
+            {phoneInStore}
+          </div>
         </div>
 
         <div className="cardButtons">

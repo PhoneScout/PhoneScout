@@ -1,0 +1,8 @@
+.mobile-shop-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.mobile-shop-item {
+  color: #24374f;
+}

@@ -17,6 +17,7 @@ export default function Home() {
   // Phone carousel states
   const [currentPage, setCurrentPage] = useState(0);
   const [activeChangeButton, setActiveChangeButton] = useState("right");
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 991.98);
 
 
 
@@ -35,6 +36,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+<<<<<<< Updated upstream
     const handleStorage = () => {
       const stored = localStorage.getItem("pagesHistory");
       setHomePreviousPages(stored ? JSON.parse(stored) : [{ pageName: "Főoldal", pageURL: "/" }]);
@@ -60,6 +62,22 @@ export default function Home() {
       setActiveBannerButton("right");
     }
   }
+=======
+    const mediaQuery = window.matchMedia('(max-width: 991.98px)');
+
+    const handleViewportChange = (event) => {
+      setIsMobileView(event.matches);
+    };
+
+    setIsMobileView(mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleViewportChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleViewportChange);
+    };
+  }, []);
+
+>>>>>>> Stashed changes
 
   function changePage(direction) {
     const newPage = currentPage + direction;
@@ -74,6 +92,30 @@ export default function Home() {
 
 
   function displayPhoneCards() {
+    if (isMobileView) {
+      const groupedPhones = [];
+
+      for (let index = 0; index < allPhonesData.length; index += 4) {
+        groupedPhones.push(allPhonesData.slice(index, index + 4));
+      }
+
+      return groupedPhones.map((phoneGroup, groupIndex) => (
+        <div className="home-mobile-page" key={`mobile-page-${groupIndex}`}>
+          {phoneGroup.map((phone) => (
+            <PhoneCard
+              key={phone.phoneID}
+              phoneId={phone.phoneID}
+              phoneName={phone.phoneName}
+              phoneInStore={(phone.phoneInStore === 1 ? "Raktáron" : "Nincs raktáron")}
+              phonePrice={phone.phonePrice}
+              colors={phone.colors || []}
+              ramStoragePairs={phone.ramStoragePairs || []}
+            />
+          ))}
+        </div>
+      ));
+    }
+
     let start = 0;
     activeChangeButton === "right" ? start = 0 : start = 4;
     return allPhonesData.slice(start, start + 4).map((phone) => (
@@ -161,16 +203,16 @@ export default function Home() {
       </div>
 
       <div className="row">
-        <div className="col-1">
+        {!isMobileView && <div className="col-1">
           {
             activeChangeButton === "left" ? <button onClick={() => changePage(-1)} id="carouselButtonLeft" className="carouselButton">
               <i className="fa-solid fa-arrow-left"></i>
             </button> : ""
           }
 
-        </div>
-        <div className='col-10'>
-          <div id='contentRow'>
+        </div>}
+        <div className={isMobileView ? 'col-12' : 'col-10'}>
+          <div id='contentRow' className={isMobileView ? 'home-mobile-scroll' : ''}>
             {allPhonesData.length === 0 ? (
               <p>Telefonok betöltése...</p>
             ) : (
@@ -178,12 +220,13 @@ export default function Home() {
             )}
           </div>
         </div>
-        <div className="col-1">
+        {!isMobileView && <div className="col-1">
           {
             activeChangeButton === "right" ? <button onClick={() => changePage(1)} id="carouselButtonRight" className="carouselButton">
               <i className="fa-solid fa-arrow-right"></i>
             </button> : ""
           }
+<<<<<<< Updated upstream
         </div>
         <div className="phone-carousel-dots">
           <div 
@@ -206,8 +249,16 @@ export default function Home() {
           ></div>
         </div>
         <div className="hr">
+=======
+        </div>}
+        {!isMobileView && <div className="dots">
+          <div className={`dot ${currentPage === 0 ? "dotActive" : ""}`} id="leftDot"></div>
+          <div className={`dot ${currentPage === 1 ? "dotActive" : ""}`} id="rightDot"></div>
+        </div>}
+        {!isMobileView && <div className="hr">
+>>>>>>> Stashed changes
           <hr size="5" />
-        </div>
+        </div>}
 
       </div>
       <div className="container service-section ">

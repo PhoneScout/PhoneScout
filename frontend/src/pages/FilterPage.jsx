@@ -31,6 +31,8 @@ export default function FilterPage() {
   const [filterData, setFilterData] = useState(null);
   const [showManufacturerDropdown, setShowManufacturerDropdown] = useState(false);
   const [showCpuDropdown, setShowCpuDropdown] = useState(false);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 991.98);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   
   const navigate = useNavigate();
   const allPhonesURL = "http://localhost:5175/api/filterPage/GetAllPhones";
@@ -40,6 +42,24 @@ export default function FilterPage() {
   useEffect(() => {
     getPhoneDatas();
     getFilterDatas();
+  }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 991.98px)');
+
+    const handleViewportChange = (event) => {
+      setIsMobileView(event.matches);
+      if (!event.matches) {
+        setIsMobileFilterOpen(false);
+      }
+    };
+
+    setIsMobileView(mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleViewportChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleViewportChange);
+    };
   }, []);
 
   const getPhoneDatas = async () => {
@@ -202,6 +222,9 @@ export default function FilterPage() {
       localFilter();
     } finally {
       setIsLoading(false);
+      if (isMobileView) {
+        setIsMobileFilterOpen(false);
+      }
     }
   };
 
@@ -303,6 +326,9 @@ export default function FilterPage() {
       phoneWeightMax: ''
     });
     setFilteredPhones(phones);
+    if (isMobileView) {
+      setIsMobileFilterOpen(false);
+    }
   };
 
   const handlePhoneClick = (phone) => {
@@ -534,10 +560,46 @@ export default function FilterPage() {
   return (
     <div>
 
+      {isMobileView && (
+        <button
+          className="btn btn-primary mobile-floating-filter-toggle"
+          type="button"
+          onClick={() => setIsMobileFilterOpen(true)}
+          aria-label="Szűrők megnyitása"
+        >
+          <i className="bi bi-list"></i>
+        </button>
+      )}
+
+      {isMobileView && isMobileFilterOpen && (
+        <button
+          className="mobile-filter-backdrop"
+          type="button"
+          aria-label="Szűrőpanel bezárása"
+          onClick={() => setIsMobileFilterOpen(false)}
+        />
+      )}
+
       <div className="container mt-4">
         <div className="row">
           <div className="col-3">
-            <div id="filterPanel">
+            <div
+              id="filterPanel"
+              className={`filterPanelMobile ${isMobileView ? 'is-mobile' : ''} ${isMobileFilterOpen ? 'is-open' : ''}`}
+            >
+              {isMobileView && (
+                <div className="mobile-filter-panel-header d-flex justify-content-between align-items-center mb-3">
+                  <h4 className="mb-0">Szűrők</h4>
+                  <button
+                    className="btn btn-outline-secondary btn-sm"
+                    type="button"
+                    onClick={() => setIsMobileFilterOpen(false)}
+                  >
+                    <i className="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              )}
+
               <div className="filter-sticky-header d-flex justify-content-between align-items-center mb-3">
                 <h3 className="mb-0">Szűrők</h3>
                 <div>
@@ -703,6 +765,12 @@ export default function FilterPage() {
           </div>
 
           <div className="col-9">
+            {isMobileView && (
+              <div className="mobile-filter-toolbar mb-3">
+                <span className="mobile-filter-count">{filteredPhones.length} termék</span>
+              </div>
+            )}
+
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4>Találatok: {filteredPhones.length} termék</h4>
               <div className="text-muted">

@@ -1,0 +1,35 @@
+.mobile-page {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mobile-surface {
+  background: #fff;
+  border-radius: 14px;
+  border: 1px solid #e3e8f2;
+  box-shadow: 0 8px 18px rgba(17, 35, 65, 0.05);
+  padding: 14px;
+}
+
+.mobile-title {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #20314b;
+}
+
+.mobile-muted {
+  color: #6f7e95;
+  margin: 0;
+  font-size: 0.88rem;
+}
+
+.mobile-chip {
+  background: #eef4ff;
+  color: #2a5bc4;
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.78rem;
+  font-weight: 600;
+}

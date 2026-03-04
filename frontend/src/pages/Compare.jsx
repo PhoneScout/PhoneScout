@@ -29,6 +29,8 @@ export default function Compare() {
   const [colorError, setColorError] = useState(false);
   const [pairError, setPairError] = useState(false);
   const [calculatedPrice, setCalculatedPrice] = useState(0);
+  const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 991.98);
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   // Csoportosított tulajdonságok
   const groupedProps = [
@@ -170,6 +172,24 @@ export default function Compare() {
   useEffect(() => {
     loadPhones();
   }, [loadPhones, refreshTrigger]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 991.98px)');
+
+    const handleViewportChange = (event) => {
+      setIsMobileView(event.matches);
+      if (!event.matches) {
+        setIsMobileFilterOpen(false);
+      }
+    };
+
+    setIsMobileView(mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleViewportChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleViewportChange);
+    };
+  }, []);
 
   useEffect(() => {
     const loadPhoneImage = async (phoneID) => {
@@ -494,11 +514,33 @@ export default function Compare() {
 
   return (
     <div className="container-fluid py-4">
+      {isMobileView && isMobileFilterOpen && (
+        <button
+          className="compare-mobile-filter-backdrop"
+          type="button"
+          aria-label="Szűrőpanel bezárása"
+          onClick={() => setIsMobileFilterOpen(false)}
+        />
+      )}
+
       <div className="container py-4 position-relative">
         <div className="row">
           {/* BAL OLDALI SZŰRŐPANEL */}
-          <div className="col-md-3">
-            <div id="filterPanel">
+          <div className="col-md-3 compare-filter-col">
+            <div id="filterPanel" className={`compare-filter-panel ${isMobileView ? 'is-mobile' : ''} ${isMobileFilterOpen ? 'is-open' : ''}`}>
+              {isMobileView && (
+                <div className="compare-filter-mobile-header">
+                  <strong>Összehasonlítás feltételek</strong>
+                  <button
+                    className="btn btn-outline-secondary btn-sm"
+                    type="button"
+                    onClick={() => setIsMobileFilterOpen(false)}
+                  >
+                    <i className="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              )}
+
               <div className="filter-option mb-4">
                 <input 
                   type="checkbox" 
@@ -555,27 +597,57 @@ export default function Compare() {
           </div>
 
           {/* JOBB OLDALI TARTALOM */}
-          <div className="col-md-9 position-relative">
-            <div className="d-flex justify-content-between align-items-center mb-4">
-              <h1 className="h3 mb-0">Telefonok összehasonlítása</h1>
-              <div>
-                <button
-                  className="btn btn-success btn-sm me-2"
-                  onClick={() => setShowModal(true)}
-                >
-                  + Telefon hozzáadása
-                </button>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => {
-                    localStorage.removeItem("comparePhones");
-                    setRefreshTrigger(prev => prev + 1);
-                  }}
-                >
-                  Összehasonlítás törlése
-                </button>
+          <div className="col-md-9 position-relative compare-content-col">
+            {isMobileView ? (
+              <div className="compare-mobile-header mb-3">
+                <h1 className="h4 mb-2 text-center">Telefonok összehasonlítása</h1>
+                <div className="compare-mobile-actions compare-mobile-actions--floating">
+                  <button
+                    className="btn btn-outline-primary btn-sm"
+                    onClick={() => setIsMobileFilterOpen(true)}
+                    type="button"
+                  >
+                    <i className="bi bi-list"></i>
+                  </button>
+                  <button
+                    className="btn btn-success btn-sm"
+                    onClick={() => setShowModal(true)}
+                  >
+                    + Hozzáadás
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => {
+                      localStorage.removeItem("comparePhones");
+                      setRefreshTrigger(prev => prev + 1);
+                    }}
+                  >
+                    Összes törlése
+                  </button>
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="d-flex justify-content-between align-items-center mb-4">
+                <h1 className="h3 mb-0">Telefonok összehasonlítása</h1>
+                <div>
+                  <button
+                    className="btn btn-success btn-sm me-2"
+                    onClick={() => setShowModal(true)}
+                  >
+                    + Telefon hozzáadása
+                  </button>
+                  <button
+                    className="btn btn-danger btn-sm"
+                    onClick={() => {
+                      localStorage.removeItem("comparePhones");
+                      setRefreshTrigger(prev => prev + 1);
+                    }}
+                  >
+                    Összehasonlítás törlése
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Nyilak */}
             <button className="scroll-arrow left-arrow" onClick={() => scroll("left")}>

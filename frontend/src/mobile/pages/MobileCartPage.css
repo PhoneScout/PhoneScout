@@ -1,0 +1,14 @@
+.mobile-cart-empty {
+  min-height: 240px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.mobile-cart-empty i {
+  font-size: 2rem;
+  color: #3c74f4;
+}

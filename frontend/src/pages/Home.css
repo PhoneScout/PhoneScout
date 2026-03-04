@@ -239,6 +239,37 @@ hr {
 
 }
 
+@media (max-width: 991.98px) {
+    #contentRow.home-mobile-scroll {
+        display: flex !important;
+        justify-content: flex-start !important;
+        align-items: flex-start;
+        flex-wrap: nowrap !important;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        gap: 12px;
+        padding: 2px 6px 10px;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x mandatory;
+    }
+
+    #contentRow.home-mobile-scroll .home-mobile-page {
+        flex: 0 0 calc(100% - 12px);
+        width: calc(100% - 12px);
+        min-width: calc(100% - 12px);
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        scroll-snap-align: start;
+    }
+
+    #contentRow.home-mobile-scroll .home-mobile-page .phoneRow {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+}
+
 .service-section {
     margin-top: 50px;
     padding: 40px 0;

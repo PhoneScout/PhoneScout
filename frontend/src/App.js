@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.css'
 import './App.css';
 import Home from './pages/Home';
@@ -23,12 +23,14 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ForgotPassword from './pages/ForgotPassword';
 import ScrollToTopButton from './components/ScrollToTopButton';
+import MobileApp from './mobile/MobileApp';
 
 
 
 function App() {
 
   const location = useLocation();
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 991);
   const excludeLayout = ['/bejelentkezes', '/fiokaktivalas','/elfelejtettjelszo'];
   const shouldShowLayout = !excludeLayout.includes(location.pathname);
 
@@ -67,6 +69,25 @@ function App() {
     const pageTitle = getPageTitle(location.pathname);
     document.title = `${pageTitle} | PhoneScout`;
   }, [location.pathname]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 991.98px)');
+
+    const handleViewportChange = (event) => {
+      setIsMobile(event.matches);
+    };
+
+    setIsMobile(mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleViewportChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleViewportChange);
+    };
+  }, []);
+
+  if (isMobile) {
+    return <MobileApp />;
+  }
 
   return (
 

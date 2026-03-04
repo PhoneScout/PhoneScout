@@ -679,3 +679,108 @@
     border-left: 3px solid #d32f2f;
     border-radius: 3px;
 }
+
+@media (max-width: 991.98px) {
+    .compare-content-col {
+        margin-top: 4px;
+    }
+
+    .compare-mobile-header {
+        position: relative;
+        padding-top: 48px;
+    }
+
+    .compare-mobile-actions {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .compare-mobile-actions .btn {
+        min-height: 34px;
+        white-space: nowrap;
+        padding-inline: 10px;
+    }
+
+    .compare-mobile-actions--floating {
+        position: fixed;
+        top: calc(68px + env(safe-area-inset-top));
+        left: 10px;
+        z-index: 950;
+        background: rgba(255, 255, 255, 0.95);
+        border: 1px solid #d7e1ef;
+        border-radius: 10px;
+        padding: 6px;
+        box-shadow: 0 8px 20px rgba(17, 37, 70, 0.14);
+    }
+
+    .compare-mobile-filter-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        border: none;
+        background: rgba(13, 24, 41, 0.42);
+        padding: 0;
+    }
+
+    .compare-filter-panel.is-mobile {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(88vw, 360px);
+        max-width: 88vw;
+        z-index: 1001;
+        overflow-y: auto;
+        padding: calc(12px + env(safe-area-inset-top)) 10px 14px;
+        transform: translateX(-104%);
+        transition: transform 0.24s ease;
+        margin: 0;
+        border-radius: 0;
+        box-shadow: 0 14px 30px rgba(11, 24, 46, 0.22);
+    }
+
+    .compare-filter-panel.is-mobile.is-open {
+        transform: translateX(0);
+    }
+
+    .compare-filter-mobile-header {
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        padding-bottom: 8px;
+        background: #fff;
+        border-bottom: 1px solid #e5e9f2;
+    }
+
+    .compare-cards-row,
+    .compare-cards-row.scrollable-row {
+        flex-direction: row !important;
+        flex-wrap: nowrap !important;
+        justify-content: flex-start !important;
+        align-items: stretch;
+        overflow-x: auto !important;
+        overflow-y: hidden;
+        gap: 12px !important;
+        margin: 12px 0 8px !important;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+        scroll-snap-type: x proximity;
+    }
+
+    .compare-card {
+        flex: 0 0 min(88vw, 340px) !important;
+        width: min(88vw, 340px) !important;
+        min-width: min(88vw, 340px) !important;
+        max-width: min(88vw, 340px) !important;
+        scroll-snap-align: start;
+    }
+
+    .scroll-arrow {
+        display: none !important;
+    }
+}

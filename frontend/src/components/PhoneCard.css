@@ -211,6 +211,22 @@
     margin-bottom: 10px;
 }
 
+.phoneTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.phoneTitleText {
+  margin: 0;
+}
+
+.phoneInlinePrice,
+.phoneInlineStock {
+  display: none;
+}
+
 .carouselButton {
     background-color: #80A4CB;
     border-radius: 100%;

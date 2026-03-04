@@ -1,0 +1,19 @@
+.mobile-service-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mobile-service-item {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  border: 1px solid #e2e9f4;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.mobile-service-item i {
+  color: #2b66ea;
+  font-size: 1.1rem;
+}

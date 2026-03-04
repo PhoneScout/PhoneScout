@@ -1,0 +1,28 @@
+.mobile-home-hero {
+  background: linear-gradient(145deg, #ffffff 0%, #eef4ff 100%);
+}
+
+.mobile-home-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.mobile-home-action {
+  border: 1px solid #e2e9f4;
+  border-radius: 12px;
+  text-decoration: none;
+  color: #2a3a55;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: center;
+  justify-content: center;
+  min-height: 84px;
+}
+
+.mobile-home-action i {
+  font-size: 1.15rem;
+  color: #2564f4;
+}
