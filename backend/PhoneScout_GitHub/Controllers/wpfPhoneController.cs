@@ -39,7 +39,7 @@ namespace PhoneScout_GitHub.Controllers
                     manufacturerName = m.Manufacturer.ManufacturerName,
                     phoneInstore = m.PhoneInStore,
                     phonePrice = m.PhonePrice,
-                    phoneAvailable = m.PhoneDeleted,
+                    phoneAvailable = m.PhoneAvailable,
                 })
                 .ToList();
 
@@ -73,7 +73,7 @@ namespace PhoneScout_GitHub.Controllers
                 phone.PhoneName = dto.phoneName;
                 phone.PhoneInStore = dto.phoneInstore;
                 phone.PhonePrice = dto.phonePrice;
-                phone.PhoneDeleted = dto.phoneAvailable;
+                phone.PhoneAvailable = dto.phoneAvailable;
 
                 cx.SaveChanges();
 
@@ -258,7 +258,7 @@ namespace PhoneScout_GitHub.Controllers
                 PhoneReleaseDate = dto.phoneReleaseDate,
                 PhonePrice = dto.phonePrice,
                 PhoneInStore = dto.phoneInStore,
-                PhoneDeleted = (int)dto.phoneAvailable,
+                PhoneAvailable = (int)dto.phoneAvailable,
                 CpuId = cpu.Id,
                 ManufacturerId = manufacturer.Id,
                 BackMaterialId = backMaterial.Id,

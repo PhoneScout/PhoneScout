@@ -30,7 +30,7 @@ namespace PhoneScout_GitHub.Controllers
             try
             {
                 var phones = _context.Phonedatas
-                    .Where(p => p.PhoneDeleted == 0
+                    .Where(p => p.PhoneAvailable == 1
                     && (!filters.manufacturerNames.Any() || filters.manufacturerNames.Contains(p.Manufacturer.ManufacturerName))
                     && (!filters.cpuNames.Any() || filters.cpuNames.Contains(p.Cpu.CpuName))
                     && (filters.phoneAntutu == 0 || filters.phoneAntutu < p.PhoneAntutu)
@@ -116,7 +116,7 @@ namespace PhoneScout_GitHub.Controllers
             try
             {
                 var phoneDatas = _context.Phonedatas
-                .Where(p=>p.PhoneDeleted == 0)
+                .Where(p=>p.PhoneAvailable == 1)
                 .OrderByDescending(p => p.PhonePopularity)
                 .Select(p => new mainPageDTO
                 {

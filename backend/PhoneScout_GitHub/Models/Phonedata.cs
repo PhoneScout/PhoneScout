@@ -87,7 +87,7 @@ public partial class Phonedata
 
     public int? PhonePopularity { get; set; }
 
-    public int PhoneDeleted { get; set; }
+    public int PhoneAvailable { get; set; }
 
     public virtual Backmaterial? BackMaterial { get; set; }
 

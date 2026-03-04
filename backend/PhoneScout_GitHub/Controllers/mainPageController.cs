@@ -26,7 +26,7 @@ namespace PhoneScout_GitHub.Controllers
         public IActionResult mainPage()
         {
             var phoneDatas = _context.Phonedatas
-            .Where(p=>p.PhoneDeleted == 0)
+            .Where(p=>p.PhoneAvailable == 1)
                 .OrderByDescending(p => p.PhonePopularity)
                 .Take(8)
                 .Select(p => new mainPageDTO
@@ -58,7 +58,7 @@ namespace PhoneScout_GitHub.Controllers
         public IActionResult allPhonesName()
         {
             var phoneDatas = _context.Phonedatas
-                .Where(p=>p.PhoneDeleted == 0)
+                .Where(p=>p.PhoneAvailable == 1)
                 .OrderBy(p => p.PhoneName)
                 .Select(p => new mainPageDTO
                 {
