@@ -517,7 +517,7 @@ export default function ServiceRequest() {
 
 
   const openChatbot = () => {
-    alert("Chatbot nyitása...");
+    window.dispatchEvent(new Event('openChatbot'));
   };
 
   const faqItems = [
@@ -633,6 +633,7 @@ export default function ServiceRequest() {
                 id="atvizsgalas"
                 checked={formData.atvizsgalas}
                 onChange={handleInputChange}
+                style={{ border: '1px solid #000' }}
               />
               <label className="form-check-label" htmlFor="atvizsgalas">
                 Átvizsgálás kérése

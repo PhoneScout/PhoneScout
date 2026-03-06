@@ -3,6 +3,10 @@ import './Service.css';
 import { Link } from 'react-router';
 
 export default function Service() {
+  const openChatbot = () => {
+    window.dispatchEvent(new Event('openChatbot'));
+  };
+
   return (
     <div>
       <div className="container service-section">
@@ -161,7 +165,7 @@ export default function Service() {
           </div>
 
           {/* GOMBOK */}
-          <button className="btn btn-outline-info mt-4 w-100" id="chatbotBtn">
+          <button className="btn btn-outline-info mt-4 w-100" id="chatbotBtn" onClick={openChatbot}>
             <i className="fas fa-robot"></i> Chatbot: Segítség a hibához
           </button>
 
