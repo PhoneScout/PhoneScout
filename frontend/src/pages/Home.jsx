@@ -35,49 +35,6 @@ export default function Home() {
       .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
   }, []);
 
-  useEffect(() => {
-<<<<<<< Updated upstream
-    const handleStorage = () => {
-      const stored = localStorage.getItem("pagesHistory");
-      setHomePreviousPages(stored ? JSON.parse(stored) : [{ pageName: "Főoldal", pageURL: "/" }]);
-    };
-
-    handleStorage();
-    window.addEventListener('storage', handleStorage);
-    window.addEventListener('focus', handleStorage);
-
-    return () => {
-      window.removeEventListener('storage', handleStorage);
-      window.removeEventListener('focus', handleStorage);
-    };
-  }, []);
-
-  function changeBannerPage(direction) {
-    const newPage = bannerPage + direction;
-    setBannerPage(newPage);
-
-    if (newPage === 1) {
-      setActiveBannerButton("left");
-    } else if (newPage === 0) {
-      setActiveBannerButton("right");
-    }
-  }
-=======
-    const mediaQuery = window.matchMedia('(max-width: 991.98px)');
-
-    const handleViewportChange = (event) => {
-      setIsMobileView(event.matches);
-    };
-
-    setIsMobileView(mediaQuery.matches);
-    mediaQuery.addEventListener('change', handleViewportChange);
-
-    return () => {
-      mediaQuery.removeEventListener('change', handleViewportChange);
-    };
-  }, []);
-
->>>>>>> Stashed changes
 
   function changePage(direction) {
     const newPage = currentPage + direction;
@@ -87,6 +44,22 @@ export default function Home() {
       setActiveChangeButton("left");
     } else if (newPage === 0) {
       setActiveChangeButton("right");
+    }
+  }
+
+  function changeBannerPage(direction) {
+    const newPage = bannerPage + direction;
+
+    if (newPage < 0 || newPage > 1) {
+      return;
+    }
+
+    setBannerPage(newPage);
+
+    if (newPage === 1) {
+      setActiveBannerButton("left");
+    } else if (newPage === 0) {
+      setActiveBannerButton("right");
     }
   }
 
@@ -220,45 +193,22 @@ export default function Home() {
             )}
           </div>
         </div>
-        {!isMobileView && <div className="col-1">
-          {
-            activeChangeButton === "right" ? <button onClick={() => changePage(1)} id="carouselButtonRight" className="carouselButton">
-              <i className="fa-solid fa-arrow-right"></i>
-            </button> : ""
-          }
-<<<<<<< Updated upstream
-        </div>
-        <div className="phone-carousel-dots">
-          <div 
-            className={`phone-carousel-dot ${currentPage === 0 ? "dotActive" : ""}`} 
-            id="leftDot"
-            onClick={() => {
-              setCurrentPage(0);
-              setActiveChangeButton("right");
-            }}
-            style={{ cursor: 'pointer' }}
-          ></div>
-          <div 
-            className={`phone-carousel-dot ${currentPage === 1 ? "dotActive" : ""}`} 
-            id="rightDot"
-            onClick={() => {
-              setCurrentPage(1);
-              setActiveChangeButton("left");
-            }}
-            style={{ cursor: 'pointer' }}
-          ></div>
-        </div>
-        <div className="hr">
-=======
-        </div>}
-        {!isMobileView && <div className="dots">
-          <div className={`dot ${currentPage === 0 ? "dotActive" : ""}`} id="leftDot"></div>
-          <div className={`dot ${currentPage === 1 ? "dotActive" : ""}`} id="rightDot"></div>
-        </div>}
-        {!isMobileView && <div className="hr">
->>>>>>> Stashed changes
-          <hr size="5" />
-        </div>}
+        {!isMobileView && <>
+          <div className="col-1">
+            {
+              activeChangeButton === "right" ? <button onClick={() => changePage(1)} id="carouselButtonRight" className="carouselButton">
+                <i className="fa-solid fa-arrow-right"></i>
+              </button> : ""
+            }
+          </div>
+          <div className="dots">
+            <div className={`dot ${currentPage === 0 ? "dotActive" : ""}`} id="leftDot"></div>
+            <div className={`dot ${currentPage === 1 ? "dotActive" : ""}`} id="rightDot"></div>
+          </div>
+          <div className="hr">
+            <hr size="5" />
+          </div>
+        </>}
 
       </div>
       <div className="container service-section ">
