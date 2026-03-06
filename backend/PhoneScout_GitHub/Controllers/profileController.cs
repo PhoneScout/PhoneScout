@@ -73,6 +73,7 @@ namespace PhoneScout_GitHub.Controllers
                         manufacturerName = aRepair.ManufacturerName,
                         phoneInspection = aRepair.PhoneInspection,
                         problemDescription = aRepair.ProblemDescription,
+                        repairDescription = aRepair.RepairDescription,
                         parts = new List<string>()
                     };
 
@@ -186,6 +187,7 @@ namespace PhoneScout_GitHub.Controllers
                         manufacturerName = aRepair.ManufacturerName,
                         phoneInspection = aRepair.PhoneInspection,
                         problemDescription = aRepair.ProblemDescription,
+                        repairDescription = aRepair.RepairDescription,
                         parts = new List<string>()
                     };
 
@@ -348,7 +350,9 @@ namespace PhoneScout_GitHub.Controllers
 
                     ManufacturerName = dto.manufacturerName,
                     PhoneInspection = dto.phoneInspection,
-                    ProblemDescription = dto.problemDescription
+                    ProblemDescription = dto.problemDescription,
+                    RepairDescription = dto.repairDescription
+                    
                 };
 
                 cx.Connectionservices.Add(repair);
@@ -448,6 +452,7 @@ namespace PhoneScout_GitHub.Controllers
                 selectedRepair.ManufacturerName = dto.manufacturerName;
                 selectedRepair.PhoneInspection = dto.phoneInspection;
                 selectedRepair.ProblemDescription = dto.problemDescription;
+                selectedRepair.RepairDescription = dto.repairDescription;
 
                 // 5. Update parts (add only if not already linked)
 
