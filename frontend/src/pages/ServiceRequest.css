@@ -132,18 +132,24 @@ a {
 .paymentModal {
     display: none;
     position: fixed;
-    top: 0; left: 0; width: 100vw; height: 100vh;
+    top: 0; left: 0; width: 100vw; height: 100dvh;
     background: rgba(0,0,0,0.5);
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: clamp(10px, 2.4vh, 22px);
     z-index: 9999;
 }
 .modalContent {
     background: white;
     padding: 30px 40px;
     border-radius: 16px;
-    min-width: 700px;
-    max-width: 90vw;
+    box-sizing: border-box;
+    width: min(980px, 100%);
+    min-width: 0;
+    max-width: 100%;
+    max-height: calc(100dvh - 2 * clamp(10px, 2.4vh, 22px));
+    overflow-y: auto;
     box-shadow: 0 8px 32px rgba(0,0,0,0.15);
     position: relative;
     display: flex;

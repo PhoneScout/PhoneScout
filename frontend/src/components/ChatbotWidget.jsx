@@ -1229,6 +1229,7 @@ function ChatbotWidget() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [showBubble, setShowBubble] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(window.innerWidth <= 991.98);
   const [messages, setMessages] = useState([]);
   const [followUps, setFollowUps] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -1239,6 +1240,7 @@ function ChatbotWidget() {
   const chatRef = useRef(null);
   const widgetRef = useRef(null);
   const dragRef = useRef({ isDragging: false, offsetX: 0, offsetY: 0 });
+  const bubbleScrollTimerRef = useRef(null);
 
   useEffect(() => {
     const timer = setTimeout(() => setShowBubble(true), 100);
@@ -1247,10 +1249,80 @@ function ChatbotWidget() {
   }, []);
 
   useEffect(() => {
+    const handleOpenFromMobileNav = () => {
+      setIsOpen(true);
+      setShowBubble(false);
+    };
+
+    window.addEventListener('openChatbot', handleOpenFromMobileNav);
+
+    return () => {
+      window.removeEventListener('openChatbot', handleOpenFromMobileNav);
+    };
+  }, []);
+
+  useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }
   }, [messages, followUps, isLoading]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 991.98px)');
+
+    const handleViewportChange = (event) => {
+      setIsMobileViewport(event.matches);
+    };
+
+    setIsMobileViewport(mediaQuery.matches);
+    mediaQuery.addEventListener('change', handleViewportChange);
+
+    return () => {
+      mediaQuery.removeEventListener('change', handleViewportChange);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!widgetRef.current) return;
+
+    if (isMobileViewport) {
+      widgetRef.current.style.left = '';
+      widgetRef.current.style.top = '';
+      widgetRef.current.style.right = '';
+      widgetRef.current.style.bottom = '';
+      dragRef.current.isDragging = false;
+    }
+  }, [isMobileViewport, isOpen]);
+
+  useEffect(() => {
+    if (!isMobileViewport) return;
+
+    const handleScroll = () => {
+      if (isOpen) return;
+
+      setShowBubble(false);
+
+      if (bubbleScrollTimerRef.current) {
+        clearTimeout(bubbleScrollTimerRef.current);
+      }
+
+      bubbleScrollTimerRef.current = setTimeout(() => {
+        if (!isOpen) {
+          setShowBubble(true);
+        }
+      }, 220);
+    };
+
+    window.addEventListener('scroll', handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      if (bubbleScrollTimerRef.current) {
+        clearTimeout(bubbleScrollTimerRef.current);
+        bubbleScrollTimerRef.current = null;
+      }
+    };
+  }, [isMobileViewport, isOpen]);
 
   useEffect(() => {
     const handleMove = (e) => {
@@ -1519,10 +1591,15 @@ function ChatbotWidget() {
 
   const closeChat = () => {
     setIsOpen(false);
+    if (isMobileViewport) {
+      setShowBubble(false);
+      return;
+    }
     setTimeout(() => setShowBubble(true), 300);
   };
 
   const handleHeaderMouseDown = (e) => {
+    if (isMobileViewport) return;
     if (!widgetRef.current) return;
     const rect = widgetRef.current.getBoundingClientRect();
     dragRef.current.isDragging = true;
