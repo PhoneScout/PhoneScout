@@ -76,12 +76,17 @@ export default function Home() {
   }
 
   function changeBannerPage(direction, isManual = false) {
-    const newPage = bannerPage + direction;
     const eventSlideCount = allEventsData.length > 0 ? allEventsData.length : 1;
     const totalBannerSlides = 2 + eventSlideCount;
 
-    if (newPage < 0 || newPage > totalBannerSlides - 1) {
-      return;
+    let newPage = bannerPage + direction;
+
+    if (newPage < 0) {
+      newPage = totalBannerSlides - 1;
+    }
+
+    if (newPage > totalBannerSlides - 1) {
+      newPage = 0;
     }
 
     setBannerPage(newPage);
@@ -165,8 +170,6 @@ export default function Home() {
 
   const eventSlideCount = allEventsData.length > 0 ? allEventsData.length : 1;
   const totalBannerSlides = 2 + eventSlideCount;
-  const isFirstBannerPage = bannerPage === 0;
-  const isLastBannerPage = bannerPage === totalBannerSlides - 1;
   const currentEvent = bannerPage >= 2 ? allEventsData[bannerPage - 2] : null;
 
   const formatEventDate = (dateValue) => {
@@ -174,7 +177,15 @@ export default function Home() {
       return "Dátum nincs megadva";
     }
 
-    return new Date(dateValue).toLocaleDateString('hu-HU');
+    const eventDate = new Date(dateValue);
+    const year = eventDate.getFullYear();
+    const monthNames = ['januar', 'februar', 'március', 'április', 'május', 'június', 'július', 'augusztus', 'szeptember', 'október', 'november', 'december'];
+    const month = monthNames[eventDate.getMonth()];
+    const day = eventDate.getDate();
+    const hours = String(eventDate.getHours()).padStart(2, '0');
+    const minutes = String(eventDate.getMinutes()).padStart(2, '0');
+
+    return `${year} ${month} ${day}. ${hours}:${minutes}`;
   };
 
   const formatCountdown = (dateValue) => {
@@ -208,12 +219,9 @@ export default function Home() {
       <div className="banner-carousel-section">
         <div className="banner-controls">
           <div className="banner-button-left">
-            {
-              !isFirstBannerPage ?
-                <button onClick={() => changeBannerPage(-1, true)} className="carouselButtonBanner">
-                  <i className="fa-solid fa-arrow-left"></i>
-                </button> : ""
-            }
+            <button onClick={() => changeBannerPage(-1, true)} className="carouselButtonBanner">
+              <i className="fa-solid fa-arrow-left"></i>
+            </button>
           </div>
           <div className="banner-content">
             {bannerPage === 0 && (
@@ -258,6 +266,9 @@ export default function Home() {
                       </div>
                       <div className="event-slide-text">
                         <h2>{currentEvent.eventName}</h2>
+                        {currentEvent.eventHostName && (
+                          <p className="event-host-name">{currentEvent.eventHostName}</p>
+                        )}
                         <p className="event-date-text">{formatEventDate(currentEvent.eventDate)}</p>
                         <div className="event-countdown">{formatCountdown(currentEvent.eventDate)}</div>
                       </div>
@@ -270,12 +281,9 @@ export default function Home() {
             )}
           </div>
           <div className="banner-button-right">
-            {
-              !isLastBannerPage ?
-                <button onClick={() => changeBannerPage(1, true)} className="carouselButtonBanner">
-                  <i className="fa-solid fa-arrow-right"></i>
-                </button> : ""
-            }
+            <button onClick={() => changeBannerPage(1, true)} className="carouselButtonBanner">
+              <i className="fa-solid fa-arrow-right"></i>
+            </button>
           </div>
         </div>
         <div className="banner-dots">

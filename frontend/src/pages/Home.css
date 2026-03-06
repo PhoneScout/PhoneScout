@@ -9,6 +9,7 @@
 .banner-carousel-section {
     width: 100%;
     position: relative;
+    margin-top: -15px;
     margin-bottom: 32px;
     padding: 0;
     overflow: hidden;
@@ -43,7 +44,7 @@
 
 .banner-content {
     flex: 1;
-    min-height: 300px;
+    min-height: 400px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -417,10 +418,17 @@ hr {
 }
 
 .event-slide-text h2 {
-    margin: 0 0 14px 0;
+    margin: 0 0 8px 0;
     font-size: 2em;
     font-weight: 700;
     color: white;
+}
+
+.event-host-name {
+    margin: 0 0 12px 0;
+    font-size: 1em;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .event-slide-text p {
@@ -471,6 +479,10 @@ hr {
 
     .event-slide-text h2 {
         font-size: 1.5em;
+    }
+
+    .event-host-name {
+        font-size: 0.9em;
     }
 }
 
