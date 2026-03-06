@@ -29,6 +29,7 @@ namespace PhoneScout_GitHub.DTOs
         public int phoneInspection { get; set; }
     
         public string problemDescription { get; set; } = null!;
+        public string repairDescription { get; set; }
 
         public List<string>? parts { get; set; }
     }

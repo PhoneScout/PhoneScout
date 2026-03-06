@@ -304,6 +304,9 @@ public partial class PhoneContext : DbContext
             entity.Property(e => e.ProblemDescription)
                 .HasColumnType("text")
                 .HasColumnName("problemDescription");
+            entity.Property(e => e.RepairDescription)
+                .HasColumnType("text")
+                .HasColumnName("repairDescription");
             entity.Property(e => e.RepairPrice)
                 .HasColumnType("int(11)")
                 .HasColumnName("repairPrice");

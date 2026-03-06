@@ -41,6 +41,8 @@ public partial class Connectionservice
 
     public string ProblemDescription { get; set; } = null!;
 
+    public string RepairDescription { get; set; } = null!;
+
     public virtual ICollection<Connectionpart> Connectionparts { get; set; } = new List<Connectionpart>();
 
     public virtual User User { get; set; } = null!;

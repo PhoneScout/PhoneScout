@@ -23,6 +23,7 @@ namespace PhoneScout_GitHub.DTOs
         public string manufacturerName { get; set; }
         public int phoneInspection { get; set; }
         public string problemDescription { get; set; }
+        public string repairDescription { get; set; }
         public List<string> parts { get; set; }
     }
 }
