@@ -24,10 +24,12 @@ import Footer from './components/Footer';
 import ForgotPassword from './pages/ForgotPassword';
 import ScrollToTopButton from './components/ScrollToTopButton';
 import MobileApp from './mobile/MobileApp';
+import { useAuth } from './components/AuthContext';
 
 
 
 function App() {
+  const { token } = useAuth();
 
   const location = useLocation();
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 991);
@@ -103,7 +105,7 @@ function App() {
         <Route path='/kosar' element={<Cart />}></Route>
         <Route path='/osszehasonlitas' element={<Compare />}></Route>
         <Route path="/telefon/:phoneId" element={<PhonePage />} />
-        <Route path="/profil" element={<Profile />}></Route>
+        <Route path="/profil" element={token ? <Profile /> : <LoginRegister />}></Route>
         <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
         <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
         <Route path="/bejelentkezes" element={<LoginRegister />}></Route>

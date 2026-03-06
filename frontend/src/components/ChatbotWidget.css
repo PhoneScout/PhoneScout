@@ -17,6 +17,7 @@
   z-index: 1000;
   transform: translateY(100%) scale(0.8);
   opacity: 0;
+  pointer-events: none;
   transition: transform 0.3s ease, opacity 0.3s ease;
   resize: both;
 }
@@ -24,6 +25,7 @@
 .ps-chatbot .chat-widget.open {
   transform: translateY(0) scale(1);
   opacity: 1;
+  pointer-events: auto;
 }
 
 .ps-chatbot .chat-header {
@@ -283,4 +285,27 @@
 .ps-chatbot .send-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+
+@media (max-width: 991.98px) {
+  .ps-chatbot .chat-bubble,
+  .ps-chatbot .chat-widget {
+    bottom: calc(92px + env(safe-area-inset-bottom));
+  }
+
+  .ps-chatbot .chat-bubble {
+    display: none;
+    right: 12px;
+    width: 62px;
+    height: 62px;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.32);
+  }
+
+  .ps-chatbot .chat-widget {
+    right: 12px;
+    width: min(92vw, 420px);
+    max-height: 64dvh;
+    min-height: 0;
+    resize: none;
+  }
 }

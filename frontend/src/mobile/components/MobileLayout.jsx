@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
-import { Link, NavLink, useLocation } from 'react-router-dom';
+import { useEffect, useRef, useState } from 'react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../components/AuthContext';
+import axios from 'axios';
 import '../mobile-shell.css';
 
 const hiddenBottomNavPaths = ['/bejelentkezes', '/fiokaktivalas', '/elfelejtettjelszo'];
@@ -31,10 +33,20 @@ function getMobileTitle(pathname) {
 }
 
 function MobileLayout({ children }) {
+  const { token, logout } = useAuth();
+  const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [allPhoneNames, setAllPhoneNames] = useState([]);
   const hideBottomNav = hiddenBottomNavPaths.includes(location.pathname);
+  const userFullName = localStorage.getItem('fullname') || 'Felhasználó';
+  const userEmail = localStorage.getItem('email') || '';
+  const searchWrapperRef = useRef(null);
+  const searchInputRef = useRef(null);
 
   useEffect(() => {
     const getCartCount = () => {
@@ -78,7 +90,79 @@ function MobileLayout({ children }) {
 
   useEffect(() => {
     setIsMenuOpen(false);
+    setIsSearchOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const fetchPhoneNames = async () => {
+      try {
+        const response = await axios.get('http://localhost:5175/allPhonesName');
+        setAllPhoneNames(Array.isArray(response.data) ? response.data : []);
+      } catch {
+        setAllPhoneNames([]);
+      }
+    };
+
+    fetchPhoneNames();
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutsideSearch = (event) => {
+      if (searchWrapperRef.current && !searchWrapperRef.current.contains(event.target)) {
+        setIsSearchOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutsideSearch);
+    return () => document.removeEventListener('mousedown', handleClickOutsideSearch);
+  }, []);
+
+  useEffect(() => {
+    if (isSearchOpen && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [isSearchOpen]);
+
+  const handleLogout = () => {
+    logout();
+    localStorage.removeItem('fullname');
+    localStorage.removeItem('email');
+    localStorage.removeItem('userid');
+    setIsMenuOpen(false);
+  };
+
+  const handleSearchClick = (event) => {
+    event.preventDefault();
+    setIsMenuOpen(false);
+    setIsSearchOpen((prev) => !prev);
+  };
+
+  const handleSearchInput = (event) => {
+    const query = event.target.value;
+    setSearchQuery(query);
+
+    if (!query.trim()) {
+      setSearchResults([]);
+      return;
+    }
+
+    const filtered = allPhoneNames
+      .filter((phone) => phone.phoneName?.toLowerCase().includes(query.toLowerCase()))
+      .slice(0, 5);
+
+    setSearchResults(filtered);
+  };
+
+  const openPhoneFromSearch = (phoneID) => {
+    setSearchQuery('');
+    setSearchResults([]);
+    setIsSearchOpen(false);
+    navigate(`/telefon/${phoneID}`);
+  };
+
+  const handleOpenChatbot = () => {
+    window.dispatchEvent(new Event('openChatbot'));
+  };
 
   return (
     <div className='mobile-app-shell'>
@@ -89,7 +173,10 @@ function MobileLayout({ children }) {
           <button
             className='mobile-menu-button'
             type='button'
-            onClick={() => setIsMenuOpen(true)}
+            onClick={() => {
+              setIsSearchOpen(false);
+              setIsMenuOpen(true);
+            }}
             aria-label='Menü megnyitása'
           >
             <i className='bi bi-list'></i>
@@ -109,7 +196,7 @@ function MobileLayout({ children }) {
             <h1 className='mobile-topbar-title'>{getMobileTitle(location.pathname)}</h1>
           </div>
 
-          <Link to='/szures' className='mobile-topbar-search' aria-label='Keresés'>
+          <Link to='/szures' className='mobile-topbar-search' aria-label='Keresés' onClick={handleSearchClick}>
             <i className='bi bi-search'></i>
           </Link>
 
@@ -118,7 +205,41 @@ function MobileLayout({ children }) {
             <span className='mobile-topbar-cart-badge'>{cartCount}</span>
           </Link>
         </div>
+
       </header>
+
+      {isSearchOpen && <button className='mobile-search-backdrop' onClick={() => setIsSearchOpen(false)} aria-label='Keresés bezárása' />}
+
+      {isSearchOpen && (
+        <div className='mobile-floating-search-panel' ref={searchWrapperRef}>
+          <div className='mobile-topbar-search-input-wrap'>
+            <i className='bi bi-search'></i>
+            <input
+              ref={searchInputRef}
+              type='text'
+              value={searchQuery}
+              onChange={handleSearchInput}
+              placeholder='Telefon keresése...'
+              aria-label='Telefon keresése'
+            />
+          </div>
+
+          {searchResults.length > 0 && (
+            <div className='mobile-topbar-search-results'>
+              {searchResults.map((phone) => (
+                <button
+                  key={phone.phoneID}
+                  type='button'
+                  className='mobile-topbar-search-result-item'
+                  onClick={() => openPhoneFromSearch(phone.phoneID)}
+                >
+                  {phone.phoneName}
+                </button>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       <aside className={`mobile-side-menu ${isMenuOpen ? 'mobile-side-menu--open' : ''}`}>
         <div className='mobile-side-menu-header'>
@@ -176,6 +297,40 @@ function MobileLayout({ children }) {
             <span>Kosár</span>
           </Link>
         </div>
+
+        <div className='mobile-side-menu-user'>
+          <small className='mobile-side-menu-user-label'>Felhasználó</small>
+          {token ? (
+            <>
+              <strong className='mobile-side-menu-user-name'>{userFullName}</strong>
+              {userEmail && <span className='mobile-side-menu-user-email'>{userEmail}</span>}
+              <div className='mobile-side-menu-user-actions'>
+                <Link to='/profil' className='mobile-side-menu-user-action mobile-side-menu-user-action--profile'>
+                  Profil oldal
+                </Link>
+                <button
+                  type='button'
+                  className='mobile-side-menu-user-action mobile-side-menu-user-action--logout'
+                  onClick={handleLogout}
+                >
+                  Kijelentkezés
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <span className='mobile-side-menu-user-guest'>Nincs bejelentkezve</span>
+              <div className='mobile-side-menu-user-actions'>
+                <Link to='/profil' className='mobile-side-menu-user-action mobile-side-menu-user-action--profile'>
+                  Profil oldal
+                </Link>
+                <Link to='/bejelentkezes' className='mobile-side-menu-user-action mobile-side-menu-user-action--login'>
+                  Bejelentkezés
+                </Link>
+              </div>
+            </>
+          )}
+        </div>
       </aside>
 
       <main className='mobile-main'>{children}</main>
@@ -198,6 +353,10 @@ function MobileLayout({ children }) {
             <i className='bi bi-columns-gap'></i>
             <span>Összeh.</span>
           </NavLink>
+          <button type='button' className='mobile-nav-item mobile-nav-item--button' onClick={handleOpenChatbot}>
+            <i className='bi bi-robot'></i>
+            <span>Chatbot</span>
+          </button>
           <NavLink to='/profil' className='mobile-nav-item'>
             <i className='bi bi-person'></i>
             <span>Profil</span>

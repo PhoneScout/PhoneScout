@@ -270,7 +270,7 @@ export default function PhonePage() {
   if (!phone) return <div className="text-center mt-5"><h3>Készülék nem található.</h3></div>;
 
   return (
-    <div>
+    <div className="phone-page">
       <div className="container-fluid px-3 px-md-5">
 
         {/* FELSŐ SZEKCIÓ: 3 OSZLOPOS ELRENDEZÉS */}

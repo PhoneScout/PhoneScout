@@ -21,8 +21,11 @@ import ForgotPassword from '../pages/ForgotPassword';
 import KepTeszt from '../pages/KepTeszt';
 import ChatbotWidget from '../components/ChatbotWidget';
 import ScrollToTopButton from '../components/ScrollToTopButton';
+import { useAuth } from '../components/AuthContext';
 
 function MobileApp() {
+  const { token } = useAuth();
+
   return (
     <div className='mobile-mode-root'>
       <MobileLayout>
@@ -33,7 +36,7 @@ function MobileApp() {
           <Route path='/kosar' element={<Cart />} />
           <Route path='/osszehasonlitas' element={<Compare />} />
           <Route path='/telefon/:phoneId' element={<PhonePage />} />
-          <Route path='/profil' element={<Profile />} />
+          <Route path='/profil' element={token ? <Profile /> : <LoginRegister />} />
           <Route path='/szervizigenyles' element={<ServiceRequest />} />
           <Route path='/bejelentkezes' element={<LoginRegister />} />
           <Route path='/fiokaktivalas' element={<RegistrationConfirm />} />

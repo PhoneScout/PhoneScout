@@ -9,10 +9,13 @@ import axios from 'axios';
 
 export default function Home() {
   const allPhonesURL = "http://localhost:5175/mainPage";
+  const eventsURL = "http://localhost:5175/api/event";
 
   // Banner carousel states
   const [bannerPage, setBannerPage] = useState(0);
-  const [activeBannerButton, setActiveBannerButton] = useState("right");
+  const [manualBannerNavigationCount, setManualBannerNavigationCount] = useState(0);
+  const [allEventsData, setAllEventsData] = useState([]);
+  const [nowTime, setNowTime] = useState(new Date());
 
   // Phone carousel states
   const [currentPage, setCurrentPage] = useState(0);
@@ -33,51 +36,33 @@ export default function Home() {
         setAllPhonesData(response.data);
       })
       .catch((error) => console.error("Hiba a JSON betöltésekor:", error));
+
+    axios.get(eventsURL)
+      .then((response) => {
+        const now = new Date();
+        const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+        const twoWeeksLaterEnd = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 14, 23, 59, 59, 999);
+
+        const upcomingTwoWeekEvents = response.data
+          .filter((event) => {
+            const eventDate = new Date(event.eventDate);
+            return !Number.isNaN(eventDate.getTime()) && eventDate >= todayStart && eventDate <= twoWeeksLaterEnd;
+          })
+          .sort((firstEvent, secondEvent) => new Date(firstEvent.eventDate) - new Date(secondEvent.eventDate));
+
+        setAllEventsData(upcomingTwoWeekEvents);
+      })
+      .catch((error) => console.error("Hiba az eventos adatok betöltésekor:", error));
   }, []);
 
   useEffect(() => {
-<<<<<<< Updated upstream
-    const handleStorage = () => {
-      const stored = localStorage.getItem("pagesHistory");
-      setHomePreviousPages(stored ? JSON.parse(stored) : [{ pageName: "Főoldal", pageURL: "/" }]);
-    };
+    const countdownTimer = setInterval(() => {
+      setNowTime(new Date());
+    }, 1000);
 
-    handleStorage();
-    window.addEventListener('storage', handleStorage);
-    window.addEventListener('focus', handleStorage);
-
-    return () => {
-      window.removeEventListener('storage', handleStorage);
-      window.removeEventListener('focus', handleStorage);
-    };
+    return () => clearInterval(countdownTimer);
   }, []);
 
-  function changeBannerPage(direction) {
-    const newPage = bannerPage + direction;
-    setBannerPage(newPage);
-
-    if (newPage === 1) {
-      setActiveBannerButton("left");
-    } else if (newPage === 0) {
-      setActiveBannerButton("right");
-    }
-  }
-=======
-    const mediaQuery = window.matchMedia('(max-width: 991.98px)');
-
-    const handleViewportChange = (event) => {
-      setIsMobileView(event.matches);
-    };
-
-    setIsMobileView(mediaQuery.matches);
-    mediaQuery.addEventListener('change', handleViewportChange);
-
-    return () => {
-      mediaQuery.removeEventListener('change', handleViewportChange);
-    };
-  }, []);
-
->>>>>>> Stashed changes
 
   function changePage(direction) {
     const newPage = currentPage + direction;
@@ -89,6 +74,44 @@ export default function Home() {
       setActiveChangeButton("right");
     }
   }
+
+  function changeBannerPage(direction, isManual = false) {
+    const newPage = bannerPage + direction;
+    const eventSlideCount = allEventsData.length > 0 ? allEventsData.length : 1;
+    const totalBannerSlides = 2 + eventSlideCount;
+
+    if (newPage < 0 || newPage > totalBannerSlides - 1) {
+      return;
+    }
+
+    setBannerPage(newPage);
+
+    if (isManual) {
+      setManualBannerNavigationCount((prevCount) => prevCount + 1);
+    }
+  }
+
+  function setBannerPageManually(targetPage) {
+    const eventSlideCount = allEventsData.length > 0 ? allEventsData.length : 1;
+    const totalBannerSlides = 2 + eventSlideCount;
+    const boundedPage = Math.max(0, Math.min(targetPage, totalBannerSlides - 1));
+
+    setBannerPage(boundedPage);
+    setManualBannerNavigationCount((prevCount) => prevCount + 1);
+  }
+
+  useEffect(() => {
+    const eventSlideCount = allEventsData.length > 0 ? allEventsData.length : 1;
+    const totalBannerSlides = 2 + eventSlideCount;
+
+    const bannerTimeout = setTimeout(() => {
+      setBannerPage((prevPage) => {
+        return prevPage === totalBannerSlides - 1 ? 0 : prevPage + 1;
+      });
+    }, 10000);
+
+    return () => clearTimeout(bannerTimeout);
+  }, [allEventsData, bannerPage, manualBannerNavigationCount]);
 
 
   function displayPhoneCards() {
@@ -140,6 +163,45 @@ export default function Home() {
     </React.Fragment>
   ));
 
+  const eventSlideCount = allEventsData.length > 0 ? allEventsData.length : 1;
+  const totalBannerSlides = 2 + eventSlideCount;
+  const isFirstBannerPage = bannerPage === 0;
+  const isLastBannerPage = bannerPage === totalBannerSlides - 1;
+  const currentEvent = bannerPage >= 2 ? allEventsData[bannerPage - 2] : null;
+
+  const formatEventDate = (dateValue) => {
+    if (!dateValue) {
+      return "Dátum nincs megadva";
+    }
+
+    return new Date(dateValue).toLocaleDateString('hu-HU');
+  };
+
+  const formatCountdown = (dateValue) => {
+    if (!dateValue) {
+      return "Nincs időpont";
+    }
+
+    const eventDate = new Date(dateValue);
+
+    if (Number.isNaN(eventDate.getTime())) {
+      return "Érvénytelen időpont";
+    }
+
+    const differenceInMs = eventDate.getTime() - nowTime.getTime();
+
+    if (differenceInMs <= 0) {
+      return "Esemény folyamatban";
+    }
+
+    const totalMinutes = Math.floor(differenceInMs / (1000 * 60));
+    const days = Math.floor(totalMinutes / (60 * 24));
+    const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+    const minutes = totalMinutes % 60;
+
+    return `${days} nap ${hours} óra ${minutes} perc`;
+  };
+
   return (
     <div>
       {/* Banner Carousel - Full Width */}
@@ -147,8 +209,8 @@ export default function Home() {
         <div className="banner-controls">
           <div className="banner-button-left">
             {
-              activeBannerButton === "left" ?
-                <button onClick={() => changeBannerPage(-1)} className="carouselButtonBanner">
+              !isFirstBannerPage ?
+                <button onClick={() => changeBannerPage(-1, true)} className="carouselButtonBanner">
                   <i className="fa-solid fa-arrow-left"></i>
                 </button> : ""
             }
@@ -168,33 +230,63 @@ export default function Home() {
                 <h3>Ne hagyja ki ezt az esélyt!</h3>
               </div>
             )}
+            {bannerPage >= 2 && (
+              <div className="banner-slide events-slide">
+                {currentEvent ? (
+                  <a
+                    href={currentEvent.eventURL || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="event-slide-link"
+                    onClick={(event) => {
+                      if (!currentEvent.eventURL) {
+                        event.preventDefault();
+                      }
+                    }}
+                  >
+                    <div className="event-slide-content">
+                      <div className="event-slide-image-wrap">
+                        {currentEvent.imageBase64 ? (
+                          <img
+                            src={`data:${currentEvent.contentType};base64,${currentEvent.imageBase64}`}
+                            alt={currentEvent.eventName}
+                            className="event-slide-image"
+                          />
+                        ) : (
+                          <div className="event-slide-image-placeholder">Nincs kép</div>
+                        )}
+                      </div>
+                      <div className="event-slide-text">
+                        <h2>{currentEvent.eventName}</h2>
+                        <p className="event-date-text">{formatEventDate(currentEvent.eventDate)}</p>
+                        <div className="event-countdown">{formatCountdown(currentEvent.eventDate)}</div>
+                      </div>
+                    </div>
+                  </a>
+                ) : (
+                  <p className="no-events">Jelenleg nincsenek aktív események</p>
+                )}
+              </div>
+            )}
           </div>
           <div className="banner-button-right">
             {
-              activeBannerButton === "right" ?
-                <button onClick={() => changeBannerPage(1)} className="carouselButtonBanner">
+              !isLastBannerPage ?
+                <button onClick={() => changeBannerPage(1, true)} className="carouselButtonBanner">
                   <i className="fa-solid fa-arrow-right"></i>
                 </button> : ""
             }
           </div>
         </div>
         <div className="banner-dots">
-          <div 
-            className={`banner-dot ${bannerPage === 0 ? "banner-dotActive" : ""}`}
-            onClick={() => {
-              setBannerPage(0);
-              setActiveBannerButton("right");
-            }}
-            style={{ cursor: 'pointer' }}
-          ></div>
-          <div 
-            className={`banner-dot ${bannerPage === 1 ? "banner-dotActive" : ""}`}
-            onClick={() => {
-              setBannerPage(1);
-              setActiveBannerButton("left");
-            }}
-            style={{ cursor: 'pointer' }}
-          ></div>
+          {Array.from({ length: totalBannerSlides }).map((_, index) => (
+            <div
+              key={`banner-dot-${index}`}
+              className={`banner-dot ${bannerPage === index ? "banner-dotActive" : ""}`}
+              onClick={() => setBannerPageManually(index)}
+              style={{ cursor: 'pointer' }}
+            ></div>
+          ))}
         </div>
       </div>
 
@@ -220,45 +312,22 @@ export default function Home() {
             )}
           </div>
         </div>
-        {!isMobileView && <div className="col-1">
-          {
-            activeChangeButton === "right" ? <button onClick={() => changePage(1)} id="carouselButtonRight" className="carouselButton">
-              <i className="fa-solid fa-arrow-right"></i>
-            </button> : ""
-          }
-<<<<<<< Updated upstream
-        </div>
-        <div className="phone-carousel-dots">
-          <div 
-            className={`phone-carousel-dot ${currentPage === 0 ? "dotActive" : ""}`} 
-            id="leftDot"
-            onClick={() => {
-              setCurrentPage(0);
-              setActiveChangeButton("right");
-            }}
-            style={{ cursor: 'pointer' }}
-          ></div>
-          <div 
-            className={`phone-carousel-dot ${currentPage === 1 ? "dotActive" : ""}`} 
-            id="rightDot"
-            onClick={() => {
-              setCurrentPage(1);
-              setActiveChangeButton("left");
-            }}
-            style={{ cursor: 'pointer' }}
-          ></div>
-        </div>
-        <div className="hr">
-=======
-        </div>}
-        {!isMobileView && <div className="dots">
-          <div className={`dot ${currentPage === 0 ? "dotActive" : ""}`} id="leftDot"></div>
-          <div className={`dot ${currentPage === 1 ? "dotActive" : ""}`} id="rightDot"></div>
-        </div>}
-        {!isMobileView && <div className="hr">
->>>>>>> Stashed changes
-          <hr size="5" />
-        </div>}
+        {!isMobileView && <>
+          <div className="col-1">
+            {
+              activeChangeButton === "right" ? <button onClick={() => changePage(1)} id="carouselButtonRight" className="carouselButton">
+                <i className="fa-solid fa-arrow-right"></i>
+              </button> : ""
+            }
+          </div>
+          <div className="dots">
+            <div className={`dot ${currentPage === 0 ? "dotActive" : ""}`} id="leftDot"></div>
+            <div className={`dot ${currentPage === 1 ? "dotActive" : ""}`} id="rightDot"></div>
+          </div>
+          <div className="hr">
+            <hr size="5" />
+          </div>
+        </>}
 
       </div>
       <div className="container service-section ">
