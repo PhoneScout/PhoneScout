@@ -208,7 +208,7 @@ namespace PhoneScout_GitHub.Controllers
                 var user = _cx.Users.FirstOrDefault(f => f.Email == Email);
                 if (user == null)
                 {
-                    return BadRequest("Nincs ilyen email című felhasználó!");
+                    return BadRequest("Hibás email cím vagy jelszó!");
                 }
                 return Ok(user.Id);
             }
@@ -305,7 +305,7 @@ namespace PhoneScout_GitHub.Controllers
                 var user = _cx.Users.FirstOrDefault(f => f.Email == Email);
                 if (user == null)
                 {
-                    return BadRequest("Nincs ilyen email című felhasználó!");
+                    return BadRequest("Hibás email cím vagy jelszó!");
                 }
                 string emailTargy = "Elfelejtett jelszó";
                 string emailTorzs = $@"

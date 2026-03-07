@@ -29,7 +29,7 @@ export default function Login({ onSwitchToRegister }) {
             case 401:
                 return 'Hibás email cím vagy jelszó.';
             case 404:
-                return 'A felhasználó nem található.';
+                return 'Hibás email cím vagy jelszó.';
             case 429:
                 return 'Túl sok próbálkozás történt. Kérjük, próbálja újra később.';
             case 500:
@@ -62,7 +62,7 @@ export default function Login({ onSwitchToRegister }) {
             const saltResponse = await axios.get(`http://localhost:5175/api/Login/GetSalt/${encodeURIComponent(email)}`);
 
             if (saltResponse.status !== 200) {
-                throw new Error("A felhasználó nem található.");
+                throw new Error("Hibás email cím vagy jelszó.");
             }
 
             let salt = await saltResponse.data;
