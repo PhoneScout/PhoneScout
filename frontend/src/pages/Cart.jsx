@@ -462,6 +462,7 @@ export default function Cart() {
 
       setCartItems([]);
       localStorage.setItem("cart", JSON.stringify([]));
+      window.dispatchEvent(new Event("cartUpdated"));
 
       setShowPaymentModal(false);
       setShowSuccessModal(true);

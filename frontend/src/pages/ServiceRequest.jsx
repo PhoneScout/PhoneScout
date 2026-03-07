@@ -78,6 +78,49 @@ export default function ServiceRequest() {
     return { userID, userEmail, userName };
   };
 
+  const getApiErrorMessage = (error, fallbackMessage) => {
+    const status = error?.response?.status;
+    const responseData = error?.response?.data;
+
+    if (typeof responseData === 'string' && responseData.trim()) {
+      return responseData;
+    }
+
+    if (typeof responseData?.message === 'string' && responseData.message.trim()) {
+      return responseData.message;
+    }
+
+    if (responseData?.errors && typeof responseData.errors === 'object') {
+      const allMessages = Object.values(responseData.errors)
+        .flatMap(value => Array.isArray(value) ? value : [value])
+        .filter(msg => typeof msg === 'string' && msg.trim());
+
+      if (allMessages.length > 0) {
+        return allMessages[0];
+      }
+    }
+
+    switch (status) {
+      case 400:
+        return 'Hibás adatok lettek elküldve. Kérjük, ellenőrizze a mezőket.';
+      case 401:
+        return 'A művelethez bejelentkezés szükséges.';
+      case 403:
+        return 'Nincs jogosultsága ehhez a művelethez.';
+      case 404:
+        return 'A kért erőforrás nem található.';
+      case 409:
+        return 'Az igénylés már létezik vagy ütközés történt.';
+      case 500:
+        return 'Szerverhiba történt. Kérjük, próbálja újra később.';
+      default:
+        if (error?.code === 'ERR_NETWORK') {
+          return 'Nem sikerült elérni a szervert. Ellenőrizze az internetkapcsolatot.';
+        }
+        return fallbackMessage;
+    }
+  };
+
   const normalizeAddress = (address) => ({
     postalCode: address?.postalCode?.toString() || '',
     city: address?.city || '',
@@ -144,7 +187,7 @@ export default function ServiceRequest() {
         setShowDeliveryAddressForm(false);
       } catch (error) {
         console.error('Hiba a címek betöltésekor:', error);
-        setAddressLoadError('A címek betöltése sikertelen. A mezők kézzel kitölthetők.');
+        setAddressLoadError(getApiErrorMessage(error, 'A címek betöltése sikertelen. A mezők kézzel kitölthetők.'));
         setBillingAddressList([]);
         setDeliveryAddressList([]);
       } finally {
@@ -170,9 +213,16 @@ export default function ServiceRequest() {
 
   const handleInputChange = (e) => {
     const { id, value, type, checked } = e.target;
+
+    let processedValue = value;
+
+    if (id === 'phone') {
+      processedValue = value.replace(/\D/g, '').slice(0, 15);
+    }
+
     setFormData(prev => ({
       ...prev,
-      [id]: type === 'checkbox' ? checked : value
+      [id]: type === 'checkbox' ? checked : processedValue
     }));
 
     if (id === 'atvizsgalas') {
@@ -292,7 +342,13 @@ export default function ServiceRequest() {
       setSelectedDeliveryAddressId(parseInt(addressId, 10));
       const selectedAddress = deliveryAddressList.find(addr => addr.id === parseInt(addressId, 10));
       if (selectedAddress) {
-        setDeliveryAddressData(normalizeAddress(selectedAddress));
+        const normalized = normalizeAddress(selectedAddress);
+        setDeliveryAddressData(normalized);
+
+        if (billingSameAsDelivery) {
+          setBillingAddressData(normalized);
+          setSelectedBillingAddressId(parseInt(addressId, 10));
+        }
       }
     } else {
       setShowDeliveryAddressForm(false);
@@ -318,18 +374,20 @@ export default function ServiceRequest() {
           addressValidationErrors[`delivery-${field}`] = 'A mező kitöltése kötelező!';
         }
       });
-    } else if (!selectedDeliveryAddressId && !billingSameAsDelivery) {
+    } else if (!selectedDeliveryAddressId) {
       addressValidationErrors['delivery-select'] = 'Válasszon egy szállítási cím!';
     }
 
-    if (showBillingAddressForm) {
-      requiredFields.forEach(field => {
-        if (!billingAddressData[field].toString().trim()) {
-          addressValidationErrors[`billing-${field}`] = 'A mező kitöltése kötelező!';
-        }
-      });
-    } else if (!selectedBillingAddressId) {
-      addressValidationErrors['billing-select'] = 'Válasszon egy számlázási cím!';
+    if (!billingSameAsDelivery) {
+      if (showBillingAddressForm) {
+        requiredFields.forEach(field => {
+          if (!billingAddressData[field].toString().trim()) {
+            addressValidationErrors[`billing-${field}`] = 'A mező kitöltése kötelező!';
+          }
+        });
+      } else if (!selectedBillingAddressId) {
+        addressValidationErrors['billing-select'] = 'Válasszon egy számlázási cím!';
+      }
     }
 
     setPaymentFormErrors(errors);
@@ -423,7 +481,7 @@ export default function ServiceRequest() {
     if (!validatePaymentForm()) return;
 
     try {
-      const { userID, userEmail, userName } = getUserContext();
+      const { userID } = getUserContext();
 
       if (!userID || Number.isNaN(userID) || userID <= 0) {
         setAddressLoadError('A szerviz igényléshez jelentkezz be újra.');
@@ -453,6 +511,7 @@ export default function ServiceRequest() {
         manufacturerName: formData.device,
         phoneInspection: formData.atvizsgalas ? 1 : 0,
         problemDescription: formData.problem,
+        repairDescription: '',
         parts: selectedProblems
       };
 
@@ -464,7 +523,7 @@ export default function ServiceRequest() {
       console.log("Repair request response:", response.data);
 
       if (response.status !== 200 && response.status !== 201) {
-        console.error("Hiba a szerviz igénylés küldésekor");
+        setAddressLoadError('A szerviz igénylés mentése nem sikerült. Kérjük, próbálja újra.');
         return;
       }
 
@@ -494,15 +553,21 @@ export default function ServiceRequest() {
       console.error("Error processing repair request:", error);
       console.error("Error response data:", error.response?.data);
       console.error("Error response status:", error.response?.status);
-      setAddressLoadError(`Hiba történt a szerviz igénylés feldolgozásakor: ${error.response?.data?.message || error.message}`);
+      setAddressLoadError(getApiErrorMessage(error, 'Hiba történt a szerviz igénylés feldolgozásakor.'));
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // Validate required fields
-    if (!formData.name || !formData.email || !formData.phone || !formData.device || !formData.problem) {
+    const trimmedName = formData.name.trim();
+    const trimmedEmail = formData.email.trim();
+    const phoneDigits = formData.phone.replace(/\D/g, '');
+    const trimmedDevice = formData.device.trim();
+    const trimmedProblem = formData.problem.trim();
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!trimmedName || !trimmedEmail || !phoneDigits || !trimmedDevice || !trimmedProblem) {
       setFormMessage(
         <div className="alert alert-danger">
           Kérjük, töltse ki az összes kötelező mezőt!
@@ -510,6 +575,47 @@ export default function ServiceRequest() {
       );
       return;
     }
+
+    if (trimmedName.length < 2) {
+      setFormMessage(<div className="alert alert-danger">A név túl rövid.</div>);
+      return;
+    }
+
+    if (!emailRegex.test(trimmedEmail)) {
+      setFormMessage(<div className="alert alert-danger">Kérjük, adjon meg érvényes email címet.</div>);
+      return;
+    }
+
+    if (phoneDigits.length < 10) {
+      setFormMessage(<div className="alert alert-danger">Kérjük, adjon meg érvényes telefonszámot.</div>);
+      return;
+    }
+
+    if (trimmedDevice.length < 2) {
+      setFormMessage(<div className="alert alert-danger">A készülék neve túl rövid.</div>);
+      return;
+    }
+
+    if (selectedProblems.length === 0) {
+      setFormMessage(<div className="alert alert-danger">Kérjük, válasszon legalább egy hibatípust.</div>);
+      return;
+    }
+
+    if (trimmedProblem.length < 10) {
+      setFormMessage(<div className="alert alert-danger">A hiba leírása legyen legalább 10 karakter.</div>);
+      return;
+    }
+
+    setFormData(prev => ({
+      ...prev,
+      name: trimmedName,
+      email: trimmedEmail,
+      phone: phoneDigits,
+      device: trimmedDevice,
+      problem: trimmedProblem
+    }));
+
+    setFormMessage('');
 
     // Save repair data and open payment modal
     openPaymentModal();
@@ -581,7 +687,7 @@ export default function ServiceRequest() {
               value={formData.phone}
               onChange={handleInputChange}
               required
-              maxLength="11"
+              maxLength="15"
             />
           </div>
           <div className="col-md-6">

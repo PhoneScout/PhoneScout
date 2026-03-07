@@ -1262,6 +1262,22 @@ function ChatbotWidget() {
   }, []);
 
   useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent("chatbotStateChange", {
+        detail: { isOpen }
+      })
+    );
+
+    return () => {
+      window.dispatchEvent(
+        new CustomEvent("chatbotStateChange", {
+          detail: { isOpen: false }
+        })
+      );
+    };
+  }, [isOpen]);
+
+  useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight;
     }

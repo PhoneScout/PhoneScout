@@ -19,12 +19,44 @@ export default function PhonePage() {
   const [selectedQty, setSelectedQty] = useState(1);
   const [compareIds, setCompareIds] = useState([]);
   const [calculatedPrice, setCalculatedPrice] = useState(0);
+  const [errorMessage, setErrorMessage] = useState('');
   const timeoutsRef = useRef([]);
 
   const svgRef = useRef(null);
 
+  const isPhoneInStock = (value) => {
+    if (value === 1 || value === true) return true;
+    if (value === 0 || value === false) return false;
+
+    if (typeof value === 'string') {
+      const normalized = value.trim().toLowerCase();
+      return ['1', 'true', 'igen', 'van', 'raktáron', 'raktaron'].includes(normalized);
+    }
+
+    return false;
+  };
+
+  const getApiErrorMessage = (error, fallback) => {
+    const responseData = error?.response?.data;
+
+    if (typeof responseData === 'string' && responseData.trim()) {
+      return responseData;
+    }
+
+    if (typeof responseData?.message === 'string' && responseData.message.trim()) {
+      return responseData.message;
+    }
+
+    if (error?.code === 'ERR_NETWORK') {
+      return 'Nem sikerült kapcsolódni a szerverhez. Kérjük, próbálja újra.';
+    }
+
+    return fallback;
+  };
+
   useEffect(() => {
     setLoading(true);
+    setErrorMessage('');
     axios.get(`http://localhost:5175/phonePage/${phoneId}`)
       .then(response => {
         setPhone(response.data);
@@ -33,6 +65,7 @@ export default function PhonePage() {
       })
       .catch(err => {
         console.error("Hiba:", err);
+        setErrorMessage(getApiErrorMessage(err, 'Nem sikerült betölteni a készülék adatait.'));
         setLoading(false);
       });
   }, [phoneId]);
@@ -46,6 +79,7 @@ export default function PhonePage() {
       })
       .catch(err => {
         console.error("Hiba a képek betöltésekor:", err);
+        setErrorMessage((prev) => prev || getApiErrorMessage(err, 'A képek betöltése sikertelen.'));
         setPictures([]);
       });
   }, [phoneId]);
@@ -269,9 +303,16 @@ export default function PhonePage() {
   if (loading) return <div className="text-center mt-5"><h3>Betöltés...</h3></div>;
   if (!phone) return <div className="text-center mt-5"><h3>Készülék nem található.</h3></div>;
 
+  const inStock = isPhoneInStock(phone.phoneInStore);
+
   return (
     <div className="phone-page">
       <div className="container-fluid px-3 px-md-5">
+        {errorMessage && (
+          <div className="alert alert-warning mt-3" role="alert">
+            {errorMessage}
+          </div>
+        )}
 
         {/* FELSŐ SZEKCIÓ: 3 OSZLOPOS ELRENDEZÉS */}
         <div className="row mt-4 align-items-start gy-4">
@@ -406,8 +447,8 @@ export default function PhonePage() {
           <div className="col-12 col-md-4">
             <div className="phoneDataBox mx-auto">
               <div className="phoneName">{phone.phoneName}</div>
-              <div className="phoneStock" style={{ color: phone.phoneInStore === "van" ? "#68F145" : "red" }}>
-                {phone.phoneInStore === "van" ? "Raktáron" : "Nincs raktáron"}
+              <div className="phoneStock" style={{ color: inStock ? "#68F145" : "red" }}>
+                {inStock ? "Raktáron" : "Nincs raktáron"}
               </div>
               <div className="price">{calculatedPrice?.toLocaleString()} Ft</div>
               <button className="phoneSiteButton phoneSiteCartButton mt-3" onClick={handleCartClick}>Kosárba rakom</button>

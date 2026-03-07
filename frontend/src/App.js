@@ -87,38 +87,60 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    if (!shouldShowLayout || isMobile) {
+      document.documentElement.style.removeProperty('--navbar-height');
+      return;
+    }
+
+    const setNavbarHeight = () => {
+      const navbar = document.querySelector('.navbar-wrapper');
+      const navbarHeight = navbar?.offsetHeight || 88;
+      document.documentElement.style.setProperty('--navbar-height', `${navbarHeight}px`);
+    };
+
+    setNavbarHeight();
+    window.addEventListener('resize', setNavbarHeight);
+
+    return () => {
+      window.removeEventListener('resize', setNavbarHeight);
+    };
+  }, [location.pathname, shouldShowLayout, isMobile]);
+
   if (isMobile) {
     return <MobileApp />;
   }
 
   return (
 
-    <div className="App">
+    <div className={`App ${shouldShowLayout ? 'with-fixed-navbar' : ''}`}>
 
 
       {shouldShowLayout && <Navbar />}
 
-      <Routes>
-        <Route path='/' element={<Home />}></Route>
-        <Route path='/szures' element={<FilterPage />} ></Route>
-        <Route path='/szerviz' element={<Service />}></Route>
-        <Route path='/kosar' element={<Cart />}></Route>
-        <Route path='/osszehasonlitas' element={<Compare />}></Route>
-        <Route path="/telefon/:phoneId" element={<PhonePage />} />
-        <Route path="/profil" element={token ? <Profile /> : <LoginRegister />}></Route>
-        <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
-        <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
-        <Route path="/bejelentkezes" element={<LoginRegister />}></Route>
-        <Route path='/fiokaktivalas' element={<RegistrationConfirm />} />
-        <Route path='/teszt' element={<KepTeszt />} />
-        <Route path='/rolunk' element={<AboutUs />} />
-        <Route path='/kapcsolat' element={<Contact />} />
-        <Route path='/elerhetosegek' element={<Contacts />} />
-        <Route path='/bolt' element={<Shop />} />
-        <Route path='/csomagolasfeltetelek' element={<PackagingTerms />} />
-        <Route path='/elfelejtettjelszo' element={<ForgotPassword />} />
+      <div className="app-content">
+        <Routes>
+          <Route path='/' element={<Home />}></Route>
+          <Route path='/szures' element={<FilterPage />} ></Route>
+          <Route path='/szerviz' element={<Service />}></Route>
+          <Route path='/kosar' element={<Cart />}></Route>
+          <Route path='/osszehasonlitas' element={<Compare />}></Route>
+          <Route path="/telefon/:phoneId" element={<PhonePage />} />
+          <Route path="/profil" element={token ? <Profile /> : <LoginRegister />}></Route>
+          <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
+          <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
+          <Route path="/bejelentkezes" element={<LoginRegister />}></Route>
+          <Route path='/fiokaktivalas' element={<RegistrationConfirm />} />
+          <Route path='/teszt' element={<KepTeszt />} />
+          <Route path='/rolunk' element={<AboutUs />} />
+          <Route path='/kapcsolat' element={<Contact />} />
+          <Route path='/elerhetosegek' element={<Contacts />} />
+          <Route path='/bolt' element={<Shop />} />
+          <Route path='/csomagolasfeltetelek' element={<PackagingTerms />} />
+          <Route path='/elfelejtettjelszo' element={<ForgotPassword />} />
 
-      </Routes>
+        </Routes>
+      </div>
 
       {shouldShowLayout && <Footer />}
 

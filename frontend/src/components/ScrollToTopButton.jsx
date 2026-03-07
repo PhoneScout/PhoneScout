@@ -3,6 +3,7 @@ import './ScrollToTopButton.css';
 
 export default function ScrollToTopButton() {
   const [isVisible, setIsVisible] = useState(false);
+  const [isChatbotOpen, setIsChatbotOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => {
@@ -17,6 +18,18 @@ export default function ScrollToTopButton() {
     };
   }, []);
 
+  useEffect(() => {
+    const handleChatbotState = (event) => {
+      setIsChatbotOpen(Boolean(event?.detail?.isOpen));
+    };
+
+    window.addEventListener('chatbotStateChange', handleChatbotState);
+
+    return () => {
+      window.removeEventListener('chatbotStateChange', handleChatbotState);
+    };
+  }, []);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -26,7 +39,7 @@ export default function ScrollToTopButton() {
   return (
     <button
       type="button"
-      className="scrollToTopButton"
+      className={`scrollToTopButton ${isChatbotOpen ? 'chatbot-open' : ''}`}
       onClick={scrollToTop}
       aria-label="Ugrás az oldal tetejére"
       title="Ugrás az oldal tetejére"

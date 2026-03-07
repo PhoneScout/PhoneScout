@@ -11,6 +11,37 @@ export default function Login({ onSwitchToRegister }) {
     const navigate = useNavigate();
     const { login: authLogin } = useAuth(); 
 
+    const getApiErrorMessage = (error, fallback) => {
+        const status = error?.response?.status;
+        const responseData = error?.response?.data;
+
+        if (typeof responseData === 'string' && responseData.trim()) {
+            return responseData;
+        }
+
+        if (typeof responseData?.message === 'string' && responseData.message.trim()) {
+            return responseData.message;
+        }
+
+        switch (status) {
+            case 400:
+                return 'Hibás email cím vagy jelszó.';
+            case 401:
+                return 'Hibás email cím vagy jelszó.';
+            case 404:
+                return 'A felhasználó nem található.';
+            case 429:
+                return 'Túl sok próbálkozás történt. Kérjük, próbálja újra később.';
+            case 500:
+                return 'Szerverhiba történt. Kérjük, próbálja újra később.';
+            default:
+                if (error?.code === 'ERR_NETWORK') {
+                    return 'Nem sikerült kapcsolódni a szerverhez. Ellenőrizze az internetkapcsolatot.';
+                }
+                return fallback;
+        }
+    };
+
     const handleLogin = async (e) => {    
         if (e) e.preventDefault();
 
@@ -88,7 +119,7 @@ export default function Login({ onSwitchToRegister }) {
 
         } catch (error) {
             alertBox.style.color = "red";
-            alertBox.innerText = "Hiba történt a bejelentkezés során: " + error.message;
+            alertBox.innerText = getApiErrorMessage(error, "Hiba történt a bejelentkezés során.");
         }
     };
 

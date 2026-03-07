@@ -31,6 +31,7 @@ export default function Compare() {
   const [calculatedPrice, setCalculatedPrice] = useState(0);
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 991.98);
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
+  const [apiMessage, setApiMessage] = useState('');
 
   // Csoportosított tulajdonságok
   const groupedProps = [
@@ -103,6 +104,25 @@ export default function Compare() {
   ];
 
   const logicalValueKeys = ["phoneInStore"];
+  const lowerIsBetterKeys = ["phonePrice"];
+
+  const getApiErrorMessage = (error, fallback) => {
+    const responseData = error?.response?.data;
+
+    if (typeof responseData === 'string' && responseData.trim()) {
+      return responseData;
+    }
+
+    if (typeof responseData?.message === 'string' && responseData.message.trim()) {
+      return responseData.message;
+    }
+
+    if (error?.code === 'ERR_NETWORK') {
+      return 'Nem sikerült kapcsolódni a szerverhez. Kérjük, próbálja újra.';
+    }
+
+    return fallback;
+  };
 
   // Összes telefon betöltése (modálhoz)
   useEffect(() => {
@@ -115,6 +135,7 @@ export default function Compare() {
         }
       } catch (err) {
         console.error("Hiba az összes telefon lekérésekor:", err);
+        setApiMessage(getApiErrorMessage(err, 'Nem sikerült betölteni a telefonlistát.'));
       } finally {
         setLoadingAllPhones(false);
       }
@@ -132,6 +153,7 @@ export default function Compare() {
     }
 
     try {
+      setApiMessage('');
       const requests = compareIds.map(id =>
         axios.get(`http://localhost:5175/comparePage/${id}`)
       );
@@ -164,6 +186,7 @@ export default function Compare() {
       setPhones(phones);
     } catch (err) {
       console.error("Hiba az adatok lekérésekor:", err);
+      setApiMessage(getApiErrorMessage(err, 'Az összehasonlítás adatai nem tölthetők be.'));
     } finally {
       setLoading(false);
     }
@@ -300,8 +323,16 @@ export default function Compare() {
   const min = Math.min(...numericValues);
   const current = parseFloat(value);
 
-  if (current === max && max !== min) return "highlight-green";
-  if (current === min && max !== min) return "highlight-orange";
+  if (max === min) return "";
+
+  if (lowerIsBetterKeys.includes(key)) {
+    if (current === min) return "highlight-green";
+    if (current === max) return "highlight-orange";
+    return "";
+  }
+
+  if (current === max) return "highlight-green";
+  if (current === min) return "highlight-orange";
   return "";
 };
 
@@ -514,6 +545,14 @@ export default function Compare() {
 
   return (
     <div className="container-fluid py-4">
+      {apiMessage && (
+        <div className="container">
+          <div className="alert alert-warning" role="alert">
+            {apiMessage}
+          </div>
+        </div>
+      )}
+
       {isMobileView && isMobileFilterOpen && (
         <button
           className="compare-mobile-filter-backdrop"
