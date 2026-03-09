@@ -684,6 +684,10 @@
   font-family: 'Inter', sans-serif;
 }
 
+.service-request-multiline {
+  white-space: pre-wrap;
+}
+
 .service-request-details strong {
   color: #2300B3;
   font-weight: 600;
@@ -758,10 +762,10 @@
   backdrop-filter: blur(4px); /* Modern üveghatás */
   display: flex;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
   overflow-y: auto;
   padding: clamp(10px, 2.4vh, 22px);
-  z-index: 1000;
+  z-index: 30000;
   animation: modalFadeIn 0.3s ease-out;
 }
 
@@ -777,8 +781,32 @@
   max-height: calc(100dvh - 2 * clamp(10px, 2.4vh, 22px));
   overflow-y: auto;
   text-align: center;
+  position: relative;
   transform: translateY(0);
   animation: modalSlideUp 0.3s ease-out;
+}
+
+.profile-modal-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  border: none;
+  background: transparent;
+  font-size: 1.8rem;
+  line-height: 1;
+  cursor: pointer;
+  color: #666;
+}
+
+.profile-modal-close:hover {
+  color: #2300B3;
+}
+
+.profile-modal-content-lg {
+  width: min(92vw, 880px);
+  max-width: 880px;
+  max-height: calc(100dvh - 2 * clamp(10px, 2.4vh, 22px));
+  text-align: left;
 }
 
 /* Cím stílusa */
@@ -801,6 +829,50 @@
   display: flex;
   gap: 1rem;
   justify-content: center;
+  flex-wrap: wrap;
+}
+
+.repair-description-preview {
+  text-align: left;
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;
+  white-space: pre-wrap;
+}
+
+.repair-edit-container {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  text-align: left;
+}
+
+.repair-edit-textarea {
+  width: 100%;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 0.7rem;
+  resize: vertical;
+  box-sizing: border-box;
+}
+
+.repair-edit-actions {
+  display: flex;
+  gap: 0.6rem;
+}
+
+.profile-modal-actions button:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 768px) {
+  .profile-modal-content-lg {
+    width: 96vw;
+    max-width: 96vw;
+    padding: 1.2rem;
+  }
 }
 
 /* Közös gomb stílusok */
