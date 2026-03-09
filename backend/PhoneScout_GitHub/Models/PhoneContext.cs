@@ -655,7 +655,7 @@ public partial class PhoneContext : DbContext
                 .HasColumnType("int(11)")
                 .HasColumnName("chargerTypeID");
             entity.Property(e => e.ConnectionConnectionSpeed)
-                .HasPrecision(11)
+                .HasPrecision(11, 1)
                 .HasColumnName("connectionConnectionSpeed");
             entity.Property(e => e.ConnectionDualSim)
                 .HasColumnType("int(1)")

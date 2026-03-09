@@ -240,12 +240,12 @@ namespace PhoneScout_GitHub.Controllers
                 ScreenMaxBrightness = dto.screenMaxBrightness,
                 ScreenSharpness = dto.screenSharpness,
                 ConnectionMaxWifi = (int?)dto.connectionMaxWifi,
-                ConnectionMaxBluetooth = (decimal?)dto.connectionMaxBluetooth,
+                ConnectionMaxBluetooth = dto.connectionMaxBluetooth,
                 ConnectionMaxMobileNetwork = dto.connectionMaxMobileNetwork,
                 ConnectionDualSim = dto.connectionDualSim,
                 ConnectionEsim = dto.connectionEsim,
                 ConnectionNfc = dto.connectionNfc,
-                ConnectionConnectionSpeed = (int?)dto.connectionConnectionSpeed,
+                ConnectionConnectionSpeed = dto.connectionConnectionSpeed,
                 ConnectionJack = dto.connectionJack,
                 SensorsInfrared = dto.sensorsInfrared,
                 BatteryCapacity = dto.batteryCapacity,
@@ -432,7 +432,7 @@ namespace PhoneScout_GitHub.Controllers
             phone.ConnectionDualSim = dto.connectionDualSim;
             phone.ConnectionEsim = dto.connectionEsim;
             phone.ConnectionNfc = dto.connectionNfc;
-            phone.ConnectionConnectionSpeed = (int?)dto.connectionConnectionSpeed;
+            phone.ConnectionConnectionSpeed = dto.connectionConnectionSpeed;
             phone.ConnectionJack = dto.connectionJack;
             phone.SensorsInfrared = dto.sensorsInfrared;
             phone.BatteryCapacity = dto.batteryCapacity;
