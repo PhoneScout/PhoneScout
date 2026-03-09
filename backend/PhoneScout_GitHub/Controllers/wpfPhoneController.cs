@@ -465,80 +465,213 @@ namespace PhoneScout_GitHub.Controllers
             // STEP 3: Merge multi-value tables
             // ===============================
 
-            // COLORS
-            foreach (var colorDto in dto.colors)
-            {
-                var color = cx.Colors.FirstOrDefault(c =>
-                    c.ColorName == colorDto.colorName &&
-                    c.ColorHex == colorDto.colorHex)
-                    ?? cx.Colors.Add(new Color
-                    {
-                        ColorName = colorDto.colorName,
-                        ColorHex = colorDto.colorHex
-                    }).Entity;
+            // ===============================
+// COLORS
+// ===============================
 
-                if (!phone.Connphonecolors.Any(x => x.ColorId == color.Id))
-                {
-                    phone.Connphonecolors.Add(new Connphonecolor
-                    {
-                        Color = color
-                    });
-                }
-            }
+// --- Get existing color connections
+var existingColorIds = phone.Connphonecolors
+    .Select(c => c.ColorId)
+    .ToList();
 
-            // RAM + STORAGE
-            foreach (var rs in dto.ramStoragePairs)
-            {
-                var ramStorage = cx.Ramstorages.FirstOrDefault(r =>
-                    r.RamAmount == rs.ramAmount &&
-                    r.StorageAmount == rs.storageAmount)
-                    ?? cx.Ramstorages.Add(new Ramstorage
-                    {
-                        RamAmount = rs.ramAmount,
-                        StorageAmount = rs.storageAmount
-                    }).Entity;
+// --- Get color IDs from DTO
+var updatedColorIds = new List<int>();
 
-                if (!phone.Connphoneramstorages.Any(x => x.RamstorageId == ramStorage.Id))
-                {
-                    phone.Connphoneramstorages.Add(new Connphoneramstorage
-                    {
-                        Ramstorage = ramStorage
-                    });
-                }
-            }
+foreach (var colorDto in dto.colors)
+{
+    var existingColor = cx.Colors
+        .FirstOrDefault(c =>
+            c.ColorName == colorDto.colorName &&
+            c.ColorHex == colorDto.colorHex);
 
-            // CAMERAS
-            foreach (var camDto in dto.cameras)
-            {
-                var camera = cx.Cameras.FirstOrDefault(c =>
-                    c.CameraName == camDto.cameraName)
-                    ?? cx.Cameras.Add(new Camera
-                    {
-                        CameraName = camDto.cameraName,
-                        CameraResolution = camDto.cameraResolution,
-                        CameraAperture = camDto.cameraAperture,
-                        CameraFocalLength = camDto.cameraFocalLength,
-                        CameraOis = camDto.cameraOis
-                    }).Entity;
+    if (existingColor != null)
+        updatedColorIds.Add(existingColor.Id);
+}
 
-                var cameraType = cx.Cameratypes.FirstOrDefault(ct =>
-                    ct.CameraType1 == camDto.cameraType)
-                    ?? cx.Cameratypes.Add(new Cameratype
-                    {
-                        CameraType1 = camDto.cameraType
-                    }).Entity;
+// --- Find colors that must be removed
+var colorsToRemove = existingColorIds
+    .Except(updatedColorIds)
+    .ToList();
 
-                if (!phone.Connphonecameras.Any(x =>
-                    x.CameraId == camera.Id &&
-                    x.CameraTypeId == cameraType.Id))
-                {
-                    phone.Connphonecameras.Add(new Connphonecamera
-                    {
-                        Camera = camera,
-                        CameraType = cameraType
-                    });
-                }
-            }
+foreach (var colorId in colorsToRemove)
+{
+    var connection = phone.Connphonecolors
+        .FirstOrDefault(c => c.ColorId == colorId);
+
+    if (connection != null)
+        cx.Connphonecolors.Remove(connection);
+}
+
+// --- Add missing colors
+foreach (var colorDto in dto.colors)
+{
+    var color = cx.Colors.FirstOrDefault(c =>
+        c.ColorName == colorDto.colorName &&
+        c.ColorHex == colorDto.colorHex);
+
+    if (color == null)
+    {
+        color = new Color
+        {
+            ColorName = colorDto.colorName,
+            ColorHex = colorDto.colorHex
+        };
+
+        cx.Colors.Add(color);
+        cx.SaveChanges();
+    }
+
+    bool exists = phone.Connphonecolors
+        .Any(x => x.ColorId == color.Id);
+
+    if (!exists)
+    {
+        phone.Connphonecolors.Add(new Connphonecolor
+        {
+            ColorId = color.Id
+        });
+    }
+}
+
+           // ===============================
+// RAM + STORAGE
+// ===============================
+
+// --- Existing connections
+var existingRamStorageIds = phone.Connphoneramstorages
+    .Select(r => r.RamstorageId)
+    .ToList();
+
+// --- IDs from DTO
+var updatedRamStorageIds = new List<int>();
+
+foreach (var rs in dto.ramStoragePairs)
+{
+    var existingPair = cx.Ramstorages.FirstOrDefault(r =>
+        r.RamAmount == rs.ramAmount &&
+        r.StorageAmount == rs.storageAmount);
+
+    if (existingPair != null)
+        updatedRamStorageIds.Add(existingPair.Id);
+}
+
+// --- Find pairs to remove
+var ramStorageToRemove = existingRamStorageIds
+    .Except(updatedRamStorageIds)
+    .ToList();
+
+foreach (var ramStorageId in ramStorageToRemove)
+{
+    var connection = phone.Connphoneramstorages
+        .FirstOrDefault(r => r.RamstorageId == ramStorageId);
+
+    if (connection != null)
+        cx.Connphoneramstorages.Remove(connection);
+}
+
+// --- Add new pairs
+foreach (var rs in dto.ramStoragePairs)
+{
+    var ramStorage = cx.Ramstorages.FirstOrDefault(r =>
+        r.RamAmount == rs.ramAmount &&
+        r.StorageAmount == rs.storageAmount);
+
+    if (ramStorage == null)
+    {
+        ramStorage = new Ramstorage
+        {
+            RamAmount = rs.ramAmount,
+            StorageAmount = rs.storageAmount
+        };
+
+        cx.Ramstorages.Add(ramStorage);
+        cx.SaveChanges();
+    }
+
+    bool exists = phone.Connphoneramstorages
+        .Any(x => x.RamstorageId == ramStorage.Id);
+
+    if (!exists)
+    {
+        phone.Connphoneramstorages.Add(new Connphoneramstorage
+        {
+            RamstorageId = ramStorage.Id
+        });
+    }
+}
+
+            // ===============================
+// CAMERAS
+// ===============================
+
+// --- Step 1: Get existing connections
+var existingCameraConnections = phone.Connphonecameras
+    .Select(c => new { c.CameraId, c.CameraTypeId })
+    .ToList();
+
+// --- Step 2: Prepare updated connections from DTO
+var updatedCameraConnections = new List<(int CameraId, int CameraTypeId)>();
+
+foreach (var camDto in dto.cameras)
+{
+    // Ensure Camera exists
+    var camera = cx.Cameras.FirstOrDefault(c => c.CameraName == camDto.cameraName);
+    if (camera == null)
+    {
+        camera = new Camera
+        {
+            CameraName = camDto.cameraName,
+            CameraResolution = camDto.cameraResolution,
+            CameraAperture = camDto.cameraAperture,
+            CameraFocalLength = camDto.cameraFocalLength,
+            CameraOis = camDto.cameraOis
+        };
+        cx.Cameras.Add(camera);
+        cx.SaveChanges();
+    }
+
+    // Ensure CameraType exists
+    var cameraType = cx.Cameratypes.FirstOrDefault(ct => ct.CameraType1 == camDto.cameraType);
+    if (cameraType == null)
+    {
+        cameraType = new Cameratype { CameraType1 = camDto.cameraType };
+        cx.Cameratypes.Add(cameraType);
+        cx.SaveChanges();
+    }
+
+    updatedCameraConnections.Add((camera.Id, cameraType.Id));
+}
+
+// --- Step 3: Remove connections that are no longer in DTO
+var connectionsToRemove = existingCameraConnections
+    .Where(ec => !updatedCameraConnections
+        .Any(uc => uc.CameraId == ec.CameraId && uc.CameraTypeId == ec.CameraTypeId))
+    .ToList();
+
+foreach (var conn in connectionsToRemove)
+{
+    var existingConn = phone.Connphonecameras
+        .FirstOrDefault(c => c.CameraId == conn.CameraId && c.CameraTypeId == conn.CameraTypeId);
+
+    if (existingConn != null)
+        cx.Connphonecameras.Remove(existingConn);
+}
+
+// --- Step 4: Add missing connections
+foreach (var conn in updatedCameraConnections)
+{
+    bool exists = phone.Connphonecameras
+        .Any(c => c.CameraId == conn.CameraId && c.CameraTypeId == conn.CameraTypeId);
+
+    if (!exists)
+    {
+        phone.Connphonecameras.Add(new Connphonecamera
+        {
+            CameraId = conn.CameraId,
+            CameraTypeId = conn.CameraTypeId
+        });
+    }
+}
 
             // ===============================
             // FINAL SAVE
