@@ -3,6 +3,7 @@ import './Profile.css';
 import axios from 'axios';
 import { UNSAFE_useScrollRestoration, useNavigate } from 'react-router';
 import InputText from '../components/InputText';
+import { getCityFromPostalCode } from '../utils/postalCodeUtils';
 
 
 //fetch('http://localhost:5292/phonePage/2').then(response => response.json()).then(data => console.log(data)) //ID-T KISZEDNI A / MÖGÜL HA VAN
@@ -79,6 +80,7 @@ const Profile = () => {
   const [showEditRequestForm, setShowEditRequestForm] = useState(false);
   const [editRequestText, setEditRequestText] = useState('');
   const [editRequestMessage, setEditRequestMessage] = useState({ text: '', isError: false });
+  const [offerActionMessage, setOfferActionMessage] = useState({ text: '', isError: false });
   const [showActionConfirmModal, setShowActionConfirmModal] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
   const [showEditSuccessModal, setShowEditSuccessModal] = useState(false);
@@ -103,6 +105,11 @@ const Profile = () => {
   
   // Feedback messages
   const [paymentSuccessMessage, setPaymentSuccessMessage] = useState('');
+
+  const isAuthenticatedForPayment = () => {
+    const token = localStorage.getItem('userToken') || localStorage.getItem('jwtToken') || localStorage.getItem('token');
+    return Boolean(token) && userID && !Number.isNaN(Number(userID)) && Number(userID) > 0;
+  };
 
 
   // Szervízrendelések betöltése az API-ből
@@ -157,6 +164,7 @@ const Profile = () => {
     setShowEditRequestForm(false);
     setEditRequestText('');
     setEditRequestMessage({ text: '', isError: false });
+    setOfferActionMessage({ text: '', isError: false });
     setShowPriceModal(true);
   };
 
@@ -168,6 +176,7 @@ const Profile = () => {
     setShowEditRequestForm(false);
     setEditRequestText('');
     setEditRequestMessage({ text: '', isError: false });
+    setOfferActionMessage({ text: '', isError: false });
   };
 
   // helpers for payment modal
@@ -338,6 +347,12 @@ const Profile = () => {
 
   const proceedAcceptOffer = () => {
     if (!activeRepair) return;
+    if (!isAuthenticatedForPayment()) {
+      setOfferActionMessage({ text: 'A fizetéshez be kell jelentkezni.', isError: true });
+      return;
+    }
+
+    setOfferActionMessage({ text: '', isError: false });
     // Közvetlenül a fizetési modalra lépünk az activeRepair már szerzett cím adatokkal
     setShowPriceModal(false);
     // reset payment form state
@@ -842,10 +857,38 @@ const Profile = () => {
     }
   };
 
-  const handleAddressInputChange = (e, type, idx, field) => {
+  const handleAddressInputChange = async (e, type, idx, field) => {
     let { value } = e.target;
     if (field === 'phoneNumber') {
       value = sanitizePhone(value);
+    }
+
+    // Ha irányítószámot módosít és 4 karakter hosszú, automatikusan kitölti a várost
+    if (field === 'postalCode') {
+      value = value.replace(/\D/g, '').slice(0, 4);
+      if (value.length === 4) {
+        try {
+          const data = await getCityFromPostalCode(value);
+          if (data && data.telepules) {
+            // Automatikusan kitölti a várost is
+            if (type === 'shipping') {
+              const updated = shippingAddresses.map((addr, i) =>
+                i === idx ? { ...addr, postalCode: value, city: data.telepules } : addr
+              );
+              setShippingAddresses(updated);
+            } else {
+              const updated = billingAddresses.map((addr, i) =>
+                i === idx ? { ...addr, postalCode: value, city: data.telepules } : addr
+              );
+              setBillingAddresses(updated);
+            }
+            return;
+          }
+        } catch (error) {
+          console.log('Irányítószám nem található');
+          // Folytatjuk a normál frissítést
+        }
+      }
     }
 
     if (type === 'shipping') {
@@ -861,12 +904,30 @@ const Profile = () => {
     }
   };
 
-  const handleNewAddressChange = (e) => {
+  const handleNewAddressChange = async (e) => {
     const { name, value } = e.target;
     let v = value;
     if (name === 'phoneNumber') {
       v = sanitizePhone(value);
     }
+    
+    // Ha irányítószámot módosít és 4 karakter hosszú, automatikusan kitölti a várost
+    if (name === 'postalCode') {
+      v = value.replace(/\D/g, '').slice(0, 4);
+      if (v.length === 4) {
+        try {
+          const data = await getCityFromPostalCode(v);
+          if (data && data.telepules) {
+            setNewAddress({ ...newAddress, postalCode: v, city: data.telepules });
+            return;
+          }
+        } catch (error) {
+          console.log('Irányítószám nem található');
+          // Folytatjuk a normál frissítést
+        }
+      }
+    }
+    
     setNewAddress({ ...newAddress, [name]: v });
   };
 
@@ -1167,7 +1228,10 @@ const Profile = () => {
                           <button
                             type="button"
                             className="btn-cancel"
-                            onClick={() => setEditingShippingId(null)}
+                            onClick={() => {
+                              setEditingShippingId(null);
+                              refreshAddresses();
+                            }}
                           >
                             Mégse
                           </button>
@@ -1357,7 +1421,10 @@ const Profile = () => {
                           <button
                             type="button"
                             className="btn-cancel"
-                            onClick={() => setEditingBillingId(null)}
+                            onClick={() => {
+                              setEditingBillingId(null);
+                              refreshAddresses();
+                            }}
                           >
                             Mégse
                           </button>
@@ -1580,12 +1647,17 @@ const Profile = () => {
                   <button onClick={handleAcceptOffer} className="profile-modal-btn-confirm" disabled={showEditRequestForm}>Elfogadás</button>
                   <button onClick={handleDeclineOffer} className="btn-cancel" disabled={showEditRequestForm}>Elutasítás</button>
                   {!showEditRequestForm && (
-                    <button onClick={toggleEditRequestForm} className="profile-modal-btn-cancel">
+                    <button onClick={toggleEditRequestForm} className="profile-modal btn-copy">
                       Szerviz módosítása
                     </button>
                   )}
                   <button onClick={closePriceModal} className="profile-modal-btn-cancel" disabled={showEditRequestForm}>Vissza</button>
                 </div>
+                {offerActionMessage.text && (
+                  <p className={offerActionMessage.isError ? 'text-danger' : 'text-success'}>
+                    <strong>{offerActionMessage.text}</strong>
+                  </p>
+                )}
                 {showEditRequestForm && (
                   <div className="repair-edit-container">
                     <label htmlFor="edit-repair-request"><strong>Írd le, mit szeretnél módosítani:</strong></label>
@@ -1598,8 +1670,8 @@ const Profile = () => {
                       placeholder="Pl.: Kérem csak a kijelző cseréjére adjatok ajánlatot..."
                     />
                     <div className="repair-edit-actions">
-                      <button onClick={cancelEditRequest} className="btn-cancel">Mégse</button>
                       <button onClick={handleSubmitEditRequest} className="profile-modal-btn-confirm">Küldés</button>
+                      <button onClick={cancelEditRequest} className="btn-cancel">Mégse</button>
                     </div>
                     {editRequestMessage.text && (
                       <p className={editRequestMessage.isError ? 'text-danger' : 'text-success'}>

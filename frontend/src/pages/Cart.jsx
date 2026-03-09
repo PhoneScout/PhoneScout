@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import "./Cart.css";
 import axios from 'axios';
+import { getCityFromPostalCode } from '../utils/postalCodeUtils';
 
 const EMPTY_ADDRESS = {
   postalCode: '',
@@ -19,6 +20,7 @@ export default function Cart() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [paymentAccessMessage, setPaymentAccessMessage] = useState('');
   const [formData, setFormData] = useState({
     cardNumber: '',
     expiry: '',
@@ -47,6 +49,12 @@ export default function Cart() {
     const userName = localStorage.getItem("fullname") || "";
 
     return { userID, userEmail, userName };
+  };
+
+  const isAuthenticatedForPayment = () => {
+    const token = localStorage.getItem('userToken') || localStorage.getItem('jwtToken') || localStorage.getItem('token');
+    const { userID } = getUserContext();
+    return Boolean(token) && userID && !Number.isNaN(userID) && userID > 0;
   };
 
   const normalizeAddress = (address) => ({
@@ -287,11 +295,31 @@ export default function Cart() {
     setFormData(prev => ({ ...prev, [id]: processedValue }));
   };
 
-  const handleAddressInputChange = (type, field, value) => {
+  const handleAddressInputChange = async (type, field, value) => {
     let processedValue = value;
 
     if (field === 'postalCode') {
       processedValue = value.replace(/\D/g, '').slice(0, 4);
+      
+      // Város automatikus kitöltése, ha 4 számjegy van
+      if (processedValue.length === 4) {
+        try {
+          const data = await getCityFromPostalCode(processedValue);
+          if (data && data.telepules) {
+            if (type === 'delivery') {
+              setDeliveryAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
+              if (billingSameAsDelivery) {
+                setBillingAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
+              }
+            } else {
+              setBillingAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
+            }
+            return; // Kilépünk, mert már frissítettük az állapotot
+          }
+        } catch (error) {
+          console.log('Irányítószám nem található');
+        }
+      }
     }
 
     if (field === 'phoneNumber') {
@@ -401,6 +429,12 @@ export default function Cart() {
   const openPaymentModal = () => {
     setFormErrors({});
     setAddressErrors({});
+    if (!isAuthenticatedForPayment()) {
+      setPaymentAccessMessage('A fizetéshez be kell jelentkezni.');
+      return;
+    }
+
+    setPaymentAccessMessage('');
     setShowPaymentModal(true);
   };
 
@@ -495,6 +529,11 @@ export default function Cart() {
                 <button className="paymentButton" onClick={openPaymentModal}>
                   Fizetés
                 </button>
+                {paymentAccessMessage && (
+                  <div className="alert alert-danger mt-3 mb-0" role="alert">
+                    {paymentAccessMessage}
+                  </div>
+                )}
 
                 {cartPhones.map(item => {
                   const phone = item.phone || {};

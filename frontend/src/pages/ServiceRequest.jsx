@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import axios from 'axios';
+import { getCityFromPostalCode } from '../utils/postalCodeUtils';
 
 const EMPTY_ADDRESS = {
   postalCode: '',
@@ -22,6 +23,7 @@ export default function ServiceRequest() {
   });
   const [selectedProblems, setSelectedProblems] = useState([]);
   const [formMessage, setFormMessage] = useState('');
+  const [requestFieldErrors, setRequestFieldErrors] = useState({});
   const [showAtvizsgalasInfo, setShowAtvizsgalasInfo] = useState(false);
   const [uniqueCode, setUniqueCode] = useState('');
 
@@ -76,6 +78,12 @@ export default function ServiceRequest() {
     const userName = localStorage.getItem("fullname") || "";
 
     return { userID, userEmail, userName };
+  };
+
+  const isAuthenticatedForPayment = () => {
+    const token = localStorage.getItem('userToken') || localStorage.getItem('jwtToken') || localStorage.getItem('token');
+    const { userID } = getUserContext();
+    return Boolean(token) && userID && !Number.isNaN(userID) && userID > 0;
   };
 
   const getApiErrorMessage = (error, fallbackMessage) => {
@@ -225,12 +233,17 @@ export default function ServiceRequest() {
       [id]: type === 'checkbox' ? checked : processedValue
     }));
 
+    if (id !== 'atvizsgalas') {
+      setRequestFieldErrors(prev => ({ ...prev, [id]: '' }));
+    }
+
     if (id === 'atvizsgalas') {
       setShowAtvizsgalasInfo(checked);
     }
   };
 
   const handleProblemToggle = (problem) => {
+    setRequestFieldErrors(prev => ({ ...prev, selectedProblems: '' }));
     setSelectedProblems(prev => {
       if (prev.includes(problem.value)) {
         return prev.filter(p => p !== problem.value);
@@ -283,11 +296,34 @@ export default function ServiceRequest() {
     setPaymentFormData(prev => ({ ...prev, [id]: processedValue }));
   };
 
-  const handleAddressInputChange = (type, field, value) => {
+  const handleAddressInputChange = async (type, field, value) => {
     let processedValue = value;
 
     if (field === 'postalCode') {
       processedValue = value.replace(/\D/g, '').slice(0, 4);
+      
+      // Város automatikus kitöltése, ha 4 számjegy van
+      if (processedValue.length === 4) {
+        try {
+          const data = await getCityFromPostalCode(processedValue);
+          if (data && data.telepules) {
+            if (type === 'delivery') {
+              setDeliveryAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
+              if (billingSameAsDelivery) {
+                setBillingAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
+              }
+            } else {
+              setBillingAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
+              if (billingSameAsDelivery) {
+                setDeliveryAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
+              }
+            }
+            return; // Kilépünk, mert már frissítettük az állapotot
+          }
+        } catch (error) {
+          console.log('Irányítószám nem található');
+        }
+      }
     }
 
     if (field === 'phoneNumber') {
@@ -302,6 +338,10 @@ export default function ServiceRequest() {
       }
     } else {
       setBillingAddressData(prev => ({ ...prev, [field]: processedValue }));
+
+      if (billingSameAsDelivery) {
+        setDeliveryAddressData(prev => ({ ...prev, [field]: processedValue }));
+      }
     }
   };
 
@@ -309,7 +349,9 @@ export default function ServiceRequest() {
     setBillingSameAsDelivery(checked);
 
     if (checked) {
-      setBillingAddressData(deliveryAddressData);
+      setDeliveryAddressData(billingAddressData);
+      setSelectedDeliveryAddressId(selectedBillingAddressId);
+      setShowDeliveryAddressForm(showBillingAddressForm);
     }
   };
 
@@ -318,17 +360,33 @@ export default function ServiceRequest() {
       setShowBillingAddressForm(true);
       setBillingAddressData(EMPTY_ADDRESS);
       setSelectedBillingAddressId(null);
+      if (billingSameAsDelivery) {
+        setShowDeliveryAddressForm(true);
+        setDeliveryAddressData(EMPTY_ADDRESS);
+        setSelectedDeliveryAddressId(null);
+      }
     } else if (addressId) {
       setShowBillingAddressForm(false);
       setSelectedBillingAddressId(parseInt(addressId, 10));
       const selectedAddress = billingAddressList.find(addr => addr.id === parseInt(addressId, 10));
       if (selectedAddress) {
-        setBillingAddressData(normalizeAddress(selectedAddress));
+        const normalized = normalizeAddress(selectedAddress);
+        setBillingAddressData(normalized);
+        if (billingSameAsDelivery) {
+          setShowDeliveryAddressForm(false);
+          setSelectedDeliveryAddressId(parseInt(addressId, 10));
+          setDeliveryAddressData(normalized);
+        }
       }
     } else {
       setShowBillingAddressForm(false);
       setSelectedBillingAddressId(null);
       setBillingAddressData(EMPTY_ADDRESS);
+      if (billingSameAsDelivery) {
+        setShowDeliveryAddressForm(false);
+        setSelectedDeliveryAddressId(null);
+        setDeliveryAddressData(EMPTY_ADDRESS);
+      }
     }
   };
 
@@ -400,6 +458,16 @@ export default function ServiceRequest() {
     setPaymentFormErrors({});
     setAddressErrors({});
     setAddressLoadError('');
+
+    if (!isAuthenticatedForPayment()) {
+      setFormMessage(
+        <div className="alert alert-danger">
+          A fizetéshez be kell jelentkezni.
+        </div>
+      );
+      return;
+    }
+
     setShowPaymentModal(true);
   };
 
@@ -567,6 +635,22 @@ export default function ServiceRequest() {
     const trimmedProblem = formData.problem.trim();
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    const fieldErrors = {};
+    if (!trimmedName) fieldErrors.name = 'Nem adta meg.';
+    if (!trimmedEmail) fieldErrors.email = 'Nem adta meg.';
+    if (!phoneDigits) fieldErrors.phone = 'Nem adta meg.';
+    if (!trimmedDevice) fieldErrors.device = 'Nem adta meg.';
+    if (selectedProblems.length === 0) fieldErrors.selectedProblems = 'Nem adta meg.';
+    if (!trimmedProblem) fieldErrors.problem = 'Nem adta meg.';
+
+    if (Object.keys(fieldErrors).length > 0) {
+      setRequestFieldErrors(fieldErrors);
+      setFormMessage('');
+      return;
+    }
+
+    setRequestFieldErrors({});
+
     if (!trimmedName || !trimmedEmail || !phoneDigits || !trimmedDevice || !trimmedProblem) {
       setFormMessage(
         <div className="alert alert-danger">
@@ -655,51 +739,55 @@ export default function ServiceRequest() {
 
       <div className="container my-5">
         <h2>Szervizelés igénylése</h2>
-        <form id="szervizForm" className="row g-3" onSubmit={handleSubmit}>
+        <form id="szervizForm" className="row g-3" onSubmit={handleSubmit} noValidate>
           <div className="col-md-6">
             <label htmlFor="name" className="form-label">Név</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${requestFieldErrors.name ? 'is-invalid' : ''}`}
               id="name"
               value={formData.name}
               onChange={handleInputChange}
               required
             />
+            {requestFieldErrors.name && <div className="invalid-feedback d-block">{requestFieldErrors.name}</div>}
           </div>
           <div className="col-md-6">
             <label htmlFor="email" className="form-label">Email cím</label>
             <input
               type="email"
-              className="form-control"
+              className={`form-control ${requestFieldErrors.email ? 'is-invalid' : ''}`}
               id="email"
               value={formData.email}
               onChange={handleInputChange}
               required
             />
+            {requestFieldErrors.email && <div className="invalid-feedback d-block">{requestFieldErrors.email}</div>}
           </div>
           <div className="col-md-6">
             <label htmlFor="phone" className="form-label">Telefonszám</label>
             <input
               type="tel"
-              className="form-control"
+              className={`form-control ${requestFieldErrors.phone ? 'is-invalid' : ''}`}
               id="phone"
               value={formData.phone}
               onChange={handleInputChange}
               required
               maxLength="15"
             />
+            {requestFieldErrors.phone && <div className="invalid-feedback d-block">{requestFieldErrors.phone}</div>}
           </div>
           <div className="col-md-6">
             <label htmlFor="device" className="form-label">Hibás készülék</label>
             <input
               type="text"
-              className="form-control"
+              className={`form-control ${requestFieldErrors.device ? 'is-invalid' : ''}`}
               id="device"
               value={formData.device}
               onChange={handleInputChange}
               required
             />
+            {requestFieldErrors.device && <div className="invalid-feedback d-block">{requestFieldErrors.device}</div>}
           </div>
           <div className="col-md-6">
             <label className="form-label">Mivel van baj?</label>
@@ -730,6 +818,7 @@ export default function ServiceRequest() {
                 ))}
               </div>
             </div>
+            {requestFieldErrors.selectedProblems && <div className="invalid-feedback d-block">{requestFieldErrors.selectedProblems}</div>}
           </div>
           <div className="col-md-6 d-flex align-items-end">
             <div className="form-check">
@@ -760,13 +849,14 @@ export default function ServiceRequest() {
           <div className="col-12">
             <label htmlFor="problem" className="form-label">Hiba leírása</label>
             <textarea
-              className="form-control"
+              className={`form-control ${requestFieldErrors.problem ? 'is-invalid' : ''}`}
               id="problem"
               rows="3"
               value={formData.problem}
               onChange={handleInputChange}
               required
             ></textarea>
+            {requestFieldErrors.problem && <div className="invalid-feedback d-block">{requestFieldErrors.problem}</div>}
           </div>
           <hr />
           <div className="col-4"> <div className="modalTotalPrice">
@@ -812,10 +902,9 @@ export default function ServiceRequest() {
             >
               {hasSubmittedRepair ? 'Igénylés már elküldve' : 'Igénylés elküldése'}
             </button>
-          </div>
-
-          <div id="formMessage" className="mt-3">
-            {formMessage}
+            <div id="formMessage" className="mt-3">
+              {formMessage}
+            </div>
           </div>
         </form>
       </div>
