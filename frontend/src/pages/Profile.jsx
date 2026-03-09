@@ -1633,7 +1633,7 @@ const Profile = () => {
                   <button onClick={handleAcceptOffer} className="profile-modal-btn-confirm" disabled={showEditRequestForm}>Elfogadás</button>
                   <button onClick={handleDeclineOffer} className="btn-cancel" disabled={showEditRequestForm}>Elutasítás</button>
                   {!showEditRequestForm && (
-                    <button onClick={toggleEditRequestForm} className="profile-modal-btn-cancel">
+                    <button onClick={toggleEditRequestForm} className="profile-modal btn-copy">
                       Szerviz módosítása
                     </button>
                   )}
@@ -1651,8 +1651,8 @@ const Profile = () => {
                       placeholder="Pl.: Kérem csak a kijelző cseréjére adjatok ajánlatot..."
                     />
                     <div className="repair-edit-actions">
-                      <button onClick={cancelEditRequest} className="btn-cancel">Mégse</button>
                       <button onClick={handleSubmitEditRequest} className="profile-modal-btn-confirm">Küldés</button>
+                      <button onClick={cancelEditRequest} className="btn-cancel">Mégse</button>
                     </div>
                     {editRequestMessage.text && (
                       <p className={editRequestMessage.isError ? 'text-danger' : 'text-success'}>
