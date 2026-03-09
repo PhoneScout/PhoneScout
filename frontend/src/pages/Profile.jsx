@@ -60,6 +60,15 @@ const Profile = () => {
     return s;
   };
 
+  const formatDateTime = (date = new Date()) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
+  };
+
   const [phones, setPhones] = useState([]);
   const [serviceRequests, setServiceRequests] = useState([]);
 
@@ -67,7 +76,13 @@ const Profile = () => {
   // price offer modal state
   const [showPriceModal, setShowPriceModal] = useState(false);
   const [activeRepair, setActiveRepair] = useState(null);
-  const [showDeclineConfirm, setShowDeclineConfirm] = useState(false);
+  const [showEditRequestForm, setShowEditRequestForm] = useState(false);
+  const [editRequestText, setEditRequestText] = useState('');
+  const [editRequestMessage, setEditRequestMessage] = useState({ text: '', isError: false });
+  const [showActionConfirmModal, setShowActionConfirmModal] = useState(false);
+  const [pendingAction, setPendingAction] = useState(null);
+  const [showEditSuccessModal, setShowEditSuccessModal] = useState(false);
+  const [waitingForServiceUpdate, setWaitingForServiceUpdate] = useState({});
 
   // payment modal for repair offer
   const [showRepairPaymentModal, setShowRepairPaymentModal] = useState(false);
@@ -87,7 +102,6 @@ const Profile = () => {
   const [paymentShowDeliveryAddressForm, setPaymentShowDeliveryAddressForm] = useState(false);
   
   // Feedback messages
-  const [declineSuccessMessage, setDeclineSuccessMessage] = useState('');
   const [paymentSuccessMessage, setPaymentSuccessMessage] = useState('');
 
 
@@ -104,6 +118,22 @@ const Profile = () => {
         if (Array.isArray(response.data)) {
           // backend omits userID so inject it manually
           const withId = response.data.map(r => ({ ...r, userID }));
+
+          setWaitingForServiceUpdate(prev => {
+            const next = { ...prev };
+            withId.forEach((repair) => {
+              if (!(repair.repairID in prev)) return;
+
+              const previousServiceDescription = (prev[repair.repairID] || '').trim();
+              const currentServiceDescription = (repair.repairDescription || '').trim();
+
+              if (currentServiceDescription && currentServiceDescription !== previousServiceDescription) {
+                delete next[repair.repairID];
+              }
+            });
+            return next;
+          });
+
           setServiceRequests(withId);
         }
       } catch (error) {
@@ -124,13 +154,20 @@ const Profile = () => {
   // helper to open offer modal
   const openPriceModal = (repair) => {
     setActiveRepair(repair);
+    setShowEditRequestForm(false);
+    setEditRequestText('');
+    setEditRequestMessage({ text: '', isError: false });
     setShowPriceModal(true);
   };
 
   const closePriceModal = () => {
     setActiveRepair(null);
     setShowPriceModal(false);
-    setShowDeclineConfirm(false);
+    setShowActionConfirmModal(false);
+    setPendingAction(null);
+    setShowEditRequestForm(false);
+    setEditRequestText('');
+    setEditRequestMessage({ text: '', isError: false });
   };
 
   // helpers for payment modal
@@ -295,6 +332,11 @@ const Profile = () => {
   };
 
   const handleAcceptOffer = () => {
+    setPendingAction('accept');
+    setShowActionConfirmModal(true);
+  };
+
+  const proceedAcceptOffer = () => {
     if (!activeRepair) return;
     // Közvetlenül a fizetési modalra lépünk az activeRepair már szerzett cím adatokkal
     setShowPriceModal(false);
@@ -307,7 +349,8 @@ const Profile = () => {
   };
 
   const handleDeclineOffer = () => {
-    setShowDeclineConfirm(true);
+    setPendingAction('decline');
+    setShowActionConfirmModal(true);
   };
 
   const confirmDecline = async () => {
@@ -324,16 +367,132 @@ const Profile = () => {
       );
       // update local list so button disappears
       setServiceRequests(prev => prev.map(r => r.repairID === activeRepair.repairID ? { ...r, isPriceAccepted: 2 } : r));
-      setDeclineSuccessMessage('Árajánlat sikeresen elutasítva!');
-      setTimeout(() => {
-        setShowDeclineConfirm(false);
-        closePriceModal();
-        setDeclineSuccessMessage('');
-      }, 2000);
+      closePriceModal();
     } catch (err) {
       console.error('Árajánlat elutasítása hiba:', err);
-      setShowDeclineConfirm(false);
       closePriceModal();
+    }
+  };
+
+  const toggleEditRequestForm = () => {
+    setShowEditRequestForm(prev => !prev);
+    setEditRequestMessage({ text: '', isError: false });
+    setEditRequestText('');
+  };
+
+  const cancelEditRequest = () => {
+    setShowEditRequestForm(false);
+    setEditRequestText('');
+    setEditRequestMessage({ text: '', isError: false });
+  };
+
+  const handleSubmitEditRequest = async () => {
+    const trimmedDescription = editRequestText.trim();
+    if (!trimmedDescription) {
+      setEditRequestMessage({ text: 'A módosítás leírása nem lehet üres.', isError: true });
+      return;
+    }
+
+    setPendingAction('edit');
+    setShowActionConfirmModal(true);
+  };
+
+  const submitEditRequest = async () => {
+    if (!activeRepair) return;
+
+    const trimmedDescription = editRequestText.trim();
+    if (!trimmedDescription) {
+      setEditRequestMessage({ text: 'A módosítás leírása nem lehet üres.', isError: true });
+      return;
+    }
+
+    try {
+      const previousServiceDescription = (activeRepair.repairDescription || '').trim();
+      const baseDescription = (activeRepair.problemDescription || '').trim();
+      const nowText = formatDateTime();
+
+      let mergedDescription = baseDescription;
+
+      if (previousServiceDescription) {
+        mergedDescription = mergedDescription
+          ? `${mergedDescription}\n\n---------------\n\nSzerviz frissítés:\n${previousServiceDescription}`
+          : `Szerviz frissítés:\n${previousServiceDescription}`;
+      }
+
+      mergedDescription = mergedDescription
+        ? `${mergedDescription}\n\n---------------\n\n${nowText} - Módosítás:\n${trimmedDescription}`
+        : `${nowText} - Módosítás:\n${trimmedDescription}`;
+
+      const payload = {
+        ...activeRepair,
+        userID: activeRepair.userID || userID,
+        problemDescription: mergedDescription,
+        repairDescription: '',
+        repairPrice: 0,
+        isPriceAccepted: 0
+      };
+
+      await axios.put(
+        `http://localhost:5175/api/Profile/updateRepair/${activeRepair.repairID}`,
+        payload
+      );
+
+      const updatedRepair = {
+        ...activeRepair,
+        problemDescription: mergedDescription,
+        repairDescription: '',
+        repairPrice: 0,
+        isPriceAccepted: 0
+      };
+
+      setActiveRepair(updatedRepair);
+      setServiceRequests(prev =>
+        prev.map(r => (r.repairID === activeRepair.repairID ? updatedRepair : r))
+      );
+      setWaitingForServiceUpdate(prev => ({ ...prev, [activeRepair.repairID]: previousServiceDescription }));
+
+      closePriceModal();
+      setShowEditSuccessModal(true);
+      setTimeout(() => {
+        setShowEditSuccessModal(false);
+      }, 5000);
+      window.dispatchEvent(new Event('repairUpdated'));
+    } catch (error) {
+      console.error('Hiba a módosítási kérés küldésekor:', error);
+      setEditRequestMessage({ text: 'Nem sikerült elküldeni a módosítási kérést.', isError: true });
+    }
+  };
+
+  const handleConfirmPendingAction = async () => {
+    const action = pendingAction;
+    setShowActionConfirmModal(false);
+    setPendingAction(null);
+
+    if (action === 'accept') {
+      proceedAcceptOffer();
+      return;
+    }
+
+    if (action === 'decline') {
+      await confirmDecline();
+      return;
+    }
+
+    if (action === 'edit') {
+      await submitEditRequest();
+    }
+  };
+
+  const getPendingActionConfirmText = () => {
+    switch (pendingAction) {
+      case 'accept':
+        return 'Biztosan el szeretnéd fogadni az árajánlatot?';
+      case 'decline':
+        return 'Biztosan el szeretnéd utasítani az árajánlatot?';
+      case 'edit':
+        return 'Biztosan elküldöd a módosítási kérést?';
+      default:
+        return 'Biztosan folytatod?';
     }
   };
 
@@ -373,6 +532,18 @@ const Profile = () => {
         return 'ismeretlen';
     }
   };
+
+  const hasServiceDescription = (repair) => {
+    const text = repair?.repairDescription;
+    return typeof text === 'string' && text.trim().length > 0;
+  };
+
+  const isWaitingForServiceResponse = (repair) => {
+    if (!repair?.repairID) return false;
+    return Object.prototype.hasOwnProperty.call(waitingForServiceUpdate, repair.repairID);
+  };
+
+  const canShowOffer = (repair) => hasServiceDescription(repair) && !isWaitingForServiceResponse(repair);
 
   // Szállítási címek
   const [shippingAddresses, setShippingAddresses] = useState([]);
@@ -1358,18 +1529,17 @@ const Profile = () => {
                       </span>
                     </div>
                     <div className="service-request-details">
-                      {console.log('Szervizkérés részletei:', request)}
                       <p><strong>Gyártó:</strong> {request.manufacturerName}</p>
                       <p><strong>Város:</strong> {request.billingCity}</p>
                       <p><strong>Cím:</strong> {request.billingAddress}</p>
                       <p><strong>Telefonszám:</strong> {request.billingPhoneNumber}</p>
-                      <p><strong>Hiba leírása:</strong> {request.problemDescription}</p>
-                      <p><strong>Vizsgálat:</strong> {request.phoneInspection ? "érdekelne" : "nem érdekelne"}</p>
-                      <p><strong>Ár:</strong> {request.repairPrice ? request.repairPrice.toLocaleString() + ' Ft' : 'Árajánlat függőben'}</p>
+                      <p className="service-request-multiline"><strong>Hiba leírása:</strong> {request.problemDescription}</p>
+                      <p className="service-request-multiline"><strong>Szerviz leírása:</strong> {request.repairDescription ? request.repairDescription : 'Még nincs szerviz visszajelzés.'}</p>
+                      <p><strong>Ár:</strong> {canShowOffer(request) ? `${request.repairPrice.toLocaleString()} Ft` : '0 Ft'}</p>
                       {request.isPriceAccepted === 1 && <p className="text-success"><strong>Árajánlat elfogadva</strong></p>}
                       {request.isPriceAccepted === 2 && <p className="text-danger"><strong>Árajánlat elutasítva</strong></p>}
                     </div>
-                    {request.isPriceAccepted === 0 && (
+                    {request.isPriceAccepted === 0 && canShowOffer(request) && (
                       <div className="service-request-actions">
                         <button
                           className="btn-view-offer"
@@ -1390,40 +1560,84 @@ const Profile = () => {
           {/* árajánlat megtekintése modal */}
           {showPriceModal && activeRepair && (
             <div className="profile-modal-overlay">
-              <div className="profile-modal-content">
+              <div className="profile-modal-content profile-modal-content-lg">
+                <button className="profile-modal-close" onClick={closePriceModal} aria-label="Bezárás">&times;</button>
                 <div className="profile-modal-header">
                   <h3 className="profile-modal-title">Árajánlat</h3>
                 </div>
                 <div className="profile-modal-body">
-                  <p>Árajánlat összege: <strong>{activeRepair.repairPrice.toLocaleString()} Ft</strong></p>
+                  <p>Árajánlat összege: <strong>{canShowOffer(activeRepair) ? `${activeRepair.repairPrice.toLocaleString()} Ft` : '0 Ft'}</strong></p>
+                  <p><strong>Te leírásod:</strong></p>
+                  <p className="repair-description-preview">
+                    {activeRepair.problemDescription ? activeRepair.problemDescription : 'Nincs megadva.'}
+                  </p>
+                  <p><strong>Szerviz leírása:</strong></p>
+                  <p className="repair-description-preview">
+                    {activeRepair.repairDescription ? activeRepair.repairDescription : 'Még nincs szerviz visszajelzés.'}
+                  </p>
                 </div>
                 <div className="profile-modal-actions">
-                  <button onClick={handleAcceptOffer} className="profile-modal-btn-confirm">Elfogadás</button>
-                  <button onClick={handleDeclineOffer} className="btn-cancel">Elutasítás</button>
-                  <button onClick={closePriceModal} className="profile-modal-btn-cancel">Vissza</button>
+                  <button onClick={handleAcceptOffer} className="profile-modal-btn-confirm" disabled={showEditRequestForm}>Elfogadás</button>
+                  <button onClick={handleDeclineOffer} className="btn-cancel" disabled={showEditRequestForm}>Elutasítás</button>
+                  {!showEditRequestForm && (
+                    <button onClick={toggleEditRequestForm} className="profile-modal-btn-cancel">
+                      Szerviz módosítása
+                    </button>
+                  )}
+                  <button onClick={closePriceModal} className="profile-modal-btn-cancel" disabled={showEditRequestForm}>Vissza</button>
+                </div>
+                {showEditRequestForm && (
+                  <div className="repair-edit-container">
+                    <label htmlFor="edit-repair-request"><strong>Írd le, mit szeretnél módosítani:</strong></label>
+                    <textarea
+                      id="edit-repair-request"
+                      className="repair-edit-textarea"
+                      rows={4}
+                      value={editRequestText}
+                      onChange={(e) => setEditRequestText(e.target.value)}
+                      placeholder="Pl.: Kérem csak a kijelző cseréjére adjatok ajánlatot..."
+                    />
+                    <div className="repair-edit-actions">
+                      <button onClick={cancelEditRequest} className="btn-cancel">Mégse</button>
+                      <button onClick={handleSubmitEditRequest} className="profile-modal-btn-confirm">Küldés</button>
+                    </div>
+                    {editRequestMessage.text && (
+                      <p className={editRequestMessage.isError ? 'text-danger' : 'text-success'}>
+                        <strong>{editRequestMessage.text}</strong>
+                      </p>
+                    )}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* művelet megerősítő modal */}
+          {showActionConfirmModal && (
+            <div className="profile-modal-overlay">
+              <div className="profile-modal-content">
+                <div className="profile-modal-header">
+                  <h3 className="profile-modal-title">Megerősítés</h3>
+                </div>
+                <div className="profile-modal-body">
+                  <p className="profile-modal-text">{getPendingActionConfirmText()}</p>
+                </div>
+                <div className="profile-modal-actions">
+                  <button onClick={handleConfirmPendingAction} className="profile-modal-btn-confirm">Igen</button>
+                  <button onClick={() => { setShowActionConfirmModal(false); setPendingAction(null); }} className="profile-modal-btn-cancel">Nem</button>
                 </div>
               </div>
             </div>
           )}
 
-          {/* elutasítás megerősítő modal */}
-          {showDeclineConfirm && (
+          {showEditSuccessModal && (
             <div className="profile-modal-overlay">
               <div className="profile-modal-content">
                 <div className="profile-modal-header">
-                  <h3 className="profile-modal-title">Árajánlat elutasítása</h3>
+                  <h3 className="profile-modal-title">Sikeres küldés</h3>
                 </div>
                 <div className="profile-modal-body">
-                  <p className="profile-modal-text">Biztosan el szeretnéd utasítani az árajánlatot?</p>
-                </div>
-                {declineSuccessMessage && (
-                  <div style={{ color: '#dc3545', textAlign: 'center', marginBottom: '12px', fontWeight: 'bold', fontSize: '16px' }}>
-                    ✓ {declineSuccessMessage}
-                  </div>
-                )}
-                <div className="profile-modal-actions">
-                  <button onClick={confirmDecline} className="btn-cancel">Igen</button>
-                  <button onClick={() => setShowDeclineConfirm(false)} className="profile-modal-btn-cancel">Nem</button>
+                  <p className="profile-modal-text">A módosítási kérés sikeresen elküldve. Az ablak 5 másodperc múlva bezárul.</p>
                 </div>
               </div>
             </div>
