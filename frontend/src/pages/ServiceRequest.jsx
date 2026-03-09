@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import axios from 'axios';
+import { getCityFromPostalCode } from '../utils/postalCodeUtils';
 
 const EMPTY_ADDRESS = {
   postalCode: '',
@@ -283,11 +284,31 @@ export default function ServiceRequest() {
     setPaymentFormData(prev => ({ ...prev, [id]: processedValue }));
   };
 
-  const handleAddressInputChange = (type, field, value) => {
+  const handleAddressInputChange = async (type, field, value) => {
     let processedValue = value;
 
     if (field === 'postalCode') {
       processedValue = value.replace(/\D/g, '').slice(0, 4);
+      
+      // Város automatikus kitöltése, ha 4 számjegy van
+      if (processedValue.length === 4) {
+        try {
+          const data = await getCityFromPostalCode(processedValue);
+          if (data && data.telepules) {
+            if (type === 'delivery') {
+              setDeliveryAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
+              if (billingSameAsDelivery) {
+                setBillingAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
+              }
+            } else {
+              setBillingAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
+            }
+            return; // Kilépünk, mert már frissítettük az állapotot
+          }
+        } catch (error) {
+          console.log('Irányítószám nem található');
+        }
+      }
     }
 
     if (field === 'phoneNumber') {

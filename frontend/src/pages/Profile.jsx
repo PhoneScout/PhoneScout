@@ -3,6 +3,7 @@ import './Profile.css';
 import axios from 'axios';
 import { UNSAFE_useScrollRestoration, useNavigate } from 'react-router';
 import InputText from '../components/InputText';
+import { getCityFromPostalCode } from '../utils/postalCodeUtils';
 
 
 //fetch('http://localhost:5292/phonePage/2').then(response => response.json()).then(data => console.log(data)) //ID-T KISZEDNI A / MÖGÜL HA VAN
@@ -842,10 +843,38 @@ const Profile = () => {
     }
   };
 
-  const handleAddressInputChange = (e, type, idx, field) => {
+  const handleAddressInputChange = async (e, type, idx, field) => {
     let { value } = e.target;
     if (field === 'phoneNumber') {
       value = sanitizePhone(value);
+    }
+
+    // Ha irányítószámot módosít és 4 karakter hosszú, automatikusan kitölti a várost
+    if (field === 'postalCode') {
+      value = value.replace(/\D/g, '').slice(0, 4);
+      if (value.length === 4) {
+        try {
+          const data = await getCityFromPostalCode(value);
+          if (data && data.telepules) {
+            // Automatikusan kitölti a várost is
+            if (type === 'shipping') {
+              const updated = shippingAddresses.map((addr, i) =>
+                i === idx ? { ...addr, postalCode: value, city: data.telepules } : addr
+              );
+              setShippingAddresses(updated);
+            } else {
+              const updated = billingAddresses.map((addr, i) =>
+                i === idx ? { ...addr, postalCode: value, city: data.telepules } : addr
+              );
+              setBillingAddresses(updated);
+            }
+            return;
+          }
+        } catch (error) {
+          console.log('Irányítószám nem található');
+          // Folytatjuk a normál frissítést
+        }
+      }
     }
 
     if (type === 'shipping') {
@@ -861,12 +890,30 @@ const Profile = () => {
     }
   };
 
-  const handleNewAddressChange = (e) => {
+  const handleNewAddressChange = async (e) => {
     const { name, value } = e.target;
     let v = value;
     if (name === 'phoneNumber') {
       v = sanitizePhone(value);
     }
+    
+    // Ha irányítószámot módosít és 4 karakter hosszú, automatikusan kitölti a várost
+    if (name === 'postalCode') {
+      v = value.replace(/\D/g, '').slice(0, 4);
+      if (v.length === 4) {
+        try {
+          const data = await getCityFromPostalCode(v);
+          if (data && data.telepules) {
+            setNewAddress({ ...newAddress, postalCode: v, city: data.telepules });
+            return;
+          }
+        } catch (error) {
+          console.log('Irányítószám nem található');
+          // Folytatjuk a normál frissítést
+        }
+      }
+    }
+    
     setNewAddress({ ...newAddress, [name]: v });
   };
 
@@ -1167,7 +1214,10 @@ const Profile = () => {
                           <button
                             type="button"
                             className="btn-cancel"
-                            onClick={() => setEditingShippingId(null)}
+                            onClick={() => {
+                              setEditingShippingId(null);
+                              refreshAddresses();
+                            }}
                           >
                             Mégse
                           </button>
@@ -1357,7 +1407,10 @@ const Profile = () => {
                           <button
                             type="button"
                             className="btn-cancel"
-                            onClick={() => setEditingBillingId(null)}
+                            onClick={() => {
+                              setEditingBillingId(null);
+                              refreshAddresses();
+                            }}
                           >
                             Mégse
                           </button>

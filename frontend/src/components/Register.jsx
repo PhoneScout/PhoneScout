@@ -3,6 +3,7 @@ import InputText from './InputText';
 import styles from './Register.module.css';
 import { Link } from 'react-router';
 import axios from 'axios';
+import { getCityFromPostalCode } from '../utils/postalCodeUtils';
 
 export default function Register({ onSwitchToLogin }) {
     // Állapot a checkbox pipálásának követésére.
@@ -17,6 +18,25 @@ export default function Register({ onSwitchToLogin }) {
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showPasswordAgain, setShowPasswordAgain] = useState(false);
+
+    const handlePostalCodeChange = async (e) => {
+        const postalCode = e.target.value.replace(/\D/g, '').slice(0, 4);
+        const cityInput = document.getElementById('registerCity');
+        
+        if (postalCode.length === 4 && cityInput) {
+            try {
+                const data = await getCityFromPostalCode(postalCode);
+                if (data && data.telepules) {
+                    cityInput.value = data.telepules;
+                }
+            } catch (error) {
+                console.log('Irányítószám nem található');
+                cityInput.value = '';
+            }
+        } else if (cityInput) {
+            cityInput.value = '';
+        }
+    };
 
 
     const checkPasswordStrength = (value) => {
@@ -243,8 +263,8 @@ export default function Register({ onSwitchToLogin }) {
                         <div className={styles.billingInner}>
                             <h2 className={styles.billingTitle}>Számlázási adatok</h2>
                             <div className={styles.formRow}>
+                                <InputText type='text' id="registerPostalCode" label="Irányítószám" onChange={handlePostalCodeChange} />
                                 <InputText type='text' id="registerCity" label="Város" />
-                                <InputText type='text' id="registerPostalCode" label="Irányítószám" />
                             </div>
                             <div className={styles.formRow}>
                                 <InputText type='text' id="registerAddress" label="Utca" />
