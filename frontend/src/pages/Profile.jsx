@@ -80,6 +80,7 @@ const Profile = () => {
   const [showEditRequestForm, setShowEditRequestForm] = useState(false);
   const [editRequestText, setEditRequestText] = useState('');
   const [editRequestMessage, setEditRequestMessage] = useState({ text: '', isError: false });
+  const [offerActionMessage, setOfferActionMessage] = useState({ text: '', isError: false });
   const [showActionConfirmModal, setShowActionConfirmModal] = useState(false);
   const [pendingAction, setPendingAction] = useState(null);
   const [showEditSuccessModal, setShowEditSuccessModal] = useState(false);
@@ -104,6 +105,11 @@ const Profile = () => {
   
   // Feedback messages
   const [paymentSuccessMessage, setPaymentSuccessMessage] = useState('');
+
+  const isAuthenticatedForPayment = () => {
+    const token = localStorage.getItem('userToken') || localStorage.getItem('jwtToken') || localStorage.getItem('token');
+    return Boolean(token) && userID && !Number.isNaN(Number(userID)) && Number(userID) > 0;
+  };
 
 
   // Szervízrendelések betöltése az API-ből
@@ -158,6 +164,7 @@ const Profile = () => {
     setShowEditRequestForm(false);
     setEditRequestText('');
     setEditRequestMessage({ text: '', isError: false });
+    setOfferActionMessage({ text: '', isError: false });
     setShowPriceModal(true);
   };
 
@@ -169,6 +176,7 @@ const Profile = () => {
     setShowEditRequestForm(false);
     setEditRequestText('');
     setEditRequestMessage({ text: '', isError: false });
+    setOfferActionMessage({ text: '', isError: false });
   };
 
   // helpers for payment modal
@@ -339,6 +347,12 @@ const Profile = () => {
 
   const proceedAcceptOffer = () => {
     if (!activeRepair) return;
+    if (!isAuthenticatedForPayment()) {
+      setOfferActionMessage({ text: 'A fizetéshez be kell jelentkezni.', isError: true });
+      return;
+    }
+
+    setOfferActionMessage({ text: '', isError: false });
     // Közvetlenül a fizetési modalra lépünk az activeRepair már szerzett cím adatokkal
     setShowPriceModal(false);
     // reset payment form state
@@ -1639,6 +1653,11 @@ const Profile = () => {
                   )}
                   <button onClick={closePriceModal} className="profile-modal-btn-cancel" disabled={showEditRequestForm}>Vissza</button>
                 </div>
+                {offerActionMessage.text && (
+                  <p className={offerActionMessage.isError ? 'text-danger' : 'text-success'}>
+                    <strong>{offerActionMessage.text}</strong>
+                  </p>
+                )}
                 {showEditRequestForm && (
                   <div className="repair-edit-container">
                     <label htmlFor="edit-repair-request"><strong>Írd le, mit szeretnél módosítani:</strong></label>

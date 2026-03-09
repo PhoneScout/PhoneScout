@@ -20,6 +20,7 @@ export default function Cart() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [paymentAccessMessage, setPaymentAccessMessage] = useState('');
   const [formData, setFormData] = useState({
     cardNumber: '',
     expiry: '',
@@ -48,6 +49,12 @@ export default function Cart() {
     const userName = localStorage.getItem("fullname") || "";
 
     return { userID, userEmail, userName };
+  };
+
+  const isAuthenticatedForPayment = () => {
+    const token = localStorage.getItem('userToken') || localStorage.getItem('jwtToken') || localStorage.getItem('token');
+    const { userID } = getUserContext();
+    return Boolean(token) && userID && !Number.isNaN(userID) && userID > 0;
   };
 
   const normalizeAddress = (address) => ({
@@ -422,6 +429,12 @@ export default function Cart() {
   const openPaymentModal = () => {
     setFormErrors({});
     setAddressErrors({});
+    if (!isAuthenticatedForPayment()) {
+      setPaymentAccessMessage('A fizetéshez be kell jelentkezni.');
+      return;
+    }
+
+    setPaymentAccessMessage('');
     setShowPaymentModal(true);
   };
 
@@ -516,6 +529,11 @@ export default function Cart() {
                 <button className="paymentButton" onClick={openPaymentModal}>
                   Fizetés
                 </button>
+                {paymentAccessMessage && (
+                  <div className="alert alert-danger mt-3 mb-0" role="alert">
+                    {paymentAccessMessage}
+                  </div>
+                )}
 
                 {cartPhones.map(item => {
                   const phone = item.phone || {};
