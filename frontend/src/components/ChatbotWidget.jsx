@@ -1186,7 +1186,7 @@ const SYSTEM_INSTRUCTION = `
     - After the user filled the form there is a description of what they have to do.
     - If you list phones, make it obious that its a list, for example by saying "Here are some phones we have:" and then list them, and if they ask about a specific phone, give them the details about that phone.
     - The address is Miskolc, Palóczy László utca 3, 3525. both to the service and the shop. If they ask about the address, tell them this and that both the service and the shop are in the same place.
-    
+    - If they ask about how can they repair something at home, give your best answer because we want to help the copstumer as we can
     `;
 
 const normalizeText = (value = "") =>
@@ -1475,7 +1475,7 @@ function ChatbotWidget() {
     addMessage({
       id: loadingId,
       role: "loading",
-      text: "AI gondolkodik..."
+      text: "Sam gondolkodik..."
     });
 
     const matchedPhone = getMatchedPhone(question);
