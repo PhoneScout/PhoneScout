@@ -615,7 +615,14 @@ var updatedCameraConnections = new List<(int CameraId, int CameraTypeId)>();
 foreach (var camDto in dto.cameras)
 {
     // Ensure Camera exists
-    var camera = cx.Cameras.FirstOrDefault(c => c.CameraName == camDto.cameraName);
+    var camera = cx.Cameras.FirstOrDefault(c =>
+    c.CameraName == camDto.cameraName &&
+    c.CameraResolution == camDto.cameraResolution &&
+    c.CameraAperture == camDto.cameraAperture &&
+    c.CameraFocalLength == camDto.cameraFocalLength &&
+    c.CameraOis == camDto.cameraOis
+);
+
     if (camera == null)
     {
         camera = new Camera
