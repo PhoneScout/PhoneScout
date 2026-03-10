@@ -159,15 +159,6 @@ export default function Home() {
     ))
   }
 
-  const homePagesHistoryElements = homePreviousPages.map((page, index) => (
-    <React.Fragment key={`${page.pageName}-${index}`}>
-      <Link to={page.pageURL} className="pagesHistory">
-        <div>{page.pageName}</div>
-      </Link>
-      {index < homePreviousPages.length - 1 && " / "}
-    </React.Fragment>
-  ));
-
   const eventSlideCount = allEventsData.length > 0 ? allEventsData.length : 1;
   const totalBannerSlides = 2 + eventSlideCount;
   const currentEvent = bannerPage >= 2 ? allEventsData[bannerPage - 2] : null;
@@ -298,10 +289,7 @@ export default function Home() {
         </div>
       </div>
 
-      <div className="container mt-2" id="previousPagesPlace">
-        {homePagesHistoryElements}
-      </div>
-
+     
       <div className="row">
         {!isMobileView && <div className="col-1">
           {

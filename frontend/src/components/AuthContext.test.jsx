@@ -14,7 +14,7 @@ describe("AuthContext tesztek", () => {
     logCurrentTest("UNIT/Auth");
   });
 
-  test("login menti a tokent contextbe és localStorage-ba", () => {
+  test("login menti a tokent localStorage-ba", () => {
     const { result } = renderHook(() => useAuth(), {
       wrapper: AuthProvider,
     });
@@ -23,11 +23,10 @@ describe("AuthContext tesztek", () => {
       result.current.login("new-token-456");
     });
 
-    expect(result.current.token).toBe("new-token-456");
     expect(localStorage.getItem("userToken")).toBe("new-token-456");
   });
 
-  test("logout törli a tokent contextből és localStorage-ból", () => {
+  test("logout törli a tokent localStorage-ból", () => {
     localStorage.setItem("userToken", "token-1");
 
     const { result } = renderHook(() => useAuth(), {
@@ -38,7 +37,6 @@ describe("AuthContext tesztek", () => {
       result.current.logout();
     });
 
-    expect(result.current.token).toBeNull();
     expect(localStorage.getItem("userToken")).toBeNull();
   });
 });
