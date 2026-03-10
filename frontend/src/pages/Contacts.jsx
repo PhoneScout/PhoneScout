@@ -3,50 +3,114 @@ import { Link } from 'react-router-dom';
 import './InfoPages.css';
 
 export default function Contacts() {
+  const openChatbot = () => {
+    window.dispatchEvent(new Event('openChatbot'));
+  };
+
   return (
     <div className="container info-page">
       <section className="info-hero">
         <h1>Elérhetőségek</h1>
         <p>
-          Ez az oldal tájékozódási pont: válaszd ki, melyik folyamatban vagy elakadva.
+          Minden fontos kapcsolattartási információ egy helyen.
         </p>
       </section>
 
       <section className="info-section row g-4">
-        <div className="col-md-6 col-xl-4">
+        <div className="col-lg-6">
           <div className="info-card h-100">
-            <span className="info-badge">Vásárlás</span>
-            <h5>Telefon keresés</h5>
-            <ul className="info-list">
-              <li>Szűkítsd a kínálatot a Szűrés oldalon</li>
-              <li>Hasonlítsd össze a jelölteket</li>
-              <li>Végül add kosárba a kiválasztott modellt</li>
-            </ul>
-            <Link to="/szures" className="btn info-btn">Szűrés megnyitása</Link>
+            <span className="info-badge">Központ</span>
+            <h5>PhoneScout Üzlet és Szerviz</h5>
+            <div className="mb-3">
+              <strong>Cím:</strong><br />
+              Miskolc, Palóczy László utca 3, 3525
+            </div>
+            <div className="mb-3">
+              <strong>Nyitvatartás:</strong><br />
+              Hétfő - Péntek: 9:00 - 18:00<br />
+              Szombat: 10:00 - 14:00<br />
+              Vasárnap: Zárva
+            </div>
+            <div className="info-note">
+              Üzletünkben böngészhetsz a telefonok között, vagy személyesen leadhatod a 
+              szervizbe küldendő készülékedet.
+            </div>
           </div>
         </div>
-        <div className="col-md-6 col-xl-4">
+
+        <div className="col-lg-6">
           <div className="info-card h-100">
-            <span className="info-badge">Szerviz</span>
-            <h5>Hibakezelés folyamata</h5>
-            <ul className="info-list">
-              <li>Szerviz oldalon válaszd ki a megfelelő irányt</li>
-              <li>Szerviz igénylésnél add meg a kötelező adatokat</li>
-              <li>Kövesd a bevizsgálási kódhoz tartozó útmutatót</li>
-            </ul>
-            <Link to="/szervizigenyles" className="btn info-btn">Szerviz indítása</Link>
+            <span className="info-badge">Online kapcsolat</span>
+            <h5>Vásárlás és szerviz igénylés</h5>
+            <div className="mb-3">
+              <strong>Webshop:</strong><br />
+              Az online rendelés a weboldalon keresztül 0-24 órában elérhető.
+              Szűrj, hasonlítsd össze a telefonokat és rendeld meg online.
+            </div>
+            <div className="mb-3">
+              <strong>Chatbot asszisztens:</strong><br />
+              Ha kérdésed van vagy segítségre van szükséged, használd a chatbot-ot 
+              a jobb alsó sarokban.
+            </div>
+            <button onClick={openChatbot} className="btn info-btn">
+              Chatbot megnyitása
+            </button>
           </div>
         </div>
-        <div className="col-md-12 col-xl-4">
-          <div className="info-card h-100">
-            <span className="info-badge">Végső támpont</span>
-            <h5>Ha már teljesen elvesztél</h5>
-            <ul className="info-list">
-              <li>Szerviz beküldési cím: Miskolc, Palóczy László utca 3, 3525</li>
-              <li>Ez a cím a szerviz instrukciókban is ugyanígy szerepel</li>
-              <li>Első körben mindig az online lépéseket kövesd</li>
-            </ul>
-            <Link to="/kapcsolat" className="btn info-btn-secondary">Útvonal választása</Link>
+      </section>
+
+      <section className="info-section">
+        <div className="info-card">
+          <h5>Szerviz beküldési információk</h5>
+          <div className="row g-3">
+            <div className="col-md-6">
+              <strong>Személyes leadás:</strong>
+              <p>
+                Hozd be a telefonodat az üzletünkbe (Miskolc, Palóczy László utca 3) 
+                nyitvatartási időben. Munkatársaink helyben felveszik az adatokat 
+                és azonnal megkezdik a diagnosztikát.
+              </p>
+            </div>
+            <div className="col-md-6">
+              <strong>Postai beküldés:</strong>
+              <p>
+                Töltsd ki a <Link to="/szervizigenyles">szerviz igénylési űrlapot</Link>, 
+                csomagold be a telefont a <Link to="/csomagolasfeltetelek">csomagolási feltételek</Link> szerint, 
+                és küldd el postán a fenti címre, PhoneScout Szerviz címzéssel.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="info-section">
+        <div className="info-card">
+          <h5>Gyakori kérdések gyors linkjei</h5>
+          <div className="row g-3">
+            <div className="col-md-4">
+              <strong>Vásárlás:</strong>
+              <ul className="info-list mt-2">
+                <li><Link to="/szures">Telefonok böngészése</Link></li>
+                <li><Link to="/osszehasonlitas">Összehasonlítás</Link></li>
+                <li><Link to="/kosar">Kosár megtekintése</Link></li>
+              </ul>
+            </div>
+            <div className="col-md-4">
+              <strong>Szerviz:</strong>
+              <ul className="info-list mt-2">
+                <li><Link to="/szerviz">Szerviz információk</Link></li>
+                <li><Link to="/szervizigenyles">Szerviz igénylés</Link></li>
+                <li><Link to="/csomagolasfeltetelek">Csomagolási útmutató</Link></li>
+              </ul>
+            </div>
+            <div className="col-md-4">
+              <strong>Információk:</strong>
+              <ul className="info-list mt-2">
+                <li><Link to="/rolunk">Rólunk</Link></li>
+                <li><Link to="/bolt">Bolt működése</Link></li>
+                <li><Link to="/kapcsolat">Kapcsolat és FAQ</Link></li>
+              </ul>
+            </div>
           </div>
         </div>
       </section>
