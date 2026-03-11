@@ -13,5 +13,7 @@ namespace PhoneScout_GitHub.DTOs
         public int privilegeID { get; set; }
 
         public int active { get; set; }
+
+        public addressDTO? billingAddress { get; set; }
     }
 }

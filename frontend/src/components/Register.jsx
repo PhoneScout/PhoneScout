@@ -92,6 +92,10 @@ export default function Register({ onSwitchToLogin }) {
         const email = document.getElementById('registerEmail')?.value.trim() || "";
         const password = document.getElementById('registerPassword')?.value || "";
         const passwordAgain = document.getElementById('registerPasswordAgain')?.value || "";
+        const billingPostalCode = document.getElementById('registerPostalCode')?.value.trim() || "";
+        const billingCity = document.getElementById('registerCity')?.value.trim() || "";
+        const billingAddress = document.getElementById('registerAddress')?.value.trim() || "";
+        const billingPhoneNumber = document.getElementById('registerPhoneNU')?.value.trim() || "";
 
         if (!name || !email || !password) {
             alertBox.innerText = "Hiba: A név, email és jelszó mezők kitöltése kötelező!";
@@ -100,6 +104,11 @@ export default function Register({ onSwitchToLogin }) {
 
         if (password !== passwordAgain) {
             alertBox.innerText = "Hiba: A két jelszó nem egyezik!";
+            return;
+        }
+
+        if (showBilling && (!billingPostalCode || !billingCity || !billingAddress || !billingPhoneNumber)) {
+            alertBox.innerText = "Hiba: Ha számlázási címet ad meg, minden számlázási mező kitöltése kötelező!";
             return;
         }
 
@@ -118,7 +127,14 @@ export default function Register({ onSwitchToLogin }) {
                 salt: salt,
                 hash: hashedPassword,
                 privilegeID: 5,
-                active: 0
+                active: 0,
+                billingAddress: showBilling ? {
+                    postalCode: Number(billingPostalCode),
+                    city: billingCity,
+                    address: billingAddress,
+                    phoneNumber: Number(billingPhoneNumber),
+                    addressType: 0,
+                } : null
             };
 
             //Felhasználó regisztrálása
@@ -129,28 +145,6 @@ export default function Register({ onSwitchToLogin }) {
                 alertBox.style.color = "red";
                 alertBox.innerText = `Szerver hiba: ${errorText}`;
                 return;
-            }
-
-            // Regisztráció számlázási címmel
-            if (showBilling) {
-                //ID megszerzése
-                const getResponse = await axios.get(`http://localhost:5175/api/Registration/GetId/${email}`);
-
-                if (getResponse.status === 200) {
-                    const userId = await getResponse.data;
-
-                    const billingData = {
-                        postalCode: document.getElementById('registerPostalCode')?.value || "",
-                        city: document.getElementById('registerCity')?.value || "",
-                        address: document.getElementById('registerAddress')?.value || "",
-                        phoneNumber: document.getElementById('registerPhoneNU')?.value || "",
-                        addressType: 0,
-                        userId: userId,
-                    };
-
-                    // Számlázási adatok feltöltése
-                    await axios.post('http://localhost:5175/api/address/PostAddress', billingData);
-                }
             }
 
             alertBox.style.color = "green";

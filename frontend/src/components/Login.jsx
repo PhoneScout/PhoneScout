@@ -75,7 +75,6 @@ export default function Login({ onSwitchToRegister }) {
                 }
             }
 
-            console.log("Tisztított salt:", salt);
 
             const combinedPassword = password + salt;
             const msgBuffer = new TextEncoder().encode(combinedPassword);
@@ -83,7 +82,6 @@ export default function Login({ onSwitchToRegister }) {
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
-            console.log(hashedPassword)
 
             // Login adatok postolása végpontra
             const loginData = {
@@ -104,7 +102,7 @@ export default function Login({ onSwitchToRegister }) {
             alertBox.innerText = "Sikeres bejelentkezés! Átirányítás...";
 
             const result = await response.data;
-            console.log("Szerver válasza:", result);
+            console.info("Sikeres bejelentkezés.");
 
             if (result.token) {
                 //authLogin használata
@@ -118,8 +116,10 @@ export default function Login({ onSwitchToRegister }) {
             }, 2000);
 
         } catch (error) {
+            const errorMessage = getApiErrorMessage(error, "Hiba történt a bejelentkezés során.");
+            console.error(errorMessage);
             alertBox.style.color = "red";
-            alertBox.innerText = getApiErrorMessage(error, "Hiba történt a bejelentkezés során.");
+            alertBox.innerText = errorMessage;
         }
     };
 

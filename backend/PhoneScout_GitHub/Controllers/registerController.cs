@@ -33,6 +33,8 @@ namespace PhoneScout_GitHub.Controllers
         {
             try
             {
+                await using var transaction = await _cx.Database.BeginTransactionAsync();
+
                 // Ellenőrizzük, létezik-e már az email
                 if (await _cx.Users.AnyAsync(f => f.Email == user.email))
                 {
@@ -68,6 +70,33 @@ namespace PhoneScout_GitHub.Controllers
                 await _cx.Users.AddAsync(newUser);
                 await _cx.SaveChangesAsync();
 
+                if (user.billingAddress != null)
+                {
+                    if (user.billingAddress.postalCode <= 0 ||
+                        string.IsNullOrWhiteSpace(user.billingAddress.city) ||
+                        string.IsNullOrWhiteSpace(user.billingAddress.address) ||
+                        user.billingAddress.phoneNumber <= 0)
+                    {
+                        await transaction.RollbackAsync();
+                        return BadRequest("A számlázási cím minden mezőjének kitöltése kötelező.");
+                    }
+
+                    var billingAddress = new Address
+                    {
+                        PostalCode = user.billingAddress.postalCode,
+                        City = user.billingAddress.city,
+                        Address1 = user.billingAddress.address,
+                        PhoneNumber = user.billingAddress.phoneNumber,
+                        AddressType = 0,
+                        UserId = newUser.Id,
+                    };
+
+                    await _cx.Addresses.AddAsync(billingAddress);
+                    await _cx.SaveChangesAsync();
+                }
+
+                await transaction.CommitAsync();
+
                 // Email tartalom összeállítása
                 string emailTargy = "Regisztráció a PhoneScout rendszerbe.";
                 string emailTorzs = $@"
@@ -86,7 +115,7 @@ namespace PhoneScout_GitHub.Controllers
                                             <h3 style=""color: #333333; font-size: 18px; margin-bottom: 20px; font-family: Arial, sans-serif;"">Kedves {user.name}!</h3>
                                             
                                             <p style=""color: #555555; font-size: 16px; line-height: 1.5; margin-bottom: 35px; font-family: Arial, sans-serif;"">
-                                                A regisztráció befejezéséhez kattints az alábbi linkre:
+                                                A regisztráció befejezéséhez kattints az alábbi gombra:
                                             </p>
 
                                             <!-- Gomb -->
@@ -100,7 +129,7 @@ namespace PhoneScout_GitHub.Controllers
 
                                             <!-- Lábjegyzet -->
                                             <div style=""margin-top: 45px; border-top: 1px solid #eeeeee; padding-top: 20px; text-align: left;"">
-                                                <p style=""color: #333333; font-size: 14px; margin: 0; font-family: Arial, sans-serif;"">Üdvözlettel,<br><strong>PhoneScout Team</strong></p>
+                                                <p style=""color: #333333; font-size: 14px; margin: 0; font-family: Arial, sans-serif;"">Üdvözlettel,<br><strong>PhoneScout Csapata</strong></p>
                                                 <p style=""font-size: 12px; color: #777777; margin-top: 15px; line-height: 1.4; font-family: Arial, sans-serif;"">Ez egy automatikusan generált üzenet, kérjük ne válaszoljon rá.</p>
                                             </div>
                                         </div>
@@ -324,7 +353,7 @@ namespace PhoneScout_GitHub.Controllers
                                             <h3 style=""color: #333333; font-size: 18px; margin-bottom: 20px; font-family: Arial, sans-serif;"">Kedves {user.Name}!</h3>
                                             
                                             <p style=""color: #555555; font-size: 16px; line-height: 1.5; margin-bottom: 35px; font-family: Arial, sans-serif;"">
-                                                A jelszó visszaállításához kattints az alábbi linkre:
+                                                A jelszó visszaállításához kattints az alábbi gombra:
                                             </p>
 
                                             <!-- Gomb -->
@@ -338,7 +367,7 @@ namespace PhoneScout_GitHub.Controllers
 
                                             <!-- Lábjegyzet -->
                                             <div style=""margin-top: 45px; border-top: 1px solid #eeeeee; padding-top: 20px; text-align: left;"">
-                                                <p style=""color: #333333; font-size: 14px; margin: 0; font-family: Arial, sans-serif;"">Üdvözlettel,<br><strong>PhoneScout Team</strong></p>
+                                                <p style=""color: #333333; font-size: 14px; margin: 0; font-family: Arial, sans-serif;"">Üdvözlettel,<br><strong>PhoneScout Csapata</strong></p>
                                                 <p style=""font-size: 12px; color: #777777; margin-top: 15px; line-height: 1.4; font-family: Arial, sans-serif;"">Ez egy automatikusan generált üzenet, kérjük ne válaszoljon rá.</p>
                                             </div>
                                         </div>
