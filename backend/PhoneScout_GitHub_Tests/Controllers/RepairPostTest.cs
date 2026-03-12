@@ -45,7 +45,7 @@ public class RepairPostTests
         var dto = new profileRepairPostDTO
         {
             userID = 1,
-            parts = new List<string> { "Screen" }
+            parts = new List<string> { "Képernyő" }
         };
 
         var result = controller.postRepair(dto);

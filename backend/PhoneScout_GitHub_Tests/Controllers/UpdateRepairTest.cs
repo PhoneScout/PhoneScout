@@ -55,9 +55,11 @@ public class UpdateRepairTests
     [Fact]
     public void UpdateRepair_RepairNotFound_ReturnsNotFound()
     {
-        var controller = GetController(new List<User>(), new List<Part>(), new List<Connectionservice>(), new List<Connectionpart>());
+        var controller = GetController(new List<User>(), 
+        new List<Part>(), new List<Connectionservice>(),
+        new List<Connectionpart>());
 
-        var dto = new profileRepairPostDTO { userID = 1, parts = new List<string> { "Screen" } };
+        var dto = new profileRepairPostDTO { userID = 1, parts = new List<string> { "Képernyő" } };
         var result = controller.updateRepair(dto, "nonexistent");
 
         var notFound = Assert.IsType<NotFoundObjectResult>(result);
