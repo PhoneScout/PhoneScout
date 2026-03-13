@@ -28,7 +28,7 @@ export default function AboutUs() {
             <h5 className="mt-4">Küldetésünk</h5>
             <p className="mb-0">
               Megkönnyíteni a telefonválasztást intelligens szűrőkkel és részletes összehasonlítási lehetőségekkel, 
-              valamint biztosítani a gyors és megbízható javítási szolgáltatást transparens árakkal és 
+              valamint biztosítani a gyors és megbízható javítási szolgáltatást átlátható árakkal és 
               lépésről-lépésre követhető folyamatokkal.
             </p>
           </div>
@@ -77,11 +77,11 @@ export default function AboutUs() {
           <div className="row g-3">
             <div className="col-md-6">
               <strong>Átlátható vásárlás:</strong>
-              <p className="mb-0">Minden telefonról részletes specifikáció, összehasonlítási lehetőség, valós ár.</p>
+              <p className="mb-0">Minden telefonról részletes specifikáció, összehasonlítási lehetőség, valós ár és sok más vár rád.</p>
             </div>
             <div className="col-md-6">
               <strong>Gyors szerviz:</strong>
-              <p className="mb-0">Professzionális javítás néhány órán vagy napon belül, eredeti alkatrészekkel.</p>
+              <p className="mb-0">Professzionális javítás néhány órán vagy napon belül, a legjobb minőségű, vagy eredeti alkatrészekkel.</p>
             </div>
             <div className="col-md-6">
               <strong>Egy rendszer:</strong>

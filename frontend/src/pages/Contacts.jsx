@@ -23,7 +23,11 @@ export default function Contacts() {
             <h5>PhoneScout Üzlet és Szerviz</h5>
             <div className="mb-3">
               <strong>Cím:</strong><br />
-              Miskolc, Palóczy László utca 3, 3525
+              Miskolc, Palóczy László utca 3, 3525<br />
+              <strong>Telefonszám:</strong><br />
+              +36 30 123 4567<br />
+              <strong>E-mail:</strong><br />
+              phonescoutofficial@gmail.com<br />
             </div>
             <div className="mb-3">
               <strong>Nyitvatartás:</strong><br />

@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import "./Compare.css";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import PhoneDataDisclaimer from '../components/PhoneDataDisclaimer';
 
 // Render compare page.
 export default function Compare() {
@@ -642,6 +643,8 @@ export default function Compare() {
           </div>
 
           <div className="col-md-9 position-relative compare-content-col">
+            <PhoneDataDisclaimer />
+
             {isMobileView ? (
               <div className="compare-mobile-header mb-3">
                 <h1 className="h4 mb-2 text-center">Telefonok összehasonlítása</h1>

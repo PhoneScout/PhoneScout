@@ -5,6 +5,7 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import "./Cart.css";
 import axios from 'axios';
 import { getCityFromPostalCode } from '../utils/postalCodeUtils';
+import PhoneDataDisclaimer from '../components/PhoneDataDisclaimer';
 
 const EMPTY_ADDRESS = {
   postalCode: '',
@@ -520,6 +521,8 @@ export default function Cart() {
               </div>
             ) : (
               <div>
+                <PhoneDataDisclaimer />
+
                 <div className="totalPriceCart">
                   Végösszeg: {formatPrice(totalPrice)} Ft
                 </div>

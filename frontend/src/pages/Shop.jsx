@@ -1,8 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import './InfoPages.css';
+import { useAuth } from '../components/AuthContext';
+import PhoneDataDisclaimer from '../components/PhoneDataDisclaimer';
 
 export default function Shop() {
+  const { token } = useAuth();
+
   return (
     <div className="container info-page">
       <section className="info-hero">
@@ -10,6 +14,13 @@ export default function Shop() {
         <p>
           Fedezd fel, hogyan találhatsz könnyen és gyorsan a számodra tökéletes telefont.
         </p>
+      </section>
+
+      <section className="info-section">
+        <div className="info-card">
+          <span className="info-badge">Fontos</span>
+          <PhoneDataDisclaimer className="mb-0" />
+        </div>
       </section>
 
       <section className="info-section">
@@ -148,8 +159,9 @@ export default function Shop() {
             </div>
           </div>
           <div className="info-actions mt-4">
-            <Link to="/login" className="btn info-btn">Bejelentkezés</Link>
-            <Link to="/register" className="btn info-btn-secondary">Regisztráció</Link>
+            {!token && (
+              <Link to="/bejelentkezes" className="btn info-btn">Bejelentkezés / Regisztáció</Link>
+            )}
           </div>
         </div>
       </section>

@@ -21,16 +21,15 @@ export default function Contact() {
           <div className="info-card h-100">
             <h5>Hogyan segíthetünk?</h5>
             <p>
-              A PhoneScout rendszere arra lett tervezve, hogy önállóan tudd használni 
-              vásárláshoz és szerviz igényléshez. Ha mégis elakadtál vagy kérdésed van, 
+              A PhoneScout rendszere arra lett tervezve, hogy önállóan tudd használni
+              vásárláshoz és szerviz igényléshez. Ha mégis elakadtál vagy kérdésed van,
               az alábbi lehetőségek állnak rendelkezésedre:
             </p>
-
             <span className="info-badge mt-3">1. Chatbot asszisztens</span>
-            <h5>Azonnali válaszok 0-24 órában</h5>
+            <h5>Azonnali AI válaszok 0-24</h5>
             <p>
-              A chatbot asszisztens segít eligazodni a telefonválasztásban, 
-              a vásárlási folyamatban és a szerviz igénylésben. Kattints a 
+              A chatbot asszisztens segít eligazodni a telefonválasztásban,
+              a vásárlási folyamatban és a szerviz igénylésben. Kattints a
               jobb alsó sarokban található ikonra vagy használd az alábbi gombot.
             </p>
             <button onClick={openChatbot} className="btn info-btn">
@@ -39,23 +38,38 @@ export default function Contact() {
 
             <hr className="my-4" />
 
-            <span className="info-badge">2. Gyakori kérdések (FAQ)</span>
+            <span className="info-badge mt-3">2. Ügyfélszolgálat</span>
+            <h5>Gyors válaszok munkaidőn belül</h5>
+            <p>
+              Ha szeretnél személyesen beszélni velünk, vagy részletesebb segítségre van szükséged,
+              elérhetőségeinken keresztül is kapcsolatba léphetsz velünk. Miskolci üzletünkben
+              személyesen is várunk, ahol segítünk a telefonválasztásban vagy a szerviz igénylésben.
+              <ul>
+                <li>Telefon: +36 30 123 4567</li>
+                <li>Email: phonescoutofficial@gmail.com</li>
+                <li>Üzlet: Miskolc, Palóczy László utca 3</li>
+              </ul>
+            </p>
+
+            <hr className="my-4" />
+
+            <span className="info-badge">3. Gyakori kérdések (FAQ)</span>
             <h5>Vásárlással kapcsolatos kérdések</h5>
             <ul className="info-list">
               <li>
                 <strong>Hogyan keresek telefont?</strong><br />
-                Használd a <Link to="/szures">Szűrés oldalt</Link>, ahol ár, márka, 
+                Használd a <Link to="/szures">Szűrés oldalt</Link>, ahol ár, márka,
                 tárhely és egyéb paraméterek alapján szűkítheted a listát.
               </li>
               <li>
                 <strong>Hogyan hasonlítok össze telefonokat?</strong><br />
-                Az összehasonlítás ikonra kattintva jelölhetsz ki telefonokat, majd 
-                az <Link to="/osszehasonlitas">Összehasonlítás oldalon</Link> láthatod 
+                Az összehasonlítás ikonra kattintva jelölhetsz ki telefonokat, majd
+                az <Link to="/osszehasonlitas">Összehasonlítás oldalon</Link> láthatod
                 őket egymás mellett.
               </li>
               <li>
                 <strong>Hogyan vásárolok?</strong><br />
-                Rakd a telefont a kosárba, majd a <Link to="/kosar">Kosár oldalon</Link> véglegesítsd 
+                Rakd a telefont a kosárba, majd a <Link to="/kosar">Kosár oldalon</Link> véglegesítsd
                 a rendelést. Bejelentkezés szükséges a vásárláshoz.
               </li>
             </ul>
@@ -64,19 +78,19 @@ export default function Contact() {
             <ul className="info-list">
               <li>
                 <strong>Hogyan igénylek szerviz szolgáltatást?</strong><br />
-                Látogass el a <Link to="/szervizigenyles">Szerviz igénylés oldalra</Link>, 
+                Látogass el a <Link to="/szervizigenyles">Szerviz igénylés oldalra</Link>,
                 töltsd ki az űrlapot és kövesd a megjelenő instrukciókat.
               </li>
               <li>
                 <strong>Hogyan küldöm be a telefonomat javításra?</strong><br />
-                Két lehetőséged van: személyesen leadhatod az üzletünkben 
-                (Miskolc, Palóczy László utca 3) vagy postán beküldheted a 
+                Két lehetőséged van: személyesen leadhatod az üzletünkben
+                (Miskolc, Palóczy László utca 3) vagy postán beküldheted a
                 <Link to="/csomagolasfeltetelek"> csomagolási útmutató</Link> szerint.
               </li>
               <li>
                 <strong>Mennyi ideig tart a javítás?</strong><br />
-                Az egyszerűbb javítások akár néhány órán belül elkészülhetnek, 
-                bonyolultabb esetekben 1-3 munkanap. A szerviz oldalon részletes 
+                Az egyszerűbb javítások akár néhány órán belül elkészülhetnek,
+                bonyolultabb esetekben 1-3 munkanap. A szerviz oldalon részletes
                 információkat találsz.
               </li>
             </ul>

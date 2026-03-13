@@ -497,29 +497,29 @@ export default function ServiceRequest() {
     if (atvizsgalas) {
       return (
         <div className="alert alert-info">
-          Kérését megkaptuk, és rögzítettük.<br />
+          Kérésed megkaptuk, és rögzítettük.<br />
           {selectedLabels && <><b>Kiválasztott problémák:</b> {selectedLabels}<br /></>}
-          <strong>Kérjük, küldje el telefonját postán a következő címre, vagy hozza be üzletünkbe:</strong><br />
+          <strong>Kérjük, küldd el telefonod postán a következő címre, vagy hozd be üzletünkbe:</strong><br />
           <b>Cím:</b> Miskolc, Palóczy László utca 3, 3525<br />
           <b>Név:</b> PhoneScout Szerviz<br />
           <b>Telefonszám:</b> +36 30 123 4567<br />
           <b>Email:</b> info@phonescout.hu<br />
           <br />
-          <b>Bevizsgálási kódja:</b> <span style={{ fontSize: '1.2em', color: '#17a2b8' }}><strong>{code}</strong></span><br />
-          <b>Kérjük, a csomagba mellékelje:</b><br />
+          <b>Bevizsgálási kódod:</b> <span style={{ fontSize: '1.2em', color: '#17a2b8' }}><strong>{code}</strong></span><br />
+          <b>Kérjük, a csomagba mellékeld:</b><br />
           <ul>
-            <li>A nevet amit itt megadott,</li>
-            <li>A telefonszámot amit itt megadott,</li>
+            <li>A nevet amit itt megadtál,</li>
+            <li>A telefonszámot amit itt megadtál,</li>
             <li>A készüléket a csomagolási feltételeknek megfelelően becsomagolva <Link to="/csomagolasfeltetelek" target="_blank" style={{ color: '#17a2b8', textDecoration: 'underline' }}>ITT</Link>,</li>
-            <li>A bevizsgálási kódját. Az ön kódja: <strong>{code}</strong></li>
+            <li>A bevizsgálási kódodat. Az kódod: <strong>{code}</strong></li>
           </ul>
-          <b>Ha személyesen jön be:</b><br />
+          <b>Ha személyesen jössz be:</b><br />
           <ul>
-            <li>Hozza magával az E-mailt amit tőlünk kapott</li>
+            <li>Hozd magaddal az E-mailt amit tőlünk kaptál,</li>
             <br />
             <p><strong>VAGY</strong></p>
-            <li>Bevizsgálási kódját: <strong>{code}</strong></li>
-            <li>Valamilyen elérhetőségét amit megadott az űrlapon (pl. email, telefonszám)</li>
+            <li>Bevizsgálási kódod: <strong>{code}</strong></li>
+            <li>Valamilyen elérhetőségét amit megadtál az űrlapon (pl. email, telefonszám)</li>
           </ul>
           <br />
         </div>
@@ -528,29 +528,29 @@ export default function ServiceRequest() {
 
     return (
       <div className="alert alert-info">
-        Kérését megkaptuk, és rögzítettük.<br />
+        Kérésed megkaptuk, és rögzítettük.<br />
         {selectedLabels && <><b>Kiválasztott problémák:</b> {selectedLabels}<br /></>}
-        <strong>Kérjük, küldje el telefonját postán a következő címre, vagy hozza be üzletünkbe:</strong><br />
+        <strong>Kérjük, Küld el telefonod postán a következő címre, vagy hozd be üzletünkbe:</strong><br />
         <b>Cím:</b> Miskolc, Palóczy László utca 3, 3525<br />
         <b>Név:</b> PhoneScout Szerviz<br />
         <b>Telefonszám:</b> +36 30 123 4567<br />
         <b>Email:</b> info@phonescout.hu<br />
         <br />
-        <b>Bevizsgálási kódja:</b> <span style={{ fontSize: '1.2em', color: '#17a2b8' }}><strong>{code}</strong></span><br />
-        <b>Kérjük, a csomagba mellékelje:</b><br />
+        <b>Bevizsgálási kódod:</b> <span style={{ fontSize: '1.2em', color: '#17a2b8' }}><strong>{code}</strong></span><br />
+        <b>Kérjük, a csomagba mellékeld:</b><br />
         <ul>
-          <li>A nevet amit itt megadott,</li>
-          <li>A telefonszámot amit itt megadott,</li>
+          <li>A nevet amit itt megadtál,</li>
+          <li>A telefonszámot amit itt megadtál,</li>
           <li>A készüléket a csomagolási feltételeknek megfelelően becsomagolva <Link to="/csomagolasfeltetelek" target="_blank" style={{ color: '#17a2b8', textDecoration: 'underline' }}>ITT</Link>,</li>
-          <li>A bevizsgálási kódját. Az ön kódja: <strong>{code}</strong></li>
+          <li>A bevizsgálási kódodat. Az kódod: <strong>{code}</strong></li>
         </ul>
-        <b>Ha személyesen jön be:</b><br />
+        <b>Ha személyesen jössz be:</b><br />
         <ul>
-          <li>Hozza magával az E-mailt amit tőlünk kapott</li>
+          <li>Hozd magaddal az E-mailt amit tőlünk kaptál,</li>
           <br />
           <p><strong>VAGY</strong></p>
-          <li>Bevizsgálási kódját: <strong>{code}</strong></li>
-          <li>Valamilyen elérhetőségét amit megadott az űrlapon (pl. email, telefonszám)</li>
+          <li>Bevizsgálási kódod: <strong>{code}</strong></li>
+          <li>Valamilyen elérhetőségét amit megadtál az űrlapon (pl. email, telefonszám)</li>
         </ul>
         <br />
       </div>
@@ -736,7 +736,7 @@ export default function ServiceRequest() {
     {
       id: 'faq3',
       question: 'Hogyan követhetem nyomon a szerviz státuszát?',
-      answer: 'A bevizsgálási kód segítségével az online szerviz státusz lekérdező oldalon.'
+      answer: 'A bevizsgálási kód segítségével az profil oldalon.'
     }
   ];
 
@@ -895,10 +895,10 @@ export default function ServiceRequest() {
                   A fenti összegek <strong>fix díjak</strong> (átvizsgálási és beküldési költség).
                 </p>
                 <p style={{ margin: '0 0 1px 0' }}>
-                  A <strong>tényleges szervizelési árajánlatot</strong> az átvizsgálás után kapja meg.
+                  A <strong>tényleges szervizelési árajánlatot</strong> az átvizsgálás után kapod meg.
                 </p>
                 <p style={{ margin: '0 0 1px 0' }}>
-                   Az árajánlatot a <strong>Profil oldalon</strong> tudja elfogadni vagy elutasítani, ahol kollégánktól részletes információt is kap.
+                   Az árajánlatot a <strong>Profil oldalon</strong> tudod elfogadni vagy elutasítani, ahol kollégánktól részletes információt is kapsz.
                 </p>
                 <p style={{ margin: '0' }}>
                  <strong>Emailes értesítést</strong> küldünk minden változásról.
@@ -1229,15 +1229,15 @@ export default function ServiceRequest() {
         <div className="payment-success-modal" style={{ display: 'flex' }}>
           <div className="payment-success-content">
             <h2>Szervíz igénylés sikeres!</h2>
-            <p>Köszönjük az igénylést! Kérjük, küldje el telefonját az alábbi címre:</p>
+            <p>Köszönjük az igénylést! Kérjük, küldd el telefonod postán, vagy hozd be személyesen az alábbi címre:</p>
             <p>
               <strong>PhoneScout Szerviz</strong><br />
               Miskolc, Palóczy László utca 3, 3525<br />
               +36 30 123 4567<br />
-              info@phonescout.hu
+              phonescoutofficial@gmail.com
             </p>
             <p>
-              <strong>Bevizsgálási kódja: {uniqueCode}</strong>
+              <strong>Bevizsgálási kódod: {uniqueCode}</strong>
             </p>
             <button
               id="closeSuccessModal"

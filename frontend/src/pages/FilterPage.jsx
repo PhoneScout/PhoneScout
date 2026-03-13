@@ -4,6 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './FilterPage.css';
 import PhoneCard from '../components/PhoneCard';
 import axios from 'axios';
+import PhoneDataDisclaimer from '../components/PhoneDataDisclaimer';
 
 // Render filter page.
 export default function FilterPage() {
@@ -783,6 +784,8 @@ export default function FilterPage() {
                 <span className="mobile-filter-count">{filteredPhones.length} termék</span>
               </div>
             )}
+
+            <PhoneDataDisclaimer />
 
             <div className="d-flex justify-content-between align-items-center mb-3">
               <h4>Találatok: {filteredPhones.length} termék</h4>

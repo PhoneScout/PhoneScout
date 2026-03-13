@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import './PhonePage.css';
 import axios from 'axios';
+import PhoneDataDisclaimer from '../components/PhoneDataDisclaimer';
 
 // Render phone page.
 export default function PhonePage() {
@@ -326,6 +327,7 @@ export default function PhonePage() {
             {errorMessage}
           </div>
         )}
+        <PhoneDataDisclaimer className="mt-3" />
         <div className="row mt-4 align-items-start gy-4">
           <div className="col-12 col-md-4">
             <div className="carouselDiv">

@@ -383,7 +383,7 @@ a {
 
 .filter-sticky-header {
     position: sticky;
-    top: 12px;
+    top: 88px;
     z-index: 20;
     background: #fff;
     padding: 8px 0;

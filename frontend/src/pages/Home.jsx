@@ -225,15 +225,15 @@ export default function Home() {
             {bannerPage === 0 && (
               <div className="banner-slide welcome-slide">
                 <h1>Üdvözlünk a PhoneScout-ban!</h1>
-                <p>Az Ön megbízható telefonkereskedője és szervíz partnere</p>
-                <h3>Fedezze fel a legújabb telefonokat szuper árakon!</h3>
+                <p>A te megbízható telefonkereskedőd és szervíz partnered</p>
+                <h3>Fedezd fel a legújabb telefonokat szuper árakon!</h3>
               </div>
             )}
             {bannerPage === 1 && (
               <div className="banner-slide promo-slide">
                 <h1>Szuper ajánlatok az egész hónapban!</h1>
                 <p>Akár 30% kedvezmény a kiválasztott termékekre</p>
-                <h3>Ne hagyja ki ezt az esélyt!</h3>
+                <h3>Ne hagyd ki ezt az esélyt!</h3>
               </div>
             )}
             {bannerPage >= 2 && (
@@ -352,7 +352,7 @@ export default function Home() {
             </ul>
 
             <Link className="btn btn-primary service-btn"
-              to="/szervizigenyles">Irány a <strong>szervíz</strong>
+              to="/szerviz">Irány a <strong>szervíz</strong>
               oldal</Link>
           </div>
           <div className="col-lg-6 service-image">
