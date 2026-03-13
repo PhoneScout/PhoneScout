@@ -49,7 +49,7 @@
     transition: transform 0.2s;
     flex: 0 0 460px;
     position: relative;
-    cursor: pointer;
+    cursor: default;
 }
 
 .compare-card:hover {
@@ -146,6 +146,10 @@
     text-overflow: clip;
     white-space: normal;
     word-break: break-word;
+}
+
+.compare-card-link-target {
+    cursor: pointer;
 }
 
 .compare-card-actions {

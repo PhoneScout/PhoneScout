@@ -46,12 +46,12 @@ const Profile = () => {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [addressStatusMessage, setAddressStatusMessage] = useState({ text: "", isError: false });
 
-  const MAX_PHONE_LENGTH = 15;
+  const MAX_PHONE_LENGTH = 11;
 
   // Sanitize phone value.
   const sanitizePhone = (val) => {
-    if (!val) return val;
-    let s = val.replace(/[+]/g, '');
+    if (!val) return '';
+    let s = val.replace(/\D/g, '');
     if (s.length > MAX_PHONE_LENGTH) s = s.slice(0, MAX_PHONE_LENGTH);
     return s;
   };
@@ -259,7 +259,7 @@ const Profile = () => {
       processed = value.replace(/\D/g, '').slice(0, 4);
     }
     if (field === 'phoneNumber') {
-      processed = value.replace(/\D/g, '').slice(0, 15);
+      processed = value.replace(/\D/g, '').slice(0, MAX_PHONE_LENGTH);
     }
 
     if (type === 'billing') {
@@ -731,6 +731,12 @@ const Profile = () => {
       const list = type === 'shipping' ? shippingAddresses : billingAddresses;
       if (!list[idx]) return;
       const address = list[idx];
+      const sanitizedPhoneNumber = sanitizePhone(address.phoneNumber);
+
+      if (!/^\d{11}$/.test(sanitizedPhoneNumber)) {
+        setAddressStatusMessage({ text: "A telefonszám pontosan 11 számjegy lehet!", isError: true });
+        return;
+      }
 
       const response = await axios.put(
         `http://localhost:5175/api/address/PutAddress/${address.id}`,
@@ -738,7 +744,7 @@ const Profile = () => {
           postalCode: address.postalCode,
           city: address.city,
           address: address.address,
-          phoneNumber: address.phoneNumber,
+          phoneNumber: sanitizedPhoneNumber,
           addressType: type === 'shipping' ? 1 : 0,
           userID: parseInt(userID)
         }
@@ -768,6 +774,12 @@ const Profile = () => {
       }
 
       const addressType = newAddress.type === 'shipping' ? 1 : 0;
+      const sanitizedPhoneNumber = sanitizePhone(newAddress.phoneNumber);
+
+      if (!/^\d{11}$/.test(sanitizedPhoneNumber)) {
+        setAddressStatusMessage({ text: "A telefonszám pontosan 11 számjegy lehet!", isError: true });
+        return;
+      }
 
       const response = await axios.post(
         `http://localhost:5175/api/address/PostAddress`,
@@ -775,7 +787,7 @@ const Profile = () => {
           postalCode: newAddress.postalCode,
           city: newAddress.city,
           address: newAddress.address,
-          phoneNumber: newAddress.phoneNumber,
+          phoneNumber: sanitizedPhoneNumber,
           addressType: addressType,
           userID: parseInt(userID)
         }

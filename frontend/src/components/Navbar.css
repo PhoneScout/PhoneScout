@@ -403,21 +403,44 @@
     pointer-events: auto;
 }
 
-.dropdown-item {
+.search-dropdown .dropdown-item {
     padding: 8px 10px;
     cursor: pointer;
-    min-height: 40px; /* min-height helyett height, hogy a tartalom szabályozza */
+    min-height: 44px;
     box-sizing: border-box;
     transition: background-color 0.2s ease;
-    display: flex;
-    align-items: center; /* Vertikálisan középre */
-    justify-content: center; /* Horizontálisan középre */
-    text-align: center;
-    width: 100%; /* Teljes szélesség */
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    text-align: left;
+    width: 100%;
+    gap: 10px;
+    white-space: nowrap !important;
+    overflow: hidden;
 }
 
-.dropdown-item:hover {
+.search-dropdown .dropdown-item:hover {
     background-color: #f9f9f9;
+}
+
+.search-result-thumb {
+    width: 28px;
+    height: 28px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
+    border: 1px solid #ececec;
+    display: block;
+}
+
+.search-result-name {
+    display: block;
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap !important;
 }
 
 .search-dropdown::-webkit-scrollbar {

@@ -557,8 +557,8 @@ export default function PhonePage() {
             </div>
           </div>
           <div className="col-12 col-lg-4 d-none d-lg-block phone-svg-col">
-            <div className="svg-container sticky-top">
-              <object id="mySvg" ref={svgRef} data="/images/telefon-svg.svg" type="image/svg+xml" aria-label="Telefon belső felépítése" style={{ width: '100%', minWidth: '300px' }}></object>
+            <div className="svg-container">
+              <object id="mySvg" ref={svgRef} data="/images/telefon-svg.svg" type="image/svg+xml" aria-label="Telefon belső felépítése" style={{ width: '100%' }}></object>
             </div>
           </div>
         </div>

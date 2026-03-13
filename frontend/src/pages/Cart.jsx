@@ -14,6 +14,7 @@ const EMPTY_ADDRESS = {
 };
 
 export default function Cart() {
+  const PHONE_NUMBER_LENGTH = 11;
   const [cartItems, setCartItems] = useState([]);
   const [cartPhones, setCartPhones] = useState([]);
   const [phoneImages, setPhoneImages] = useState({});
@@ -66,6 +67,9 @@ export default function Cart() {
     address: address?.address || '',
     phoneNumber: address?.phoneNumber?.toString() || ''
   });
+
+  // Normalize phone values.
+  const sanitizePhone = (value) => (value || '').replace(/\D/g, '').slice(0, PHONE_NUMBER_LENGTH);
   
   // Normalize cart data.
   const normalizeCart = () => {
@@ -322,7 +326,7 @@ export default function Cart() {
     }
 
     if (field === 'phoneNumber') {
-      processedValue = value.replace(/\D/g, '').slice(0, 15);
+      processedValue = sanitizePhone(value);
     }
 
     if (type === 'delivery') {
@@ -403,8 +407,13 @@ export default function Cart() {
           addressValidationErrors[`delivery-${field}`] = 'A mező kitöltése kötelező!';
         }
       });
+      if (deliveryAddressData.phoneNumber && !new RegExp(`^\\d{${PHONE_NUMBER_LENGTH}}$`).test(deliveryAddressData.phoneNumber)) {
+        addressValidationErrors['delivery-phoneNumber'] = `A telefonszám pontosan ${PHONE_NUMBER_LENGTH} számjegy lehet.`;
+      }
     } else if (!selectedDeliveryAddressId && !billingSameAsDelivery) {
       addressValidationErrors['delivery-select'] = 'Válasszon egy szállítási cím!';
+    } else if (!billingSameAsDelivery && selectedDeliveryAddressId && !new RegExp(`^\\d{${PHONE_NUMBER_LENGTH}}$`).test(deliveryAddressData.phoneNumber || '')) {
+      addressValidationErrors['delivery-phoneNumber'] = `A telefonszám pontosan ${PHONE_NUMBER_LENGTH} számjegy lehet.`;
     }
 
     if (showBillingAddressForm) {
@@ -413,8 +422,13 @@ export default function Cart() {
           addressValidationErrors[`billing-${field}`] = 'A mező kitöltése kötelező!';
         }
       });
+      if (billingAddressData.phoneNumber && !new RegExp(`^\\d{${PHONE_NUMBER_LENGTH}}$`).test(billingAddressData.phoneNumber)) {
+        addressValidationErrors['billing-phoneNumber'] = `A telefonszám pontosan ${PHONE_NUMBER_LENGTH} számjegy lehet.`;
+      }
     } else if (!selectedBillingAddressId) {
       addressValidationErrors['billing-select'] = 'Válasszon egy számlázási cím!';
+    } else if (selectedBillingAddressId && !new RegExp(`^\\d{${PHONE_NUMBER_LENGTH}}$`).test(billingAddressData.phoneNumber || '')) {
+      addressValidationErrors['billing-phoneNumber'] = `A telefonszám pontosan ${PHONE_NUMBER_LENGTH} számjegy lehet.`;
     }
 
     setFormErrors(errors);
@@ -749,6 +763,9 @@ export default function Cart() {
                       placeholder="36301234567"
                       value={billingAddressData.phoneNumber}
                       onChange={(e) => handleAddressInputChange('billing', 'phoneNumber', e.target.value)}
+                      maxLength={PHONE_NUMBER_LENGTH}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                     />
                     {addressErrors['billing-phoneNumber'] && <div className="invalid-feedback">{addressErrors['billing-phoneNumber']}</div>}
 
@@ -845,6 +862,9 @@ export default function Cart() {
                         placeholder="36301234567"
                         value={deliveryAddressData.phoneNumber}
                         onChange={(e) => handleAddressInputChange('delivery', 'phoneNumber', e.target.value)}
+                        maxLength={PHONE_NUMBER_LENGTH}
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                       />
                       {addressErrors['delivery-phoneNumber'] && <div className="invalid-feedback">{addressErrors['delivery-phoneNumber']}</div>}
 
