@@ -10,10 +10,8 @@ const logCurrentTest = (type) => {
   console.log(`[${type}] ${testName}`);
 };
 
-// Mock-oljuk az axios-t
 vi.mock("axios");
 
-// Mock PhoneCard komponens
 vi.mock("../components/PhoneCard", () => ({
   default: function MockPhoneCard({ phoneName, phonePrice }) {
     return (
@@ -25,21 +23,18 @@ vi.mock("../components/PhoneCard", () => ({
   },
 }));
 
-// Mock Navbar komponens
 vi.mock("../components/Navbar", () => ({
   default: function MockNavbar() {
     return <nav>Mock Navbar</nav>;
   },
 }));
 
-// Mock InputText komponens
 vi.mock("../components/InputText", () => ({
   default: function MockInputText(props) {
     return <input {...props} />;
   },
 }));
 
-// Mock react-router Link komponens
 vi.mock("react-router", () => ({
   Link: function MockLink({ to, children, ...props }) {
     return <a href={to} {...props}>{children}</a>;
@@ -83,7 +78,6 @@ describe("Home oldal tesztek", () => {
 
     const mockEvents = [];
 
-    // Mock axios hívások
     axios.get.mockImplementation((url) => {
       if (url.includes("mainPage")) {
         return Promise.resolve({ data: mockPhones });
@@ -96,7 +90,6 @@ describe("Home oldal tesztek", () => {
 
     renderHomeWithRouter();
 
-    // Várjuk meg, hogy a telefonok megjelenjenek
     await waitFor(() => {
       expect(screen.getByText("Samsung Galaxy S24")).toBeInTheDocument();
     });

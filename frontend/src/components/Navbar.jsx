@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Navbar.css';
-import { Link, useLocation, useNavigate } from 'react-router-dom'; // useNavigate importálása
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
 
+// Render navigation.
 export default function Navbar() {
 
     const { token, logout: authLogout } = useAuth();
@@ -14,35 +15,27 @@ export default function Navbar() {
         return stored ? JSON.parse(stored) : [{ pageName: "Főoldal", pageURL: "/" }];
     });
 
-    // Mobile menu state
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const [windowWidth, setWindowWidth] = useState(typeof window !== 'undefined' ? window.innerWidth : 1200);
 
-    // Ref for mobile menu to detect clicks outside
     const mobileMenuRef = useRef(null);
 
-    // Ref for search dropdown
     const searchBoxRef = useRef(null);
     const searchDropdownRef = useRef(null);
-    const mobileSearchBoxRef = useRef(null);
-    const mobileSearchDropdownRef = useRef(null);
 
-    // State for search
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState([]);
     const [showDropdown, setShowDropdown] = useState(false);
     const [allPhoneNames, setAllPhoneNames] = useState([]);
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
-    const navigate = useNavigate(); // useNavigate hook
-    const location = useLocation();
+    const navigate = useNavigate();
 
-    // Save to localStorage
+    // Save history.
     useEffect(() => {
         localStorage.setItem("pagesHistory", JSON.stringify(previousPages));
     }, [previousPages]);
 
-    // Handle window resize
     useEffect(() => {
         const handleResize = () => {
             const width = window.innerWidth;
@@ -67,7 +60,7 @@ export default function Navbar() {
             }
         }
 
-        // Handle escape key
+        // Close the mobile menu on escape.
         function handleEscapeKey(event) {
             if (event.key === 'Escape' && isMenuOpen) {
                 setIsMenuOpen(false);
@@ -83,7 +76,7 @@ export default function Navbar() {
         };
     }, [isMenuOpen]);
 
-    // Load phone names for search
+    // Load search data.
     useEffect(() => {
         fetchPhoneNames();
     }, []);
@@ -103,6 +96,7 @@ export default function Navbar() {
         return () => document.removeEventListener('mousedown', handleClickOutsideSearch);
     }, []);
 
+    // Load phone names for search.
     const fetchPhoneNames = async () => {
         try {
             const response = await axios.get("http://localhost:5175/allPhonesName");
@@ -113,7 +107,7 @@ export default function Navbar() {
         }
     };
 
-    // Handle search
+    // Filter phone names by query.
     const handleSearch = (e) => {
         const query = e.target.value;
         setSearchQuery(query);
@@ -121,7 +115,7 @@ export default function Navbar() {
         if (query.length > 0) {
             const filteredResults = allPhoneNames.filter(phone =>
                 phone.phoneName.toLowerCase().includes(query.toLowerCase())
-            ).slice(0, 5); // Limit to 5 results
+            ).slice(0, 5);
             setSearchResults(filteredResults);
             setShowDropdown(true);
         } else {
@@ -130,17 +124,11 @@ export default function Navbar() {
         }
     };
 
-    // Open phone page from search result
+    // Open a phone from search results.
     const openPhonePage = (phoneID, phoneName) => {
         localStorage.setItem("selectedPhone", phoneID);
-
-        // Add to page history
         checkPagesHistory(phoneName, `/telefon/${phoneID}`);
-
-        // Navigate to phone page
         navigate(`/telefon/${phoneID}`);
-
-        // Clear search
         setSearchQuery('');
         setShowDropdown(false);
     };
@@ -155,7 +143,7 @@ export default function Navbar() {
     // Check if mobile view
     const isMobileView = windowWidth <= 992;
 
-    // Handler for page history
+    // Update history.
     function checkPagesHistory(name, url) {
         const pageIndex = previousPages.findIndex(p => p.pageName === name);
         let newHistory;
@@ -181,26 +169,9 @@ export default function Navbar() {
         }
     };
 
-    // Render pages history
-    const pagesHistoryElements = previousPages.map((page, index) => (
-        <React.Fragment key={page.pageName}>
-            <Link
-                to={page.pageURL}
-                className="pagesHistory"
-                onClick={() => {
-                    checkPagesHistory(page.pageName, page.pageURL);
-                    closeMobileMenu();
-                }}
-            >
-                <div>{page.pageName}</div>
-            </Link>
-            {index < previousPages.length - 1 && " / "}
-        </React.Fragment>
-    ));
-
-    // Cart state
     const [cartCount, setCartCount] = useState(0);
 
+    // Sync cart count.
     useEffect(() => {
         function updateCartCount() {
             const cart = JSON.parse(localStorage.getItem("cart")) || [];
@@ -214,21 +185,19 @@ export default function Navbar() {
         }
         updateCartCount();
 
-        // Listen for cart updates if you have a custom event
+        // React to cart changes.
         const handleCartUpdate = () => updateCartCount();
         window.addEventListener('cartUpdated', handleCartUpdate);
 
         return () => window.removeEventListener('cartUpdated', handleCartUpdate);
     }, []);
 
-    // User state
     const [fullname, setFullname] = useState(null);
-    const [jogosultsag, setJogosultsag] = useState(null);
 
+    // Sync user data.
     useEffect(() => {
         const syncUserData = () => {
             setFullname(localStorage.getItem("fullname"));
-            setJogosultsag(localStorage.getItem("jogosultsag"));
         };
 
         syncUserData();
@@ -239,6 +208,7 @@ export default function Navbar() {
         };
     }, [token]);
 
+    // Log out user.
     function logout() {
         authLogout();
         localStorage.removeItem("jwtToken");
@@ -250,23 +220,18 @@ export default function Navbar() {
             setShowSuccessModal(false);
         }, 2000);
 
-        //IDE KELL VISSZAJÖNNÖM
-
-        // Reset page history
         setPreviousPages([{ pageName: "Főoldal", pageURL: "/" }]);
         localStorage.removeItem("pagesHistory");
 
-        // Navigate to home page
         navigate("/");
         closeMobileMenu();
     }
 
-    // Check if user is logged in
     const isLoggedIn = !!token;
 
-    // Compare count state
     const [compareCount, setCompareCount] = useState(0);
 
+    // Sync compare count.
     useEffect(() => {
         function updateCompareCount() {
             const comparePhones = JSON.parse(localStorage.getItem("comparePhones")) || [];
@@ -274,7 +239,7 @@ export default function Navbar() {
         }
         updateCompareCount();
 
-        // Listen for compare updates
+        // React to compare changes.
         const handleCompareUpdate = () => updateCompareCount();
         window.addEventListener('compareUpdated', handleCompareUpdate);
 
@@ -293,12 +258,9 @@ export default function Navbar() {
                 </div>
             )}
 
-            {/* Main Navbar */}
             <div className="custom-header">
-                {/* Logo and Hamburger */}
                 <div className="col-8 col-md-4 col-lg-3 logo-container">
                     <div className="d-flex align-items-center">
-                        {/* Hamburger button - visible only on mobile/tablet */}
                         <button
                             className={`hamburger-btn ${isMobileView ? 'd-block' : 'd-none'}`}
                             onClick={toggleMenu}
@@ -316,7 +278,6 @@ export default function Navbar() {
                     </div>
                 </div>
 
-                {/* Desktop Navigation - hidden on mobile */}
                 <div className="col-lg-4 NavBarCol nav-links d-none d-lg-flex">
                     <Link
                         to="/szures"
@@ -351,7 +312,6 @@ export default function Navbar() {
                     </Link>
                 </div>
 
-                {/* Desktop Search - hidden on mobile */}
                 <div className="col-lg-2 search-container d-none d-lg-flex">
                     <div className="search-icon">
                         <i className="fa-solid fa-magnifying-glass"></i>
@@ -382,27 +342,24 @@ export default function Navbar() {
                     </div>
                 </div>
 
-                {/* Desktop User/Cart - hidden on mobile */}
                 <div className="col-lg-3 user-cart-container d-none d-lg-flex justify-content-end">
                     {isLoggedIn ? (
-                        // Logged in user - show dropdown with profile and logout
                         <div className="dropdown" id="dropdownMenu">
-                            <a href="#" className="dropdown-toggle userIcon" id="loginDropdown" data-bs-toggle="dropdown"
-                                aria-expanded="false">
+                                <button type="button" className="dropdown-toggle userIcon" id="loginDropdown" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
                                 <div id="userChange">
                                     <div id="fullName">{fullname}</div>
                                     <div className="user-img-wrapper">
                                         <img src="../Images/doneUserIcon1.png" alt="User" />
                                     </div>
                                 </div>
-                            </a>
+                                </button>
                             <ul className="dropdown-menu" aria-labelledby="loginDropdown">
                                 <li><Link to="/profil"><button className="profile_button">Profil</button></Link></li>
                                 <li><button className="logout_button" onClick={logout}>Kijelentkezés</button></li>
                             </ul>
                         </div>
                     ) : (
-                        // Not logged in - show login link
                         <Link
                             to="/bejelentkezes"
                             className="userIcon"
@@ -432,7 +389,6 @@ export default function Navbar() {
                     </div>
                 </div>
 
-                {/* Mobile Cart Icon - visible only on mobile */}
                 <div className="col-4 col-md-8 col-lg-0 d-flex d-lg-none justify-content-end align-items-center">
                     <div className="cart-icon mobile-cart">
                         <Link

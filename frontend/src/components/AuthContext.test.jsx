@@ -3,6 +3,7 @@ import { render, screen, renderHook, act } from "@testing-library/react";
 import { AuthProvider, useAuth } from "./AuthContext";
 import { vi } from "vitest";
 
+// Log the active test name.
 const logCurrentTest = (type) => {
   const testName = expect.getState().currentTestName ?? "ismeretlen teszt";
   console.log(`[${type}] ${testName}`);

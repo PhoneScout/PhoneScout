@@ -2,6 +2,7 @@ import React from 'react'
 import './Service.css';
 import { Link } from 'react-router';
 
+// Render service page.
 export default function Service() {
   const openChatbot = () => {
     window.dispatchEvent(new Event('openChatbot'));
@@ -11,7 +12,6 @@ export default function Service() {
     <div>
       <div className="container service-section">
         <div className="row align-items-center">
-          {/* BAL OLDAL – SZÖVEG */}
           <div className="col-lg-6 service-text left-side">
             <h2>Gyors és Megbízható Szerviz</h2>
 
@@ -63,7 +63,6 @@ export default function Service() {
             </ul>
           </div>
 
-          {/* JOBB OLDAL – CAROUSEL */}
           <div className="col-lg-6 service-text">
             <div
               id="serviceCarousel"
@@ -164,7 +163,6 @@ export default function Service() {
             </div>
           </div>
 
-          {/* GOMBOK */}
           <button className="btn btn-outline-info mt-4 w-100" id="chatbotBtn" onClick={openChatbot}>
             <i className="fas fa-robot"></i> Chatbot: Segítség a hibához
           </button>

@@ -43,6 +43,7 @@ export default function Cart() {
 
   const navigate = useNavigate();
 
+  // Read user data.
   const getUserContext = () => {
     const userID = parseInt(localStorage.getItem("userid") || localStorage.getItem("userID") || "0", 10);
     const userEmail = localStorage.getItem("email") || localStorage.getItem("userEmail") || "";
@@ -51,32 +52,25 @@ export default function Cart() {
     return { userID, userEmail, userName };
   };
 
+  // Check payment access.
   const isAuthenticatedForPayment = () => {
     const token = localStorage.getItem('userToken') || localStorage.getItem('jwtToken') || localStorage.getItem('token');
     const { userID } = getUserContext();
     return Boolean(token) && userID && !Number.isNaN(userID) && userID > 0;
   };
 
+  // Normalize address shape.
   const normalizeAddress = (address) => ({
     postalCode: address?.postalCode?.toString() || '',
     city: address?.city || '',
     address: address?.address || '',
     phoneNumber: address?.phoneNumber?.toString() || ''
   });
-
-  const areAddressesEqual = (a, b) => {
-    return (
-      (a.postalCode || '').trim() === (b.postalCode || '').trim() &&
-      (a.city || '').trim().toLowerCase() === (b.city || '').trim().toLowerCase() &&
-      (a.address || '').trim().toLowerCase() === (b.address || '').trim().toLowerCase() &&
-      (a.phoneNumber || '').trim() === (b.phoneNumber || '').trim()
-    );
-  };
-
+  
+  // Normalize cart data.
   const normalizeCart = () => {
     const raw = JSON.parse(localStorage.getItem("cart") || "[]");
     if (Array.isArray(raw)) {
-      // Ensure all items have storageIndex, default to 0 if missing
       return raw.map(item => ({
         ...item,
         storageIndex: item.storageIndex ?? 0
@@ -98,11 +92,13 @@ export default function Cart() {
     return legacyItems;
   };
 
+  // Load local cart.
   useEffect(() => {
     const savedCart = normalizeCart();
     setCartItems(savedCart);
   }, []);
 
+  // Fetch cart phone data.
   useEffect(() => {
     axios.get("http://localhost:5175/mainPage")
       .then(allPhones => {
@@ -139,6 +135,7 @@ export default function Cart() {
   useEffect(() => {
     if (!showPaymentModal) return;
 
+    // Load user addresses.
     const loadAddresses = async () => {
       const { userID } = getUserContext();
 
@@ -162,14 +159,12 @@ export default function Cart() {
           axios.get(`http://localhost:5175/api/address/GetAddresses/${userID}/0`)
         ]);
 
-        // Szállítási és számlázási csímlisták feltöltése
         const shippingAddresses = Array.isArray(shippingRes.data) ? shippingRes.data : [];
         const billingAddresses = Array.isArray(billingRes.data) ? billingRes.data : [];
 
         setDeliveryAddressList(shippingAddresses);
         setBillingAddressList(billingAddresses);
 
-        // Az első szállítási cím beállítása
         if (shippingAddresses.length > 0) {
           const firstShippingAddress = shippingAddresses[0];
           setSelectedDeliveryAddressId(firstShippingAddress.id);
@@ -179,7 +174,6 @@ export default function Cart() {
           setDeliveryAddressData(EMPTY_ADDRESS);
         }
 
-        // Az első számlázási cím kiválasztása és beállítása
         if (billingAddresses.length > 0) {
           const firstBillingAddress = billingAddresses[0];
           setSelectedBillingAddressId(firstBillingAddress.id);
@@ -205,7 +199,7 @@ export default function Cart() {
     loadAddresses();
   }, [showPaymentModal]);
 
-  // Load phone image from backend
+  // Load phone image
   const loadPhoneImage = async (phoneID) => {
     try {
       const response = await axios.get(
@@ -226,10 +220,12 @@ export default function Cart() {
     }
   };
 
+  // Format display price.
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
 
+  // Change item count.
   const handleQuantityChange = (itemKey, delta) => {
     const newCart = [...cartItems];
     const idx = newCart.findIndex(i => getItemKey(i) === itemKey);
@@ -247,25 +243,28 @@ export default function Cart() {
     localStorage.setItem("cart", JSON.stringify(newCart));
   };
 
+  // Delete cart item.
   const removeFromCart = (itemKey) => {
     const newCart = cartItems.filter(i => getItemKey(i) !== itemKey);
     setCartItems(newCart);
     localStorage.setItem("cart", JSON.stringify(newCart));
   };
 
+  // Build unique item key.
   const getItemKey = (item) =>
     `${item.phoneID}-${item.colorHex || ""}-${item.ramAmount || ""}-${item.storageAmount || ""}`;
 
+  // Navigate to phone page.
   const handlePhoneClick = (phoneID) => {
     localStorage.setItem("selectedPhone", phoneID);
     navigate(`/telefon/${phoneID}`);
   };
 
+  // Format payment input.
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     let processedValue = value;
 
-    // Apply formatting based on field type
     switch (id) {
       case "cardNumber":
         processedValue = value.replace(/\D/g, "");
@@ -295,13 +294,13 @@ export default function Cart() {
     setFormData(prev => ({ ...prev, [id]: processedValue }));
   };
 
+  // Update address input.
   const handleAddressInputChange = async (type, field, value) => {
     let processedValue = value;
 
     if (field === 'postalCode') {
       processedValue = value.replace(/\D/g, '').slice(0, 4);
-      
-      // Város automatikus kitöltése, ha 4 számjegy van
+
       if (processedValue.length === 4) {
         try {
           const data = await getCityFromPostalCode(processedValue);
@@ -314,7 +313,7 @@ export default function Cart() {
             } else {
               setBillingAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
             }
-            return; // Kilépünk, mert már frissítettük az állapotot
+            return;
           }
         } catch (error) {
           console.log('Irányítószám nem található');
@@ -337,6 +336,7 @@ export default function Cart() {
     }
   };
 
+  // Toggle address sync.
   const toggleBillingSameAsDelivery = (checked) => {
     setBillingSameAsDelivery(checked);
 
@@ -345,6 +345,7 @@ export default function Cart() {
     }
   };
 
+  // Choose billing address.
   const handleSelectBillingAddress = (addressId) => {
     if (addressId === 'new') {
       setShowBillingAddressForm(true);
@@ -364,6 +365,7 @@ export default function Cart() {
     }
   };
 
+  // Choose delivery address.
   const handleSelectDeliveryAddress = (addressId) => {
     if (addressId === 'new') {
       setShowDeliveryAddressForm(true);
@@ -383,6 +385,7 @@ export default function Cart() {
     }
   };
 
+  // Validate payment forms.
   const validateForm = () => {
     const errors = {};
     Object.keys(formData).forEach(key => {
@@ -394,29 +397,23 @@ export default function Cart() {
     const addressValidationErrors = {};
     const requiredFields = ['postalCode', 'city', 'address', 'phoneNumber'];
 
-    // Szállítási cím validálása
     if (showDeliveryAddressForm) {
-      // Ha formában van az adat, validáljuk az inputokat
       requiredFields.forEach(field => {
         if (!deliveryAddressData[field].toString().trim()) {
           addressValidationErrors[`delivery-${field}`] = 'A mező kitöltése kötelező!';
         }
       });
     } else if (!selectedDeliveryAddressId && !billingSameAsDelivery) {
-      // Ha dropdownból kell kiválasztani és nincs kiválasztva
       addressValidationErrors['delivery-select'] = 'Válasszon egy szállítási cím!';
     }
 
-    // Számlázási cím validálása
     if (showBillingAddressForm) {
-      // Ha formában van az adat, validáljuk az inputokat
       requiredFields.forEach(field => {
         if (!billingAddressData[field].toString().trim()) {
           addressValidationErrors[`billing-${field}`] = 'A mező kitöltése kötelező!';
         }
       });
     } else if (!selectedBillingAddressId) {
-      // Ha dropdownból kell kiválasztani és nincs kiválasztva
       addressValidationErrors['billing-select'] = 'Válasszon egy számlázási cím!';
     }
 
@@ -426,6 +423,7 @@ export default function Cart() {
     return Object.keys(errors).length === 0 && Object.keys(addressValidationErrors).length === 0;
   };
 
+  // Open payment dialog.
   const openPaymentModal = () => {
     setFormErrors({});
     setAddressErrors({});
@@ -438,6 +436,7 @@ export default function Cart() {
     setShowPaymentModal(true);
   };
 
+  // Submit payment request.
   const handlePayment = async () => {
     if (!validateForm()) return;
 
@@ -487,7 +486,6 @@ export default function Cart() {
 
         console.log("STATUS:", response.status);
         console.log("RESPONSE BODY:", responseText);
-        // console.log("SENT DATA:", { dto: orderData });
 
         if (response.status !== 200) {
           return;

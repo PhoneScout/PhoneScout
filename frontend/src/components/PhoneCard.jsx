@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { createPortal } from "react-dom";
 import axios from "axios";
 
+// Render phone card.
 export default function PhoneCard({
   phoneId,
   phoneName,
@@ -24,6 +25,7 @@ export default function PhoneCard({
   const [pairError, setPairError] = useState(false);
   const [calculatedPrice, setCalculatedPrice] = useState(phonePrice);
 
+  // Load first phone image.
   useEffect(() => {
     if (!phoneId) return;
 
@@ -49,6 +51,7 @@ export default function PhoneCard({
     loadFirstImage();
   }, [phoneId]);
 
+  // Sync compare list.
   useEffect(() => {
     const syncCompare = () => {
       const saved = JSON.parse(localStorage.getItem("comparePhones") || "[]");
@@ -65,7 +68,7 @@ export default function PhoneCard({
     };
   }, []);
 
-  // Calculate price based on storage index
+  // Recalculate variant price.
   useEffect(() => {
     if (selectedPairIdx !== null && phonePrice) {
       const basePrice = phonePrice;
@@ -82,17 +85,16 @@ export default function PhoneCard({
     phoneInStore === true ||
     String(phoneInStore).trim().toLowerCase() === "raktáron";
 
+  // Normalize cart format.
   const normalizeCart = () => {
     const raw = JSON.parse(localStorage.getItem("cart") || "[]");
     if (Array.isArray(raw)) {
-      // Ensure all items have storageIndex, default to 0 if missing
       return raw.map(item => ({
         ...item,
         storageIndex: item.storageIndex ?? 0
       }));
     }
 
-    // Legacy object -> array
     const legacyItems = Object.entries(raw).map(([id, qty]) => ({
       phoneID: Number(id),
       quantity: Number(qty),
@@ -108,9 +110,7 @@ export default function PhoneCard({
     return legacyItems;
   };
 
-  const getCartCount = (items) =>
-    items.reduce((sum, item) => sum + (item.quantity || 0), 0);
-
+  // Add phone to compare.
   const handleCompareClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -168,11 +168,11 @@ export default function PhoneCard({
     }
   };
 
+  // Open variant modal.
   const handleCartClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    
-    // Only show modal if colors and ramStoragePairs are provided
+
     if (colors.length === 0 || ramStoragePairs.length === 0) {
       return;
     }
@@ -187,6 +187,7 @@ export default function PhoneCard({
     setShowVariantModal(true);
   };
 
+  // Add selected variant to cart.
   const addToCartWithVariants = () => {
     let hasErrors = false;
 
@@ -233,7 +234,6 @@ export default function PhoneCard({
 
     localStorage.setItem("cart", JSON.stringify(cartItems));
 
-    // Trigger cart update event to notify Navbar
     window.dispatchEvent(new Event("cartUpdated"));
 
     setShowVariantModal(false);

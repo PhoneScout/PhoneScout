@@ -1,6 +1,7 @@
 import { useState } from "react";
 import "./InputText.css";
 
+// Render a styled input field.
 export default function InputText({ type, id, label, onChange, inputStyle, value, required, ...rest }) {
   const isCheckbox = type === "checkbox";
   const isPasswordType = type === "password";

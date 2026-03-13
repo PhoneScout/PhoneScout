@@ -5,8 +5,8 @@ import { Link } from 'react-router';
 import axios from 'axios';
 import { getCityFromPostalCode } from '../utils/postalCodeUtils';
 
+// Render registration form.
 export default function Register({ onSwitchToLogin }) {
-    // Állapot a checkbox pipálásának követésére.
     const [showBilling, setShowBilling] = useState(false);
 
     const [passwordStrength, setPasswordStrength] = useState({
@@ -16,9 +16,8 @@ export default function Register({ onSwitchToLogin }) {
     });
 
     const [password, setPassword] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
-    const [showPasswordAgain, setShowPasswordAgain] = useState(false);
 
+    // Autofill city by postal code.
     const handlePostalCodeChange = async (e) => {
         const postalCode = e.target.value.replace(/\D/g, '').slice(0, 4);
         const cityInput = document.getElementById('registerCity');
@@ -38,7 +37,7 @@ export default function Register({ onSwitchToLogin }) {
         }
     };
 
-
+    // Evaluate password strength.
     const checkPasswordStrength = (value) => {
         let score = 0;
 
@@ -59,10 +58,12 @@ export default function Register({ onSwitchToLogin }) {
         }
     };
 
+    // Toggle billing section.
     const handleCheckboxChange = (event) => {
         setShowBilling(event.target.checked);
     };
 
+    // Generate random salt.
     function GenerateSalt(SaltLength) {
         const karakterek = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         let salt = "";
@@ -75,11 +76,11 @@ export default function Register({ onSwitchToLogin }) {
         return salt;
     }
 
+    // Submit registration data.
     const handleRegisterClick = async (e) => {
         if (e) e.preventDefault();
 
         const alertBox = document.getElementById('alertReg');
-        // Alaphelyzetbe állítás minden gombnyomáskor
         alertBox.innerText = "";
         alertBox.style.color = "red";
 
@@ -137,7 +138,6 @@ export default function Register({ onSwitchToLogin }) {
                 } : null
             };
 
-            //Felhasználó regisztrálása
             const response = await axios.post('http://localhost:5175/api/Registration', userData);
 
             if (response.status !== 200) {
@@ -184,7 +184,6 @@ export default function Register({ onSwitchToLogin }) {
                 <h2 className={styles.mainTitle}>Regisztráció</h2>
 
                 <div className={styles.formLayout}>
-                    {/* Alap adatok */}
                     <div className={styles.formRow}>
                         <InputText type='text' id='registerName' label='Név' required />
                     </div>
@@ -251,8 +250,6 @@ export default function Register({ onSwitchToLogin }) {
                         </div>
                     )}
 
-
-                    {/* Animált Számlázási Rész */}
                     <div className={`${styles.billingWrapper} ${showBilling ? styles.show : ''}`}>
                         <div className={styles.billingInner}>
                             <h2 className={styles.billingTitle}>Számlázási adatok</h2>

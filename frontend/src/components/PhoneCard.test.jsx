@@ -10,17 +10,17 @@ const logCurrentTest = (type) => {
   console.log(`[${type}] ${testName}`);
 };
 
-// Axios mock-olása
+// Mock axios module.
 vi.mock("axios");
 
-// Helper függvény a komponens rendereléséhez Router-rel
+// Render component with router.
 const renderWithRouter = (component) => {
   return render(<BrowserRouter>{component}</BrowserRouter>);
 };
 
 describe("PhoneCard komponens tesztek", () => {
   beforeEach(() => {
-    // LocalStorage tisztítása minden teszt előtt
+    // Reset state before each test.
     localStorage.clear();
     vi.clearAllMocks();
     logCurrentTest("UNIT/PhoneCard");
@@ -44,7 +44,6 @@ describe("PhoneCard komponens tesztek", () => {
       />
     );
 
-    // Várjuk meg, hogy az axios hívás megtörténjen
     await waitFor(() => {
       expect(axios.get).toHaveBeenCalledWith(
         "http://localhost:5175/api/blob/GetIndex/5",

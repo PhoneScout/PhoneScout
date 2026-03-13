@@ -3,6 +3,7 @@ import "./Compare.css";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 
+// Render compare page.
 export default function Compare() {
   const navigate = useNavigate();
   const [phones, setPhones] = useState([]);
@@ -12,7 +13,6 @@ export default function Compare() {
   const [openGroups, setOpenGroups] = useState({});
   const scrollContainerRef = useRef(null);
 
-  // Modal állapotok
   const [showModal, setShowModal] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [allPhones, setAllPhones] = useState([]);
@@ -20,8 +20,8 @@ export default function Compare() {
   const [refreshTrigger, setRefreshTrigger] = useState(0);
   const [phoneImages, setPhoneImages] = useState({});
   const [showVariantModal, setShowVariantModal] = useState(false);
-  const [variantPhone, setVariantPhone] = useState(null);
-  const [variantLoading, setVariantLoading] = useState(false);
+  const [variantPhone] = useState(null);
+  const [variantLoading] = useState(false);
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedPair, setSelectedPair] = useState(null);
   const [selectedPairIdx, setSelectedPairIdx] = useState(null);
@@ -33,7 +33,6 @@ export default function Compare() {
   const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
   const [apiMessage, setApiMessage] = useState('');
 
-  // Csoportosított tulajdonságok
   const groupedProps = [
     {
       group: "Általános",
@@ -106,6 +105,7 @@ export default function Compare() {
   const logicalValueKeys = ["phoneInStore"];
   const lowerIsBetterKeys = ["phonePrice"];
 
+  // Format API error text.
   const getApiErrorMessage = (error, fallback) => {
     const responseData = error?.response?.data;
 
@@ -124,8 +124,9 @@ export default function Compare() {
     return fallback;
   };
 
-  // Összes telefon betöltése (modálhoz)
+  // Load phone names.
   useEffect(() => {
+    // Fetch phone names.
     const fetchAllPhones = async () => {
       setLoadingAllPhones(true);
       try {
@@ -143,7 +144,7 @@ export default function Compare() {
     fetchAllPhones();
   }, []);
 
-  // Összehasonlító telefonok betöltése
+  // Load compared phones.
   const loadPhones = useCallback(async () => {
     const compareIds = JSON.parse(localStorage.getItem("comparePhones") || "[]");
     if (!compareIds.length) {
@@ -159,10 +160,8 @@ export default function Compare() {
       );
       const responses = await Promise.all(requests);
       const phones = responses.map(res => {
-        // Az axios response .data mezőjéből vesszük ki az adatokat
         let data = Array.isArray(res.data) ? res.data[0] : res.data;
-        
-        // Ha van ramStorage tömb, kivonjuk a minimum RAM és minimum tárhely adatokat
+
         if (data && data.ramStorage && Array.isArray(data.ramStorage) && data.ramStorage.length > 0) {
           const ramValues = data.ramStorage
             .map(pair => Number(pair.ramAmount))
@@ -180,9 +179,9 @@ export default function Compare() {
             data.storageAmount = Math.min(...storageValues);
           }
         }
-        
+
         return data;
-      }).filter(p => p); // Nullok/undefined szűrése
+      }).filter(p => p);
       setPhones(phones);
     } catch (err) {
       console.error("Hiba az adatok lekérésekor:", err);
@@ -192,13 +191,16 @@ export default function Compare() {
     }
   }, []);
 
+  // Refresh compared phones.
   useEffect(() => {
     loadPhones();
   }, [loadPhones, refreshTrigger]);
 
+  // Track viewport changes.
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 991.98px)');
 
+    // Sync viewport state.
     const handleViewportChange = (event) => {
       setIsMobileView(event.matches);
       if (!event.matches) {
@@ -214,7 +216,9 @@ export default function Compare() {
     };
   }, []);
 
+  // Load compare images.
   useEffect(() => {
+    // Fetch image blob.
     const loadPhoneImage = async (phoneID) => {
       try {
         const response = await axios.get(
@@ -229,7 +233,6 @@ export default function Compare() {
         const url = URL.createObjectURL(response.data);
         setPhoneImages(prev => ({ ...prev, [phoneID]: url }));
       } catch {
-        // nincs kép vagy nem elérhető
       }
     };
 
@@ -240,7 +243,7 @@ export default function Compare() {
     });
   }, [phones, phoneImages]);
 
-  // Görgetés
+  // Scroll compare list.
   const scroll = (direction) => {
     if (scrollContainerRef.current) {
       const scrollAmount = 400;
@@ -251,7 +254,7 @@ export default function Compare() {
     }
   };
 
-  // Szűrők kezelése
+  // Toggle filter option.
   const toggleFilter = (key) => {
     const newFilters = new Set(selectedFilters);
     if (newFilters.has(key)) newFilters.delete(key);
@@ -259,11 +262,12 @@ export default function Compare() {
     setSelectedFilters(newFilters);
   };
 
+  // Toggle filter group.
   const toggleGroup = (idx) => {
     setOpenGroups(prev => ({ ...prev, [idx]: !prev[idx] }));
   };
 
-  // Kiemelés
+  // Normalize logical value.
   const normalizeLogicalValue = (value) => {
     if (value === 1 || value === true) return "van";
     if (value === 0 || value === false) return "nincs";
@@ -277,6 +281,7 @@ export default function Compare() {
     return "-";
   };
 
+  // Build display value.
   const getDisplayValue = (key, rawValue, phone, formatter) => {
     if (logicalValueKeys.includes(key)) {
       return normalizeLogicalValue(rawValue) === "van" ? "Van" : "Nincs";
@@ -293,26 +298,23 @@ export default function Compare() {
     return rawValue;
   };
 
+  // Resolve highlight class.
   const getHighlightClass = (key, value) => {
   if (!selectedFilters.has(key) || phones.length < 2) return "";
 
-  // Speciális kezelés a "Készleten" mezőre
   if (logicalValueKeys.includes(key)) {
     const values = phones.map(p => normalizeLogicalValue(p[key]));
     const hasVan = values.includes("van");
     const hasNincs = values.includes("nincs");
 
-    // Ha minden telefon készleten van, vagy mindegyik nincs – ne jelöljön semmit
     if (!hasVan || !hasNincs) return "";
 
-    // Különben: "van" = legjobb (zöld), "nincs" = legrosszabb (narancs)
     const normalizedCurrent = normalizeLogicalValue(value);
     if (normalizedCurrent === "van") return "highlight-green";
     if (normalizedCurrent === "nincs") return "highlight-orange";
     return "";
   }
 
-  // Eredeti numerikus logika minden más mezőre
   const numericValues = phones
     .map(p => parseFloat(p[key]))
     .filter(v => !isNaN(v));
@@ -336,14 +338,14 @@ export default function Compare() {
   return "";
 };
 
-  // Különbség vizsgálat
+  // Check row difference.
   const isDifferentRow = (key) => {
     if (!highlightDifferences || phones.length < 2) return false;
     const firstValue = phones[0][key];
     return phones.some(p => p[key] !== firstValue);
   };
 
-  // Hozzáadás / eltávolítás
+  // Add compared phone.
   const handleAddPhone = (phoneId) => {
     const compareIds = JSON.parse(localStorage.getItem("comparePhones") || "[]");
     if (!compareIds.includes(phoneId)) {
@@ -353,6 +355,7 @@ export default function Compare() {
     }
   };
 
+  // Remove compared phone.
   const handleRemovePhone = (phoneId) => {
     let compareIds = JSON.parse(localStorage.getItem("comparePhones") || "[]");
     compareIds = compareIds.filter(id => String(id) !== String(phoneId));
@@ -360,16 +363,19 @@ export default function Compare() {
     setRefreshTrigger(prev => prev + 1);
   };
 
+  // Open phone page.
   const handleCardNavigation = (phoneId) => {
     localStorage.setItem("selectedPhone", String(phoneId));
     navigate(`/telefon/${phoneId}`);
   };
 
+  // Handle cart button click.
   const handleCartButtonClick = (e, phoneId) => {
     e.stopPropagation();
     handleCardNavigation(phoneId);
   };
 
+  // Recalculate variant price.
   useEffect(() => {
     const basePrice = variantPhone?.phonePrice || 0;
     if (selectedPairIdx !== null && basePrice) {
@@ -380,6 +386,7 @@ export default function Compare() {
     }
   }, [selectedPairIdx, variantPhone]);
 
+  // Add variant to cart.
   const addToCartWithVariants = (e) => {
     e.stopPropagation();
 
@@ -453,6 +460,7 @@ export default function Compare() {
     phone.phoneName?.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Close selection modal.
   const closeModal = () => {
     setShowModal(false);
     setSearchTerm("");
@@ -468,7 +476,6 @@ export default function Compare() {
           Telefon hozzáadása
         </button>
 
-        {/* Modál akkor is megnyitható, ha üres a lista */}
         {showModal && (
           <div className="modal-overlay" onClick={closeModal}>
             <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -564,7 +571,6 @@ export default function Compare() {
 
       <div className="container py-4 position-relative">
         <div className="row">
-          {/* BAL OLDALI SZŰRŐPANEL */}
           <div className="col-md-3 compare-filter-col">
             <div id="filterPanel" className={`compare-filter-panel ${isMobileView ? 'is-mobile' : ''} ${isMobileFilterOpen ? 'is-open' : ''}`}>
               {isMobileView && (
@@ -635,7 +641,6 @@ export default function Compare() {
             </div>
           </div>
 
-          {/* JOBB OLDALI TARTALOM */}
           <div className="col-md-9 position-relative compare-content-col">
             {isMobileView ? (
               <div className="compare-mobile-header mb-3">
@@ -688,7 +693,6 @@ export default function Compare() {
               </div>
             )}
 
-            {/* Nyilak */}
             <button className="scroll-arrow left-arrow" onClick={() => scroll("left")}>
               <i className="fa-solid fa-arrow-left"></i>
             </button>
@@ -696,7 +700,6 @@ export default function Compare() {
               <i className="fa-solid fa-arrow-right"></i>
             </button>
 
-            {/* Kártyák sora */}
             <div 
               className="compare-cards-row scrollable-row" 
               id="compareResult" 
@@ -777,7 +780,6 @@ export default function Compare() {
         </div>
       </div>
 
-      {/* MODÁLIS ABLAK (csak ha showModal true és már van telefon a listában) */}
       {showModal && phones.length > 0 && (
         <div className="modal-overlay" onClick={closeModal}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>

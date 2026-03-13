@@ -595,13 +595,58 @@
 .userIcon {
     color: #68F145;
     text-decoration: none;
-    font-weight: bold;
-    font-size: 115%;
-    transition: color 0.3s ease;
+    font-weight: 900;
+    font-size: 135%;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 2px rgba(35, 0, 179, 0.18);
+    transition: color 0.3s ease, text-shadow 0.3s ease, transform 0.3s ease;
+}
+
+button.userIcon {
+    background: transparent;
+    border: none;
+    padding: 0;
+    margin: 0;
+    font: inherit;
+    text-align: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+button.userIcon:focus,
+button.userIcon:focus-visible,
+button.userIcon:active {
+    outline: none;
+    box-shadow: none;
+    background: transparent;
+    border: none;
 }
 
 .userIcon:hover {
     color: #4db832;
+    text-shadow: 0 2px 6px rgba(104, 241, 69, 0.35);
+}
+
+#loginDropdown,
+#loginLink {
+    color: #68F145;
+    font-weight: 900;
+    font-size: 122%;
+}
+
+#loginDropdown #userChange,
+#loginLink #userChange {
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+#loginDropdown #fullName,
+#loginLink #fullName {
+    font-size: 1.05em;
+    font-weight: 900;
+    line-height: 1.1;
+    letter-spacing: 0.02em;
+    text-shadow: 0 1px 2px rgba(35, 0, 179, 0.18);
 }
 
 #loginText {

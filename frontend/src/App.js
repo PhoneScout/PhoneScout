@@ -12,7 +12,6 @@ import Profile from './pages/Profile';
 import ServiceRequest from './pages/ServiceRequest';
 import LoginRegister from './pages/LoginRegister';
 import RegistrationConfirm from './pages/RegistrationConfirm';
-import KepTeszt from './pages/KepTeszt';
 import AboutUs from './pages/AboutUs';
 import Contact from './pages/Contact';
 import Contacts from './pages/Contacts';
@@ -28,6 +27,7 @@ import { useAuth } from './components/AuthContext';
 
 
 
+// Render the main application.
 function App() {
   const { token } = useAuth();
 
@@ -36,6 +36,7 @@ function App() {
   const excludeLayout = ['/bejelentkezes', '/fiokaktivalas','/elfelejtettjelszo'];
   const shouldShowLayout = !excludeLayout.includes(location.pathname);
 
+  // Resolve the current page title.
   const getPageTitle = (pathname) => {
     const staticTitles = {
       '/': 'Főoldal',
@@ -75,6 +76,7 @@ function App() {
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 991.98px)');
 
+    // Update the mobile layout flag.
     const handleViewportChange = (event) => {
       setIsMobile(event.matches);
     };
@@ -131,7 +133,6 @@ function App() {
           <Route path="/szervizigenyles" element={<ServiceRequest />}></Route>
           <Route path="/bejelentkezes" element={<LoginRegister />}></Route>
           <Route path='/fiokaktivalas' element={<RegistrationConfirm />} />
-          <Route path='/teszt' element={<KepTeszt />} />
           <Route path='/rolunk' element={<AboutUs />} />
           <Route path='/kapcsolat' element={<Contact />} />
           <Route path='/elerhetosegek' element={<Contacts />} />

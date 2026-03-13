@@ -12,6 +12,7 @@ const EMPTY_ADDRESS = {
   phoneNumber: ''
 };
 
+// Render service request page.
 export default function ServiceRequest() {
   const [formData, setFormData] = useState({
     name: '',
@@ -27,7 +28,6 @@ export default function ServiceRequest() {
   const [showAtvizsgalasInfo, setShowAtvizsgalasInfo] = useState(false);
   const [uniqueCode, setUniqueCode] = useState('');
 
-  // Payment modal states
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [paymentFormData, setPaymentFormData] = useState({
@@ -55,6 +55,7 @@ export default function ServiceRequest() {
   const REPAIR_PRICE = 5000;
   const INSPECTION_FEE = 5000;
 
+  // Calculate total price.
   const getTotalPrice = () => {
     let total = REPAIR_PRICE;
     if (formData.atvizsgalas) {
@@ -72,6 +73,7 @@ export default function ServiceRequest() {
     { id: 'problemOther', value: 'Egyéb', label: 'Egyéb' }
   ];
 
+  // Read user context from localStorage.
   const getUserContext = () => {
     const userID = parseInt(localStorage.getItem("userid") || localStorage.getItem("userID") || "0", 10);
     const userEmail = localStorage.getItem("email") || localStorage.getItem("userEmail") || "";
@@ -80,12 +82,14 @@ export default function ServiceRequest() {
     return { userID, userEmail, userName };
   };
 
+  // Check payment authentication.
   const isAuthenticatedForPayment = () => {
     const token = localStorage.getItem('userToken') || localStorage.getItem('jwtToken') || localStorage.getItem('token');
     const { userID } = getUserContext();
     return Boolean(token) && userID && !Number.isNaN(userID) && userID > 0;
   };
 
+  // Extract API error message.
   const getApiErrorMessage = (error, fallbackMessage) => {
     const status = error?.response?.status;
     const responseData = error?.response?.data;
@@ -129,6 +133,7 @@ export default function ServiceRequest() {
     }
   };
 
+  // Normalize address object.
   const normalizeAddress = (address) => ({
     postalCode: address?.postalCode?.toString() || '',
     city: address?.city || '',
@@ -136,10 +141,12 @@ export default function ServiceRequest() {
     phoneNumber: address?.phoneNumber?.toString() || ''
   });
 
+  // Generate code on mount.
   useEffect(() => {
     generateUniqueCode();
   }, []);
 
+  // Load addresses when payment modal opens.
   useEffect(() => {
     if (!showPaymentModal) return;
 
@@ -206,6 +213,7 @@ export default function ServiceRequest() {
     loadAddresses();
   }, [showPaymentModal]);
 
+  // Generate unique repair code.
   const generateUniqueCode = () => {
     const now = new Date();
     const datePart = now.getFullYear().toString().slice(-2) +
@@ -219,6 +227,7 @@ export default function ServiceRequest() {
     return code;
   };
 
+  // Handle form input change.
   const handleInputChange = (e) => {
     const { id, value, type, checked } = e.target;
 
@@ -242,6 +251,7 @@ export default function ServiceRequest() {
     }
   };
 
+  // Toggle problem selection.
   const handleProblemToggle = (problem) => {
     setRequestFieldErrors(prev => ({ ...prev, selectedProblems: '' }));
     setSelectedProblems(prev => {
@@ -253,16 +263,19 @@ export default function ServiceRequest() {
     });
   };
 
+  // Get selected problem labels.
   const getSelectedProblemLabels = () => {
     return problemOptions
       .filter(problem => selectedProblems.includes(problem.value))
       .map(problem => problem.label);
   };
 
+  // Format price with dot separator.
   const formatPrice = (price) => {
     return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
   };
 
+  // Handle payment field input.
   const handlePaymentInputChange = (e) => {
     const { id, value } = e.target;
     let processedValue = value;
@@ -296,13 +309,12 @@ export default function ServiceRequest() {
     setPaymentFormData(prev => ({ ...prev, [id]: processedValue }));
   };
 
+  // Handle address field input.
   const handleAddressInputChange = async (type, field, value) => {
     let processedValue = value;
 
     if (field === 'postalCode') {
       processedValue = value.replace(/\D/g, '').slice(0, 4);
-      
-      // Város automatikus kitöltése, ha 4 számjegy van
       if (processedValue.length === 4) {
         try {
           const data = await getCityFromPostalCode(processedValue);
@@ -318,7 +330,7 @@ export default function ServiceRequest() {
                 setDeliveryAddressData(prev => ({ ...prev, postalCode: processedValue, city: data.telepules }));
               }
             }
-            return; // Kilépünk, mert már frissítettük az állapotot
+            return;
           }
         } catch (error) {
           console.log('Irányítószám nem található');
@@ -345,6 +357,7 @@ export default function ServiceRequest() {
     }
   };
 
+  // Sync billing and delivery toggle.
   const toggleBillingSameAsDelivery = (checked) => {
     setBillingSameAsDelivery(checked);
 
@@ -355,6 +368,7 @@ export default function ServiceRequest() {
     }
   };
 
+  // Select billing address.
   const handleSelectBillingAddress = (addressId) => {
     if (addressId === 'new') {
       setShowBillingAddressForm(true);
@@ -390,6 +404,7 @@ export default function ServiceRequest() {
     }
   };
 
+  // Select delivery address.
   const handleSelectDeliveryAddress = (addressId) => {
     if (addressId === 'new') {
       setShowDeliveryAddressForm(true);
@@ -415,6 +430,7 @@ export default function ServiceRequest() {
     }
   };
 
+  // Validate payment form fields.
   const validatePaymentForm = () => {
     const errors = {};
     Object.keys(paymentFormData).forEach(key => {
@@ -454,6 +470,7 @@ export default function ServiceRequest() {
     return Object.keys(errors).length === 0 && Object.keys(addressValidationErrors).length === 0;
   };
 
+  // Open payment modal.
   const openPaymentModal = () => {
     setPaymentFormErrors({});
     setAddressErrors({});
@@ -471,6 +488,7 @@ export default function ServiceRequest() {
     setShowPaymentModal(true);
   };
 
+  // Build service info message.
   const buildServiceInfoMessage = (data) => {
     if (!data) return '';
 
@@ -539,12 +557,14 @@ export default function ServiceRequest() {
     );
   };
 
+  // Close success modal.
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false);
     setFormMessage(buildServiceInfoMessage(repairData));
     setRepairData(null);
   };
 
+  // Submit payment and repair request.
   const handlePayment = async () => {
     if (!validatePaymentForm()) return;
 
@@ -583,8 +603,6 @@ export default function ServiceRequest() {
         parts: selectedProblems
       };
 
-      // console.log("Sending repair payload:", repairPayload);
-
       const response = await axios.post("http://localhost:5175/api/Profile/postRepair", repairPayload);
 
       console.log("Repair request status:", response.status);
@@ -605,12 +623,6 @@ export default function ServiceRequest() {
       setShowSuccessModal(true);
       setHasSubmittedRepair(true);
 
-      // Ne töröljük az űrlap adatokat
-      // setFormData({ ... });
-      // setSelectedProblems([]);
-      // setShowAtvizsgalasInfo(false);
-
-      // Csak a fizetési adatokat töröljük
       setPaymentFormData({
         cardNumber: '',
         expiry: '',
@@ -625,6 +637,7 @@ export default function ServiceRequest() {
     }
   };
 
+  // Handle form submit.
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -700,12 +713,11 @@ export default function ServiceRequest() {
     }));
 
     setFormMessage('');
-
-    // Save repair data and open payment modal
     openPaymentModal();
   };
 
 
+  // Open chatbot widget.
   const openChatbot = () => {
     window.dispatchEvent(new Event('openChatbot'));
   };

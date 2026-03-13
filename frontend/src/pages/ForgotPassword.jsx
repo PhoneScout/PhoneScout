@@ -4,18 +4,17 @@ import axios from 'axios';
 import InputText from '../components/InputText';
 import './ForgotPassword.css';
 
+// Render forgot password page.
 export default function ForgotPassword() {
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
-    
-    // State-ek a beviteli mezőkhöz
+
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [statusMessage, setStatusMessage] = useState({ text: "", isError: false });
     const [emailInput, setEmailInput] = useState("");
     const [emailSent, setEmailSent] = useState(false);
 
-    // URL paraméterek
     const name = searchParams.get('name') || '';
     const email = searchParams.get('email') || '';
 
@@ -23,6 +22,7 @@ export default function ForgotPassword() {
         score: 0, label: "", color: "#ccc"
     });
 
+    // Evaluate password strength.
     const checkPasswordStrength = (value) => {
         let score = 0;
         if (value.length >= 8) score++;
@@ -42,6 +42,7 @@ export default function ForgotPassword() {
         }
     };
 
+    // Hash password with salt.
     const hashPassword = async (password, salt) => {
         const combinedPassword = password + salt;
         const msgBuffer = new TextEncoder().encode(combinedPassword);
@@ -50,6 +51,7 @@ export default function ForgotPassword() {
         return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
     };
 
+    // Generate random salt.
     function GenerateSalt(SaltLength) {
         const karakterek = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
         let salt = "";
@@ -59,7 +61,7 @@ export default function ForgotPassword() {
         return salt;
     }
 
-    // Email kérés kezelése
+    // Send reset email.
     const handleEmailRequest = async (e) => {
         e.preventDefault();
         setStatusMessage({ text: "", isError: false });
@@ -93,6 +95,7 @@ export default function ForgotPassword() {
         }
     };
 
+    // Reset account password.
     const handlePasswordChange = async (e) => {
         e.preventDefault();
         setStatusMessage({ text: "", isError: false });
@@ -150,7 +153,6 @@ export default function ForgotPassword() {
                 </div>
 
                 {!email ? (
-                    // Email kérés képernyő
                     <>
                         <h2 className="title_RegistrationConfirm">Elfelejtett jelszó</h2>
 
@@ -185,7 +187,6 @@ export default function ForgotPassword() {
                         </Link>
                     </>
                 ) : (
-                    // Jelszó módosítás képernyő
                     <>
                         <h2 className="title_RegistrationConfirm">Új jelszó megadása</h2>
 
