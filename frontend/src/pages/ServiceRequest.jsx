@@ -583,7 +583,7 @@ export default function ServiceRequest() {
         parts: selectedProblems
       };
 
-      console.log("Sending repair payload:", repairPayload);
+      // console.log("Sending repair payload:", repairPayload);
 
       const response = await axios.post("http://localhost:5175/api/Profile/postRepair", repairPayload);
 

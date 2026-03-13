@@ -13,7 +13,7 @@ const Profile = () => {
   // Felhasználó adatok
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [userData, setUserData] = useState({ userFullName: '', userEmail: '' });
+  const [userData, setUserData] = useState({ userFullName: '', userEmail: '', currentPassword: '', newPassword: '', confirmPassword: '' });
   const [userID, setUserID] = useState(null);
   const savedEmail = localStorage.getItem('email');
   
@@ -22,7 +22,7 @@ const Profile = () => {
     const loadUserData = async () => {
       try {
         const savedName = localStorage.getItem('fullname');
-        setUserData({ userFullName: savedName, userEmail: savedEmail });
+        setUserData(prev => ({ ...prev, userFullName: savedName, userEmail: savedEmail }));
 
         if (savedEmail) {
           const response = await axios.get(`http://localhost:5175/api/Registration/GetId/${encodeURIComponent(savedEmail)}`);
@@ -116,15 +116,15 @@ const Profile = () => {
   useEffect(() => {
     const loadServiceRequests = async () => {
       try {
-        if (!userID) {
-          console.error('UserID nem elérhető');
+        const numericUserId = Number(userID);
+        if (!userID || Number.isNaN(numericUserId) || numericUserId <= 0) {
           return;
         }
 
-        const response = await axios.get(`http://localhost:5175/api/Profile/GetRepair/${userID}`);
+        const response = await axios.get(`http://localhost:5175/api/Profile/GetRepair/${numericUserId}`);
         if (Array.isArray(response.data)) {
           // backend omits userID so inject it manually
-          const withId = response.data.map(r => ({ ...r, userID }));
+          const withId = response.data.map(r => ({ ...r, userID: numericUserId }));
 
           setWaitingForServiceUpdate(prev => {
             const next = { ...prev };
@@ -515,12 +515,12 @@ const Profile = () => {
   useEffect(() => {
     const loadOrders = async () => {
       try {
-        if (!userID) {
-          console.error('UserID nem elérhető');
+        const numericUserId = Number(userID);
+        if (!userID || Number.isNaN(numericUserId) || numericUserId <= 0) {
           return;
         }
 
-        const response = await axios.get(`http://localhost:5175/api/Profile/GetOrder/${userID}`);
+        const response = await axios.get(`http://localhost:5175/api/Profile/GetOrder/${numericUserId}`);
         if (Array.isArray(response.data)) {
           setPhones(response.data);
         }
