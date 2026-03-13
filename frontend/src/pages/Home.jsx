@@ -224,7 +224,7 @@ export default function Home() {
             )}
             {bannerPage === 1 && (
               <div className="banner-slide promo-slide">
-                <h1>Szuperajánlatok az egész hónapban!</h1>
+                <h1>Szuper ajánlatok az egész hónapban!</h1>
                 <p>Akár 30% kedvezmény a kiválasztott termékekre</p>
                 <h3>Ne hagyja ki ezt az esélyt!</h3>
               </div>
