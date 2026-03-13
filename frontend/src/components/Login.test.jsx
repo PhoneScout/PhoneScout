@@ -6,15 +6,8 @@ import Login from "./Login";
 import { AuthProvider } from "./AuthContext";
 import { vi } from "vitest";
 
-const logCurrentTest = (type) => {
-  const testName = expect.getState().currentTestName ?? "ismeretlen teszt";
-  console.log(`[${type}] ${testName}`);
-};
-
-// Axios mock-olása
 vi.mock("axios");
 
-// Mock useNavigate
 const mockNavigate = vi.fn();
 vi.mock("react-router-dom", async () => {
   const actual = await vi.importActual("react-router-dom");
@@ -24,7 +17,6 @@ vi.mock("react-router-dom", async () => {
   };
 });
 
-// Mock InputText komponens
 vi.mock("./InputText", () => ({
   default: function MockInputText({ id, label, type, onChange, value }) {
     return (
@@ -41,7 +33,6 @@ vi.mock("./InputText", () => ({
   },
 }));
 
-// Helper a komponens rendereléséhez
 const renderLoginWithProviders = () => {
   return render(
     <BrowserRouter>
@@ -56,12 +47,9 @@ describe("Login komponens tesztek", () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
-    mockNavigate.mockClear();
-    logCurrentTest("UNIT/Login");
-    
-    // Mock crypto.subtle.digest - használjuk a vi.stubGlobal-t
+
     const mockDigest = vi.fn().mockResolvedValue(new ArrayBuffer(32));
-    vi.stubGlobal('crypto', {
+    vi.stubGlobal("crypto", {
       subtle: {
         digest: mockDigest,
       },
@@ -73,13 +61,11 @@ describe("Login komponens tesztek", () => {
   });
 
   test("sikeres bejelentkezés végrehajt egy navigációt", async () => {
-    // Mock salt lekérés
     axios.get.mockResolvedValueOnce({
       status: 200,
       data: "testsalt123",
     });
 
-    // Mock login POST
     axios.post.mockResolvedValueOnce({
       status: 200,
       data: {

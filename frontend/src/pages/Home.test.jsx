@@ -1,19 +1,12 @@
 import React from "react";
-import { render, screen, waitFor } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import axios from "axios";
 import Home from "./Home";
 import { vi } from "vitest";
 
-const logCurrentTest = (type) => {
-  const testName = expect.getState().currentTestName ?? "ismeretlen teszt";
-  console.log(`[${type}] ${testName}`);
-};
-
-// Mock-oljuk az axios-t
 vi.mock("axios");
 
-// Mock PhoneCard komponens
 vi.mock("../components/PhoneCard", () => ({
   default: function MockPhoneCard({ phoneName, phonePrice }) {
     return (
@@ -25,21 +18,18 @@ vi.mock("../components/PhoneCard", () => ({
   },
 }));
 
-// Mock Navbar komponens
 vi.mock("../components/Navbar", () => ({
   default: function MockNavbar() {
     return <nav>Mock Navbar</nav>;
   },
 }));
 
-// Mock InputText komponens
 vi.mock("../components/InputText", () => ({
   default: function MockInputText(props) {
     return <input {...props} />;
   },
 }));
 
-// Mock react-router Link komponens
 vi.mock("react-router", () => ({
   Link: function MockLink({ to, children, ...props }) {
     return <a href={to} {...props}>{children}</a>;
@@ -58,7 +48,6 @@ describe("Home oldal tesztek", () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
-    logCurrentTest("UNIT/Home");
   });
 
   test("betölti és megjeleníti a telefonokat a GET kérés után", async () => {
@@ -83,7 +72,6 @@ describe("Home oldal tesztek", () => {
 
     const mockEvents = [];
 
-    // Mock axios hívások
     axios.get.mockImplementation((url) => {
       if (url.includes("mainPage")) {
         return Promise.resolve({ data: mockPhones });
@@ -96,10 +84,7 @@ describe("Home oldal tesztek", () => {
 
     renderHomeWithRouter();
 
-    // Várjuk meg, hogy a telefonok megjelenjenek
-    await waitFor(() => {
-      expect(screen.getByText("Samsung Galaxy S24")).toBeInTheDocument();
-    });
+    expect(await screen.findByText("Samsung Galaxy S24")).toBeInTheDocument();
 
     expect(screen.getByText("iPhone 15 Pro")).toBeInTheDocument();
   });

@@ -1,17 +1,9 @@
-import React from "react";
-import { render, screen, renderHook, act } from "@testing-library/react";
+import { renderHook, act } from "@testing-library/react";
 import { AuthProvider, useAuth } from "./AuthContext";
-import { vi } from "vitest";
-
-const logCurrentTest = (type) => {
-  const testName = expect.getState().currentTestName ?? "ismeretlen teszt";
-  console.log(`[${type}] ${testName}`);
-};
 
 describe("AuthContext tesztek", () => {
   beforeEach(() => {
     localStorage.clear();
-    logCurrentTest("UNIT/Auth");
   });
 
   test("login menti a tokent localStorage-ba", () => {
