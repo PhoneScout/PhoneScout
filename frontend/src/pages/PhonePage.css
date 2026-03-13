@@ -106,8 +106,10 @@ br {
     display: block;
     width: 100%;
     height: auto;
-    min-height: 200px;
+    min-height: 160px;
+    max-width: 420px;
     object-fit: contain;
+    margin: 0 auto;
 }
 
 #mySvg:not([data]) {
@@ -117,9 +119,9 @@ br {
 .svg-container {
     user-select: none;
     position: sticky;
-    top: 20px;
+    top: 120px;
     z-index: 10;
-    width: 70%;
+    width: 58%;
     align-self: flex-start;
     margin: 0 auto;
 }

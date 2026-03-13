@@ -14,6 +14,7 @@ const EMPTY_ADDRESS = {
 
 // Render service request page.
 export default function ServiceRequest() {
+  const PHONE_NUMBER_LENGTH = 11;
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -54,6 +55,9 @@ export default function ServiceRequest() {
 
   const REPAIR_PRICE = 5000;
   const INSPECTION_FEE = 5000;
+
+  // Normalize phone values.
+  const sanitizePhone = (value) => (value || '').replace(/\D/g, '').slice(0, PHONE_NUMBER_LENGTH);
 
   // Calculate total price.
   const getTotalPrice = () => {
@@ -234,7 +238,7 @@ export default function ServiceRequest() {
     let processedValue = value;
 
     if (id === 'phone') {
-      processedValue = value.replace(/\D/g, '').slice(0, 15);
+      processedValue = sanitizePhone(value);
     }
 
     setFormData(prev => ({
@@ -339,7 +343,7 @@ export default function ServiceRequest() {
     }
 
     if (field === 'phoneNumber') {
-      processedValue = value.replace(/\D/g, '').slice(0, 15);
+      processedValue = sanitizePhone(value);
     }
 
     if (type === 'delivery') {
@@ -448,8 +452,13 @@ export default function ServiceRequest() {
           addressValidationErrors[`delivery-${field}`] = 'A mező kitöltése kötelező!';
         }
       });
+      if (deliveryAddressData.phoneNumber && !new RegExp(`^\\d{${PHONE_NUMBER_LENGTH}}$`).test(deliveryAddressData.phoneNumber)) {
+        addressValidationErrors['delivery-phoneNumber'] = `A telefonszám pontosan ${PHONE_NUMBER_LENGTH} számjegy lehet.`;
+      }
     } else if (!selectedDeliveryAddressId) {
       addressValidationErrors['delivery-select'] = 'Válasszon egy szállítási cím!';
+    } else if (!new RegExp(`^\\d{${PHONE_NUMBER_LENGTH}}$`).test(deliveryAddressData.phoneNumber || '')) {
+      addressValidationErrors['delivery-phoneNumber'] = `A telefonszám pontosan ${PHONE_NUMBER_LENGTH} számjegy lehet.`;
     }
 
     if (!billingSameAsDelivery) {
@@ -459,8 +468,13 @@ export default function ServiceRequest() {
             addressValidationErrors[`billing-${field}`] = 'A mező kitöltése kötelező!';
           }
         });
+        if (billingAddressData.phoneNumber && !new RegExp(`^\\d{${PHONE_NUMBER_LENGTH}}$`).test(billingAddressData.phoneNumber)) {
+          addressValidationErrors['billing-phoneNumber'] = `A telefonszám pontosan ${PHONE_NUMBER_LENGTH} számjegy lehet.`;
+        }
       } else if (!selectedBillingAddressId) {
         addressValidationErrors['billing-select'] = 'Válasszon egy számlázási cím!';
+      } else if (!new RegExp(`^\\d{${PHONE_NUMBER_LENGTH}}$`).test(billingAddressData.phoneNumber || '')) {
+        addressValidationErrors['billing-phoneNumber'] = `A telefonszám pontosan ${PHONE_NUMBER_LENGTH} számjegy lehet.`;
       }
     }
 
@@ -683,7 +697,7 @@ export default function ServiceRequest() {
       return;
     }
 
-    if (phoneDigits.length < 10) {
+    if (phoneDigits.length !== PHONE_NUMBER_LENGTH) {
       setFormMessage(<div className="alert alert-danger">Kérjük, adjon meg érvényes telefonszámot.</div>);
       return;
     }
@@ -785,7 +799,9 @@ export default function ServiceRequest() {
               value={formData.phone}
               onChange={handleInputChange}
               required
-              maxLength="15"
+              maxLength={PHONE_NUMBER_LENGTH}
+              inputMode="numeric"
+              pattern="[0-9]*"
             />
             {requestFieldErrors.phone && <div className="invalid-feedback d-block">{requestFieldErrors.phone}</div>}
           </div>
@@ -1101,6 +1117,9 @@ export default function ServiceRequest() {
                       placeholder="36301234567"
                       value={billingAddressData.phoneNumber}
                       onChange={(e) => handleAddressInputChange('billing', 'phoneNumber', e.target.value)}
+                      maxLength={PHONE_NUMBER_LENGTH}
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                     />
                     {addressErrors['billing-phoneNumber'] && <div className="invalid-feedback">{addressErrors['billing-phoneNumber']}</div>}
 
@@ -1197,6 +1216,9 @@ export default function ServiceRequest() {
                         placeholder="36301234567"
                         value={deliveryAddressData.phoneNumber}
                         onChange={(e) => handleAddressInputChange('delivery', 'phoneNumber', e.target.value)}
+                        maxLength={PHONE_NUMBER_LENGTH}
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                       />
                       {addressErrors['delivery-phoneNumber'] && <div className="invalid-feedback">{addressErrors['delivery-phoneNumber']}</div>}
 

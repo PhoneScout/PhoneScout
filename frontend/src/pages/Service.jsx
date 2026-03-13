@@ -1,9 +1,27 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import './Service.css';
 import { Link } from 'react-router';
 
 // Render service page.
 export default function Service() {
+  const carouselRef = useRef(null);
+  const [activeSlide, setActiveSlide] = useState(0);
+
+  // Sync active list item with current carousel slide.
+  useEffect(() => {
+    const carouselElement = carouselRef.current;
+    if (!carouselElement) return;
+
+    const handleSlide = (event) => {
+      if (typeof event?.to === 'number') {
+        setActiveSlide(event.to);
+      }
+    };
+
+    carouselElement.addEventListener('slid.bs.carousel', handleSlide);
+    return () => carouselElement.removeEventListener('slid.bs.carousel', handleSlide);
+  }, []);
+
   const openChatbot = () => {
     window.dispatchEvent(new Event('openChatbot'));
   };
@@ -26,36 +44,46 @@ export default function Service() {
 
             <ul id="serviceList">
               <li
+                className={activeSlide === 0 ? 'active' : ''}
                 data-bs-target="#serviceCarousel"
                 data-bs-slide-to="0"
+                onClick={() => setActiveSlide(0)}
                 style={{ cursor: "pointer" }}
               >
                 Gyors javítás, akár néhány órán belül
               </li>
               <li
+                className={activeSlide === 1 ? 'active' : ''}
                 data-bs-target="#serviceCarousel"
                 data-bs-slide-to="1"
+                onClick={() => setActiveSlide(1)}
                 style={{ cursor: "pointer" }}
               >
                 Kedvező árak és átlátható költségek
               </li>
               <li
+                className={activeSlide === 2 ? 'active' : ''}
                 data-bs-target="#serviceCarousel"
                 data-bs-slide-to="2"
+                onClick={() => setActiveSlide(2)}
                 style={{ cursor: "pointer" }}
               >
                 Eredeti vagy prémium minőségű alkatrészek
               </li>
               <li
+                className={activeSlide === 3 ? 'active' : ''}
                 data-bs-target="#serviceCarousel"
                 data-bs-slide-to="3"
+                onClick={() => setActiveSlide(3)}
                 style={{ cursor: "pointer" }}
               >
                 Garancia minden javításra
               </li>
               <li
+                className={activeSlide === 4 ? 'active' : ''}
                 data-bs-target="#serviceCarousel"
                 data-bs-slide-to="4"
+                onClick={() => setActiveSlide(4)}
                 style={{ cursor: "pointer" }}
               >
                 Derítsd ki mi baja a telefonodnak
@@ -66,6 +94,7 @@ export default function Service() {
           <div className="col-lg-6 service-text">
             <div
               id="serviceCarousel"
+              ref={carouselRef}
               className="carousel slide"
               data-bs-ride="carousel"
             >

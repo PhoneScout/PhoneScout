@@ -8,6 +8,7 @@ import { getCityFromPostalCode } from '../utils/postalCodeUtils';
 // Render registration form.
 export default function Register({ onSwitchToLogin }) {
     const [showBilling, setShowBilling] = useState(false);
+    const PHONE_NUMBER_LENGTH = 11;
 
     const [passwordStrength, setPasswordStrength] = useState({
         score: 0,
@@ -16,6 +17,14 @@ export default function Register({ onSwitchToLogin }) {
     });
 
     const [password, setPassword] = useState("");
+
+    // Keep phone input numeric and limited.
+    const sanitizePhone = (value) => (value || '').replace(/\D/g, '').slice(0, PHONE_NUMBER_LENGTH);
+
+    // Handle phone field input.
+    const handleBillingPhoneChange = (e) => {
+        e.target.value = sanitizePhone(e.target.value);
+    };
 
     // Autofill city by postal code.
     const handlePostalCodeChange = async (e) => {
@@ -96,7 +105,7 @@ export default function Register({ onSwitchToLogin }) {
         const billingPostalCode = document.getElementById('registerPostalCode')?.value.trim() || "";
         const billingCity = document.getElementById('registerCity')?.value.trim() || "";
         const billingAddress = document.getElementById('registerAddress')?.value.trim() || "";
-        const billingPhoneNumber = document.getElementById('registerPhoneNU')?.value.trim() || "";
+        const billingPhoneNumber = sanitizePhone(document.getElementById('registerPhoneNU')?.value.trim() || "");
 
         if (!name || !email || !password) {
             alertBox.innerText = "Hiba: A név, email és jelszó mezők kitöltése kötelező!";
@@ -110,6 +119,11 @@ export default function Register({ onSwitchToLogin }) {
 
         if (showBilling && (!billingPostalCode || !billingCity || !billingAddress || !billingPhoneNumber)) {
             alertBox.innerText = "Hiba: Ha számlázási címet ad meg, minden számlázási mező kitöltése kötelező!";
+            return;
+        }
+
+        if (showBilling && !/^\d{11}$/.test(billingPhoneNumber)) {
+            alertBox.innerText = "Hiba: A telefonszám pontosan 11 számjegy lehet.";
             return;
         }
 
@@ -261,7 +275,15 @@ export default function Register({ onSwitchToLogin }) {
                                 <InputText type='text' id="registerAddress" label="Utca" />
                             </div>
                             <div className={styles.formRow}>
-                                <InputText type='tel' id="registerPhoneNU" label="Telefonszám" />
+                                <InputText
+                                    type='tel'
+                                    id="registerPhoneNU"
+                                    label="Telefonszám"
+                                    onChange={handleBillingPhoneChange}
+                                    maxLength={PHONE_NUMBER_LENGTH}
+                                    inputMode="numeric"
+                                    pattern="[0-9]*"
+                                />
                             </div>
                         </div>
                     </div>

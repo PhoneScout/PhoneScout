@@ -709,7 +709,7 @@ export default function Compare() {
               ref={scrollContainerRef}
             >
               {phones.map((phone) => (
-                <div className="compare-card" key={phone.phoneID} onClick={() => handleCardNavigation(phone.phoneID)}>
+                <div className="compare-card" key={phone.phoneID}>
                   <button
                     className="compare-card-remove-btn"
                     type="button"
@@ -723,7 +723,10 @@ export default function Compare() {
                   </button>
 
                   <div className="compare-card-header">
-                    <div className="compare-card-image-wrap">
+                    <div
+                      className="compare-card-image-wrap compare-card-link-target"
+                      onClick={() => handleCardNavigation(phone.phoneID)}
+                    >
                       <img
                         className="compare-card-image"
                         src={phoneImages[phone.phoneID] || "/images/placeholder.png"}
@@ -736,7 +739,13 @@ export default function Compare() {
                     </div>
 
                     <div className="compare-card-title-row">
-                      <div className="compare-card-title" title={phone.phoneName}>{phone.phoneName}</div>
+                      <div
+                        className="compare-card-title compare-card-link-target"
+                        title={phone.phoneName}
+                        onClick={() => handleCardNavigation(phone.phoneID)}
+                      >
+                        {phone.phoneName}
+                      </div>
                       <div className="compare-card-actions">
                         <button
                           type="button"

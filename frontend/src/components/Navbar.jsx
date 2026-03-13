@@ -334,7 +334,13 @@ export default function Navbar() {
                                         className="dropdown-item"
                                         onClick={() => openPhonePage(phone.phoneID, phone.phoneName)}
                                     >
-                                        {phone.phoneName}
+                                        <img
+                                            src={`http://localhost:5175/api/blob/GetIndex/${phone.phoneID}`}
+                                            alt={phone.phoneName}
+                                            className="search-result-thumb"
+                                            loading="lazy"
+                                        />
+                                        <span className="search-result-name">{phone.phoneName}</span>
                                     </div>
                                 ))}
                             </div>
