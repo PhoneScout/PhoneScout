@@ -487,7 +487,7 @@ export default function Cart() {
 
         console.log("STATUS:", response.status);
         console.log("RESPONSE BODY:", responseText);
-        console.log("SENT DATA:", { dto: orderData });
+        // console.log("SENT DATA:", { dto: orderData });
 
         if (response.status !== 200) {
           return;
@@ -518,7 +518,7 @@ export default function Cart() {
           <div className="col-8">
             {cartPhones.length === 0 ? (
               <div className="emptyCartMessage">
-                <h>A kosarad üres.</h>
+                <p>A kosarad üres.</p>
               </div>
             ) : (
               <div>
