@@ -2,6 +2,7 @@ import React from 'react'
 import './Footer.css';
 import { Link } from 'react-router-dom';
 
+// Render the page footer.
 export default function Footer() {
   return (
     <footer>

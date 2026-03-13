@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
-import { useSearchParams, Link, useNavigate } from 'react-router-dom'; // Importáld a useNavigate-et
+import { useSearchParams, Link, useNavigate } from 'react-router-dom';
 import './ResigstrationConfirm.css';
 import axios from 'axios';
 
+// Render confirmation page.
 export default function RegistrationConfirm() {
     const [searchParams] = useSearchParams();
-    const navigate = useNavigate(); // Inicializáld a navigációt
+    const navigate = useNavigate();
     const [message, setMessage] = useState("");
     const [isSuccess, setIsSuccess] = useState(false);
 
     const name = searchParams.get('name') || 'Felhasználó';
     const email = searchParams.get('email');
 
+    // Activate account.
     const handleActivation = async (e) => {
         e.preventDefault();
         

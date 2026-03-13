@@ -18,7 +18,6 @@ import Contacts from '../pages/Contacts';
 import Shop from '../pages/Shop';
 import PackagingTerms from '../pages/PackagingTerms';
 import ForgotPassword from '../pages/ForgotPassword';
-import KepTeszt from '../pages/KepTeszt';
 import ChatbotWidget from '../components/ChatbotWidget';
 import ScrollToTopButton from '../components/ScrollToTopButton';
 import { useAuth } from '../components/AuthContext';
@@ -40,7 +39,6 @@ function MobileApp() {
           <Route path='/szervizigenyles' element={<ServiceRequest />} />
           <Route path='/bejelentkezes' element={<LoginRegister />} />
           <Route path='/fiokaktivalas' element={<RegistrationConfirm />} />
-          <Route path='/teszt' element={<KepTeszt />} />
           <Route path='/rolunk' element={<AboutUs />} />
           <Route path='/kapcsolat' element={<Contact />} />
           <Route path='/elerhetosegek' element={<Contacts />} />

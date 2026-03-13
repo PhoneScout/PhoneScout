@@ -1,23 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import './Profile.css';
 import axios from 'axios';
-import { UNSAFE_useScrollRestoration, useNavigate } from 'react-router';
+
 import InputText from '../components/InputText';
 import { getCityFromPostalCode } from '../utils/postalCodeUtils';
 
-
-//fetch('http://localhost:5292/phonePage/2').then(response => response.json()).then(data => console.log(data)) //ID-T KISZEDNI A / MÖGÜL HA VAN
-
-
+// Render profile page.
 const Profile = () => {
-  // Felhasználó adatok
-
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [userData, setUserData] = useState({ userFullName: '', userEmail: '', currentPassword: '', newPassword: '', confirmPassword: '' });
   const [userID, setUserID] = useState(null);
   const savedEmail = localStorage.getItem('email');
-  
-  // UserID betöltése az email alapján
+
+  // Load user data.
   useEffect(() => {
     const loadUserData = async () => {
       try {
@@ -39,12 +34,12 @@ const Profile = () => {
     loadUserData();
   }, [savedEmail]);
 
-  // Címek betöltése az API-ből (újrahasznosítjuk a refreshAddresses segédfüggvényt)
+  // Refresh addresses.
   useEffect(() => {
     if (userID) {
       refreshAddresses();
     }
-  }, [userID]);
+  }, [userID]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const [passwordStrength, setPasswordStrength] = useState({ score: 0, label: "", color: "#ccc" });
   const [statusMessage, setStatusMessage] = useState({ text: "", isError: false });
@@ -53,7 +48,7 @@ const Profile = () => {
 
   const MAX_PHONE_LENGTH = 15;
 
-  // helper to remove plus and enforce length
+  // Sanitize phone value.
   const sanitizePhone = (val) => {
     if (!val) return val;
     let s = val.replace(/[+]/g, '');
@@ -61,6 +56,7 @@ const Profile = () => {
     return s;
   };
 
+  // Format date time.
   const formatDateTime = (date = new Date()) => {
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
@@ -73,8 +69,6 @@ const Profile = () => {
   const [phones, setPhones] = useState([]);
   const [serviceRequests, setServiceRequests] = useState([]);
 
-  const navigate = useNavigate();
-  // price offer modal state
   const [showPriceModal, setShowPriceModal] = useState(false);
   const [activeRepair, setActiveRepair] = useState(null);
   const [showEditRequestForm, setShowEditRequestForm] = useState(false);
@@ -86,33 +80,31 @@ const Profile = () => {
   const [showEditSuccessModal, setShowEditSuccessModal] = useState(false);
   const [waitingForServiceUpdate, setWaitingForServiceUpdate] = useState({});
 
-  // payment modal for repair offer
   const [showRepairPaymentModal, setShowRepairPaymentModal] = useState(false);
   const [paymentFormData, setPaymentFormData] = useState({ cardNumber: '', expiry: '', cvc: '', cardName: '' });
   const [paymentFormErrors, setPaymentFormErrors] = useState({});
-  const [paymentDeliveryAddressData, setPaymentDeliveryAddressData] = useState({ postalCode: '', city: '', address: '', phoneNumber: '' });
+  const [, setPaymentDeliveryAddressData] = useState({ postalCode: '', city: '', address: '', phoneNumber: '' });
   const [paymentBillingAddressData, setPaymentBillingAddressData] = useState({ postalCode: '', city: '', address: '', phoneNumber: '' });
-  const [paymentBillingSameAsDelivery, setPaymentBillingSameAsDelivery] = useState(true);
-  const [paymentAddressErrors, setPaymentAddressErrors] = useState({});
-  const [paymentAddressLoading, setPaymentAddressLoading] = useState(false);
-  const [paymentAddressLoadError, setPaymentAddressLoadError] = useState('');
-  const [paymentBillingAddressList, setPaymentBillingAddressList] = useState([]);
-  const [paymentDeliveryAddressList, setPaymentDeliveryAddressList] = useState([]);
-  const [paymentSelectedBillingAddressId, setPaymentSelectedBillingAddressId] = useState(null);
-  const [paymentSelectedDeliveryAddressId, setPaymentSelectedDeliveryAddressId] = useState(null);
-  const [paymentShowBillingAddressForm, setPaymentShowBillingAddressForm] = useState(false);
-  const [paymentShowDeliveryAddressForm, setPaymentShowDeliveryAddressForm] = useState(false);
-  
-  // Feedback messages
+  const [, setPaymentBillingSameAsDelivery] = useState(true);
+  const [, setPaymentAddressErrors] = useState({});
+  const [paymentAddressLoading] = useState(false);
+  const [paymentAddressLoadError] = useState('');
+  const [paymentBillingAddressList] = useState([]);
+  const [paymentDeliveryAddressList] = useState([]);
+  const [, setPaymentSelectedBillingAddressId] = useState(null);
+  const [, setPaymentSelectedDeliveryAddressId] = useState(null);
+  const [, setPaymentShowBillingAddressForm] = useState(false);
+  const [, setPaymentShowDeliveryAddressForm] = useState(false);
+
   const [paymentSuccessMessage, setPaymentSuccessMessage] = useState('');
 
+  // Check payment auth.
   const isAuthenticatedForPayment = () => {
     const token = localStorage.getItem('userToken') || localStorage.getItem('jwtToken') || localStorage.getItem('token');
     return Boolean(token) && userID && !Number.isNaN(Number(userID)) && Number(userID) > 0;
   };
 
-
-  // Szervízrendelések betöltése az API-ből
+  // Load service requests.
   useEffect(() => {
     const loadServiceRequests = async () => {
       try {
@@ -123,7 +115,6 @@ const Profile = () => {
 
         const response = await axios.get(`http://localhost:5175/api/Profile/GetRepair/${numericUserId}`);
         if (Array.isArray(response.data)) {
-          // backend omits userID so inject it manually
           const withId = response.data.map(r => ({ ...r, userID: numericUserId }));
 
           setWaitingForServiceUpdate(prev => {
@@ -150,7 +141,6 @@ const Profile = () => {
 
     loadServiceRequests();
 
-    // listen for external updates (e.g. after payment in cart)
     const refreshHandler = () => {
       loadServiceRequests();
     };
@@ -158,7 +148,7 @@ const Profile = () => {
     return () => window.removeEventListener('repairUpdated', refreshHandler);
   }, [userID]);
 
-  // helper to open offer modal
+  // Open offer modal.
   const openPriceModal = (repair) => {
     setActiveRepair(repair);
     setShowEditRequestForm(false);
@@ -168,6 +158,7 @@ const Profile = () => {
     setShowPriceModal(true);
   };
 
+  // Close offer modal.
   const closePriceModal = () => {
     setActiveRepair(null);
     setShowPriceModal(false);
@@ -179,7 +170,7 @@ const Profile = () => {
     setOfferActionMessage({ text: '', isError: false });
   };
 
-  // helpers for payment modal
+  // Normalize payment address.
   const normalizePaymentAddress = (address) => ({
     postalCode: address?.postalCode?.toString() || '',
     city: address?.city || '',
@@ -187,6 +178,7 @@ const Profile = () => {
     phoneNumber: address?.phoneNumber?.toString() || ''
   });
 
+  // Update payment input.
   const handlePaymentInputChange = (e) => {
     const { id, value } = e.target;
     let processedValue = value;
@@ -220,6 +212,7 @@ const Profile = () => {
     setPaymentFormData(prev => ({ ...prev, [id]: processedValue }));
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleSelectBillingAddressPayment = (id) => {
     if (id === 'new') {
       setPaymentShowBillingAddressForm(true);
@@ -234,6 +227,7 @@ const Profile = () => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleSelectDeliveryAddressPayment = (id) => {
     if (id === 'new') {
       setPaymentShowDeliveryAddressForm(true);
@@ -248,6 +242,7 @@ const Profile = () => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const toggleBillingSameAsDeliveryPayment = (checked) => {
     setPaymentBillingSameAsDelivery(checked);
     if (checked) {
@@ -257,6 +252,7 @@ const Profile = () => {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handlePaymentAddressInputChange = (type, field, value) => {
     let processed = value;
     if (field === 'postalCode') {
@@ -273,6 +269,7 @@ const Profile = () => {
     }
   };
 
+  // Validate payment form.
   const validatePaymentForm = () => {
     const errors = {};
     Object.keys(paymentFormData).forEach(key => {
@@ -287,11 +284,10 @@ const Profile = () => {
     return Object.keys(errors).length === 0;
   };
 
-  // Az activeRepair-ből már megvannak a cím adatok, szóval közvetlenül azokat használjuk
+  // Fill payment addresses.
   useEffect(() => {
     if (!showRepairPaymentModal || !activeRepair) return;
 
-    // Az activeRepair-ből direkten inicializáljuk a szállítási és számlázási adatokat
     const deliveryData = {
       postalCode: activeRepair.deliveryPostalCode?.toString() || '',
       city: activeRepair.deliveryCity || '',
@@ -313,10 +309,10 @@ const Profile = () => {
     setPaymentShowDeliveryAddressForm(false);
   }, [showRepairPaymentModal, activeRepair]);
 
+  // Process repair payment.
   const handleRepairPayment = async () => {
     if (!validatePaymentForm() || !activeRepair) return;
     try {
-      // construct dto similar to activeRepair but ensure userID and accept status
       const payload = {
         ...activeRepair,
         userID: activeRepair.userID || userID,
@@ -326,7 +322,6 @@ const Profile = () => {
         `http://localhost:5175/api/Profile/updateRepair/${activeRepair.repairID}`,
         payload
       );
-      // update local list and notify
       setServiceRequests(prev => prev.map(r => r.repairID === activeRepair.repairID ? { ...r, isPriceAccepted: 1 } : r));
       window.dispatchEvent(new Event('repairUpdated'));
       setPaymentSuccessMessage('Fizetés sikeres!');
@@ -340,11 +335,13 @@ const Profile = () => {
     }
   };
 
+  // Request offer accept.
   const handleAcceptOffer = () => {
     setPendingAction('accept');
     setShowActionConfirmModal(true);
   };
 
+  // Continue accept flow.
   const proceedAcceptOffer = () => {
     if (!activeRepair) return;
     if (!isAuthenticatedForPayment()) {
@@ -353,21 +350,20 @@ const Profile = () => {
     }
 
     setOfferActionMessage({ text: '', isError: false });
-    // Közvetlenül a fizetési modalra lépünk az activeRepair már szerzett cím adatokkal
     setShowPriceModal(false);
-    // reset payment form state
     setPaymentFormData({ cardNumber: '', expiry: '', cvc: '', cardName: '' });
     setPaymentFormErrors({});
     setPaymentAddressErrors({});
-    // A modal megnyitása triggerezni fog egy useEffect-et amely az activeRepair-ből tölti fel a cím adatokat
     setShowRepairPaymentModal(true);
   };
 
+  // Request offer decline.
   const handleDeclineOffer = () => {
     setPendingAction('decline');
     setShowActionConfirmModal(true);
   };
 
+  // Confirm offer decline.
   const confirmDecline = async () => {
     if (!activeRepair) return;
     try {
@@ -380,7 +376,6 @@ const Profile = () => {
         `http://localhost:5175/api/Profile/updateRepair/${activeRepair.repairID}`,
         payload
       );
-      // update local list so button disappears
       setServiceRequests(prev => prev.map(r => r.repairID === activeRepair.repairID ? { ...r, isPriceAccepted: 2 } : r));
       closePriceModal();
     } catch (err) {
@@ -389,18 +384,21 @@ const Profile = () => {
     }
   };
 
+  // Toggle edit form.
   const toggleEditRequestForm = () => {
     setShowEditRequestForm(prev => !prev);
     setEditRequestMessage({ text: '', isError: false });
     setEditRequestText('');
   };
 
+  // Cancel edit request.
   const cancelEditRequest = () => {
     setShowEditRequestForm(false);
     setEditRequestText('');
     setEditRequestMessage({ text: '', isError: false });
   };
 
+  // Queue edit request.
   const handleSubmitEditRequest = async () => {
     const trimmedDescription = editRequestText.trim();
     if (!trimmedDescription) {
@@ -412,6 +410,7 @@ const Profile = () => {
     setShowActionConfirmModal(true);
   };
 
+  // Submit edit request.
   const submitEditRequest = async () => {
     if (!activeRepair) return;
 
@@ -478,6 +477,7 @@ const Profile = () => {
     }
   };
 
+  // Confirm pending action.
   const handleConfirmPendingAction = async () => {
     const action = pendingAction;
     setShowActionConfirmModal(false);
@@ -498,6 +498,7 @@ const Profile = () => {
     }
   };
 
+  // Resolve confirm text.
   const getPendingActionConfirmText = () => {
     switch (pendingAction) {
       case 'accept':
@@ -511,7 +512,7 @@ const Profile = () => {
     }
   };
 
-  // Rendelések betöltése az API-ből
+  // Load orders.
   useEffect(() => {
     const loadOrders = async () => {
       try {
@@ -532,7 +533,7 @@ const Profile = () => {
     loadOrders();
   }, [userID]);
 
-  // Státusz konvertálása szövegre
+  // Map status text.
   const getStatusText = (statusCode) => {
     switch (statusCode) {
       case 0:
@@ -548,25 +549,23 @@ const Profile = () => {
     }
   };
 
+  // Check repair description.
   const hasServiceDescription = (repair) => {
     const text = repair?.repairDescription;
     return typeof text === 'string' && text.trim().length > 0;
   };
 
+  // Check waiting state.
   const isWaitingForServiceResponse = (repair) => {
     if (!repair?.repairID) return false;
     return Object.prototype.hasOwnProperty.call(waitingForServiceUpdate, repair.repairID);
   };
 
+  // Check offer visibility.
   const canShowOffer = (repair) => hasServiceDescription(repair) && !isWaitingForServiceResponse(repair);
 
-  // Szállítási címek
   const [shippingAddresses, setShippingAddresses] = useState([]);
-  
-  // Számlázási címek
   const [billingAddresses, setBillingAddresses] = useState([]);
-
-  // Új cím form
   const [newAddress, setNewAddress] = useState({
     type: 'shipping',
     postalCode: '',
@@ -575,29 +574,22 @@ const Profile = () => {
     phoneNumber: ''
   });
 
-  // Módosítás státuszok
   const [editingProfile, setEditingProfile] = useState(false);
   const [editingShippingId, setEditingShippingId] = useState(null);
   const [editingBillingId, setEditingBillingId] = useState(null);
-  const [newAddressType, setNewAddressType] = useState(null); // 'shipping' vagy 'billing'
-
-  // Delete modal state
+  const [newAddressType, setNewAddressType] = useState(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [deleteAddressId, setDeleteAddressId] = useState(null);
 
-  // function GetProfile(){
-  //   fetch("")
-  // }
-
-  // Profil adatok mentése
+  // Submit profile form.
   const handleProfileSubmit = (e) => {
     e.preventDefault();
     setShowConfirmModal(true);
   };
 
+  // Save profile changes.
   const confirmSave = async () => {
     try {
-      console.log(userData)
       const response = await axios.put(
         `http://localhost:5175/api/Profile/UpdateUser/${savedEmail}`,
         {
@@ -607,7 +599,6 @@ const Profile = () => {
       );
 
       if (response.status === 200) {
-        // Itt is figyelj a konzisztens elnevezésre:
         localStorage.setItem('fullname', userData.userFullName);
         localStorage.setItem('email', userData.userEmail);
         window.dispatchEvent(new Event('userProfileUpdated'));
@@ -620,13 +611,12 @@ const Profile = () => {
         }, 2000);
       }
     } catch (error) {
-      // Axios hiba esetén itt nézd meg, mit mond a szerver:
       console.error('Hiba:', error.response?.data || error.message);
       alert('Hiba történt a mentés során!');
     }
   };
 
-  //Salt generator
+  // Generate salt.
   function GenerateSalt(SaltLength) {
     const karakterek = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
     let salt = "";
@@ -639,6 +629,7 @@ const Profile = () => {
     return salt;
   }
 
+  // Evaluate password strength.
   const checkPasswordStrength = (value) => {
     let score = 0;
     if (value.length >= 8) score++;
@@ -658,10 +649,10 @@ const Profile = () => {
     }
   };
 
-  // Jelszó változtatás
+  // Change account password.
   const handlePasswordChange = async (e) => {
     e.preventDefault();
-    setStatusMessage({ text: "", isError: false }); // Előző üzenet törlése
+    setStatusMessage({ text: "", isError: false });
 
     if (userData.newPassword !== userData.confirmPassword) {
       setStatusMessage({ text: "Az új jelszó és a megerősítés nem egyezik!", isError: true });
@@ -717,6 +708,7 @@ const Profile = () => {
     }
   };
 
+  // Hash password value.
   const hashPassword = async (password, salt) => {
     const combinedPassword = password + salt;
     const msgBuffer = new TextEncoder().encode(combinedPassword);
@@ -725,9 +717,7 @@ const Profile = () => {
     return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   };
 
-
-  // Szállítási cím mentése
-  // generic save function for both address types
+  // Save address changes.
   const saveAddress = async (type, idx, e) => {
     if (e) e.preventDefault();
     setAddressStatusMessage({ text: "", isError: false });
@@ -766,9 +756,7 @@ const Profile = () => {
     }
   };
 
-  // Számlázási cím mentése handled by saveAddress helper
-
-  // Új cím hozzáadása
+  // Add new address.
   const handleAddNewAddress = async (e) => {
     e.preventDefault();
     setAddressStatusMessage({ text: "", isError: false });
@@ -796,7 +784,6 @@ const Profile = () => {
       if (response.status === 200) {
         setAddressStatusMessage({ text: "Új cím sikeresen hozzáadva!", isError: false });
         await refreshAddresses();
-        // Form reset
         setNewAddress({
           type: newAddress.type,
           postalCode: '',
@@ -812,13 +799,13 @@ const Profile = () => {
     }
   };
 
-  // Cím törlésének megerősítése (id alapján)
+  // Open delete dialog.
   const deleteAddress = (id) => {
     setDeleteAddressId(id);
     setShowDeleteModal(true);
   };
 
-  // Valós törlés az API-n keresztül
+  // Delete selected address.
   const confirmDeleteAddress = async () => {
     setAddressStatusMessage({ text: "", isError: false });
 
@@ -834,7 +821,6 @@ const Profile = () => {
 
       if (response.status === 200) {
         setAddressStatusMessage({ text: "Cím sikeresen törölve!", isError: false });
-        // refresh addresses
         await refreshAddresses();
       }
 
@@ -847,7 +833,7 @@ const Profile = () => {
     }
   };
 
-  // Input változások kezelése
+  // Update profile input.
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setUserData({ ...userData, [name]: value });
@@ -857,20 +843,19 @@ const Profile = () => {
     }
   };
 
+  // Update address input.
   const handleAddressInputChange = async (e, type, idx, field) => {
     let { value } = e.target;
     if (field === 'phoneNumber') {
       value = sanitizePhone(value);
     }
 
-    // Ha irányítószámot módosít és 4 karakter hosszú, automatikusan kitölti a várost
     if (field === 'postalCode') {
       value = value.replace(/\D/g, '').slice(0, 4);
       if (value.length === 4) {
         try {
           const data = await getCityFromPostalCode(value);
           if (data && data.telepules) {
-            // Automatikusan kitölti a várost is
             if (type === 'shipping') {
               const updated = shippingAddresses.map((addr, i) =>
                 i === idx ? { ...addr, postalCode: value, city: data.telepules } : addr
@@ -886,7 +871,6 @@ const Profile = () => {
           }
         } catch (error) {
           console.log('Irányítószám nem található');
-          // Folytatjuk a normál frissítést
         }
       }
     }
@@ -904,14 +888,14 @@ const Profile = () => {
     }
   };
 
+  // Update new address input.
   const handleNewAddressChange = async (e) => {
     const { name, value } = e.target;
     let v = value;
     if (name === 'phoneNumber') {
       v = sanitizePhone(value);
     }
-    
-    // Ha irányítószámot módosít és 4 karakter hosszú, automatikusan kitölti a várost
+
     if (name === 'postalCode') {
       v = value.replace(/\D/g, '').slice(0, 4);
       if (v.length === 4) {
@@ -923,14 +907,14 @@ const Profile = () => {
           }
         } catch (error) {
           console.log('Irányítószám nem található');
-          // Folytatjuk a normál frissítést
         }
       }
     }
-    
+
     setNewAddress({ ...newAddress, [name]: v });
   };
 
+  // Refresh address lists.
   const refreshAddresses = async () => {
     if (!userID) return;
     try {
@@ -942,7 +926,6 @@ const Profile = () => {
       if (Array.isArray(billingRes.data)) {
         setBillingAddresses(billingRes.data);
       }
-      // clear any editing state when data refreshes
       setEditingShippingId(null);
       setEditingBillingId(null);
     } catch (err) {
@@ -950,6 +933,7 @@ const Profile = () => {
     }
   };
 
+  // Copy address entry.
   const copyAddress = async (fromType, idx) => {
     const sourceList = fromType === 'shipping' ? shippingAddresses : billingAddresses;
     const targetType = fromType === 'shipping' ? 'billing' : 'shipping';
@@ -991,14 +975,12 @@ const Profile = () => {
 
   return (
     <div className="profile-container">
-      {/* Fejléc */}
       <header className="profile-header">
         <h1>Profilom</h1>
         <p>Itt kezelheted személyes adataidat és címeidet</p>
       </header>
 
       <div className="profile-content">
-        {/* Bal oldali navigáció */}
         <div className="profile-sidebar">
           <ul>
             <li><a href="#profile">Profil adatok</a></li>
@@ -1009,9 +991,7 @@ const Profile = () => {
           </ul>
         </div>
 
-        {/* Fő tartalom */}
         <main className="profile-main">
-          {/* 1. Profil adatok szakasz */}
           <section id="profile" className="profile-section">
             <div className="section-header">
               <h2>Profil adatok</h2>
@@ -1026,7 +1006,6 @@ const Profile = () => {
               )}
             </div>
 
-            {/* Profil szekció - az általad kért összevont mezőkkel */}
             <form onSubmit={handleProfileSubmit}>
               <div className="form-stack">
                 <div className="form-group">
@@ -1084,8 +1063,6 @@ const Profile = () => {
               </div>
             )}
 
-
-            {/* Jelszó változtatás */}
             <div className="password-section">
               <h3>Jelszó változtatás</h3>
               <form onSubmit={handlePasswordChange}>
@@ -1107,8 +1084,6 @@ const Profile = () => {
                       value={userData.newPassword}
                       onChange={handleInputChange}
                     />
-
-                    {/* Itt jelenik meg az erősségjelző, ha már elkezdtek gépelni */}
                     {userData.newPassword && (
                       <div className="password-strength-container">
                         <div style={{ background: "#eee", height: "6px", borderRadius: "4px", marginTop: "6px", width: "100%" }}>
@@ -1149,7 +1124,7 @@ const Profile = () => {
                     marginTop: "10px",
                     fontSize: "14px",
                     fontWeight: "bold",
-                    backgroundColor: statusMessage.isError ? "#ffe6e6" : "#e6fffa", // Halvány háttér a jobb olvashatóságért
+                    backgroundColor: statusMessage.isError ? "#ffe6e6" : "#e6fffa",
                     borderRadius: "4px"
                   }}>
                     {statusMessage.text}
@@ -1164,7 +1139,6 @@ const Profile = () => {
             </div>
           </section>
 
-          {/* 2. Szállítási címek szakasz */}
           <section id="shipping" className="profile-section">
             <div className="section-header">
               <h2>Szállítási cím</h2>
@@ -1576,10 +1550,6 @@ const Profile = () => {
               ))}
             </div>
           </section>
-
-
-
-          {/*Szerviz kérések */}
           <section id="service-requests" className="profile-section">
             <div className="section-header">
               <h2>Szervizeltetések</h2>
@@ -1625,7 +1595,6 @@ const Profile = () => {
             </div>
           </section>
 
-          {/* árajánlat megtekintése modal */}
           {showPriceModal && activeRepair && (
             <div className="profile-modal-overlay">
               <div className="profile-modal-content profile-modal-content-lg">
@@ -1685,7 +1654,6 @@ const Profile = () => {
             </div>
           )}
 
-          {/* művelet megerősítő modal */}
           {showActionConfirmModal && (
             <div className="profile-modal-overlay">
               <div className="profile-modal-content">
@@ -1716,7 +1684,6 @@ const Profile = () => {
             </div>
           )}
 
-          {/* fizetes modal az arajanlatlozahoz */}
           {showRepairPaymentModal && activeRepair && (
             <div className="paymentModal" style={{ display: 'flex' }}>
               <div className="modalContent">
@@ -1805,7 +1772,6 @@ const Profile = () => {
               </div>
             </div>
           )}
-          {/* Cím törlés megerősítő modal */}
           {showDeleteModal && (
             <div className="profile-modal-overlay">
               <div className="profile-modal-content">

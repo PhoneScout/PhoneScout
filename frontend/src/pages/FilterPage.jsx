@@ -5,6 +5,7 @@ import './FilterPage.css';
 import PhoneCard from '../components/PhoneCard';
 import axios from 'axios';
 
+// Render filter page.
 export default function FilterPage() {
   const [filters, setFilters] = useState({
     manufacturerNames: [],
@@ -39,11 +40,13 @@ export default function FilterPage() {
   const filterApiUrl = "http://localhost:5175/api/filterPage/GetFilteredPhones";
   const filterDatasURL = "http://localhost:5175/api/filterPage/GetDatasForFilters";
 
+  // Load initial data.
   useEffect(() => {
     getPhoneDatas();
     getFilterDatas();
   }, []);
 
+  // Track viewport state.
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 991.98px)');
 
@@ -62,6 +65,7 @@ export default function FilterPage() {
     };
   }, []);
 
+  // Load phone data.
   const getPhoneDatas = async () => {
     try {
       setIsLoading(true);
@@ -76,17 +80,18 @@ export default function FilterPage() {
     }
   };
 
+  // Load filter options.
   const getFilterDatas = async () => {
     try {
       const response = await axios.get(filterDatasURL);
       const data = response.data;
       setFilterData(data);
-      console.log("Szűrő adatok:", data);
     } catch (error) {
       console.error("Hiba a szűrő adatok betöltésekor:", error);
     }
   };
 
+  // Update filter field.
   const handleFilterChange = (e) => {
     const { id, value } = e.target;
     setFilters(prev => ({
@@ -95,6 +100,7 @@ export default function FilterPage() {
     }));
   };
 
+  // Toggle manufacturer filter.
   const handleManufacturerChange = (manufacturer) => {
     setFilters(prev => {
       const current = [...prev.manufacturerNames];
@@ -113,6 +119,7 @@ export default function FilterPage() {
     });
   };
 
+  // Toggle CPU filter.
   const handleCpuChange = (cpu) => {
     setFilters(prev => {
       const current = [...prev.cpuNames];
@@ -131,6 +138,7 @@ export default function FilterPage() {
     });
   };
 
+  // Update range values.
   const handleDualRangeChange = (field, type, rawValue, min, max, step = 1) => {
     const numericValue = parseFloat(rawValue);
     const parsedMin = parseFloat(min);
@@ -161,6 +169,7 @@ export default function FilterPage() {
     });
   };
 
+  // Update slider value.
   const handleSingleSliderChange = (field, value) => {
     setFilters(prev => ({
       ...prev,
@@ -174,6 +183,7 @@ export default function FilterPage() {
     return isNaN(num) ? 0 : num;
   };
 
+  // Apply API filters.
   const applyFilters = async () => {
     setIsLoading(true);
     
@@ -197,7 +207,6 @@ export default function FilterPage() {
       phoneWeightMax: parseNumber(filters.phoneWeightMax) || (filterData?.maxPhoneWeight || 300)
     };
 
-    console.log("Küldött adatok:", JSON.stringify(filterRequestData, null, 2));
 
     try {
       const resp = await axios.post(filterApiUrl,filterRequestData);
@@ -209,7 +218,6 @@ export default function FilterPage() {
       }
 
       const data = resp.data;
-      console.log("Sikeres válasz:", data);
       
       if (Array.isArray(data)) {
         setFilteredPhones(data);
@@ -228,23 +236,21 @@ export default function FilterPage() {
     }
   };
 
+  // Apply local filters.
   const localFilter = () => {
     const filtered = phones.filter(phone => {
-      // Gyártó szűrés
       if (filters.manufacturerNames.length > 0 && phone.manufacturerName) {
         if (!filters.manufacturerNames.includes(phone.manufacturerName)) {
           return false;
         }
       }
 
-      // CPU szűrés
       if (filters.cpuNames.length > 0 && phone.cpuName) {
         if (!filters.cpuNames.includes(phone.cpuName)) {
           return false;
         }
       }
 
-      // Megjelenési dátum (év) szűrés
       if (filters.phoneReleaseDate) {
         const selectedYear = parseNumber(filters.phoneReleaseDate);
 
@@ -256,7 +262,6 @@ export default function FilterPage() {
         }
       }
 
-      // Egyéb szűrők
       if (filters.phoneAntutu && phone.phoneAntutu) {
         if (phone.phoneAntutu < parseNumber(filters.phoneAntutu)) return false;
       }
@@ -306,6 +311,7 @@ export default function FilterPage() {
     setFilteredPhones(filtered);
   };
 
+  // Reset all filters.
   const resetFilters = () => {
     setFilters({
       manufacturerNames: [],
@@ -331,6 +337,7 @@ export default function FilterPage() {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handlePhoneClick = (phone) => {
     if (phone && phone.phoneID) {
       localStorage.setItem("selectedPhone", phone.phoneID);
@@ -338,6 +345,7 @@ export default function FilterPage() {
     }
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleAddToCart = (phone, e) => {
     e.stopPropagation();
     if (!phone || !phone.phoneID) return;
@@ -348,6 +356,7 @@ export default function FilterPage() {
     alert(`${phone.phoneName} hozzáadva a kosárhoz!`);
   };
 
+  // eslint-disable-next-line no-unused-vars
   const handleAddToCompare = (phone, e) => {
     e.stopPropagation();
     if (!phone || !phone.phoneID) return;
@@ -360,6 +369,7 @@ export default function FilterPage() {
     }
   };
 
+  // Render checkbox dropdown.
   const renderCheckboxDropdown = (title, items, selectedItems, onChange, show, setShow) => {
     return (
       <div className="filter-section mt-3">
@@ -405,6 +415,7 @@ export default function FilterPage() {
     );
   };
 
+  // Render range slider.
   const renderRangeSlider = (title, field, min, max, step = 1) => {
     if (!filterData || min === undefined || max === undefined) return null;
 
@@ -482,6 +493,7 @@ export default function FilterPage() {
     );
   };
 
+  // Render single slider.
   const renderSingleSlider = (title, field, min, max, step = 1) => {
     if (!filterData || min === undefined || max === undefined) return null;
     
@@ -519,6 +531,7 @@ export default function FilterPage() {
     );
   };
 
+  // Render phone cards.
   const displayPhoneCards = () => {
     if (isLoading) {
       return (

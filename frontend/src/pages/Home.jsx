@@ -1,35 +1,37 @@
 import React, { useEffect, useState } from 'react';
 import '../../node_modules/bootstrap/dist/css/bootstrap.css';
 import './Home.css';
+// eslint-disable-next-line no-unused-vars
 import Navbar from '../components/Navbar'; //we still need the import here
 import PhoneCard from '../components/PhoneCard';
-import InputText from '../components/InputText';
 import { Link } from 'react-router';
 import axios from 'axios';
 
+// Render home page.
 export default function Home() {
   const allPhonesURL = "http://localhost:5175/mainPage";
   const eventsURL = "http://localhost:5175/api/event";
 
-  // Banner carousel states
   const [bannerPage, setBannerPage] = useState(0);
   const [manualBannerNavigationCount, setManualBannerNavigationCount] = useState(0);
   const [allEventsData, setAllEventsData] = useState([]);
   const [nowTime, setNowTime] = useState(new Date());
 
-  // Phone carousel states
   const [currentPage, setCurrentPage] = useState(0);
   const [activeChangeButton, setActiveChangeButton] = useState("right");
+  // eslint-disable-next-line no-unused-vars
   const [isMobileView, setIsMobileView] = useState(window.innerWidth <= 991.98);
 
 
 
   const [allPhonesData, setAllPhonesData] = useState([]);
+  // eslint-disable-next-line no-unused-vars
   const [homePreviousPages, setHomePreviousPages] = useState(() => {
     const stored = localStorage.getItem("pagesHistory");
     return stored ? JSON.parse(stored) : [{ pageName: "Főoldal", pageURL: "/" }];
   });
 
+  // Load home data.
   useEffect(() => {
     axios.get(allPhonesURL)
       .then((response) => {
@@ -55,6 +57,7 @@ export default function Home() {
       .catch((error) => console.error("Hiba az eventos adatok betöltésekor:", error));
   }, []);
 
+  // Update countdown timer.
   useEffect(() => {
     const countdownTimer = setInterval(() => {
       setNowTime(new Date());
@@ -63,7 +66,7 @@ export default function Home() {
     return () => clearInterval(countdownTimer);
   }, []);
 
-
+  // Change phone page.
   function changePage(direction) {
     const newPage = currentPage + direction;
     setCurrentPage(newPage);
@@ -75,6 +78,7 @@ export default function Home() {
     }
   }
 
+  // Change banner page.
   function changeBannerPage(direction, isManual = false) {
     const eventSlideCount = allEventsData.length > 0 ? allEventsData.length : 1;
     const totalBannerSlides = 2 + eventSlideCount;
@@ -96,6 +100,7 @@ export default function Home() {
     }
   }
 
+  // Set banner page directly.
   function setBannerPageManually(targetPage) {
     const eventSlideCount = allEventsData.length > 0 ? allEventsData.length : 1;
     const totalBannerSlides = 2 + eventSlideCount;
@@ -105,6 +110,7 @@ export default function Home() {
     setManualBannerNavigationCount((prevCount) => prevCount + 1);
   }
 
+  // Auto-rotate banner.
   useEffect(() => {
     const eventSlideCount = allEventsData.length > 0 ? allEventsData.length : 1;
     const totalBannerSlides = 2 + eventSlideCount;
@@ -118,7 +124,7 @@ export default function Home() {
     return () => clearTimeout(bannerTimeout);
   }, [allEventsData, bannerPage, manualBannerNavigationCount]);
 
-
+  // Render phone cards.
   function displayPhoneCards() {
     if (isMobileView) {
       const groupedPhones = [];
@@ -163,6 +169,7 @@ export default function Home() {
   const totalBannerSlides = 2 + eventSlideCount;
   const currentEvent = bannerPage >= 2 ? allEventsData[bannerPage - 2] : null;
 
+  // Format event date.
   const formatEventDate = (dateValue) => {
     if (!dateValue) {
       return "Dátum nincs megadva";
@@ -179,6 +186,7 @@ export default function Home() {
     return `${year} ${month} ${day}. ${hours}:${minutes}`;
   };
 
+  // Format countdown text.
   const formatCountdown = (dateValue) => {
     if (!dateValue) {
       return "Nincs időpont";
@@ -206,7 +214,6 @@ export default function Home() {
 
   return (
     <div>
-      {/* Banner Carousel - Full Width */}
       <div className="banner-carousel-section">
         <div className="banner-controls">
           <div className="banner-button-left">

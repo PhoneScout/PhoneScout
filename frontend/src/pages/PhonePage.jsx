@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import './PhonePage.css';
 import axios from 'axios';
 
+// Render phone page.
 export default function PhonePage() {
   const { phoneId } = useParams();
   const [phone, setPhone] = useState(null);
@@ -24,6 +25,7 @@ export default function PhonePage() {
 
   const svgRef = useRef(null);
 
+  // Check stock value.
   const isPhoneInStock = (value) => {
     if (value === 1 || value === true) return true;
     if (value === 0 || value === false) return false;
@@ -36,6 +38,7 @@ export default function PhonePage() {
     return false;
   };
 
+  // Format API error.
   const getApiErrorMessage = (error, fallback) => {
     const responseData = error?.response?.data;
 
@@ -54,6 +57,7 @@ export default function PhonePage() {
     return fallback;
   };
 
+  // Load phone data.
   useEffect(() => {
     setLoading(true);
     setErrorMessage('');
@@ -70,6 +74,7 @@ export default function PhonePage() {
       });
   }, [phoneId]);
 
+  // Load phone images.
   useEffect(() => {
     axios.get(`http://localhost:5175/api/blob/GetAllPictures/${phoneId}`)
       .then(response => {
@@ -84,12 +89,14 @@ export default function PhonePage() {
       });
   }, [phoneId]);
 
+  // Update page title.
   useEffect(() => {
     if (phone?.phoneName) {
       document.title = `${phone.phoneName} | PhoneScout`;
     }
   }, [phone?.phoneName]);
 
+  // Sync compare data.
   useEffect(() => {
     const syncCompare = () => {
       const saved = JSON.parse(localStorage.getItem('comparePhones') || '[]');
@@ -106,7 +113,7 @@ export default function PhonePage() {
     };
   }, []);
 
-  // Calculate price based on storage index
+  // Recalculate price.
   useEffect(() => {
     if (phone?.phonePrice) {
       const basePrice = phone.phonePrice;
@@ -115,11 +122,12 @@ export default function PhonePage() {
     }
   }, [selectedRamIdx, phone]);
 
-  // SVG interakciók
+  // Bind SVG actions.
   useEffect(() => {
     if (!phone || !svgRef.current) return;
     const svgObj = svgRef.current;
 
+    // Attach SVG events.
     const setupSvg = () => {
       const svgDoc = svgObj.contentDocument;
       if (!svgDoc) return;
@@ -153,10 +161,8 @@ export default function PhonePage() {
           };
 
           element.onclick = () => {
-            // Kiválasztjuk a megfelelő osztályú sorokat (kivéve az üres elválasztó sorokat)
             const rows = document.querySelectorAll(`.${map.className}:not(.more_rows)`);
 
-            // Minden sorban a td-kre rakjuk a flash osztályt
             rows.forEach(row => {
               row.querySelectorAll('td').forEach(td => td.classList.add('flash-highlight'));
             });
@@ -166,11 +172,10 @@ export default function PhonePage() {
                 row.querySelectorAll('td').forEach(td => td.classList.remove('flash-highlight'));
               });
               timeoutsRef.current = timeoutsRef.current.filter(id => id !== timeoutId);
-            }, 800); //villanás
+            }, 800);
 
             timeoutsRef.current.push(timeoutId);
 
-            // Görgetés az első ilyen sorhoz (általában a fejléc)
             if (rows.length > 0) {
               rows[0].scrollIntoView({ behavior: "smooth", block: "center" });
             }
@@ -181,7 +186,6 @@ export default function PhonePage() {
 
     svgObj.addEventListener("load", setupSvg);
 
-    // Cleanup: timeouts és event listener eltávolítása
     return () => {
       timeoutsRef.current.forEach(clearTimeout);
       timeoutsRef.current = [];
@@ -189,11 +193,13 @@ export default function PhonePage() {
     };
   }, [phone]);
 
+  // Open cart modal.
   const handleCartClick = () => {
     setSelectedQty(1);
     setShowVariantModal(true);
   };
 
+  // Add to compare.
   const handleCompareClick = () => {
     const currentPhoneId = parseInt(phoneId, 10);
     if (Number.isNaN(currentPhoneId)) return;
@@ -212,6 +218,7 @@ export default function PhonePage() {
     }
   };
 
+  // Add variant to cart.
   const addToCartWithVariants = () => {
     if (!selectedColor || selectedRamIdx === null || selectedQty < 1) return;
 
@@ -250,6 +257,7 @@ export default function PhonePage() {
 
   const isInCompare = compareIds.includes(parseInt(phoneId, 10));
 
+  // Normalize image path.
   const normalizeImageUrl = (url) => {
     if (!url) return "";
     if (url.startsWith("http://") || url.startsWith("https://")) return url;
@@ -262,18 +270,21 @@ export default function PhonePage() {
 
   const activeImage = displayedPictures[activePictureIdx] || displayedPictures[0];
 
+  // Go to previous image.
   const goToPreviousImage = () => {
     setPrevPictureIdx(activePictureIdx);
     setSlideDirection('left');
     setActivePictureIdx((prev) => (prev - 1 + displayedPictures.length) % displayedPictures.length);
   };
 
+  // Go to next image.
   const goToNextImage = () => {
     setPrevPictureIdx(activePictureIdx);
     setSlideDirection('right');
     setActivePictureIdx((prev) => (prev + 1) % displayedPictures.length);
   };
 
+  // Select thumbnail.
   const handleThumbnailClick = (idx) => {
     if (idx === activePictureIdx) return;
     setPrevPictureIdx(activePictureIdx);
@@ -292,10 +303,12 @@ export default function PhonePage() {
     }
   }, [slideDirection]);
 
+  // Open image modal.
   const openImageModal = () => {
     setShowImageModal(true);
   };
 
+  // Close image modal.
   const closeImageModal = () => {
     setShowImageModal(false);
   };
@@ -313,11 +326,7 @@ export default function PhonePage() {
             {errorMessage}
           </div>
         )}
-
-        {/* FELSŐ SZEKCIÓ: 3 OSZLOPOS ELRENDEZÉS */}
         <div className="row mt-4 align-items-start gy-4">
-
-          {/* 1. OSZLOP: KÉP / CAROUSEL */}
           <div className="col-12 col-md-4">
             <div className="carouselDiv">
               <div id="carouselExample" className="carousel slide" data-bs-ride="carousel">
@@ -328,7 +337,7 @@ export default function PhonePage() {
                         key={`prev-${prevPictureIdx}`}
                         src={normalizeImageUrl(displayedPictures[prevPictureIdx]?.imageUrl)}
                         className={`d-block w-100 carousel-image-transitioning slide-out-${slideDirection}`}
-                        alt={`Previous image`}
+                        alt="Előző"
                       />
                     )}
                     <img
@@ -380,8 +389,6 @@ export default function PhonePage() {
               </div>
             </div>
           </div>
-
-          {/* 2. OSZLOP: SPECIFIKÁCIÓ KIVÁLASZTÁSA */}
           <div className="col-12 col-md-4 colorAndVersionPicker text-center text-md-start">
             <div className="szinValaszto mt-0">
               <h4>Szín kiválasztása:</h4>
@@ -425,14 +432,10 @@ export default function PhonePage() {
               className="moreInfoAboutPhone mt-4 mx-auto mx-md-0"
               onClick={() => {
                 const title = document.getElementById('title');
-
-                // Görgetés
                 title.scrollIntoView({
                   behavior: 'smooth',
                   block: 'center'
                 });
-
-                // Villanó effekt
                 title.classList.add('title-highlight');
                 setTimeout(() => {
                   title.classList.remove('title-highlight');
@@ -442,8 +445,6 @@ export default function PhonePage() {
               <strong>További információk</strong>
             </div>
           </div>
-
-          {/* 3. OSZLOP: MEGRENDELŐS FELÜLET */}
           <div className="col-12 col-md-4">
             <div className="phoneDataBox mx-auto">
               <div className="phoneName">{phone.phoneName}</div>
@@ -463,8 +464,6 @@ export default function PhonePage() {
             </div>
           </div>
         </div>
-
-        {/* ALSÓ RÉSZ: RÉSZLETES TÁBLÁZAT ÉS INTERAKTÍV SVG */}
         <div className="row mt-5 align-items-start gy-5">
           <div className="col-12 col-lg-1"></div>
           <div className="col-12 col-lg-7">
@@ -478,7 +477,6 @@ export default function PhonePage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* CPU SZAKASZ */}
                   <tr className="cpu_table first_row"><td colSpan="2"><strong>CPU / Processzor</strong></td></tr>
                   <tr className="cpu_table"><td>Név / Típus</td><td>{phone.cpuName}</td></tr>
                   <tr className="cpu_table"><td>Magok</td><td>{phone.cpuCores} mag </td></tr>
@@ -487,8 +485,6 @@ export default function PhonePage() {
                   <tr className="cpu_table"><td>Antutu</td><td>{phone.phoneAntutu?.toLocaleString()} pont</td></tr>
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
-
-                  {/* KIJELZŐ SZAKASZ */}
                   <tr className="kijelzo_table first_row"><td colSpan="2"><strong>Kijelző</strong></td></tr>
                   <tr className="kijelzo_table"><td>Panel típusa</td><td>{phone.screenType}</td></tr>
                   <tr className="kijelzo_table"><td>Felbontás</td><td>{phone.phoneResolutionHeight} x {phone.phoneResolutionWidth} px ({phone.screenSharpness} ppi)</td></tr>
@@ -497,8 +493,6 @@ export default function PhonePage() {
                   <tr className="kijelzo_table"><td>Fényerő (Max)</td><td>{phone.screenMaxBrightness} nit</td></tr>
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
-
-                  {/* KAMERA SZAKASZ - DINAMIKUS VÁLASZTÓVAL */}
                   <tr className="camera_table first_row">
                     <td><strong>Kamerák</strong></td>
                     <td className="d-flex gap-1 flex-wrap">
@@ -522,8 +516,6 @@ export default function PhonePage() {
                   
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
-
-                  {/* CSATLAKOZTATHATÓSÁG SZAKASZ */}
                   <tr className="csatlakozo_table first_row"><td colSpan="2"><strong>Csatlakoztathatóság</strong></td></tr>
                   <tr className="csatlakozo_table"><td>Wi-Fi</td><td>{phone.connectionMaxWifi}</td></tr>
                   <tr className="csatlakozo_table"><td>Bluetooth</td><td>{phone.connectionMaxBluetooth}</td></tr>
@@ -536,15 +528,11 @@ export default function PhonePage() {
                   <tr className="csatlakozo_table"><td>Ujjlenyomat</td><td>{phone.fingerprintType} ({phone.fingerprintPlace})</td></tr>
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
-
-                  {/* RAM / TÁRHELY SZAKASZ */}
                   <tr className="ram_storage_table first_row"><td colSpan="2"><strong>RAM / Tárhely</strong></td></tr>
                   <tr className="ram_storage_table"><td>RAM sebesség</td><td>{phone.ramSpeed}</td></tr>
                   <tr className="ram_storage_table"><td>Tárhely sebesség</td><td>{phone.storageSpeed}</td></tr>
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
-
-                  {/* AKKUMULÁTOR ÉS KÜLSŐ SZAKASZ */}
                   <tr className="akkumulator_table first_row"><td colSpan="2"><strong>Akkumulátor és Külső</strong></td></tr>
                   <tr className="akkumulator_table"><td>Akkumulátor kapacitása</td><td>{phone.batteryCapacity} mAh</td></tr>
                   <tr className="akkumulator_table"><td>Akkumulátor típusa</td><td>{phone.batteryType}</td></tr>
@@ -553,8 +541,6 @@ export default function PhonePage() {
                   <tr className="akkumulator_table"><td>Töltő csatlakozó</td><td>{phone.chargerType}</td></tr>
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
-
-                  {/*Test/Ház/Külső*/}
                   <tr className="test_table first_row"><td colSpan="2"><strong>Test/Ház/Külső</strong></td></tr>
                   <tr className="test_table"><td>Vízállóság</td><td>{phone.waterproofType}</td></tr>
                   <tr className="test_table"><td>Hátlap</td><td>{phone.backMaterial}</td></tr>
@@ -564,19 +550,15 @@ export default function PhonePage() {
                   <tr className="test_table"><td>Súly</td><td>{phone.phoneWeight}g</td></tr>
 
                   <tr className="more_rows"><td colSpan="2"></td></tr>
-
-                  {/* HANGSZÓRÓ SZAKASZ */}
                   <tr className="speaker_table first_row"><td colSpan="2"><strong>Hangszóró</strong></td></tr>
                   <tr className="speaker_table"><td>Hangszóró típusa</td><td>{phone.speakerType}</td></tr>
                 </tbody>
               </table>
             </div>
           </div>
-
-          {/* SVG OLDALSÁV */}
           <div className="col-12 col-lg-4 d-none d-lg-block phone-svg-col">
             <div className="svg-container sticky-top">
-              <object id="mySvg" ref={svgRef} data="/images/telefon-svg.svg" type="image/svg+xml" style={{ width: '100%', minWidth: '300px' }}></object>
+              <object id="mySvg" ref={svgRef} data="/images/telefon-svg.svg" type="image/svg+xml" aria-label="Telefon belső felépítése" style={{ width: '100%', minWidth: '300px' }}></object>
             </div>
           </div>
         </div>
@@ -592,7 +574,7 @@ export default function PhonePage() {
                   key={`modal-prev-${prevPictureIdx}`}
                   src={normalizeImageUrl(displayedPictures[prevPictureIdx]?.imageUrl)}
                   className={`phonePageImageModalImg modal-image-transitioning slide-out-${slideDirection}`}
-                  alt={`Previous modal image`}
+                  alt="Előző"
                 />
               )}
               <img

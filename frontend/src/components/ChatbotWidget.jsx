@@ -1189,6 +1189,7 @@ const SYSTEM_INSTRUCTION = `
     - If they ask about how can they repair something at home, give your best answer because we want to help the copstumer as we can
     `;
 
+// Normalize text for matching.
 const normalizeText = (value = "") =>
   value
     .toLowerCase()
@@ -1225,6 +1226,7 @@ const QUICK_BUTTONS = [
   "Rezeg a kamera"
 ];
 
+// Render the chatbot widget.
 function ChatbotWidget() {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -1242,6 +1244,7 @@ function ChatbotWidget() {
   const dragRef = useRef({ isDragging: false, offsetX: 0, offsetY: 0 });
   const bubbleScrollTimerRef = useRef(null);
 
+  /* eslint-disable react-hooks/exhaustive-deps */
   useEffect(() => {
     const timer = setTimeout(() => setShowBubble(true), 100);
     ask("START", { skipUser: true });
@@ -1249,6 +1252,7 @@ function ChatbotWidget() {
   }, []);
 
   useEffect(() => {
+    // Open the chatbot from mobile navigation.
     const handleOpenFromMobileNav = () => {
       setIsOpen(true);
       setShowBubble(false);
@@ -1286,6 +1290,7 @@ function ChatbotWidget() {
   useEffect(() => {
     const mediaQuery = window.matchMedia('(max-width: 991.98px)');
 
+    // Sync the mobile viewport state.
     const handleViewportChange = (event) => {
       setIsMobileViewport(event.matches);
     };
@@ -1341,6 +1346,7 @@ function ChatbotWidget() {
   }, [isMobileViewport, isOpen]);
 
   useEffect(() => {
+    // Drag the widget with the pointer.
     const handleMove = (e) => {
       if (!dragRef.current.isDragging || !widgetRef.current) return;
       const left = e.clientX - dragRef.current.offsetX;
@@ -1351,6 +1357,7 @@ function ChatbotWidget() {
       widgetRef.current.style.bottom = "auto";
     };
 
+    // Stop dragging the widget.
     const handleUp = () => {
       dragRef.current.isDragging = false;
     };
@@ -1381,12 +1388,14 @@ function ChatbotWidget() {
     }
   };
 
+  // Check for service-related content.
   const isServiceRelated = (text) => {
     const serviceKeywords = ["szerviz", "javit", "javitas", "szervizelni", "repair", "service", "hiba", "nem mukodik"];
     const lowerText = normalizeText(text);
     return serviceKeywords.some((keyword) => lowerText.includes(keyword));
   };
 
+  // Find a referenced phone model.
   const getMatchedPhone = (text) => {
     const normalizedQuestion = normalizeText(text);
     return PHONE_RECORDS.find((phone) => normalizedQuestion.includes(phone.normalizedName));
@@ -1396,6 +1405,7 @@ function ChatbotWidget() {
 
   const isNfcQuestion = (text) => /\bnfc\b/.test(normalizeText(text));
 
+  // Detect phone specification questions.
   const isPhoneDataRelated = (text) => {
     const normalizedText = normalizeText(text);
     const specKeywords = [
@@ -1407,6 +1417,7 @@ function ChatbotWidget() {
     return mentionsKnownPhone(text) || specKeywords.some((keyword) => normalizedText.includes(keyword));
   };
 
+  // Detect shopping intent.
   const isBuyingRelated = (text) => {
     const buyingKeywords = [
       "vasarol", "venni", "akarok", "szeretnek", "telefont", "telefon", "buy", "purchase",
@@ -1416,6 +1427,7 @@ function ChatbotWidget() {
     return buyingKeywords.some((keyword) => lowerText.includes(keyword)) || mentionsKnownPhone(text);
   };
 
+  // Detect location questions.
   const isLocationRelated = (text) => {
     const normalized = normalizeText(text).trim().replace(/\s+/g, " ");
 
@@ -1445,10 +1457,10 @@ function ChatbotWidget() {
     return hasWhereIntent && hasAddressTarget;
   };
 
+  // Send a question to the chatbot.
   const ask = async (question, options = {}) => {
     const { skipUser = false } = options;
 
-    // Ha "START" üzenet, csak a welcome üzenetet mutatjuk, API-t nem hívunk
     if (question === "START") {
       addMessage({
         id: `bot-${Date.now()}`,
@@ -1531,7 +1543,6 @@ function ChatbotWidget() {
         parts: [{ text: msg.text }]
       }));
 
-      // Dinamikusan adjuk hozzá a telefonok adatait az aktuális kérdéshez, ha vásárlásról van szó
       let userQuestion = question;
       if (isBuyingRelated(question) || isPhoneDataRelated(question)) {
         userQuestion = `${PHONES_DATA}\n\nFelhasználó kérdése: ${question}\n\nFontos: ha a kérdés konkrét modellre vonatkozik, abból a modellből adj választ a fenti adatok alapján.`;
@@ -1551,7 +1562,6 @@ function ChatbotWidget() {
       };
 
       const res = await axios.post(
-        // ITT A VÁLTOZÁS: gemini-2.5-pro
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`,requestBody);
 
       if (res.status !== 200) {
@@ -1567,7 +1577,6 @@ function ChatbotWidget() {
 
       await typeMessage(loadingId, answer, TYPING_SPEED);
 
-      // Ha a válasz szervízhez kapcsolódik, adjunk hozzá egy gombat
       if (isServiceRelated(answer)) {
         addMessage({
           id: `service-btn-${Date.now()}`,
@@ -1588,6 +1597,7 @@ function ChatbotWidget() {
     }
   };
 
+  // Reset the conversation.
   const goHome = () => {
     historyRef.current = [];
     addMessage({
@@ -1600,11 +1610,13 @@ function ChatbotWidget() {
     ask("START", { skipUser: true });
   };
 
+  // Open the chatbot panel.
   const openChat = () => {
     setIsOpen(true);
     setShowBubble(false);
   };
 
+  // Close the chatbot panel.
   const closeChat = () => {
     setIsOpen(false);
     if (isMobileViewport) {
@@ -1614,6 +1626,7 @@ function ChatbotWidget() {
     setTimeout(() => setShowBubble(true), 300);
   };
 
+  // Start dragging the widget.
   const handleHeaderMouseDown = (e) => {
     if (isMobileViewport) return;
     if (!widgetRef.current) return;

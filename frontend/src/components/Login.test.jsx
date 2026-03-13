@@ -18,6 +18,7 @@ vi.mock("react-router-dom", async () => {
 });
 
 vi.mock("./InputText", () => ({
+  // Render a mock input field.
   default: function MockInputText({ id, label, type, onChange, value }) {
     return (
       <div>
