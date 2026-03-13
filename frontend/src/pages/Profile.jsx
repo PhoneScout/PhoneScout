@@ -1596,7 +1596,8 @@ const Profile = () => {
                       </span>
                     </div>
                     <div className="service-request-details">
-                      <p><strong>Gyártó:</strong> {request.manufacturerName}</p>
+                      <p><strong>Azonosító: <br /> </strong> {request.repairID}</p>
+                      <p><strong>Eszköz:</strong> {request.manufacturerName}</p>
                       <p><strong>Város:</strong> {request.billingCity}</p>
                       <p><strong>Cím:</strong> {request.billingAddress}</p>
                       <p><strong>Telefonszám:</strong> {request.billingPhoneNumber}</p>

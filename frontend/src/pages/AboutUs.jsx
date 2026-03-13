@@ -98,7 +98,7 @@ export default function AboutUs() {
       <section className="info-section">
         <div className="info-card d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
           <div>
-            <h5 className="mb-2">Kezdd el böngészni a telefonokat</h5>
+            <h5 className="mb-2">Kezdd el nézegetni a telefonoat</h5>
             <p className="mb-0">Használd a szűrőt a tökéletes telefon megtalálásához vagy nézd meg a szerviz lehetőségeket.</p>
           </div>
           <div className="info-actions">
