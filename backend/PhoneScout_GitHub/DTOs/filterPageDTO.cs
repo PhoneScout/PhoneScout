@@ -7,7 +7,7 @@ namespace PhoneScout_GitHub.DTOs
         public int phoneReleaseDate { get; set; }
         public List<string> cpuNames { get; set; }
         public int phoneAntutu { get; set; }
-        public int cpuMaxClockSpeed { get; set; }
+        public decimal cpuMaxClockSpeed { get; set; }
         public int cpuCoreNumber { get; set; }
         public decimal screenSizeMin { get; set; }
         public decimal screenSizeMax { get; set; }

@@ -42,6 +42,7 @@ namespace PhoneScout_GitHub.Controllers
                             colorHex = c.Color.ColorHex
                         }).ToList(),
                     ramStoragePairs = p.Connphoneramstorages
+                    .OrderBy(r=>r.Ramstorage.RamAmount).ThenBy(r=>r.Ramstorage.StorageAmount)
                         .Select(r => new ramStorageDTO { ramAmount = r.Ramstorage.RamAmount, storageAmount = r.Ramstorage.StorageAmount })
                         .ToList()
                 })

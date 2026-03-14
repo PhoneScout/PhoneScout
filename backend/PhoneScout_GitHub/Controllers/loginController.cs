@@ -55,18 +55,22 @@ namespace PhoneScout_GitHub.Controllers
         {
             try
             {
-                var user = _cx.Users.FirstOrDefault(u => u.Email == loginDTO.Email);
+                var user = _cx.Users.Include(u => u.Privilege).FirstOrDefault(u => u.Email == loginDTO.Email);
+
+                
 
                 if (user == null)
                 {
                     return BadRequest("Hibás jelszó vagy email!");
                 }
-
+                
                 // Inaktív fiók ellenőrzése
-                if (user.Active == 0)
+                if (user.Active == 0 && user.Privilege.Level != 2)
                 {
                     return BadRequest("A fiók még nincs aktiválva! Kérjük, ellenőrizze az email fiókját.");
                 }
+
+                
 
                 //  A kliensről érkező TmpHash (hash+salt) újra-hashelése a szerver oldalon
                 string finalHash = Program.CreateSHA256(loginDTO.TmpHash);
