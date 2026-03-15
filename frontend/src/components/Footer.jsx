@@ -12,7 +12,10 @@ export default function Footer() {
             <img loading="lazy" src="./images/samsung_logo.png" alt="Samsung"/>
             <img loading="lazy" src="./images/apple_logo.png" alt="Apple"/>
             <img loading="lazy" src="./images/huawei_logo.png" alt="Huawei"/>
-            <img loading="lazy" src="./images/sony_logo.png" alt="Sony"/>
+            <img loading="lazy" src="./images/Honor-logo.png" alt="Honor"/>
+            <img loading="lazy" src="./images/Google-logo.png" alt="Google"/>
+            <img loading="lazy" src="./images/Motorola-logo.png" alt="Motorola"/>
+
         </div>
         <h3>PhoneScout</h3>
       <div className="footer-nav">

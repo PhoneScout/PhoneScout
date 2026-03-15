@@ -6,13 +6,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 import axios from 'axios';
 
-// Render the login form.
 export default function Login({ onSwitchToRegister }) {
 
     const navigate = useNavigate();
     const { login: authLogin } = useAuth(); 
 
-    // Format API error messages.
     const getApiErrorMessage = (error, fallback) => {
         const status = error?.response?.status;
         const responseData = error?.response?.data;
@@ -44,7 +42,6 @@ export default function Login({ onSwitchToRegister }) {
         }
     };
 
-    // Submit login credentials.
     const handleLogin = async (e) => {    
         if (e) e.preventDefault();
 
@@ -61,6 +58,7 @@ export default function Login({ onSwitchToRegister }) {
         }
 
         try {
+            // Salt lekérése
             const saltResponse = await axios.get(`http://localhost:5175/api/Login/GetSalt/${encodeURIComponent(email)}`);
 
             if (saltResponse.status !== 200) {
@@ -77,6 +75,7 @@ export default function Login({ onSwitchToRegister }) {
                 }
             }
 
+            console.log("Tisztított salt:", salt);
 
             const combinedPassword = password + salt;
             const msgBuffer = new TextEncoder().encode(combinedPassword);
@@ -84,7 +83,9 @@ export default function Login({ onSwitchToRegister }) {
             const hashArray = Array.from(new Uint8Array(hashBuffer));
             const hashedPassword = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
 
+            console.log(hashedPassword)
 
+            // Login adatok postolása végpontra
             const loginData = {
                 email: email,
                 tmpHash: hashedPassword
@@ -98,13 +99,15 @@ export default function Login({ onSwitchToRegister }) {
                 return;
             }
 
+            // SIKER
             alertBox.style.color = "green";
             alertBox.innerText = "Sikeres bejelentkezés! Átirányítás...";
 
             const result = await response.data;
-            console.info("Sikeres bejelentkezés.");
+            console.log("Szerver válasza:", result);
 
             if (result.token) {
+                //authLogin használata
                 authLogin(result.token);
                 localStorage.setItem("fullname", result.fullName || "Felhasználó"); 
                 localStorage.setItem("email", result.email || "Email"); 
@@ -115,10 +118,8 @@ export default function Login({ onSwitchToRegister }) {
             }, 2000);
 
         } catch (error) {
-            const errorMessage = getApiErrorMessage(error, "Hiba történt a bejelentkezés során.");
-            console.error(errorMessage);
             alertBox.style.color = "red";
-            alertBox.innerText = errorMessage;
+            alertBox.innerText = getApiErrorMessage(error, "Hiba történt a bejelentkezés során.");
         }
     };
 
