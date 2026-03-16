@@ -15,6 +15,7 @@ export default function Footer() {
             <img loading="lazy" src="./images/Honor-logo.png" alt="Honor"/>
             <img loading="lazy" src="./images/Google-logo.png" alt="Google"/>
             <img loading="lazy" src="./images/Motorola-logo.png" alt="Motorola"/>
+            <img loading="lazy" src="./images/zte-nubia-png.jpg" alt="ZTE"/>
 
         </div>
         <h3>PhoneScout</h3>
