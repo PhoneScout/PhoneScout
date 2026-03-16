@@ -347,21 +347,31 @@ export default function Compare() {
   };
 
   // Add compared phone.
-  const handleAddPhone = (phoneId) => {
-    const compareIds = JSON.parse(localStorage.getItem("comparePhones") || "[]");
-    if (!compareIds.includes(phoneId)) {
-      compareIds.push(phoneId);
-      localStorage.setItem("comparePhones", JSON.stringify(compareIds));
+  const addPhoneToCompare = (phoneID) => {
+    const comparePhones = JSON.parse(localStorage.getItem("comparePhones")) || [];
+    if (!comparePhones.includes(phoneID)) {
+      comparePhones.push(phoneID);
+      localStorage.setItem("comparePhones", JSON.stringify(comparePhones));
+      window.dispatchEvent(new Event("compareUpdated"));
       setRefreshTrigger(prev => prev + 1);
     }
   };
 
   // Remove compared phone.
-  const handleRemovePhone = (phoneId) => {
-    let compareIds = JSON.parse(localStorage.getItem("comparePhones") || "[]");
-    compareIds = compareIds.filter(id => String(id) !== String(phoneId));
-    localStorage.setItem("comparePhones", JSON.stringify(compareIds));
+  const removePhoneFromCompare = (phoneID) => {
+    const comparePhones = JSON.parse(localStorage.getItem("comparePhones")) || [];
+    const updatedComparePhones = comparePhones.filter(id => id !== phoneID);
+    localStorage.setItem("comparePhones", JSON.stringify(updatedComparePhones));
+    window.dispatchEvent(new Event("compareUpdated"));
     setRefreshTrigger(prev => prev + 1);
+  };
+
+  const handleAddPhone = (phoneID) => {
+    addPhoneToCompare(phoneID);
+  };
+
+  const handleRemovePhone = (phoneID) => {
+    removePhoneFromCompare(phoneID);
   };
 
   // Open phone page.

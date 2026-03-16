@@ -233,17 +233,19 @@ export default function Navbar() {
 
     // Sync compare count.
     useEffect(() => {
-        function updateCompareCount() {
+        const updateCompareCount = () => {
             const comparePhones = JSON.parse(localStorage.getItem("comparePhones")) || [];
             setCompareCount(comparePhones.length);
-        }
+        };
+
         updateCompareCount();
 
         // React to compare changes.
-        const handleCompareUpdate = () => updateCompareCount();
-        window.addEventListener('compareUpdated', handleCompareUpdate);
+        window.addEventListener('compareUpdated', updateCompareCount);
 
-        return () => window.removeEventListener('compareUpdated', handleCompareUpdate);
+        return () => {
+            window.removeEventListener('compareUpdated', updateCompareCount);
+        };
     }, []);
 
     return (
