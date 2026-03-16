@@ -4,18 +4,20 @@ import { Link } from 'react-router-dom';
 
 // Render the page footer.
 export default function Footer() {
+  const logoBasePath = `${process.env.PUBLIC_URL}/images`;
+
   return (
     <footer>
         <h3>Partnereink</h3>
       <div className="partner-logos">
-            <img loading="lazy" src="./images/XiaomiLogo.png" alt="Xiaomi"/>
-            <img loading="lazy" src="./images/samsung_logo.png" alt="Samsung"/>
-            <img loading="lazy" src="./images/apple_logo.png" alt="Apple"/>
-            <img loading="lazy" src="./images/huawei_logo.png" alt="Huawei"/>
-            <img loading="lazy" src="./images/Honor-logo.png" alt="Honor"/>
-            <img loading="lazy" src="./images/Google-logo.png" alt="Google"/>
-            <img loading="lazy" src="./images/Motorola-logo.png" alt="Motorola"/>
-            <img loading="lazy" src="./images/zte-nubia-png.jpg" alt="ZTE"/>
+            <img loading="lazy" src={`${logoBasePath}/XiaomiLogo.png`} alt="Xiaomi"/>
+            <img loading="lazy" src={`${logoBasePath}/samsung_logo.png`} alt="Samsung"/>
+            <img loading="lazy" src={`${logoBasePath}/apple_logo.png`} alt="Apple"/>
+            <img loading="lazy" src={`${logoBasePath}/huawei_logo.png`} alt="Huawei"/>
+            <img loading="lazy" src={`${logoBasePath}/Honor-logo.png`} alt="Honor"/>
+            <img loading="lazy" src={`${logoBasePath}/Google-logo.png`} alt="Google"/>
+            <img loading="lazy" src={`${logoBasePath}/Motorola-logo.png`} alt="Motorola"/>
+            <img loading="lazy" src={`${logoBasePath}/zte-nubia-png.jpg`} alt="ZTE"/>
 
         </div>
         <h3>PhoneScout</h3>
