@@ -21,6 +21,10 @@ namespace PhoneScout_GitHub.Controllers
 
 
         [HttpGet]
+        [SwaggerOperation(
+            Summary = "Események lekérése.",
+            Description = "Visszaadja az összes eseményt. Ha nincs találat, üres tömböt ad vissza."
+        )]
         public IActionResult GetAllEvents()
         {
             try
@@ -61,6 +65,10 @@ namespace PhoneScout_GitHub.Controllers
         
 
         [HttpGet("{eventID}")]
+                [SwaggerOperation(
+            Summary = "Egy esemény lekérése.",
+            Description = "Visszaad egy eseményt azonosító alapján. Ha nincs találat, üres tömböt ad vissza."
+        )]
 public IActionResult GetEvent(int eventID)
 {
     try
@@ -104,6 +112,10 @@ public IActionResult GetEvent(int eventID)
 }
 
 [HttpGet("/{eventManufacturerName}")]
+        [SwaggerOperation(
+            Summary = "Gyártó események lekérése.",
+            Description = "Visszaadja a megadott gyártóhoz tartozó összes eseményt. Ha nincs találat, üres tömböt ad vissza."
+        )]
 public IActionResult GetManufacturersEvents(string mannufacturerName)
 {
     try
@@ -151,6 +163,10 @@ public IActionResult GetManufacturersEvents(string mannufacturerName)
 
 
 [HttpPost]
+        [SwaggerOperation(
+            Summary = "Események hozzáadása.",
+            Description = "Szükséges adatok megadása után feltölt egy eseményt."
+        )]
 public async Task<IActionResult> PostEvent(
     [FromForm] eventPostDTO dto,
     IFormFile? file)
@@ -196,6 +212,10 @@ public async Task<IActionResult> PostEvent(
 }
 
 [HttpPut("{eventID}")]
+        [SwaggerOperation(
+            Summary = "Események frissítése.",
+            Description = "Szükséges adatok megadása után frissíti a megadott azonosítójú eseményt."
+        )]
 public async Task<IActionResult> UpdateEvent(
     int eventID,
     [FromForm] eventPostDTO dto,
@@ -237,6 +257,10 @@ public async Task<IActionResult> UpdateEvent(
 }
 
 [HttpDelete("{eventID}")]
+        [SwaggerOperation(
+            Summary = "Események törlése.",
+            Description = "A megadott azonosítójú esemény törlése. Ha nincs találat, akkor hibaüzenetet ad vissza."
+        )]
 public IActionResult DeleteEvent(int eventID)
 {
     try

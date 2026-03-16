@@ -1662,7 +1662,7 @@ function ChatbotWidget() {
               ) : message.role === "service-button" ? (
                 <button
                   className="service-button-link"
-                  onClick={() => navigate("/szerviz")}
+                  onClick={() => navigate("/szervizigenyles")}
                 >
                   Szervíz igénylése
                 </button>

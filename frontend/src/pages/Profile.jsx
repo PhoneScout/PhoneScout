@@ -504,7 +504,7 @@ const Profile = () => {
       case 'accept':
         return 'Biztosan el szeretnéd fogadni az árajánlatot?';
       case 'decline':
-        return 'Biztosan el szeretnéd utasítani az árajánlatot?';
+        return "Biztosan el szeretnéd utasítani az árajánlatot? A készüléket visszakükldjük a számodra, és a szállítást utólag kell fizetned.";
       case 'edit':
         return 'Biztosan elküldöd a módosítási kérést?';
       default:
