@@ -115,6 +115,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPost("phonePost")]
+                [SwaggerOperation(
+            Summary = "Telefon hozzáadása.",
+            Description = "Admin felülethez a szükséges adatok megadása után a telefon hozzáadása."
+        )]
         public IActionResult PostPhone([FromBody] phoneDTO dto)
         {
             if (dto == null)
@@ -345,6 +349,10 @@ namespace PhoneScout_GitHub.Controllers
         }
 
         [HttpPut("phoneUpdate/{id}")]
+                [SwaggerOperation(
+            Summary = "Telefon módosítása.",
+            Description = "Admin felülethez a telefon azonosítójának és a szükséges adatok megadása után a telefon módosítása."
+        )]
         public IActionResult UpdatePhone(int id, [FromBody] phoneDTO dto)
         {
             if (dto == null)

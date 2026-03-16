@@ -33,28 +33,37 @@ namespace PhoneScout_GitHub.Controllers
                     .Where(p => p.PhoneAvailable == 1
                     && (!filters.manufacturerNames.Any() || filters.manufacturerNames.Contains(p.Manufacturer.ManufacturerName))
                     && (!filters.cpuNames.Any() || filters.cpuNames.Contains(p.Cpu.CpuName))
-                    && (filters.phoneAntutu == 0 || filters.phoneAntutu < p.PhoneAntutu)
-                    && (filters.cpuMaxClockSpeed == 0 || filters.cpuMaxClockSpeed < p.Cpu.CpuMaxClockSpeed)
-                    && (filters.cpuCoreNumber == 0 || filters.cpuCoreNumber < p.Cpu.CpuCoreNumber)
-                    && (filters.screenSizeMin == 0 || filters.screenSizeMin < p.ScreenSize)
+                    && (filters.phoneAntutu == 0 || filters.phoneAntutu <= p.PhoneAntutu)
+                    && (filters.cpuMaxClockSpeed == 0 || filters.cpuMaxClockSpeed <= p.Cpu.CpuMaxClockSpeed)
+                    && (filters.cpuCoreNumber == 0 || filters.cpuCoreNumber <= p.Cpu.CpuCoreNumber)
+                    && (filters.screenSizeMin == 0 || filters.screenSizeMin <= p.ScreenSize)
                     && (filters.screenSizeMax == 0 || filters.screenSizeMax > p.ScreenSize)
-                    && (filters.screenRefreshRateMin == 0 || filters.screenRefreshRateMin < p.ScreenRefreshRate)
+                    && (filters.screenRefreshRateMin == 0 || filters.screenRefreshRateMin <= p.ScreenRefreshRate)
                     && (filters.screenRefreshRateMax == 0 || filters.screenRefreshRateMax > p.ScreenRefreshRate)
-                    && (filters.phoneWeightMin == 0 || filters.phoneWeightMin < p.PhoneWeight)
+                    && (filters.phoneWeightMin == 0 || filters.phoneWeightMin <= p.PhoneWeight)
                     && (filters.phoneWeightMax == 0 || filters.phoneWeightMax > p.PhoneWeight)
-                    && (filters.screenMaxBrightness == 0 || filters.screenMaxBrightness < p.ScreenMaxBrightness)
-                    && (filters.ramAmount == 0 || filters.ramAmount < p.Connphoneramstorages.Max(r => r.Ramstorage.RamAmount))
-                    && (filters.storageAmount == 0 || filters.storageAmount < p.Connphoneramstorages.Max(r => r.Ramstorage.StorageAmount))
-                    && (filters.batteryCapacity == 0 || filters.batteryCapacity < p.BatteryCapacity)
+                    && (filters.screenMaxBrightness == 0 || filters.screenMaxBrightness <= p.ScreenMaxBrightness)
+                    && (filters.ramAmount == 0 || filters.ramAmount <= p.Connphoneramstorages.Max(r => r.Ramstorage.RamAmount))
+                    && (filters.storageAmount == 0 || filters.storageAmount <= p.Connphoneramstorages.Max(r => r.Ramstorage.StorageAmount))
+                    && (filters.batteryCapacity == 0 || filters.batteryCapacity <= p.BatteryCapacity)
                     && (filters.phoneReleaseDate == 0 || p.PhoneReleaseDate.HasValue && p.PhoneReleaseDate.Value.Year >= filters.phoneReleaseDate)
                     )
                     .Select(p => new mainPageDTO
                     {
                         phoneID = p.PhoneId,
-                        phoneName = p.PhoneName,
-                        phoneInStore = p.PhoneInStore,
-                        phonePrice = p.PhonePrice
-                    });
+                    phoneName = p.PhoneName,
+                    phonePrice = p.PhonePrice,
+                    phoneInStore = p.PhoneInStore,
+                    colors = p.Connphonecolors
+                        .Select(c => new colorDTO
+                        {
+                            colorName = c.Color.ColorName,
+                            colorHex = c.Color.ColorHex
+                        }).ToList(),
+                    ramStoragePairs = p.Connphoneramstorages
+                        .Select(r => new ramStorageDTO { ramAmount = r.Ramstorage.RamAmount, storageAmount = r.Ramstorage.StorageAmount })
+                        .ToList()
+                    }).ToList();
                 if (phones != null)
                 {
                     return Ok(phones);
