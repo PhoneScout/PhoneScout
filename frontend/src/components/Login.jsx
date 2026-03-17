@@ -102,7 +102,6 @@ export default function Login({ onSwitchToRegister }) {
             alertBox.innerText = "Sikeres bejelentkezés! Átirányítás...";
 
             const result = await response.data;
-            console.log("Szerver válasza:", result);
 
             if (result.token) {
                 authLogin(result.token);
