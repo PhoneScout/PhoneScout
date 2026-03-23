@@ -170,23 +170,11 @@ export default function Cart() {
         setDeliveryAddressList(shippingAddresses);
         setBillingAddressList(billingAddresses);
 
-        if (shippingAddresses.length > 0) {
-          const firstShippingAddress = shippingAddresses[0];
-          setSelectedDeliveryAddressId(firstShippingAddress.id);
-          setDeliveryAddressData(normalizeAddress(firstShippingAddress));
-        } else {
-          setSelectedDeliveryAddressId(null);
-          setDeliveryAddressData(EMPTY_ADDRESS);
-        }
+        setSelectedDeliveryAddressId(null);
+        setDeliveryAddressData(EMPTY_ADDRESS);
 
-        if (billingAddresses.length > 0) {
-          const firstBillingAddress = billingAddresses[0];
-          setSelectedBillingAddressId(firstBillingAddress.id);
-          setBillingAddressData(normalizeAddress(firstBillingAddress));
-        } else {
-          setSelectedBillingAddressId(null);
-          setBillingAddressData(EMPTY_ADDRESS);
-        }
+        setSelectedBillingAddressId(null);
+        setBillingAddressData(EMPTY_ADDRESS);
 
         setBillingSameAsDelivery(true);
         setShowBillingAddressForm(false);
@@ -707,7 +695,7 @@ export default function Cart() {
                       onChange={(e) => handleSelectBillingAddress(e.target.value)}
                       className="modalForm-select"
                     >
-                      <option value="">-- Válasszon egy cím</option>
+                      <option value="">Kérjük válasszon címet</option>
                       {billingAddressList.map(addr => (
                         <option key={addr.id} value={addr.id}>
                           {addr.postalCode} {addr.city}, {addr.address}
@@ -806,7 +794,7 @@ export default function Cart() {
                         onChange={(e) => handleSelectDeliveryAddress(e.target.value)}
                         className="modalForm-select"
                       >
-                        <option value="">-- Válasszon egy címet</option>
+                        <option value="">Kérjük válasszon címet</option>
                         {deliveryAddressList.map(addr => (
                           <option key={addr.id} value={addr.id}>
                             {addr.postalCode} {addr.city}, {addr.address}
