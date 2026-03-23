@@ -676,6 +676,7 @@ export default function Compare() {
                     className="btn btn-danger btn-sm"
                     onClick={() => {
                       localStorage.removeItem("comparePhones");
+                      window.dispatchEvent(new Event("compareUpdated"));
                       setRefreshTrigger(prev => prev + 1);
                     }}
                   >
@@ -697,6 +698,7 @@ export default function Compare() {
                     className="btn btn-danger btn-sm"
                     onClick={() => {
                       localStorage.removeItem("comparePhones");
+                      window.dispatchEvent(new Event("compareUpdated"));
                       setRefreshTrigger(prev => prev + 1);
                     }}
                   >

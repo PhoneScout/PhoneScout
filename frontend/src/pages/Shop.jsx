@@ -14,14 +14,7 @@ export default function Shop() {
         <p>
           Fedezd fel, hogyan találhatsz könnyen és gyorsan a számodra tökéletes telefont.
         </p>
-      </section>
-
-      <section className="info-section">
-        <div className="info-card">
-          <span className="info-badge">Fontos</span>
-          <PhoneDataDisclaimer className="mb-0" />
-        </div>
-      </section>
+      </section>      
 
       <section className="info-section">
         <div className="info-card">
