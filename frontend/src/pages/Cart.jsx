@@ -105,7 +105,7 @@ export default function Cart() {
 
   // Fetch cart phone data.
   useEffect(() => {
-    axios.get("http://localhost:5175/mainPage")
+    axios.get("http://localhost:5175/api/filterPage/GetAllPhones")
       .then(allPhones => {
         const phoneMap = new Map(allPhones.data.map(p => [p.phoneID, p]));
 
