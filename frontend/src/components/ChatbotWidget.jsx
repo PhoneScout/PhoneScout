@@ -61,8 +61,11 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint: Optikai (Kijelző)
 Available colors: Alpine Blue, Black, Meadow Green
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 2
@@ -116,9 +119,12 @@ Waterproof: nincs
 Speaker: stereo
 Fingerprint: Optikai (Kijelző)
 Available colors: Cyclone, Design Sleet, Frost
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 3
@@ -173,8 +179,11 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint: Ultraszonikus (Kijelző)
 Available colors: Titánfekete, Titánkék, Titánlila, Titánsárga, Titánszürke
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 4
@@ -228,10 +237,13 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint: Nincs ()
 Available colors: Black Titanium, Desert Titanium, Natural Titanium, White Titanium
+<<<<<<< Updated upstream
 
 
 
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 5
@@ -286,9 +298,12 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint: Ultraszonikus (Kijelző)
 Available colors: Titanium Black, Titanium Gray, Titanium Jadegreen, Titanium Jetblack, Titanium Pinkgold, Titanium Silverblue, Titanium Whitesilver
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 6
@@ -342,9 +357,12 @@ Waterproof: IP69K
 Speaker: stereo
 Fingerprint: Ultraszonikus (Kijelző)
 Available colors: Black, Breeze Blue, Lunar shadow Gray
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 7
@@ -398,9 +416,12 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint: Ultraszonikus (Kijelző)
 Available colors: Hazel, Obsidian, Porcelain, Rose Quartz
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 8
@@ -454,9 +475,12 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint: Optikai (Kijelző alatt)
 Available colors: Levendulalila, Midnight black, Ocean blue
+<<<<<<< Updated upstream
 
 
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 10
@@ -508,9 +532,489 @@ Back material: Műanyag
 Waterproof: IP54
 Speaker: stereo
 Fingerprint: Optikai (Kijelző alatt)
+<<<<<<< Updated upstream
 Available colors: Lime Green, Midnight Black, Mist Purple, Ocean Blue
 
 
+=======
+Available colors: Midnight Black, Mist Purple, Ocean Blue
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 11
+Name: Xiaomi Redmi Note 14 5G
+Manufacturer: Xiaomi
+Release: 2025-01-16
+Price: 75600
+In store: No
+================ DISPLAY =================
+Resolution: 1080 x 2400
+Screen size: 6.67"
+Screen type: AMOLED
+Refresh rate: 120 Hz
+Max brightness: 1200 nits
+Sharpness: 395
+
+================ PERFORMANCE =================
+Antutu: 463129
+CPU: Mediatek Dimensity 7025 Ultra 2 GHz, 6 cores, 6 nm
+RAM speed: LPDDR4X
+Storage speed: UFS2.2
+RAM/Storage versions: 12GB / 512GB; 6GB / 128GB; 8GB / 256GB
+
+================ CAMERAS =================
+Főkamera: Samsung HM6 108MP f/f/1.7
+makró kamera: Omnivision OV02B10 2MP f/f/2.4 OIS
+Széles látószögű kamera: Omnivision OV08D10 8MP f/f/2.2 OIS
+Szelfi kamera: Omnivision OV20B 20MP f/f/2.2 OIS
+
+================ CONNECTIVITY =================
+WiFi: 5
+Bluetooth: 5.30
+Mobile network: 5
+Dual SIM: No
+eSIM: Yes
+NFC: No
+Jack: No
+Infrared: No
+
+================ BATTERY =================
+Battery capacity: 5110 mAh
+Battery type: Li-Ion Polymer
+Charging wired: 45 W
+Charging wireless: 0 W
+
+================ BUILD =================
+Dimensions: 162.40 x 75.70 x 7.99 mm
+Weight: 190.00 g
+Back material: Műanyag
+Waterproof: IP64
+Speaker: stereo
+Fingerprint: Optikai (Kijelző alatt)
+Available colors: Coral Green, Levendulalila, Midnight Black
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 12
+Name: Xiaomi Redmi Note 14S
+Manufacturer: Xiaomi
+Release: 2025-03-14
+Price: 64800
+In store: Yes
+================ DISPLAY =================
+Resolution: 1080 x 2400
+Screen size: 6.67"
+Screen type: AMOLED
+Refresh rate: 120 Hz
+Max brightness: 1300 nits
+Sharpness: 395
+
+================ PERFORMANCE =================
+Antutu: 450000
+CPU: Mediatek Helio G99 Ultra 2 GHz, 8 cores, 6 nm
+RAM speed: LPDDR4X
+Storage speed: UFS2.2
+RAM/Storage versions: 12GB / 256GB; 8GB / 128GB; 8GB / 256GB
+
+================ CAMERAS =================
+Főkamera: Samsung ISOCELL HP3 200MP f/f/1.7
+makró kamera: Sony IMX355 2MP f/f/2.2 OIS
+Széles látószögű kamera: Sony IMX355 8MP f/f/2.2 OIS
+Szelfi kamera: Omnivision OV16A1Q 16MP f/f/2.4 OIS
+
+================ CONNECTIVITY =================
+WiFi: 5
+Bluetooth: 5.30
+Mobile network: 4
+Dual SIM: No
+eSIM: Yes
+NFC: No
+Jack: Yes
+Infrared: No
+
+================ BATTERY =================
+Battery capacity: 5000 mAh
+Battery type: Li-Ion Polymer
+Charging wired: 67 W
+Charging wireless: 0 W
+
+================ BUILD =================
+Dimensions: 161.10 x 75.00 x 8.00 mm
+Weight: 179.00 g
+Back material: Műanyag
+Waterproof: IP64
+Speaker: stereo
+Fingerprint: Optikai (Kijelző alatt)
+Available colors: Aurora Purple, Midnight Black, Ocean Blue
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 13
+Name: Xiaomi Redmi Note 14 Pro 4G
+Manufacturer: Xiaomi
+Release: 2025-01-16
+Price: 73990
+In store: No
+================ DISPLAY =================
+Resolution: 1080 x 2400
+Screen size: 6.67"
+Screen type: AMOLED
+Refresh rate: 120 Hz
+Max brightness: 1800 nits
+Sharpness: 395
+
+================ PERFORMANCE =================
+Antutu: 423868
+CPU: Mediatek Helio G100 Ultra 2 GHz, 8 cores, 6 nm
+RAM speed: LPDDR4X
+Storage speed: UFS2.2
+RAM/Storage versions: 12GB / 256GB; 12GB / 512GB; 8GB / 128GB; 8GB / 256GB
+
+================ CAMERAS =================
+Főkamera: Samsung S5KHP3SP 200MP f/f/1.7
+makró kamera: Omnivision OV02B10 2MP f/f/2.4 OIS
+Széles látószögű kamera: Sony IMX355 8MP f/f/2.2 OIS
+Szelfikamera: Omnivision OV20B 20MP f/f/2.2 OIS
+
+================ CONNECTIVITY =================
+WiFi: 5
+Bluetooth: 5.30
+Mobile network: 4
+Dual SIM: No
+eSIM: Yes
+NFC: No
+Jack: No
+Infrared: No
+
+================ BATTERY =================
+Battery capacity: 5500 mAh
+Battery type: Li-Ion Polymer
+Charging wired: 45 W
+Charging wireless: 0 W
+
+================ BUILD =================
+Dimensions: 162.20 x 74.90 x 8.20 mm
+Weight: 180.00 g
+Back material: Műanyag
+Waterproof: IP64
+Speaker: stereo
+Fingerprint: Optikai (Kijelző alatt)
+Available colors: Aurora Purple, Midnight Black, Ocean Blue, Sand Gold
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 14
+Name: Xiaomi Redmi Note 14 Pro+ 5G
+Manufacturer: Xiaomi
+Release: 2025-01-15
+Price: 102490
+In store: Yes
+================ DISPLAY =================
+Resolution: 1220 x 2712
+Screen size: 6.67"
+Screen type: AMOLED
+Refresh rate: 120 Hz
+Max brightness: 3000 nits
+Sharpness: 446
+
+================ PERFORMANCE =================
+Antutu: 750292
+CPU: Qualcomm SM7635 Snapdragon 7s Gen 3 2 GHz, 8 cores, 4 nm
+RAM speed: LPDDR4X
+Storage speed: UFS2.2
+RAM/Storage versions: 12GB / 256GB; 12GB / 512GB; 8GB / 256GB
+
+================ CAMERAS =================
+Fő kamera: Samsung S5KHP3SP 200MP f/f/1.7
+makró kamera: Omnivision OV02B10 2MP f/f/2.4 OIS
+Széles látószögű kamera: Sony IMX355 8MP f/f/2.2 OIS
+Szelfikamera: Omnivision OV20B 20MP f/f/2.2 OIS
+
+================ CONNECTIVITY =================
+WiFi: 5
+Bluetooth: 5.40
+Mobile network: 5
+Dual SIM: No
+eSIM: No
+NFC: No
+Jack: No
+Infrared: No
+
+================ BATTERY =================
+Battery capacity: 5110 mAh
+Battery type: Li-Ion Polymer
+Charging wired: 120 W
+Charging wireless: 0 W
+
+================ BUILD =================
+Dimensions: 162.50 x 74.70 x 8.80 mm
+Weight: 205.00 g
+Back material: Üveg
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Optikai (Kijelző alatt)
+Available colors: Frost Blue, Lavender Purple, Midnight Black
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 15
+Name: Xiaomi 14
+Manufacturer: Xiaomi
+Release: 2023-10-01
+Price: 299990
+In store: No
+================ DISPLAY =================
+Resolution: 1200 x 2670
+Screen size: 6.36"
+Screen type: AMOLED
+Refresh rate: 120 Hz
+Max brightness: 3000 nits
+Sharpness: 460
+
+================ PERFORMANCE =================
+Antutu: 2089308
+CPU: Snapdragon® 8 Gen 3 3 GHz, 8 cores, 4 nm
+RAM speed: LPDDR5X
+Storage speed: UFS 4
+RAM/Storage versions: 12GB / 256GB; 12GB / 512GB
+
+================ CAMERAS =================
+Floating telefotó kamera: Samsung S5KJN1 50MP f/f/2.0 OIS
+Főkamera: Omnivision OV32B 32MP f/f/2.0 OIS
+Széles látószögű kamera: Omnivision OVX9000 50MP f/f/1.62
+Szelfi kamera: Samsung S5KJN1 50MP f/f/2.2 OIS
+
+================ CONNECTIVITY =================
+WiFi: 7
+Bluetooth: 5.40
+Mobile network: 5
+Dual SIM: No
+eSIM: No
+NFC: No
+Jack: Yes
+Infrared: No
+
+================ BATTERY =================
+Battery capacity: 4610 mAh
+Battery type: Li-Po
+Charging wired: 90 W
+Charging wireless: 50 W
+
+================ BUILD =================
+Dimensions: 152.80 x 71.50 x 8.20 mm
+Weight: 188.00 g
+Back material: Üveg
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Optikai (Kijelzőben)
+Available colors: Black, Jade Green, White
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 16
+Name: Motorola Edge 50 Fusion
+Manufacturer: Motorola
+Release: 2024-05-15
+Price: 91820
+In store: Yes
+================ DISPLAY =================
+Resolution: 1080 x 2400
+Screen size: 6.67"
+Screen type: P-OLED
+Refresh rate: 144 Hz
+Max brightness: 1600 nits
+Sharpness: 393
+
+================ PERFORMANCE =================
+Antutu: 603451
+CPU: Qualcomm Snapdragon 7s Gen 2 2 GHz, 8 cores, 4 nm
+RAM speed: LPDDR4X
+Storage speed: UFS 2.2
+RAM/Storage versions: 12GB / 256GB; 12GB / 512GB; 8GB / 128GB; 8GB / 256GB; 8GB / 512GB
+
+================ CAMERAS =================
+Főkamera: Sony LYT-700C 50MP f/f/1.8
+Széles látószögű: Hynix Hi-1336 13MP f/f/2.1 OIS
+Szelfi kamera: Samsung S5KJD1 32MP f/f/2.45 OIS
+
+================ CONNECTIVITY =================
+WiFi: 5
+Bluetooth: 5.30
+Mobile network: 5
+Dual SIM: No
+eSIM: Yes
+NFC: No
+Jack: Yes
+Infrared: Yes
+
+================ BATTERY =================
+Battery capacity: 5000 mAh
+Battery type: Li-Polymer
+Charging wired: 68 W
+Charging wireless: 0 W
+
+================ BUILD =================
+Dimensions: 161.91 x 73.05 x 7.76 mm
+Weight: 174.90 g
+Back material: Fa
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Optikai (Kijelző alatt)
+Available colors: Forest Blue, Hot Pink, Marshmallow Blue
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 17
+Name: Motorola Edge 50 Ultra
+Manufacturer: Motorola
+Release: 2024-05-15
+Price: 217160
+In store: No
+================ DISPLAY =================
+Resolution: 1220 x 2712
+Screen size: 6.70"
+Screen type: P-OLED
+Refresh rate: 144 Hz
+Max brightness: 2500 nits
+Sharpness: 444
+
+================ PERFORMANCE =================
+Antutu: 1523879
+CPU: Qualcomm Snapdragon 8s Gen 3 3 GHz, 8 cores, 4 nm
+RAM speed: LPDDR5X
+Storage speed: UFS 4.0
+RAM/Storage versions: 12GB / 512GB; 16GB / 1024GB; 16GB / 512GB
+
+================ CAMERAS =================
+Főkamera: Omnivision OV50H 50MP f/f/1.6
+Széles látószögű: Samsung S5KJN1 50MP f/f/2.0 OIS
+Szelfi: Samsung S5KJN1 50MP f/f/1.9 OIS
+Teleobjektíves: Omnivision OV64B 64MP f/f/2.4 OIS
+
+================ CONNECTIVITY =================
+WiFi: 7
+Bluetooth: 5.40
+Mobile network: 5
+Dual SIM: No
+eSIM: Yes
+NFC: No
+Jack: Yes
+Infrared: Yes
+
+================ BATTERY =================
+Battery capacity: 4500 mAh
+Battery type: Li-Polymer
+Charging wired: 125 W
+Charging wireless: 50 W
+
+================ BUILD =================
+Dimensions: 161.08 x 72.37 x 8.59 mm
+Weight: 197.00 g
+Back material: Fa
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Optikai (Kijelző alatt)
+Available colors: Forest Grey, Nordic Wood, Peach Fuzz
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 18
+Name: Motorola Edge 50 Neo
+Manufacturer: Motorola
+Release: 2024-08-29
+Price: 117000
+In store: Yes
+================ DISPLAY =================
+Resolution: 1200 x 2670
+Screen size: 6.40"
+Screen type: P-OLED
+Refresh rate: 120 Hz
+Max brightness: 3000 nits
+Sharpness: 460
+
+================ PERFORMANCE =================
+Antutu: 696931
+CPU: Mediatek Dimensity 7300 2 GHz, 0 cores, 4 nm
+RAM speed: 
+Storage speed: UFS 4.0
+RAM/Storage versions: 12GB / 256GB; 12GB / 512GB; 8GB / 256GB
+
+================ CAMERAS =================
+Főkamera:  50MP f/ OIS
+Széles látószögű: Sony LYT-700C 50MP f/f/1.8
+Szelfikamera:  50MP f/ OIS
+Telefotó:  50MP f/ OIS
+
+================ CONNECTIVITY =================
+WiFi: 0
+Bluetooth: 5.30
+Mobile network: 0
+Dual SIM: Yes
+eSIM: Yes
+NFC: Yes
+Jack: Yes
+Infrared: Yes
+
+================ BATTERY =================
+Battery capacity: 4310 mAh
+Battery type: Li-Polymer
+Charging wired: 68 W
+Charging wireless: 15 W
+
+================ BUILD =================
+Dimensions: 154.10 x 71.20 x 8.10 mm
+Weight: 0.00 g
+Back material: Fa
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Optikai (Kijelző alatt)
+Available colors: PANTONE Grisaille, PANTONE Latté, PANTONE Mocha Mousse, PANTONE Nautical Blue, PANTONE Poinciana
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 19
+Name: Motorola Edge 50
+Manufacturer: Motorola
+Release: 2024-08-08
+Price: 108000
+In store: Yes
+================ DISPLAY =================
+Resolution: 1220 x 2712
+Screen size: 6.70"
+Screen type: P-OLED
+Refresh rate: 120 Hz
+Max brightness: 1600 nits
+Sharpness: 446
+
+================ PERFORMANCE =================
+Antutu: 722062
+CPU: Qualcomm SM7450-AB Snapdragon 7 Gen 1 AE 2 GHz, 1 cores, 4 nm
+RAM speed: 
+Storage speed: UFS 2.2
+RAM/Storage versions: 12GB / 256GB; 12GB / 512GB; 8GB / 256GB
+
+================ CAMERAS =================
+Fő hátsó kamera:  50MP f/ OIS
+Széles látószögű: Sony LYT-700C 50MP f/f/1.8
+Szelfikamera:  50MP f/ OIS
+Telefotó:  50MP f/ OIS
+
+================ CONNECTIVITY =================
+WiFi: 0
+Bluetooth: 5.20
+Mobile network: 0
+Dual SIM: Yes
+eSIM: Yes
+NFC: Yes
+Jack: Yes
+Infrared: Yes
+
+================ BATTERY =================
+Battery capacity: 5000 mAh
+Battery type: Li-Polymer
+Charging wired: 68 W
+Charging wireless: 15 W
+
+================ BUILD =================
+Dimensions: 160.80 x 72.40 x 7.80 mm
+Weight: 0.00 g
+Back material: Fa
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Optikai (Kijelző alatt)
+Available colors: Jungle Green, Koala Grey, Peach Fuzz
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 20
@@ -564,7 +1068,10 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint: Ultraszonikus (Kijelző alatt)
 Available colors: Beige, Black, Grey, Pink
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 21
@@ -618,7 +1125,10 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint: Ultraszonikus (Kijelzőben)
 Available colors: Black, Green, White
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 22
@@ -673,7 +1183,10 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint: Ultraszonikus (Kijelzőben)
 Available colors: Black, Silver Chrome, White
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 25
@@ -726,7 +1239,10 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint:  ()
 Available colors: Fehér, Fekete, Levendula, Párakék, Zsályazöld
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 26
@@ -778,7 +1294,10 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint:  ()
 Available colors: Asztrofekete, Égkék, Felhőfehér, Világos arany
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 27
@@ -832,7 +1351,10 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint:  ()
 Available colors: Ezüst, Kozmosznarancs, Mélykék
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 28
@@ -884,7 +1406,10 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint:  ()
 Available colors: Fehér, Fekete, Halvány rózsaszín
+<<<<<<< Updated upstream
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 29
@@ -939,8 +1464,11 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint: Ultraszonikus (Kijelző alatt)
 Available colors: Égkék, Fehér, Fekete, Kékeslila, Ködös ezüst, Rózsaarany
+<<<<<<< Updated upstream
 
 
+=======
+>>>>>>> Stashed changes
 ================ NEXT PHONE=================
 ================ BASIC =================
 Phone ID: 30
@@ -994,6 +1522,7 @@ Waterproof: IP68
 Speaker: stereo
 Fingerprint: Ultraszonikus (Kijelző alatt)
 Available colors: Égkék, Fehér, Fekete, Kékeslila, Ködös ezüst, Rózsaarany
+<<<<<<< Updated upstream
 
 
 
@@ -1054,6 +1583,9 @@ const SYSTEM_INSTRUCTION = `
     - The address is Miskolc, Palóczy László utca 3, 3525. both to the service and the shop. If they ask about the address, tell them this and that both the service and the shop are in the same place.
     - If they ask about how can they repair something at home, give your best answer because we want to help the copstumer as we can
     `;
+=======
+     `;
+>>>>>>> Stashed changes
 
 // Normalize text for matching.
 const normalizeText = (value = "") =>
@@ -1428,7 +1960,7 @@ function ChatbotWidget() {
       };
 
       const res = await axios.post(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`,requestBody);
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`, requestBody);
 
       if (res.status !== 200) {
         const errorData = await res.data;
