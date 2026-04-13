@@ -10,6 +10,509 @@ const STORE_MAP_URL = `https://www.google.com/maps/search/?api=1&query=${encodeU
 const PHONES_DATA = `List of phones we sell:
 ================ NEXT PHONE=================
 ================ BASIC =================
+Phone ID: 1
+Name: Xiaomi 13T
+Manufacturer: Xiaomi
+Release: 2023-09-26
+Price: 135000
+In store: No
+================ DISPLAY =================
+Resolution: 1220 x 2712
+Screen size: 6.67"
+Screen type: AMOLED
+Refresh rate: 144 Hz
+Max brightness: 2600 nits
+Sharpness: 466
+
+================ PERFORMANCE =================
+Antutu: 905365
+CPU: Mediatek Dimensity 8200 Ultra 3 GHz, 8 cores, 4 nm
+RAM speed: LPDDR5
+Storage speed: UFS 3.1
+RAM/Storage versions: 12GB / 256GB; 8GB / 256GB
+
+================ CAMERAS =================
+Fő hátsó kamera: Sony IMX707 50MP f/f/1.9
+Széles látószögű: Omnivision OV13B10 12MP f/f/2.2 OIS
+Szelfikamera: Sony IMX596 20MP f/f/2.2 OIS
+Telefotó: Omnivision OV50D40 Light Hunter 400 50MP f/f/2.0 OIS
+
+================ CONNECTIVITY =================
+WiFi: 6
+Bluetooth: 5.30
+Mobile network: 5
+Dual SIM: No
+eSIM: No
+NFC: No
+Jack: Yes
+Infrared: No
+
+================ BATTERY =================
+Battery capacity: 5000 mAh
+Battery type: Li-Po
+Charging wired: 67 W
+Charging wireless: 0 W
+
+================ BUILD =================
+Dimensions: 162.20 x 75.50 x 8.49 mm
+Weight: 193.00 g
+Back material: Vegán műbőr
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Optikai (Kijelző)
+Available colors: Alpine Blue, Black, Meadow Green
+
+
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 2
+Name: ZTE nubia Red Magic 9S Pro
+Manufacturer: ZTE nubia
+Release: 2024-07-09
+Price: 341270
+In store: Yes
+================ DISPLAY =================
+Resolution: 1116 x 2480
+Screen size: 2.80"
+Screen type: AMOLED
+Refresh rate: 120 Hz
+Max brightness: 1600 nits
+Sharpness: 400
+
+================ PERFORMANCE =================
+Antutu: 2369542
+CPU: Qualcomm Snapdragon 8 Gen 3 Leading Edition 3 GHz, 8 cores, 4 nm
+RAM speed: LPDDR5X
+Storage speed: UFS 4.0
+RAM/Storage versions: 12GB / 256GB; 12GB / 512GB; 16GB / 512GB
+
+================ CAMERAS =================
+Főkamera: Samsung GN5 50MP f/f/1.9
+Makró: GalaxyCore GC02M1 2MP f/f/2.4 OIS
+Széles látószögű: Samsung S5KJN1 50MP f/f/2.2 OIS
+Szelfikamera: Omnivision OV16A1Q 16MP f/f/2.0 OIS
+
+================ CONNECTIVITY =================
+WiFi: 7
+Bluetooth: 5.20
+Mobile network: 5
+Dual SIM: No
+eSIM: Yes
+NFC: No
+Jack: No
+Infrared: No
+
+================ BATTERY =================
+Battery capacity: 6500 mAh
+Battery type: Li-Polymer
+Charging wired: 80 W
+Charging wireless: 0 W
+
+================ BUILD =================
+Dimensions: 164.00 x 86.40 x 9.80 mm
+Weight: 229.00 g
+Back material: Üveg
+Waterproof: nincs
+Speaker: stereo
+Fingerprint: Optikai (Kijelző)
+Available colors: Cyclone, Design Sleet, Frost
+
+
+
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 3
+Name: Samsung Galaxy S24 Ultra
+Manufacturer: Samsung
+Release: 2025-02-03
+Price: 338640
+In store: No
+================ DISPLAY =================
+Resolution: 1116 x 2480
+Screen size: 6.80"
+Screen type: LTPO AMOLED
+Refresh rate: 120 Hz
+Max brightness: 2600 nits
+Sharpness: 505
+
+================ PERFORMANCE =================
+Antutu: 1814869
+CPU: Snapdragon 8 Gen 3 3 GHz, 8 cores, 4 nm
+RAM speed: LPDDR5X
+Storage speed: UFS 4.0
+RAM/Storage versions: 12GB / 1024GB; 12GB / 256GB; 12GB / 512GB
+
+================ CAMERAS =================
+Főkamera: Samsung ISOCELL HP2 200MP f/f/1.7
+Széles látószögű kamera: Sony IMX564 12MP f/f/2.2 OIS
+Szelfikamera: Samsung S5K3LU 12MP f/f/2.2 OIS
+Telefotó:  10MP f/f/2.4
+Telefotó kamera: Sony IMX854 50MP f/f/3.4
+
+================ CONNECTIVITY =================
+WiFi: 7
+Bluetooth: 5.30
+Mobile network: 5
+Dual SIM: No
+eSIM: No
+NFC: No
+Jack: Yes
+Infrared: Yes
+
+================ BATTERY =================
+Battery capacity: 5000 mAh
+Battery type: Li-Ion
+Charging wired: 45 W
+Charging wireless: 15 W
+
+================ BUILD =================
+Dimensions: 162.30 x 79.00 x 8.60 mm
+Weight: 232.00 g
+Back material: Üveg
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Ultraszonikus (Kijelző)
+Available colors: Titánfekete, Titánkék, Titánlila, Titánsárga, Titánszürke
+
+
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 4
+Name: Apple iPhone 16 Pro Max
+Manufacturer: Apple
+Release: 2024-09-20
+Price: 546940
+In store: No
+================ DISPLAY =================
+Resolution: 1320 x 2868
+Screen size: 6.90"
+Screen type: Super Retina XDR OLED
+Refresh rate: 120 Hz
+Max brightness: 2000 nits
+Sharpness: 460
+
+================ PERFORMANCE =================
+Antutu: 1753018
+CPU: Apple A18 Pro 5 GHz, 6 cores, 3 nm
+RAM speed: 
+Storage speed: NVMe
+RAM/Storage versions: 8GB / 1024GB; 8GB / 256GB; 8GB / 512GB
+
+================ CAMERAS =================
+Főkamera: Sony IMX903 48MP f/f/1.8
+periszkópos telefotó: Sony IMX913 12MP f/f/2.8
+Széles látószögű kamera: Sony IMX972 48MP f/f/2.2 OIS
+Szelfi kamera: Sony IMX714 12MP f/f/1.9
+
+================ CONNECTIVITY =================
+WiFi: 7
+Bluetooth: 5.30
+Mobile network: 5
+Dual SIM: No
+eSIM: No
+NFC: No
+Jack: Yes
+Infrared: Yes
+
+================ BATTERY =================
+Battery capacity: 4685 mAh
+Battery type: Li-Po
+Charging wired: 25 W
+Charging wireless: 25 W
+
+================ BUILD =================
+Dimensions: 163.00 x 77.60 x 8.25 mm
+Weight: 227.00 g
+Back material: Üveg
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Nincs ()
+Available colors: Black Titanium, Desert Titanium, Natural Titanium, White Titanium
+
+
+
+
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 5
+Name: Samsung Galaxy S25 Ultra
+Manufacturer: Samsung
+Release: 2025-02-03
+Price: 359020
+In store: Yes
+================ DISPLAY =================
+Resolution: 1440 x 3120
+Screen size: 6.86"
+Screen type: Dynamic LTPO AMOLED 2X
+Refresh rate: 120 Hz
+Max brightness: 2600 nits
+Sharpness: 505
+
+================ PERFORMANCE =================
+Antutu: 2265528
+CPU: Qualcomm Snapdragon 8 Elite 4 GHz, 8 cores, 3 nm
+RAM speed: LPDDR5X
+Storage speed: UFS 4.0
+RAM/Storage versions: 12GB / 1024GB; 12GB / 256GB; 12GB / 512GB; 16GB / 1024GB
+
+================ CAMERAS =================
+Főkamera: Samsung ISOCELL HP2 200MP f/f/1.7
+Periszkópos telefotó kamera: Sony IMX854 50MP f/f/3.4
+Széles látószögű kamera: Samsung JN3 50MP f/f/1.9 OIS
+Szelfi kamera: Samsung S5K3LU 12MP f/f/2.2 OIS
+Telefotó kamera:  10MP f/f/2.4
+
+================ CONNECTIVITY =================
+WiFi: 7
+Bluetooth: 5.40
+Mobile network: 5
+Dual SIM: No
+eSIM: No
+NFC: Yes
+Jack: Yes
+Infrared: Yes
+
+================ BATTERY =================
+Battery capacity: 5000 mAh
+Battery type: Li-Ion
+Charging wired: 45 W
+Charging wireless: 15 W
+
+================ BUILD =================
+Dimensions: 162.80 x 77.60 x 8.20 mm
+Weight: 218.00 g
+Back material: Üveg
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Ultraszonikus (Kijelző)
+Available colors: Titanium Black, Titanium Gray, Titanium Jadegreen, Titanium Jetblack, Titanium Pinkgold, Titanium Silverblue, Titanium Whitesilver
+
+
+
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 6
+Name: Honor Magic 7 Pro
+Manufacturer: Honor
+Release: 2024-11-08
+Price: 320640
+In store: Yes
+================ DISPLAY =================
+Resolution: 1280 x 2800
+Screen size: 6.80"
+Screen type: LTPO OLED
+Refresh rate: 120 Hz
+Max brightness: 5000 nits
+Sharpness: 453
+
+================ PERFORMANCE =================
+Antutu: 3040000
+CPU: Qualcomm Snapdragon 8 Elite 4 GHz, 8 cores, 3 nm
+RAM speed: LPDDR5X
+Storage speed: UFS 4.0
+RAM/Storage versions: 12GB / 1024GB; 12GB / 256GB; 12GB / 512GB; 16GB / 1024GB; 16GB / 512GB
+
+================ CAMERAS =================
+Főkamera: Omnivision OV50H 50MP f/f/2.0
+Széles látószögű kamera: Omnivision OV50D40 Light Hunter 400 50MP f/f/2.0 OIS
+Szelfi kamera: Sony IMX816 50MP f/f/2.0 OIS
+Telefotó kamera: Samsung S5KHP3SP 200MP f/f/2.6
+
+================ CONNECTIVITY =================
+WiFi: 7
+Bluetooth: 5.40
+Mobile network: 5
+Dual SIM: No
+eSIM: No
+NFC: No
+Jack: Yes
+Infrared: No
+
+================ BATTERY =================
+Battery capacity: 5270 mAh
+Battery type: Li-Ion
+Charging wired: 100 W
+Charging wireless: 80 W
+
+================ BUILD =================
+Dimensions: 162.70 x 77.10 x 8.80 mm
+Weight: 223.00 g
+Back material: Üveg
+Waterproof: IP69K
+Speaker: stereo
+Fingerprint: Ultraszonikus (Kijelző)
+Available colors: Black, Breeze Blue, Lunar shadow Gray
+
+
+
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 7
+Name: Google Pixel 9 Pro XL
+Manufacturer: Google
+Release: 2024-08-22
+Price: 372990
+In store: No
+================ DISPLAY =================
+Resolution: 2992 x 1344
+Screen size: 6.80"
+Screen type: LTPO OLED
+Refresh rate: 120 Hz
+Max brightness: 3000 nits
+Sharpness: 482
+
+================ PERFORMANCE =================
+Antutu: 1148512
+CPU: Google Tensor G4 3 GHz, 8 cores, 4 nm
+RAM speed: 
+Storage speed: UFS 3.1
+RAM/Storage versions: 16GB / 128GB; 16GB / 256GB; 16GB / 512GB
+
+================ CAMERAS =================
+Főkamera: Samsung GN1 50MP f/f/1.7
+Periszkópos telefotó kamera:  48MP f/f/2.8
+Széles látószögű kamera:  48MP f/f/1.7 OIS
+Szelfi kamera: Sony IMX858 42MP f/f/2.2 OIS
+
+================ CONNECTIVITY =================
+WiFi: 7
+Bluetooth: 5.30
+Mobile network: 5
+Dual SIM: No
+eSIM: No
+NFC: No
+Jack: Yes
+Infrared: Yes
+
+================ BATTERY =================
+Battery capacity: 5060 mAh
+Battery type: Li-Ion
+Charging wired: 37 W
+Charging wireless: 23 W
+
+================ BUILD =================
+Dimensions: 162.75 x 76.59 x 8.54 mm
+Weight: 221.00 g
+Back material: Üveg
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Ultraszonikus (Kijelző)
+Available colors: Hazel, Obsidian, Porcelain, Rose Quartz
+
+
+
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 8
+Name: Xiaomi Redmi Note 14 Pro 5G
+Manufacturer: Xiaomi
+Release: 2025-01-15
+Price: 84160
+In store: Yes
+================ DISPLAY =================
+Resolution: 1220 x 2712
+Screen size: 6.67"
+Screen type: AMOLED
+Refresh rate: 120 Hz
+Max brightness: 3000 nits
+Sharpness: 446
+
+================ PERFORMANCE =================
+Antutu: 704404
+CPU: Mediatek Dimensity 7300 Ultra 2 GHz, 8 cores, 4 nm
+RAM speed: LPDDR4X
+Storage speed: UFS 2.2
+RAM/Storage versions: 12GB / 256GB; 12GB / 512GB; 8GB / 256GB
+
+================ CAMERAS =================
+Főkamera: Samsung S5KHP3SP 200MP f/f/1.7
+makró kamera: Omnivision OV02B10 2MP f/f/2.4 OIS
+Széles látószögű kamera: Sony IMX355 8MP f/f/2.2 OIS
+Szelfi kamera: Omnivision OV20B 20MP f/f/2.2 OIS
+
+================ CONNECTIVITY =================
+WiFi: 6
+Bluetooth: 5.40
+Mobile network: 5
+Dual SIM: No
+eSIM: No
+NFC: No
+Jack: Yes
+Infrared: No
+
+================ BATTERY =================
+Battery capacity: 5110 mAh
+Battery type: Li-Polymer
+Charging wired: 45 W
+Charging wireless: 0 W
+
+================ BUILD =================
+Dimensions: 162.30 x 74.40 x 8.20 mm
+Weight: 190.00 g
+Back material: Üveg
+Waterproof: IP68
+Speaker: stereo
+Fingerprint: Optikai (Kijelző alatt)
+Available colors: Levendulalila, Midnight black, Ocean blue
+
+
+
+================ NEXT PHONE=================
+================ BASIC =================
+Phone ID: 10
+Name: Xiaomi Redmi Note 14 4G
+Manufacturer: Xiaomi
+Release: 2024-02-25
+Price: 57800
+In store: No
+================ DISPLAY =================
+Resolution: 1080 x 2400
+Screen size: 6.67"
+Screen type: AMOLED
+Refresh rate: 120 Hz
+Max brightness: 1200 nits
+Sharpness: 395
+
+================ PERFORMANCE =================
+Antutu: 116000
+CPU: Mediatek Helio G99 Ultra 2 GHz, 8 cores, 6 nm
+RAM speed: LPDDR4X
+Storage speed: UFS2.2
+RAM/Storage versions: 6GB / 128GB; 6GB / 256GB; 8GB / 128GB; 8GB / 256GB
+
+================ CAMERAS =================
+Főkamera: Samsung HM6 108MP f/f/1.7 OIS
+Makró: Smartsens sc202pcs 2MP f/f/2.4 OIS
+Szelfi: Omnivision OV20B 20MP f/f/2.2 OIS
+
+================ CONNECTIVITY =================
+WiFi: 5
+Bluetooth: 5.30
+Mobile network: 4
+Dual SIM: No
+eSIM: Yes
+NFC: No
+Jack: No
+Infrared: No
+
+================ BATTERY =================
+Battery capacity: 5500 mAh
+Battery type: Li-Pol
+Charging wired: 33 W
+Charging wireless: 0 W
+
+================ BUILD =================
+Dimensions: 163.30 x 76.60 x 8.20 mm
+Weight: 196.50 g
+Back material: Műanyag
+Waterproof: IP54
+Speaker: stereo
+Fingerprint: Optikai (Kijelző alatt)
+Available colors: Lime Green, Midnight Black, Mist Purple, Ocean Blue
+
+
+================ NEXT PHONE=================
+================ BASIC =================
 Phone ID: 20
 Name: Google Pixel 9 Pro
 Manufacturer: Google
