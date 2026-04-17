@@ -1,6 +1,5 @@
 A rendszer elindításának folyamata
-A rendszer teljes körű működéséhez mind a backend (API), mind a frontend szolgálta-
-tások elindítása szükséges.
+A rendszer teljes körű működéséhez mind a backend (API), mind a frontend szolgáltatások elindítása szükséges.
 
 Backend indítása
 – A backend mappába történő navigálás terminál segítségével:
